@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Komputer dan Komponennya</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      background: #f0f8ff;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      height: 100vh;
+      overflow: hidden;
+    }
+
+    .slide {
+      display: none;
+      max-width: 1000px;
+      width: 90%;
+      padding: 20px;
+      background: #fff;
+      border-radius: 12px;
+      box-shadow: 0 0 20px rgba(0,0,0,0.2);
+    }
+
+    .active {
+      display: block;
+    }
+
+    .slide-content {
+      display: flex;
+      flex-direction: row;
+      gap: 20px;
+      justify-content: space-between;
+    }
+
+    .left, .right {
+      width: 50%;
+    }
+
+    .right {
+      background-color: #f1f9ff;
+      padding: 10px;
+      border-left: 4px solid #1e88e5;
+      border-radius: 8px;
+    }
+
+    h1, h2 {
+      color: #1e88e5;
+    }
+
+    img {
+      width: 100%;
+      max-height: 250px;
+      margin: 10px auto;
+      display: block;
+      border-radius: 8px;
+    }
+
+    .controls {
+      margin-top: 20px;
+    }
+
+    button {
+      padding: 10px 20px;
+      margin: 0 10px;
+      font-size: 16px;
+      background-color: #1e88e5;
+      color: white;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+    }
+
+    button:hover {
+      background-color: #0d47a1;
+    }
+
+    button.hidden {
+      display: none;
+    }
+
+    @media (max-width: 768px) {
+      .slide-content {
+        flex-direction: column;
+      }
+
+      .left, .right {
+        width: 100%;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Slide dengan dua kolom -->
+  <div class="slide active">
+    <h1>Komputer dan Komponennya</h1>
+	<p>Apa itu komputer?</p>
+	<p>Yuk kita pelajari bersama!</p>
+  </div>
+  
+  <div class="slide">
+    <div class="slide-content">
+      <div class="left">
+        <h2>Apa itu Komputer?</h2>
+        <p>Komputer adalah alat elektronik yang digunakan untuk membantu proses belajar dan mengajar.</p>
+		<p>Contohnya: mengetik, menggambar, bermain game, mendengarkan musik, mencari informasi dari internet.</p>
+      </div>
+      <div class="right">
+        <h3>Tips Input</h3>
+        <ul>
+          <li>Tekan keyboard dengan lembut</li>
+          <li>Gunakan satu jari untuk klik mouse</li>
+          <li>Jaga kebersihan perangkat input</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+  
+  <div class="slide">
+  <div class="slide-content">
+    <div class="left">
+      <h2>Macam-Macam Komputer</h2>
+      <p>Komputer hadir dalam berbagai bentuk dan ukuran, contohnya:</p>
+      <ul>
+        <li>Laptop</li>
+        <li>Komputer PC</li>
+        <li>Tablet</li>
+        <li>Smartwatch</li>
+        <li>Smartphone</li>
+      </ul>
+      <p>Kita akan fokus belajar tentang Komputer PC dan Laptop.</p>
+      <img src="https://images.rawpixel.com/image_png_800/cHJpdmF0ZS9sci9pbWFnZXMvd2Vic2l0ZS8yMDIzLTEyL3Jhd3BpeGVsX29mZmljZV8zNV9waG90b2dyYXBoX29mX2xhcHRvcF9tb2NrdXBfd2l0aF93aGl0ZV9zY3JlZV9kNTFiNjVlZS02Y2RkLTQ0N2UtYmRmZS01MzdiZWZlNmY5NTIucG5n.png" alt="Macam-macam komputer" style="max-width: 50%; height: auto; margin-top: 10px;">
+    </div>
+    <div class="right">
+      <h3>Fakta Menarik</h3>
+      <ul>
+        <li>Smartwatch adalah komputer mini yang bisa dipakai di pergelangan tangan.</li>
+        <li>Tablet bisa digunakan dengan sentuhan, tanpa mouse atau keyboard.</li>
+        <li>Laptop lebih portabel dibanding PC, cocok untuk belajar di mana saja.</li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+  
+  <div class="slide">
+    <div class="slide-content">
+      <div class="left">
+        <h2>Input: Masukan</h2>
+        <p>Input adalah hal-hal yang kita gunakan untuk memasukkan informasi atau perintah ke komputer, seperti:</p>
+        <ul>
+          <li>Mouse</li>
+          <li>Keyboard</li>
+          <li>Suara (Google Assistant / Siri)</li>
+        </ul>
+        <img src="https://upload.wikimedia.org/wikipedia/commons/4/42/Computer_Mouse.jpg" alt="Mouse sebagai alat input">
+      </div>
+      <div class="right">
+        <h3>Tips Input</h3>
+        <ul>
+          <li>Tekan keyboard dengan lembut</li>
+          <li>Gunakan satu jari untuk klik mouse</li>
+          <li>Jaga kebersihan perangkat input</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <!-- Slide biasa tanpa dua kolom -->
+  <div class="slide">
+    <h2>Output: Keluaran</h2>
+    <p>Contoh output: layar monitor, printer</p>
+  </div>
+
+  <div class="slide">
+    <h2>Prosesor: Otak Komputer</h2>
+    <p>CPU (Central Processing Unit) adalah otak komputer yang menjalankan semua perintah dan program.</p>
+  </div>
+
+  <!-- Tambahkan slide lain sesuai format -->
+
+  <div class="controls">
+    <button id="prevBtn" onclick="prevSlide()">Sebelumnya</button>
+    <button id="nextBtn" onclick="nextSlide()">Berikutnya</button>
+  </div>
+
+  <script>
+    let currentSlide = 0;
+    const slides = document.querySelectorAll('.slide');
+    const prevBtn = document.getElementById('prevBtn');
+    const nextBtn = document.getElementById('nextBtn');
+
+    function showSlide(index) {
+      slides.forEach((slide, i) => {
+        slide.classList.remove('active');
+        if (i === index) slide.classList.add('active');
+      });
+
+      prevBtn.classList.toggle('hidden', index === 0);
+      nextBtn.classList.toggle('hidden', index === slides.length - 1);
+    }
+
+    function nextSlide() {
+      if (currentSlide < slides.length - 1) {
+        currentSlide++;
+        showSlide(currentSlide);
+      }
+    }
+
+    function prevSlide() {
+      if (currentSlide > 0) {
+        currentSlide--;
+        showSlide(currentSlide);
+      }
+    }
+
+    showSlide(currentSlide);
+  </script>
+
+</body>
+</html>
