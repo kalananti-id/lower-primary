@@ -1,122 +1,312 @@
 <!DOCTYPE html>
 <html lang="id">
+
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>UOB x Ruangguru — Slides Interaktif: Menyortir (Pertemuan 1)</title>
   <style>
-    :root{
-      --bg:#f7fbff;               /* latar biru-putih */
-      --card:#ffffff;
-      --ink:#0f172a;              /* slate-900 */
-      --muted:#5b6b88;
-      --primary:#1e66ff;          /* ruangguru-ish biru */
-      --primary-600:#2158d8;
-      --accent:#12b981;           /* aksen hijau */
-      --uob:#002561;              /* UOB navy */
-      --ring:rgba(30,102,255,.35);
-      --shadow:0 10px 30px rgba(2,22,60,.10);
-      --radius:18px;
+    :root {
+      --bg: #f7fbff;
+      --card: #ffffff;
+      --ink: #0f172a;
+      --muted: #5b6b88;
+      --primary: #1e66ff;
+      --primary-600: #2158d8;
+      --accent: #12b981;
+      --uob: #002561;
+      --ring: rgba(30, 102, 255, .35);
+      --shadow: 0 10px 30px rgba(2, 22, 60, .10);
+      --radius: 18px;
     }
-    html,body{height:100%;}
-    body{
-      margin:0; font-family: system-ui, -apple-system, Segoe UI, Roboto, Ubuntu, Cantarell, Noto Sans, Arial, "Apple Color Emoji","Segoe UI Emoji";
+
+    html,
+    body {
+      height: 100%;
+    }
+
+    body {
+      margin: 0;
+      font-family: system-ui, -apple-system, Segoe UI, Roboto, Ubuntu, Cantarell, Noto Sans, Arial, "Apple Color Emoji", "Segoe UI Emoji";
       background: linear-gradient(180deg, var(--bg), #ffffff 60%);
-      color:var(--ink);
-    }
-    /* Top Bar */
-    .topbar{position:sticky; top:0; z-index:50; background:linear-gradient(90deg,var(--uob),var(--primary)); color:#fff; padding:10px 16px; display:flex; gap:12px; align-items:center; box-shadow:0 6px 16px rgba(0,0,0,.12)}
-    .brand{display:flex; align-items:center; gap:10px; font-weight:700; letter-spacing:.2px}
-    .badge{background:rgba(255,255,255,.16); padding:6px 10px; border-radius:999px; font-size:12px}
-
-    /* Deck */
-    #deck{max-width:1100px; margin:24px auto; padding:0 16px;}
-    .slide{display:none;}
-    .slide.active{display:block;}
-    .card{background:var(--card); border-radius:var(--radius); box-shadow:var(--shadow); padding:24px;}
-    .title{font-size:clamp(22px,3.5vw,36px); margin:0 0 8px;}
-    .subtitle{margin:0 0 18px; color:var(--muted)}
-    .btn{display:inline-flex; align-items:center; gap:8px; background:var(--primary); color:#fff; border:0; padding:12px 16px; border-radius:14px; cursor:pointer; box-shadow:0 6px 16px rgba(30,102,255,.25); transition:.2s}
-    .btn:hover{transform:translateY(-1px); background:var(--primary-600)}
-    .muted{color:var(--muted)}
-
-    /* Layout helpers */
-    .grid{display:grid; gap:18px}
-    @media(min-width:900px){
-      .grid-2{grid-template-columns:1.1fr .9fr}
-      .grid-3{grid-template-columns:repeat(3,1fr)}
+      color: var(--ink);
     }
 
-    /* Progress */
-    .progress{height:8px; background:#e6eefc; border-radius:999px; overflow:hidden;}
-    .bar{height:100%; width:0%; background:linear-gradient(90deg,var(--primary),#4facfe); transition:width .4s}
+    .topbar {
+      position: sticky;
+      top: 0;
+      z-index: 50;
+      background: linear-gradient(90deg, var(--uob), var(--primary));
+      color: #fff;
+      padding: 10px 16px;
+      display: flex;
+      gap: 12px;
+      align-items: center;
+      justify-content: space-between;
+      box-shadow: 0 6px 16px rgba(0, 0, 0, .12)
+    }
 
-    /* Poll / Quiz */
-    .opt{border:1.5px solid #e6e9f3; padding:12px 14px; border-radius:12px; cursor:pointer; user-select:none; transition:.2s; background:#fff}
-    .opt:hover{border-color:var(--primary); box-shadow:0 0 0 4px var(--ring)}
-    .opt[aria-checked="true"]{border-color:var(--primary); outline:3px solid var(--ring)}
-    .opt.correct{background:#f0fbf5; border-color:#0ea66a}
-    .opt.wrong{background:#fff5f5; border-color:#ef4444}
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-weight: 700;
+      letter-spacing: .2px
+    }
 
-    /* Drag & Drop */
-    .bin{min-height:120px; border:2px dashed #cfe0ff; border-radius:16px; padding:12px; background:#f7faff; transition:.2s}
-    .bin.dragover{background:#eef5ff; border-color:var(--primary)}
-    .chips{display:flex; flex-wrap:wrap; gap:10px}
-    .chip{display:inline-flex; align-items:center; gap:6px; padding:10px 12px; border-radius:999px; background:#eef5ff; border:1px solid #d8e5ff; cursor:grab}
+    .badge {
+      background: rgba(255, 255, 255, .16);
+      padding: 6px 10px;
+      border-radius: 999px;
+      font-size: 12px
+    }
 
-    /* Footer Nav */
-    .nav{display:flex; justify-content:space-between; align-items:center; margin:18px 0 40px}
-    .ghost{background:transparent; color:var(--primary); border:1.5px solid #cfe0ff}
+    #deck {
+      max-width: 1100px;
+      margin: 24px auto;
+      padding: 0 16px;
+    }
 
-    /* Callouts */
-    .callout{background:linear-gradient(180deg,#f0f7ff,#ffffff); border:1px solid #d6e6ff; padding:16px; border-radius:14px}
+    .slide {
+      display: none;
+    }
 
-    /* Placeholder image */
-    .ph{width:100%; aspect-ratio:16/9; border-radius:14px; background:repeating-linear-gradient(45deg,#e8f1ff 0 10px,#f6faff 10px 20px); display:grid; place-items:center; color:#5b6b88}
+    .slide.active {
+      display: block;
+    }
 
-    /* Print */
-    @media print{ .topbar, .nav { display:none; } .slide{display:block; break-after:page;} body{background:#fff} }
+    .card {
+      background: var(--card);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      padding: 24px;
+    }
+
+    .title {
+      font-size: clamp(22px, 3.5vw, 36px);
+      margin: 0 0 8px;
+    }
+
+    .subtitle {
+      margin: 0 0 18px;
+      color: var(--muted)
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: var(--primary);
+      color: #fff;
+      border: 0;
+      padding: 12px 16px;
+      border-radius: 14px;
+      cursor: pointer;
+      box-shadow: 0 6px 16px rgba(30, 102, 255, .25);
+      transition: .2s
+    }
+
+    .btn:hover {
+      transform: translateY(-1px);
+      background: var(--primary-600)
+    }
+
+    .muted {
+      color: var(--muted)
+    }
+
+    .grid {
+      display: grid;
+      gap: 18px
+    }
+
+    @media(min-width:900px) {
+      .grid-2 {
+        grid-template-columns: 1.1fr .9fr
+      }
+
+      .grid-3 {
+        grid-template-columns: repeat(3, 1fr)
+      }
+    }
+
+    .progress {
+      height: 8px;
+      background: #e6eefc;
+      border-radius: 999px;
+      overflow: hidden;
+    }
+
+    .bar {
+      height: 100%;
+      width: 0%;
+      background: linear-gradient(90deg, var(--primary), #4facfe);
+      transition: width .4s
+    }
+
+    .opt {
+      border: 1.5px solid #e6e9f3;
+      padding: 12px 14px;
+      border-radius: 12px;
+      cursor: pointer;
+      user-select: none;
+      transition: .2s;
+      background: #fff
+    }
+
+    .opt:hover {
+      border-color: var(--primary);
+      box-shadow: 0 0 0 4px var(--ring)
+    }
+
+    .opt[aria-checked="true"] {
+      border-color: var(--primary);
+      outline: 3px solid var(--ring)
+    }
+
+    .opt.correct {
+      background: #f0fbf5;
+      border-color: #0ea66a
+    }
+
+    .opt.wrong {
+      background: #fff5f5;
+      border-color: #ef4444
+    }
+
+    .bin {
+      min-height: 120px;
+      border: 2px dashed #cfe0ff;
+      border-radius: 16px;
+      padding: 12px;
+      background: #f7faff;
+      transition: .2s
+    }
+
+    .bin.dragover {
+      background: #eef5ff;
+      border-color: var(--primary)
+    }
+
+    .chips {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px
+    }
+
+    .chip {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 10px 12px;
+      border-radius: 999px;
+      background: #eef5ff;
+      border: 1px solid #d8e5ff;
+      cursor: grab
+    }
+
+    .nav {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin: 18px 0 40px
+    }
+
+    .ghost {
+      background: transparent;
+      color: var(--primary);
+      border: 1.5px solid #cfe0ff
+    }
+
+    .callout {
+      background: linear-gradient(180deg, #f0f7ff, #ffffff);
+      border: 1px solid #d6e6ff;
+      padding: 16px;
+      border-radius: 14px
+    }
+
+    .ph {
+      width: 100%;
+      aspect-ratio: 16/9;
+      border-radius: 14px;
+      background: repeating-linear-gradient(45deg, #e8f1ff 0 10px, #f6faff 10px 20px);
+      display: grid;
+      place-items: center;
+      color: #5b6b88
+    }
+
+    @media print {
+
+      .topbar,
+      .nav {
+        display: none
+      }
+
+      .slide {
+        display: block;
+        break-after: page
+      }
+
+      body {
+        background: #fff
+      }
+    }
   </style>
 </head>
+
 <body>
   <header class="topbar" role="banner">
     <div class="brand" aria-label="UOB x Ruangguru">
-      <svg width="28" height="28" viewBox="0 0 24 24" fill="none" aria-hidden="true"><circle cx="12" cy="12" r="10" fill="white" opacity=".18"/><path d="M6 6h2v12H6V6Zm10 0h2v12h-2V6ZM10 4h4v16h-4V4Z" fill="white"/></svg>
+      <svg width="28" height="28" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+        <circle cx="12" cy="12" r="10" fill="white" opacity=".18" />
+        <path d="M6 6h2v12H6V6Zm10 0h2v12h-2V6ZM10 4h4v16h-4V4Z" fill="white" />
+      </svg>
       <span>UOB MyDigital Space • Ruangguru</span>
     </div>
     <span class="badge">Pertemuan 1 — Menyortir Satu Kriteria</span>
   </header>
 
   <main id="deck" aria-live="polite">
-    <div class="progress" aria-label="Progres Slide"><div class="bar" id="progressBar"></div></div>
+    <div class="progress" aria-label="Progres Slide">
+      <div class="bar" id="progressBar"></div>
+    </div>
 
     <!-- SLIDE 1: Pembuka & Tujuan -->
     <section class="slide active" data-slide="1">
       <div class="card grid grid-2">
         <div>
-          <h1 class="title">Apa Itu <span style="color:var(--primary)">Menyortir</span> & <span style="color:var(--primary)">Mengelompokkan</span>?</h1>
-          <p class="subtitle">Kita akan belajar memilah benda berdasarkan <b>satu kriteria</b> (warna, bentuk, ukuran, atau bahan).</p>
+          <h1 class="title">Apa Itu <span style="color:var(--primary)">Menyortir</span> & <span
+              style="color:var(--primary)">Mengelompokkan</span>?</h1>
+          <p class="subtitle">Kita akan belajar memilah benda berdasarkan <b>satu kriteria</b> (warna, bentuk, ukuran,
+            atau bahan).</p>
           <ul>
             <li>Siswa memahami konsep menyortir vs mengelompokkan.</li>
             <li>Siswa bisa menyortir berdasarkan satu karakteristik.</li>
             <li>Siswa dapat menjelaskan alasannya.</li>
           </ul>
-          <div class="callout" style="margin-top:12px">
-            <strong>Interaktif:</strong> klik tombol di bawah untuk pemanasan.
-            <div style="margin-top:10px; display:flex; gap:10px; flex-wrap:wrap">
-              <button class=\"btn\" data-poll=\"pernah\">+1 Sudah merapikan</button>
-              <button class=\"btn ghost\" data-poll=\"belum\">+1 Belum</button>
-              <button class=\"btn ghost\" data-dec=\"pernah\" title=\"Kurangi 1 untuk Sudah\">-1 Sudah</button>
-              <button class=\"btn ghost\" data-dec=\"belum\" title=\"Kurangi 1 untuk Belum\">-1 Belum</button>
+          <div class="callout"
+            style="margin-top:12px; min-height:120px; display:flex; flex-direction:column; justify-content:space-between;">
+            <div>
+              <strong>Interaktif:</strong> klik tombol di bawah untuk pemanasan.
+              <div style="margin-top:10px; display:flex; gap:10px; flex-wrap:wrap">
+                <button class="btn" data-poll="pernah">+1 Sudah merapikan</button>
+                <button class="btn ghost" data-poll="belum">+1 Belum</button>
+                <button class="btn ghost" data-dec="pernah" title="Kurangi 1 untuk Sudah">-1 Sudah</button>
+                <button class="btn ghost" data-dec="belum" title="Kurangi 1 untuk Belum">-1 Belum</button>
+              </div>
             </div>
-            <div id="pollMsg" class="muted" style="margin-top:8px"></div>
-            <div style="display:flex; gap:10px; align-items:center; margin-top:8px">
-              <span id="pollCount" class="badge" aria-live="polite">Sudah: 0 | Belum: 0</span>
-              <button class="btn ghost" id="resetPoll" title="Reset hitungan">Reset</button>
+
+            <div style="margin-top:8px; display:flex; gap:10px; align-items:center; justify-content:space-between;">
+              <div id="pollMsg" class="muted" style="min-height:28px"></div>
+              <div style="display:flex; gap:10px; align-items:center">
+                <span id="pollCount" class="badge" aria-live="polite">Sudah: 0 | Belum: 0</span>
+                <button class="btn ghost" id="resetPoll" title="Reset hitungan">Reset</button>
+              </div>
             </div>
           </div>
         </div>
-        <figure class="ph" aria-label="Ilustrasi anak merapikan mainan">[ Placeholder Gambar — Merapikan Mainan ]</figure>
+        <figure class="ph" aria-label="Ilustrasi anak merapikan mainan"><img src="">
+        </figure>
       </div>
     </section>
 
@@ -130,7 +320,7 @@
           <div class="opt" role="radio" tabindex="0" data-choice>🔺 Bentuk</div>
           <div class="opt" role="radio" tabindex="0" data-choice>📏 Ukuran</div>
           <div class="opt" role="radio" tabindex="0" data-choice>🪵 Bahan</div>
-          <div class="opt" role="radio" tabindex="0" data-choice>🎯 Fungsi</div>
+          <div class="opt" role="radio" tabindex="0" data-c ice>🎯 Fungsi</div>
           <div class="opt" role="radio" tabindex="0" data-choice>🎨 Tema</div>
         </div>
         <p id="choiceMsg" class="muted" style="margin-top:10px"></p>
@@ -139,17 +329,32 @@
 
     <!-- SLIDE 3: Contoh Visual -->
     <section class="slide" data-slide="3">
-      <div class="card grid grid-2">
-        <div>
-          <h2 class="title">Keranjang Ajaib</h2>
-          <p class="subtitle">Pilih cara menyortir isi keranjang di kanan.</p>
-          <div class="grid">
-            <button class="opt" data-sort="jenis">🔸 Pisahkan berdasarkan <b>jenis benda</b></button>
-            <button class="opt" data-sort="warna">🔹 Pisahkan berdasarkan <b>warna</b></button>
-          </div>
-          <p id="sortMsg" class="muted" style="margin-top:10px"></p>
+      <div class="card">
+        <h2 class="title">🧺 Keranjang Ajaib</h2>
+        <p class="subtitle">Keranjang berisi <b>krayon</b>, <b>penggaris</b>, <b>nanas</b>, dan <b>apel</b>. Klik cara
+          menyortirnya:</p>
+        <div style="display:flex; gap:10px; flex-wrap:wrap; margin-bottom:10px">
+          <button class="opt" onclick="sortBasket('jenis')">🔸 Berdasarkan <b>jenis benda</b></button>
+          <button class="opt" onclick="sortBasket('warna')">🔹 Berdasarkan <b>warna</b></button>
         </div>
-        <figure class="ph" aria-label="Keranjang berisi benda campuran">[ Placeholder Gambar — Keranjang Isi Campur ]</figure>
+
+
+        <!-- Items preview -->
+        <div class="chips" aria-label="Daftar benda dalam keranjang" id="basketItems"></div>
+
+
+        <!-- Hasil penyortiran -->
+        <div class="grid grid-2" style="margin-top:14px">
+          <div>
+            <h3 id="binATitle" class="muted">Kelompok A</h3>
+            <div class="bin" id="binA">—</div>
+          </div>
+          <div>
+            <h3 id="binBTitle" class="muted">Kelompok B</h3>
+            <div class="bin" id="binB">—</div>
+          </div>
+        </div>
+        <p id="basketMessage" class="muted" style="margin-top:10px"></p>
       </div>
     </section>
 
@@ -235,9 +440,18 @@
     <!-- SLIDE 8: Manfaat -->
     <section class="slide" data-slide="8">
       <div class="card grid grid-3">
-        <div class="callout"><h3>🧠 Berpikir Kritis</h3><p>Membantu memilih berdasarkan alasan yang logis.</p></div>
-        <div class="callout"><h3>🎯 Lebih Teratur</h3><p>Pekerjaan jadi cepat & rapi.</p></div>
-        <div class="callout"><h3>🌱 Peduli Lingkungan</h3><p>Pilah sampah organik, anorganik, pecah belah.</p></div>
+        <div class="callout">
+          <h3>🧠 Berpikir Kritis</h3>
+          <p>Membantu memilih berdasarkan alasan yang logis.</p>
+        </div>
+        <div class="callout">
+          <h3>🎯 Lebih Teratur</h3>
+          <p>Pekerjaan jadi cepat & rapi.</p>
+        </div>
+        <div class="callout">
+          <h3>🌱 Peduli Lingkungan</h3>
+          <p>Pilah sampah organik, anorganik, pecah belah.</p>
+        </div>
       </div>
     </section>
 
@@ -295,89 +509,129 @@
     let idx = 0;
     const progressBar = document.getElementById('progressBar');
     const updateProgress = () => {
-      const pct = ((idx+1)/slides.length)*100; progressBar.style.width = pct+'%';
+      const pct = ((idx + 1) / slides.length) * 100; progressBar.style.width = pct + '%';
     }
-    function show(i){
-      slides.forEach(s=>s.classList.remove('active'));
-      idx = Math.max(0, Math.min(i, slides.length-1));
+    function show(i) {
+      slides.forEach(s => s.classList.remove('active'));
+      idx = Math.max(0, Math.min(i, slides.length - 1));
       slides[idx].classList.add('active');
       updateProgress();
       // focus first focusable
       const f = slides[idx].querySelector('button, [tabindex="0"]');
-      if(f) setTimeout(()=>f.focus(), 50);
+      if (f) setTimeout(() => f.focus(), 50);
     }
-    document.getElementById('prevBtn').onclick=()=>show(idx-1);
-    document.getElementById('nextBtn').onclick=()=>show(idx+1);
-    addEventListener('keydown', e=>{ if(e.key==='ArrowRight') show(idx+1); if(e.key==='ArrowLeft') show(idx-1); });
+    document.getElementById('prevBtn').onclick = () => show(idx - 1);
+    document.getElementById('nextBtn').onclick = () => show(idx + 1);
+    addEventListener('keydown', e => { if (e.key === 'ArrowRight') show(idx + 1); if (e.key === 'ArrowLeft') show(idx - 1); });
     updateProgress();
 
     // ====== Poll (Slide 1) ======
     const pollMsg = document.getElementById('pollMsg');
     const pollCountEl = document.getElementById('pollCount');
     let pollYes = 0, pollNo = 0; // counters
-    function renderPoll(){ if(pollCountEl) pollCountEl.textContent = `Sudah: ${pollYes} | Belum: ${pollNo}`; }
+    function renderPoll() { if (pollCountEl) pollCountEl.textContent = `Sudah: ${pollYes} | Belum: ${pollNo}`; }
     renderPoll();
 
     // +1 buttons
-    document.querySelectorAll('[data-poll]').forEach(btn=>{
+    document.querySelectorAll('[data-poll]').forEach(btn => {
       btn.addEventListener('click', () => {
         const v = btn.getAttribute('data-poll');
-        if(v === 'pernah'){ pollYes++; pollMsg.textContent = '✅ Ditambah 1 untuk Sudah.'; }
+        if (v === 'pernah') { pollYes++; pollMsg.textContent = '✅ Ditambah 1 untuk Sudah.'; }
         else { pollNo++; pollMsg.textContent = '✅ Ditambah 1 untuk Belum.'; }
         renderPoll();
       })
     })
 
     // -1 buttons (koreksi salah klik)
-    document.querySelectorAll('[data-dec]').forEach(btn=>{
+    document.querySelectorAll('[data-dec]').forEach(btn => {
       btn.addEventListener('click', () => {
         const v = btn.getAttribute('data-dec');
-        if(v === 'pernah'){ pollYes = Math.max(0, pollYes-1); pollMsg.textContent = '↩️ Dikurangi 1 untuk Sudah.'; }
-        else { pollNo = Math.max(0, pollNo-1); pollMsg.textContent = '↩️ Dikurangi 1 untuk Belum.'; }
+        if (v === 'pernah') { pollYes = Math.max(0, pollYes - 1); pollMsg.textContent = '↩️ Dikurangi 1 untuk Sudah.'; }
+        else { pollNo = Math.max(0, pollNo - 1); pollMsg.textContent = '↩️ Dikurangi 1 untuk Belum.'; }
         renderPoll();
       })
     })
 
     // reset
-    document.getElementById('resetPoll')?.addEventListener('click', ()=>{
+    document.getElementById('resetPoll')?.addEventListener('click', () => {
       pollYes = 0; pollNo = 0; renderPoll(); pollMsg.textContent = '';
     });
 
     // Keyboard shortcuts: P = +1 Sudah, B = +1 Belum
-    window.addEventListener('keydown', (e)=>{
-      if(e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') return; // ignore typing fields
-      if(e.key.toLowerCase() === 'p'){ pollYes++; renderPoll(); pollMsg.textContent = '✅ +1 Sudah (keyboard)'; }
-      if(e.key.toLowerCase() === 'b'){ pollNo++; renderPoll(); pollMsg.textContent = '✅ +1 Belum (keyboard)'; }
+    window.addEventListener('keydown', (e) => {
+      if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') return; // ignore typing fields
+      if (e.key.toLowerCase() === 'p') { pollYes++; renderPoll(); pollMsg.textContent = '✅ +1 Sudah (keyboard)'; }
+      if (e.key.toLowerCase() === 'b') { pollNo++; renderPoll(); pollMsg.textContent = '✅ +1 Belum (keyboard)'; }
     });
 
     // ====== Choice chips (Slide 2) ======
     const choiceMsg = document.getElementById('choiceMsg');
-    document.querySelectorAll('[data-choice]').forEach(opt=>{
-      opt.addEventListener('click',()=>{
-        document.querySelectorAll('[data-choice]').forEach(o=>o.setAttribute('aria-checked','false'));
-        opt.setAttribute('aria-checked','true');
+    document.querySelectorAll('[data-choice]').forEach(opt => {
+      opt.addEventListener('click', () => {
+        document.querySelectorAll('[data-choice]').forEach(o => o.setAttribute('aria-checked', 'false'));
+        opt.setAttribute('aria-checked', 'true');
         choiceMsg.textContent = `Kamu memilih berdasarkan: ${opt.textContent.trim()}. Itu contoh menyortir!`;
       })
     })
 
-    // ====== Sort buttons (Slide 3) ======
-    const sortMsg = document.getElementById('sortMsg');
-    document.querySelectorAll('[data-sort]').forEach(btn=>{
-      btn.addEventListener('click',()=>{
-        const t = btn.getAttribute('data-sort');
-        sortMsg.textContent = t==='jenis' ? 'Kamu menyortir berdasarkan JENIS BENDA.' : 'Kamu menyortir berdasarkan WARNA.';
-      })
-    })
+    // ====== Sort Basket (Slide 3) ======
+    const itemsData = [
+      { name: 'Krayon', icon: '🖍️', jenis: 'Alat Tulis', warna: 'Merah' },
+      { name: 'Penggaris', icon: '📏', jenis: 'Alat Tulis', warna: 'Oranye' },
+      { name: 'Nanas', icon: '🍍', jenis: 'Buah', warna: 'Oranye' },
+      { name: 'Apel', icon: '🍎', jenis: 'Buah', warna: 'Merah' },
+    ];
+
+
+    const basketItems = document.getElementById('basketItems');
+    const binA = document.getElementById('binA');
+    const binB = document.getElementById('binB');
+    const binATitle = document.getElementById('binATitle');
+    const binBTitle = document.getElementById('binBTitle');
+    const basketMessage = document.getElementById('basketMessage');
+
+
+    function chipHTML(item) {
+      return `<span class="chip" aria-label="${item.name}">${item.icon} ${item.name}</span>`;
+    }
+
+
+    // Render initial items preview
+    if (basketItems) {
+      basketItems.innerHTML = itemsData.map(chipHTML).join('');
+    }
+
+
+    function renderBins(titleA, titleB, groupAItems, groupBItems) {
+      binATitle.textContent = titleA; binBTitle.textContent = titleB;
+      binA.innerHTML = groupAItems.length ? groupAItems.map(chipHTML).join('') : '—';
+      binB.innerHTML = groupBItems.length ? groupBItems.map(chipHTML).join('') : '—';
+    }
+
+
+    function sortBasket(mode) {
+      if (mode === 'jenis') {
+        const alatTulis = itemsData.filter(i => i.jenis === 'Alat Tulis');
+        const buah = itemsData.filter(i => i.jenis === 'Buah');
+        renderBins('Kelompok: Alat Tulis', 'Kelompok: Buah', alatTulis, buah);
+        basketMessage.textContent = 'Hasil: Krayon & Penggaris → Alat Tulis; Nanas & Apel → Buah.';
+      } else if (mode === 'warna') {
+        const merah = itemsData.filter(i => i.warna === 'Merah');
+        const oranye = itemsData.filter(i => i.warna === 'Oranye');
+        renderBins('Kelompok: Merah', 'Kelompok: Oranye', merah, oranye);
+        basketMessage.textContent = 'Hasil: Krayon & Apel → Merah; Nanas & Penggaris → Oranye.';
+      }
+    }
 
     // ====== Examples (Slide 4) ======
     const exMsg = document.getElementById('exMsg');
     const examples = {
-      sampah:'Tempat sampah warna: organik, anorganik, pecah belah.',
-      rak:'Rak buku disusun menurut ukuran/genre/warnanya.',
-      lemari:'Baju dipisah: kaos, kemeja, jaket — atau berdasarkan warna.'
+      sampah: 'Tempat sampah warna: organik, anorganik, pecah belah.',
+      rak: 'Rak buku disusun menurut ukuran/genre/warnanya.',
+      lemari: 'Baju dipisah: kaos, kemeja, jaket — atau berdasarkan warna.'
     }
-    document.querySelectorAll('[data-example]').forEach(ch=>{
-      ch.addEventListener('click',()=>{
+    document.querySelectorAll('[data-example]').forEach(ch => {
+      ch.addEventListener('click', () => {
         exMsg.textContent = examples[ch.getAttribute('data-example')] || '';
       })
     })
@@ -386,57 +640,59 @@
     const pool = document.getElementById('pool');
     const bins = document.querySelectorAll('.bin');
     let dragged = null;
-    document.querySelectorAll('.chip[draggable="true"]').forEach(ch=>{
-      ch.addEventListener('dragstart', e=>{ dragged = ch; e.dataTransfer.setData('text/plain', ch.textContent); });
+    document.querySelectorAll('.chip[draggable="true"]').forEach(ch => {
+      ch.addEventListener('dragstart', e => { dragged = ch; e.dataTransfer.setData('text/plain', ch.textContent); });
     })
-    bins.forEach(b=>{
-      b.addEventListener('dragover', e=>{ e.preventDefault(); b.classList.add('dragover'); });
-      b.addEventListener('dragleave', ()=> b.classList.remove('dragover'));
-      b.addEventListener('drop', e=>{
-        e.preventDefault(); b.classList.remove('dragover'); if(!dragged) return;
+    bins.forEach(b => {
+      b.addEventListener('dragover', e => { e.preventDefault(); b.classList.add('dragover'); });
+      b.addEventListener('dragleave', () => b.classList.remove('dragover'));
+      b.addEventListener('drop', e => {
+        e.preventDefault(); b.classList.remove('dragover'); if (!dragged) return;
         b.appendChild(dragged);
         feedbackDD();
       })
     })
-    function feedbackDD(){
+    function feedbackDD() {
       const ddMsg = document.getElementById('ddMsg');
-      const warnaOK = [...document.querySelectorAll('[data-bin="warna"] .chip')].every(ch=>ch.dataset.color);
-      const bentukOK = [...document.querySelectorAll('[data-bin="bentuk"] .chip')].every(ch=>ch.dataset.shape);
+      const warnaOK = [...document.querySelectorAll('[data-bin="warna"] .chip')].every(ch => ch.dataset.color);
+      const bentukOK = [...document.querySelectorAll('[data-bin="bentuk"] .chip')].every(ch => ch.dataset.shape);
       const totalPlaced = document.querySelectorAll('.bin .chip').length;
-      if(totalPlaced>=3){ ddMsg.textContent = 'Bagus! Kamu sudah mencoba menyortir. Coba jelaskan alasannya.'; }
-      if(warnaOK && bentukOK && totalPlaced>=6){ ddMsg.textContent = 'Mantap! Semua kartu sudah dikelompokkan. Apa dasar kriteria kamu?'; }
+      if (totalPlaced >= 3) { ddMsg.textContent = 'Bagus! Kamu sudah mencoba menyortir. Coba jelaskan alasannya.'; }
+      if (warnaOK && bentukOK && totalPlaced >= 6) { ddMsg.textContent = 'Mantap! Semua kartu sudah dikelompokkan. Apa dasar kriteria kamu?'; }
     }
 
     // ====== Timer (Slide 6) ======
     const startBtn = document.getElementById('startTimer');
     const timerDisp = document.getElementById('timerDisp');
-    let timer=null, remain=20*60;
-    function fmt(sec){ const m=Math.floor(sec/60), s=sec%60; return `${m.toString().padStart(2,'0')}:${s.toString().padStart(2,'0')}`}
-    function tick(){ remain--; timerDisp.textContent = fmt(remain); if(remain<=0){ clearInterval(timer); timer=null; startBtn.disabled=false; timerDisp.textContent='Selesai!'; startBtn.textContent='Mulai Lagi (20:00)'; }
+    let timer = null, remain = 20 * 60;
+    function fmt(sec) { const m = Math.floor(sec / 60), s = sec % 60; return `${m.toString().padStart(2, '0')}:${s.toString().padStart(2, '0')}` }
+    function tick() {
+      remain--; timerDisp.textContent = fmt(remain); if (remain <= 0) { clearInterval(timer); timer = null; startBtn.disabled = false; timerDisp.textContent = 'Selesai!'; startBtn.textContent = 'Mulai Lagi (20:00)'; }
     }
-    startBtn?.addEventListener('click',()=>{
-      if(timer) return; remain=20*60; timerDisp.textContent=fmt(remain); startBtn.disabled=true; startBtn.textContent='Sedang Berjalan…'; timer=setInterval(tick,1000);
+    startBtn?.addEventListener('click', () => {
+      if (timer) return; remain = 20 * 60; timerDisp.textContent = fmt(remain); startBtn.disabled = true; startBtn.textContent = 'Sedang Berjalan…'; timer = setInterval(tick, 1000);
     })
 
     // ====== Refleksi (Slide 7) ======
     const refMsg = document.getElementById('refMsg');
-    document.querySelectorAll('[data-ref]').forEach(btn=>{
-      btn.addEventListener('click',()=>{ refMsg.textContent='Terima kasih! Jawabanmu membantu guru memahami pemahamanmu.'; })
+    document.querySelectorAll('[data-ref]').forEach(btn => {
+      btn.addEventListener('click', () => { refMsg.textContent = 'Terima kasih! Jawabanmu membantu guru memahami pemahamanmu.'; })
     })
 
     // ====== Quiz (Slide 10) ======
     const quizMsg = document.getElementById('quizMsg');
     const answered = new Set();
-    document.querySelectorAll('[data-q]').forEach(opt=>{
-      opt.addEventListener('click',()=>{
+    document.querySelectorAll('[data-q]').forEach(opt => {
+      opt.addEventListener('click', () => {
         const q = opt.getAttribute('data-q');
         // clear state group
-        document.querySelectorAll(`[data-q="${q}"]`).forEach(o=>o.classList.remove('correct','wrong'));
-        if(opt.hasAttribute('data-correct')){ opt.classList.add('correct'); } else { opt.classList.add('wrong'); }
+        document.querySelectorAll(`[data-q="${q}"]`).forEach(o => o.classList.remove('correct', 'wrong'));
+        if (opt.hasAttribute('data-correct')) { opt.classList.add('correct'); } else { opt.classList.add('wrong'); }
         answered.add(q);
-        if(answered.size>=3){ quizMsg.textContent='Nice! Kamu sudah mengisi exit ticket hari ini.'; }
+        if (answered.size >= 3) { quizMsg.textContent = 'Nice! Kamu sudah mengisi exit ticket hari ini.'; }
       })
     })
   </script>
 </body>
+
 </html>
