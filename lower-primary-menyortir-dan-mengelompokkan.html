@@ -1,0 +1,442 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>UOB x Ruangguru — Slides Interaktif: Menyortir (Pertemuan 1)</title>
+  <style>
+    :root{
+      --bg:#f7fbff;               /* latar biru-putih */
+      --card:#ffffff;
+      --ink:#0f172a;              /* slate-900 */
+      --muted:#5b6b88;
+      --primary:#1e66ff;          /* ruangguru-ish biru */
+      --primary-600:#2158d8;
+      --accent:#12b981;           /* aksen hijau */
+      --uob:#002561;              /* UOB navy */
+      --ring:rgba(30,102,255,.35);
+      --shadow:0 10px 30px rgba(2,22,60,.10);
+      --radius:18px;
+    }
+    html,body{height:100%;}
+    body{
+      margin:0; font-family: system-ui, -apple-system, Segoe UI, Roboto, Ubuntu, Cantarell, Noto Sans, Arial, "Apple Color Emoji","Segoe UI Emoji";
+      background: linear-gradient(180deg, var(--bg), #ffffff 60%);
+      color:var(--ink);
+    }
+    /* Top Bar */
+    .topbar{position:sticky; top:0; z-index:50; background:linear-gradient(90deg,var(--uob),var(--primary)); color:#fff; padding:10px 16px; display:flex; gap:12px; align-items:center; box-shadow:0 6px 16px rgba(0,0,0,.12)}
+    .brand{display:flex; align-items:center; gap:10px; font-weight:700; letter-spacing:.2px}
+    .badge{background:rgba(255,255,255,.16); padding:6px 10px; border-radius:999px; font-size:12px}
+
+    /* Deck */
+    #deck{max-width:1100px; margin:24px auto; padding:0 16px;}
+    .slide{display:none;}
+    .slide.active{display:block;}
+    .card{background:var(--card); border-radius:var(--radius); box-shadow:var(--shadow); padding:24px;}
+    .title{font-size:clamp(22px,3.5vw,36px); margin:0 0 8px;}
+    .subtitle{margin:0 0 18px; color:var(--muted)}
+    .btn{display:inline-flex; align-items:center; gap:8px; background:var(--primary); color:#fff; border:0; padding:12px 16px; border-radius:14px; cursor:pointer; box-shadow:0 6px 16px rgba(30,102,255,.25); transition:.2s}
+    .btn:hover{transform:translateY(-1px); background:var(--primary-600)}
+    .muted{color:var(--muted)}
+
+    /* Layout helpers */
+    .grid{display:grid; gap:18px}
+    @media(min-width:900px){
+      .grid-2{grid-template-columns:1.1fr .9fr}
+      .grid-3{grid-template-columns:repeat(3,1fr)}
+    }
+
+    /* Progress */
+    .progress{height:8px; background:#e6eefc; border-radius:999px; overflow:hidden;}
+    .bar{height:100%; width:0%; background:linear-gradient(90deg,var(--primary),#4facfe); transition:width .4s}
+
+    /* Poll / Quiz */
+    .opt{border:1.5px solid #e6e9f3; padding:12px 14px; border-radius:12px; cursor:pointer; user-select:none; transition:.2s; background:#fff}
+    .opt:hover{border-color:var(--primary); box-shadow:0 0 0 4px var(--ring)}
+    .opt[aria-checked="true"]{border-color:var(--primary); outline:3px solid var(--ring)}
+    .opt.correct{background:#f0fbf5; border-color:#0ea66a}
+    .opt.wrong{background:#fff5f5; border-color:#ef4444}
+
+    /* Drag & Drop */
+    .bin{min-height:120px; border:2px dashed #cfe0ff; border-radius:16px; padding:12px; background:#f7faff; transition:.2s}
+    .bin.dragover{background:#eef5ff; border-color:var(--primary)}
+    .chips{display:flex; flex-wrap:wrap; gap:10px}
+    .chip{display:inline-flex; align-items:center; gap:6px; padding:10px 12px; border-radius:999px; background:#eef5ff; border:1px solid #d8e5ff; cursor:grab}
+
+    /* Footer Nav */
+    .nav{display:flex; justify-content:space-between; align-items:center; margin:18px 0 40px}
+    .ghost{background:transparent; color:var(--primary); border:1.5px solid #cfe0ff}
+
+    /* Callouts */
+    .callout{background:linear-gradient(180deg,#f0f7ff,#ffffff); border:1px solid #d6e6ff; padding:16px; border-radius:14px}
+
+    /* Placeholder image */
+    .ph{width:100%; aspect-ratio:16/9; border-radius:14px; background:repeating-linear-gradient(45deg,#e8f1ff 0 10px,#f6faff 10px 20px); display:grid; place-items:center; color:#5b6b88}
+
+    /* Print */
+    @media print{ .topbar, .nav { display:none; } .slide{display:block; break-after:page;} body{background:#fff} }
+  </style>
+</head>
+<body>
+  <header class="topbar" role="banner">
+    <div class="brand" aria-label="UOB x Ruangguru">
+      <svg width="28" height="28" viewBox="0 0 24 24" fill="none" aria-hidden="true"><circle cx="12" cy="12" r="10" fill="white" opacity=".18"/><path d="M6 6h2v12H6V6Zm10 0h2v12h-2V6ZM10 4h4v16h-4V4Z" fill="white"/></svg>
+      <span>UOB MyDigital Space • Ruangguru</span>
+    </div>
+    <span class="badge">Pertemuan 1 — Menyortir Satu Kriteria</span>
+  </header>
+
+  <main id="deck" aria-live="polite">
+    <div class="progress" aria-label="Progres Slide"><div class="bar" id="progressBar"></div></div>
+
+    <!-- SLIDE 1: Pembuka & Tujuan -->
+    <section class="slide active" data-slide="1">
+      <div class="card grid grid-2">
+        <div>
+          <h1 class="title">Apa Itu <span style="color:var(--primary)">Menyortir</span> & <span style="color:var(--primary)">Mengelompokkan</span>?</h1>
+          <p class="subtitle">Kita akan belajar memilah benda berdasarkan <b>satu kriteria</b> (warna, bentuk, ukuran, atau bahan).</p>
+          <ul>
+            <li>Siswa memahami konsep menyortir vs mengelompokkan.</li>
+            <li>Siswa bisa menyortir berdasarkan satu karakteristik.</li>
+            <li>Siswa dapat menjelaskan alasannya.</li>
+          </ul>
+          <div class="callout" style="margin-top:12px">
+            <strong>Interaktif:</strong> klik tombol di bawah untuk pemanasan.
+            <div style="margin-top:10px; display:flex; gap:10px; flex-wrap:wrap">
+              <button class=\"btn\" data-poll=\"pernah\">+1 Sudah merapikan</button>
+              <button class=\"btn ghost\" data-poll=\"belum\">+1 Belum</button>
+              <button class=\"btn ghost\" data-dec=\"pernah\" title=\"Kurangi 1 untuk Sudah\">-1 Sudah</button>
+              <button class=\"btn ghost\" data-dec=\"belum\" title=\"Kurangi 1 untuk Belum\">-1 Belum</button>
+            </div>
+            <div id="pollMsg" class="muted" style="margin-top:8px"></div>
+            <div style="display:flex; gap:10px; align-items:center; margin-top:8px">
+              <span id="pollCount" class="badge" aria-live="polite">Sudah: 0 | Belum: 0</span>
+              <button class="btn ghost" id="resetPoll" title="Reset hitungan">Reset</button>
+            </div>
+          </div>
+        </div>
+        <figure class="ph" aria-label="Ilustrasi anak merapikan mainan">[ Placeholder Gambar — Merapikan Mainan ]</figure>
+      </div>
+    </section>
+
+    <!-- SLIDE 2: Pemantik Pilihan Kriteria -->
+    <section class="slide" data-slide="2">
+      <div class="card">
+        <h2 class="title">Kalau Merapikan, Biasanya Dipisah Berdasarkan Apa?</h2>
+        <p class="subtitle">Klik satu pilihan di bawah — itu sudah termasuk <b>menyortir</b>!</p>
+        <div class="grid grid-3">
+          <div class="opt" role="radio" tabindex="0" data-choice>🟥 Warna</div>
+          <div class="opt" role="radio" tabindex="0" data-choice>🔺 Bentuk</div>
+          <div class="opt" role="radio" tabindex="0" data-choice>📏 Ukuran</div>
+          <div class="opt" role="radio" tabindex="0" data-choice>🪵 Bahan</div>
+          <div class="opt" role="radio" tabindex="0" data-choice>🎯 Fungsi</div>
+          <div class="opt" role="radio" tabindex="0" data-choice>🎨 Tema</div>
+        </div>
+        <p id="choiceMsg" class="muted" style="margin-top:10px"></p>
+      </div>
+    </section>
+
+    <!-- SLIDE 3: Contoh Visual -->
+    <section class="slide" data-slide="3">
+      <div class="card grid grid-2">
+        <div>
+          <h2 class="title">Keranjang Ajaib</h2>
+          <p class="subtitle">Pilih cara menyortir isi keranjang di kanan.</p>
+          <div class="grid">
+            <button class="opt" data-sort="jenis">🔸 Pisahkan berdasarkan <b>jenis benda</b></button>
+            <button class="opt" data-sort="warna">🔹 Pisahkan berdasarkan <b>warna</b></button>
+          </div>
+          <p id="sortMsg" class="muted" style="margin-top:10px"></p>
+        </div>
+        <figure class="ph" aria-label="Keranjang berisi benda campuran">[ Placeholder Gambar — Keranjang Isi Campur ]</figure>
+      </div>
+    </section>
+
+    <!-- SLIDE 4: Penjelasan Konsep -->
+    <section class="slide" data-slide="4">
+      <div class="card">
+        <h2 class="title">Menyortir vs Mengelompokkan</h2>
+        <div class="grid grid-2">
+          <div class="callout">
+            <h3>Menyortir</h3>
+            <p>Memisahkan benda berdasarkan <b>perbedaan</b> (warna/bentuk/ukuran/bahan).</p>
+          </div>
+          <div class="callout">
+            <h3>Mengelompokkan</h3>
+            <p>Mengumpulkan benda yang <b>mirip</b> ke dalam satu kelompok.</p>
+          </div>
+        </div>
+        <p class="muted" style="margin-top:10px">Klik ikon 🔍 untuk contoh nyata:</p>
+        <div class="chips">
+          <button class="chip" data-example="sampah">🔍 Tiga Tong Sampah</button>
+          <button class="chip" data-example="rak">🔍 Rak Buku</button>
+          <button class="chip" data-example="lemari">🔍 Lemari Baju</button>
+        </div>
+        <p id="exMsg" class="muted" style="margin-top:8px"></p>
+      </div>
+    </section>
+
+    <!-- SLIDE 5: Eksplorasi Drag & Drop (Satu Kriteria) -->
+    <section class="slide" data-slide="5">
+      <div class="card">
+        <h2 class="title">Eksplorasi — Satu Kriteria</h2>
+        <p class="subtitle">Instruksi: Tarik kartu benda ke <b>kelompok WARNA</b> atau <b>kelompok BENTUK</b>.</p>
+        <div class="grid grid-2">
+          <div>
+            <div class="chips" id="pool">
+              <div class="chip" draggable="true" data-color="merah" data-shape="bulat">🍎 Apel</div>
+              <div class="chip" draggable="true" data-color="merah" data-shape="silinder">🧃 Botol Merah</div>
+              <div class="chip" draggable="true" data-color="biru" data-shape="batang">✏️ Pensil Biru</div>
+              <div class="chip" draggable="true" data-color="biru" data-shape="kubus">🧊 Balok Biru</div>
+              <div class="chip" draggable="true" data-color="kuning" data-shape="bulat">🟡 Kelereng</div>
+              <div class="chip" draggable="true" data-color="kuning" data-shape="persegi">📒 Buku Kuning</div>
+            </div>
+          </div>
+          <div class="grid">
+            <div class="bin" data-bin="warna" aria-label="Kelompok Warna">Kelompok: WARNA</div>
+            <div class="bin" data-bin="bentuk" aria-label="Kelompok Bentuk">Kelompok: BENTUK</div>
+          </div>
+        </div>
+        <p id="ddMsg" class="muted" style="margin-top:10px"></p>
+      </div>
+    </section>
+
+    <!-- SLIDE 6: Aktivitas Unplugged (Instruksi & Timer) -->
+    <section class="slide" data-slide="6">
+      <div class="card">
+        <h2 class="title">Aktivitas Unplugged — "Keranjang Ajaib"</h2>
+        <ol>
+          <li>Ambil benda/gambar yang tersedia.</li>
+          <li>Sortir berdasarkan <b>satu kriteria</b> (warna/bentuk/ukuran/bahan).</li>
+          <li>Ceritakan alasannya ke temanmu.</li>
+        </ol>
+        <div style="display:flex; gap:12px; align-items:center; margin-top:12px">
+          <button class="btn" id="startTimer">Mulai Tantangan (20:00)</button>
+          <div id="timerDisp" class="badge" aria-live="polite">20:00</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- SLIDE 7: Refleksi -->
+    <section class="slide" data-slide="7">
+      <div class="card">
+        <h2 class="title">Refleksi Cepat</h2>
+        <p class="subtitle">Klik pernyataan yang paling sesuai</p>
+        <div class="grid">
+          <button class="opt" data-ref="alasan">Saya bisa menjelaskan <b>alasan</b> penyortiran saya.</button>
+          <button class="opt" data-ref="beda">Hasil saya <b>berbeda</b> dengan teman dan itu tidak apa-apa.</button>
+          <button class="opt" data-ref="belajar">Saya belajar jadi lebih <b>teliti & teratur</b>.</button>
+        </div>
+        <p id="refMsg" class="muted" style="margin-top:10px"></p>
+      </div>
+    </section>
+
+    <!-- SLIDE 8: Manfaat -->
+    <section class="slide" data-slide="8">
+      <div class="card grid grid-3">
+        <div class="callout"><h3>🧠 Berpikir Kritis</h3><p>Membantu memilih berdasarkan alasan yang logis.</p></div>
+        <div class="callout"><h3>🎯 Lebih Teratur</h3><p>Pekerjaan jadi cepat & rapi.</p></div>
+        <div class="callout"><h3>🌱 Peduli Lingkungan</h3><p>Pilah sampah organik, anorganik, pecah belah.</p></div>
+      </div>
+    </section>
+
+    <!-- SLIDE 9: Penugasan Rumah -->
+    <section class="slide" data-slide="9">
+      <div class="card">
+        <h2 class="title">Misi Rumah: Sortir Kamarmu!</h2>
+        <p class="subtitle">Pilih satu kriteria (mis. warna) dan sortir buku/mainan/baju.</p>
+        <div class="grid">
+          <div class="callout">📷 <b>Opsional:</b> Foto hasilnya dan unggah ke LMS / kirim ke guru.</div>
+          <div class="callout">✏️ Catat: <i>apa kriteria yang dipakai</i> dan <i>mengapa</i>.</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- SLIDE 10: Exit Ticket / Kuis -->
+    <section class="slide" data-slide="10">
+      <div class="card">
+        <h2 class="title">Exit Ticket — 3 Pertanyaan</h2>
+        <div class="grid">
+          <div>
+            <h3>1) Menyortir artinya…</h3>
+            <div class="opt" data-q="1">() Menggabungkan benda yang berbeda</div>
+            <div class="opt" data-q="1" data-correct>() Memisahkan benda berdasarkan perbedaan</div>
+            <div class="opt" data-q="1">() Mengacak benda tanpa aturan</div>
+          </div>
+          <div>
+            <h3>2) Contoh penyortiran di rumah adalah…</h3>
+            <div class="opt" data-q="2">() Menaruh semua barang ke kotak yang sama</div>
+            <div class="opt" data-q="2" data-correct>() Memisahkan kaos putih dan hitam</div>
+            <div class="opt" data-q="2">() Membongkar isi lemari</div>
+          </div>
+          <div>
+            <h3>3) Saat menyortir, kita belajar untuk…</h3>
+            <div class="opt" data-q="3" data-correct>() Teliti dan teratur</div>
+            <div class="opt" data-q="3">() Cepat marah</div>
+            <div class="opt" data-q="3">() Suka berantakan</div>
+          </div>
+        </div>
+        <p id="quizMsg" class="muted" style="margin-top:12px"></p>
+      </div>
+    </section>
+
+    <!-- Nav -->
+    <div class="nav">
+      <button class="btn ghost" id="prevBtn" aria-label="Sebelumnya">← Sebelumnya</button>
+      <div class="muted">Tekan ← → di keyboard untuk navigasi</div>
+      <button class="btn" id="nextBtn" aria-label="Berikutnya">Berikutnya →</button>
+    </div>
+  </main>
+
+  <script>
+    // ====== State & Helpers ======
+    const slides = [...document.querySelectorAll('.slide')];
+    let idx = 0;
+    const progressBar = document.getElementById('progressBar');
+    const updateProgress = () => {
+      const pct = ((idx+1)/slides.length)*100; progressBar.style.width = pct+'%';
+    }
+    function show(i){
+      slides.forEach(s=>s.classList.remove('active'));
+      idx = Math.max(0, Math.min(i, slides.length-1));
+      slides[idx].classList.add('active');
+      updateProgress();
+      // focus first focusable
+      const f = slides[idx].querySelector('button, [tabindex="0"]');
+      if(f) setTimeout(()=>f.focus(), 50);
+    }
+    document.getElementById('prevBtn').onclick=()=>show(idx-1);
+    document.getElementById('nextBtn').onclick=()=>show(idx+1);
+    addEventListener('keydown', e=>{ if(e.key==='ArrowRight') show(idx+1); if(e.key==='ArrowLeft') show(idx-1); });
+    updateProgress();
+
+    // ====== Poll (Slide 1) ======
+    const pollMsg = document.getElementById('pollMsg');
+    const pollCountEl = document.getElementById('pollCount');
+    let pollYes = 0, pollNo = 0; // counters
+    function renderPoll(){ if(pollCountEl) pollCountEl.textContent = `Sudah: ${pollYes} | Belum: ${pollNo}`; }
+    renderPoll();
+
+    // +1 buttons
+    document.querySelectorAll('[data-poll]').forEach(btn=>{
+      btn.addEventListener('click', () => {
+        const v = btn.getAttribute('data-poll');
+        if(v === 'pernah'){ pollYes++; pollMsg.textContent = '✅ Ditambah 1 untuk Sudah.'; }
+        else { pollNo++; pollMsg.textContent = '✅ Ditambah 1 untuk Belum.'; }
+        renderPoll();
+      })
+    })
+
+    // -1 buttons (koreksi salah klik)
+    document.querySelectorAll('[data-dec]').forEach(btn=>{
+      btn.addEventListener('click', () => {
+        const v = btn.getAttribute('data-dec');
+        if(v === 'pernah'){ pollYes = Math.max(0, pollYes-1); pollMsg.textContent = '↩️ Dikurangi 1 untuk Sudah.'; }
+        else { pollNo = Math.max(0, pollNo-1); pollMsg.textContent = '↩️ Dikurangi 1 untuk Belum.'; }
+        renderPoll();
+      })
+    })
+
+    // reset
+    document.getElementById('resetPoll')?.addEventListener('click', ()=>{
+      pollYes = 0; pollNo = 0; renderPoll(); pollMsg.textContent = '';
+    });
+
+    // Keyboard shortcuts: P = +1 Sudah, B = +1 Belum
+    window.addEventListener('keydown', (e)=>{
+      if(e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') return; // ignore typing fields
+      if(e.key.toLowerCase() === 'p'){ pollYes++; renderPoll(); pollMsg.textContent = '✅ +1 Sudah (keyboard)'; }
+      if(e.key.toLowerCase() === 'b'){ pollNo++; renderPoll(); pollMsg.textContent = '✅ +1 Belum (keyboard)'; }
+    });
+
+    // ====== Choice chips (Slide 2) ======
+    const choiceMsg = document.getElementById('choiceMsg');
+    document.querySelectorAll('[data-choice]').forEach(opt=>{
+      opt.addEventListener('click',()=>{
+        document.querySelectorAll('[data-choice]').forEach(o=>o.setAttribute('aria-checked','false'));
+        opt.setAttribute('aria-checked','true');
+        choiceMsg.textContent = `Kamu memilih berdasarkan: ${opt.textContent.trim()}. Itu contoh menyortir!`;
+      })
+    })
+
+    // ====== Sort buttons (Slide 3) ======
+    const sortMsg = document.getElementById('sortMsg');
+    document.querySelectorAll('[data-sort]').forEach(btn=>{
+      btn.addEventListener('click',()=>{
+        const t = btn.getAttribute('data-sort');
+        sortMsg.textContent = t==='jenis' ? 'Kamu menyortir berdasarkan JENIS BENDA.' : 'Kamu menyortir berdasarkan WARNA.';
+      })
+    })
+
+    // ====== Examples (Slide 4) ======
+    const exMsg = document.getElementById('exMsg');
+    const examples = {
+      sampah:'Tempat sampah warna: organik, anorganik, pecah belah.',
+      rak:'Rak buku disusun menurut ukuran/genre/warnanya.',
+      lemari:'Baju dipisah: kaos, kemeja, jaket — atau berdasarkan warna.'
+    }
+    document.querySelectorAll('[data-example]').forEach(ch=>{
+      ch.addEventListener('click',()=>{
+        exMsg.textContent = examples[ch.getAttribute('data-example')] || '';
+      })
+    })
+
+    // ====== Drag & Drop (Slide 5) ======
+    const pool = document.getElementById('pool');
+    const bins = document.querySelectorAll('.bin');
+    let dragged = null;
+    document.querySelectorAll('.chip[draggable="true"]').forEach(ch=>{
+      ch.addEventListener('dragstart', e=>{ dragged = ch; e.dataTransfer.setData('text/plain', ch.textContent); });
+    })
+    bins.forEach(b=>{
+      b.addEventListener('dragover', e=>{ e.preventDefault(); b.classList.add('dragover'); });
+      b.addEventListener('dragleave', ()=> b.classList.remove('dragover'));
+      b.addEventListener('drop', e=>{
+        e.preventDefault(); b.classList.remove('dragover'); if(!dragged) return;
+        b.appendChild(dragged);
+        feedbackDD();
+      })
+    })
+    function feedbackDD(){
+      const ddMsg = document.getElementById('ddMsg');
+      const warnaOK = [...document.querySelectorAll('[data-bin="warna"] .chip')].every(ch=>ch.dataset.color);
+      const bentukOK = [...document.querySelectorAll('[data-bin="bentuk"] .chip')].every(ch=>ch.dataset.shape);
+      const totalPlaced = document.querySelectorAll('.bin .chip').length;
+      if(totalPlaced>=3){ ddMsg.textContent = 'Bagus! Kamu sudah mencoba menyortir. Coba jelaskan alasannya.'; }
+      if(warnaOK && bentukOK && totalPlaced>=6){ ddMsg.textContent = 'Mantap! Semua kartu sudah dikelompokkan. Apa dasar kriteria kamu?'; }
+    }
+
+    // ====== Timer (Slide 6) ======
+    const startBtn = document.getElementById('startTimer');
+    const timerDisp = document.getElementById('timerDisp');
+    let timer=null, remain=20*60;
+    function fmt(sec){ const m=Math.floor(sec/60), s=sec%60; return `${m.toString().padStart(2,'0')}:${s.toString().padStart(2,'0')}`}
+    function tick(){ remain--; timerDisp.textContent = fmt(remain); if(remain<=0){ clearInterval(timer); timer=null; startBtn.disabled=false; timerDisp.textContent='Selesai!'; startBtn.textContent='Mulai Lagi (20:00)'; }
+    }
+    startBtn?.addEventListener('click',()=>{
+      if(timer) return; remain=20*60; timerDisp.textContent=fmt(remain); startBtn.disabled=true; startBtn.textContent='Sedang Berjalan…'; timer=setInterval(tick,1000);
+    })
+
+    // ====== Refleksi (Slide 7) ======
+    const refMsg = document.getElementById('refMsg');
+    document.querySelectorAll('[data-ref]').forEach(btn=>{
+      btn.addEventListener('click',()=>{ refMsg.textContent='Terima kasih! Jawabanmu membantu guru memahami pemahamanmu.'; })
+    })
+
+    // ====== Quiz (Slide 10) ======
+    const quizMsg = document.getElementById('quizMsg');
+    const answered = new Set();
+    document.querySelectorAll('[data-q]').forEach(opt=>{
+      opt.addEventListener('click',()=>{
+        const q = opt.getAttribute('data-q');
+        // clear state group
+        document.querySelectorAll(`[data-q="${q}"]`).forEach(o=>o.classList.remove('correct','wrong'));
+        if(opt.hasAttribute('data-correct')){ opt.classList.add('correct'); } else { opt.classList.add('wrong'); }
+        answered.add(q);
+        if(answered.size>=3){ quizMsg.textContent='Nice! Kamu sudah mengisi exit ticket hari ini.'; }
+      })
+    })
+  </script>
+</body>
+</html>
