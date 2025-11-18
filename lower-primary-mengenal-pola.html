@@ -446,6 +446,35 @@
 </head>
 
 <body>
+    <!-- ACCESS CODE SCREEN -->
+    <div id="access-screen" style="
+    position: fixed; inset: 0;
+    background: white;
+    z-index: 5000;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    font-family: Arial, sans-serif;
+    text-align: center;
+    padding: 20px;
+">
+        <h2 style="margin-bottom: 20px;">🔒 Masukkan Kode Akses</h2>
+
+        <input id="access-input" type="text" placeholder="Masukkan kode…" style="padding: 12px 18px; font-size: 1.2em;
+        border: 2px solid #ccc; border-radius: 10px; text-transform: uppercase;">
+
+        <button onclick="checkAccessCode()" style="
+        margin-top: 20px; padding: 12px 25px;
+        font-size: 1.1em; border: none;
+        background: #4299e1; color: white;
+        border-radius: 12px; cursor: pointer;">
+            Masuk
+        </button>
+
+        <p id="access-error" style="color: red; margin-top: 15px; font-weight: bold;"></p>
+    </div>
+
     <div class="slide-container">
         <!-- Slide 1: Judul -->
         <div class="slide active">
@@ -1117,6 +1146,23 @@
     </div>
 
     <script>
+        function checkAccessCode() {
+            let input = document.getElementById("access-input");
+            let value = input.value.toUpperCase(); // otomatis UPPERCASE
+            const correctCode = "RGMDSLP25";
+
+            if (value === correctCode) {
+                document.getElementById("access-screen").style.display = "none";
+            } else {
+                document.getElementById("access-error").textContent = "❌ Kode salah! Coba lagi.";
+            }
+        }
+
+        // Enter key support
+        document.getElementById("access-input").addEventListener("keyup", function (e) {
+            if (e.key === "Enter") checkAccessCode();
+        });
+
         let currentSlide = 0;
         const slides = document.querySelectorAll('.slide');
         const totalSlides = slides.length;
