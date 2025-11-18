@@ -1,0 +1,1586 @@
+<!doctype html>
+<html lang="id">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mengenal Pola &amp; Urutan Berulang</title>
+    <script src="/_sdk/element_sdk.js"></script>
+    <style>
+        body {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Comic Sans MS', cursive, sans-serif;
+            background: linear-gradient(135deg, #ff9a9e 0%, #fecfef 50%, #fecfef 100%);
+            height: 100%;
+            overflow: auto;
+            animation: backgroundShift 10s ease-in-out infinite;
+        }
+
+        @keyframes backgroundShift {
+
+            0%,
+            100% {
+                background: linear-gradient(135deg, #ff9a9e 0%, #fecfef 50%, #a8edea 100%);
+            }
+
+            50% {
+                background: linear-gradient(135deg, #ffecd2 0%, #fcb69f 50%, #ff9a9e 100%);
+            }
+        }
+
+        .slide-container {
+            width: 100%;
+            height: 100vh;
+            position: relative;
+            display: flex;
+            align-items: flex-start;
+            justify-content: center;
+            overflow-y: auto;
+            overflow-x: hidden;
+            padding: 80px 0;
+        }
+
+        .slide {
+            width: 90%;
+            max-width: 1500px;
+            height: 85%;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2);
+            padding: 40px;
+            display: none;
+            flex-direction: column;
+            justify-content: flex-start;
+            align-items: center;
+            text-align: center;
+            position: relative;
+            overflow-y: auto;
+            scroll-behavior: auto;
+            /* memastikan scroll cepat */
+        }
+
+        .slide.active {
+            display: flex;
+        }
+
+        .slide h1 {
+            color: #4a5568;
+            font-size: 2.5em;
+            margin-bottom: 20px;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .slide h2 {
+            color: #2d3748;
+            font-size: 2em;
+            margin-bottom: 15px;
+        }
+
+        .slide h3 {
+            color: #101111;
+            font-size: 1.3em;
+            margin-bottom: 15px;
+        }
+
+        .slide p {
+            color: #4a5568;
+            font-size: 1.3em;
+            line-height: 1.6;
+            margin-bottom: 15px;
+        }
+
+        .pattern-display {
+            font-size: 3em;
+            margin: 20px 0;
+            letter-spacing: 10px;
+        }
+
+        .quiz-options {
+            display: flex;
+            gap: 20px;
+            margin: 20px 0;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+
+        .quiz-option {
+            background: #e2e8f0;
+            border: 3px solid #cbd5e0;
+            border-radius: 15px;
+            padding: 15px 25px;
+            font-size: 1.5em;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .quiz-option:hover {
+            background: #bee3f8;
+            border-color: #3182ce;
+            transform: scale(1.05);
+        }
+
+        .quiz-option.correct {
+            background: #c6f6d5;
+            border-color: #38a169;
+        }
+
+        .quiz-option.incorrect {
+            background: #fed7d7;
+            border-color: #e53e3e;
+        }
+
+        .navigation {
+            position: fixed;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            gap: 15px;
+            z-index: 1000;
+        }
+
+        .nav-btn {
+            background: #4299e1;
+            color: white;
+            border: none;
+            border-radius: 25px;
+            padding: 12px 24px;
+            font-size: 1.1em;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(66, 153, 225, 0.3);
+        }
+
+        .nav-btn:hover {
+            background: #3182ce;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(66, 153, 225, 0.4);
+        }
+
+        .nav-btn:disabled {
+            background: #a0aec0;
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
+        }
+
+        .slide-counter {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background: #4299e1;
+            color: white;
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-weight: bold;
+        }
+
+        .examples-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin: 20px 0;
+            width: 100%;
+        }
+
+        .example-item {
+            background: #f7fafc;
+            border-radius: 15px;
+            padding: 20px;
+            border: 2px solid #e2e8f0;
+        }
+
+        .interactive-pattern {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            margin: 20px 0;
+            flex-wrap: wrap;
+        }
+
+        .pattern-element {
+            width: auto;
+            height: 60px;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2em;
+            border: 2px solid #cbd5e0;
+            padding: 0 20px;
+        }
+
+        .checklist {
+            text-align: left;
+            margin: 20px 0;
+        }
+
+        .checklist li {
+            margin: 10px 0;
+            font-size: 1.2em;
+        }
+
+        .activity-box {
+            background: #fff5f5;
+            border: 3px dashed #fc8181;
+            border-radius: 15px;
+            padding: 25px;
+            margin: 20px 0;
+        }
+
+        .highlight {
+            background: #fef5e7;
+            padding: 15px;
+            border-radius: 10px;
+            border-left: 5px solid #ed8936;
+            margin: 15px 0;
+        }
+
+        .interactive-builder {
+            background: #f0f8ff;
+            border: 3px dashed #4299e1;
+            border-radius: 20px;
+            padding: 25px;
+            margin: 20px 0;
+        }
+
+        .shape-selector {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+            margin: 20px 0;
+            flex-wrap: wrap;
+        }
+
+        .shape-btn {
+            width: 60px;
+            height: 60px;
+            border: 3px solid #cbd5e0;
+            border-radius: 15px;
+            background: white;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2em;
+            transition: all 0.3s ease;
+        }
+
+        .shape-btn:hover {
+            transform: scale(1.1);
+            border-color: #4299e1;
+            box-shadow: 0 5px 15px rgba(66, 153, 225, 0.3);
+        }
+
+        .shape-btn.selected {
+            background: #bee3f8;
+            border-color: #3182ce;
+            transform: scale(1.1);
+        }
+
+        .pattern-workspace {
+            min-height: 100px;
+            background: white;
+            border: 2px dashed #cbd5e0;
+            border-radius: 15px;
+            padding: 20px;
+            margin: 20px 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        .workspace-item {
+            width: 50px;
+            height: 50px;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.8em;
+            background: #f7fafc;
+            border: 2px solid #e2e8f0;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .workspace-item:hover {
+            transform: scale(1.1);
+            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.2);
+        }
+
+        .action-buttons {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+            margin: 20px 0;
+            flex-wrap: wrap;
+        }
+
+        .action-btn {
+            background: #48bb78;
+            color: white;
+            border: none;
+            border-radius: 20px;
+            padding: 12px 24px;
+            font-size: 1.1em;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(72, 187, 120, 0.3);
+        }
+
+        .action-btn:hover {
+            background: #38a169;
+            transform: translateY(-2px);
+        }
+
+        .action-btn.clear {
+            background: #f56565;
+            box-shadow: 0 4px 15px rgba(245, 101, 101, 0.3);
+        }
+
+        .action-btn.clear:hover {
+            background: #e53e3e;
+        }
+
+        .drag-drop-area {
+            background: #fff5f5;
+            border: 3px dashed #fc8181;
+            border-radius: 20px;
+            padding: 30px;
+            margin: 20px 0;
+            text-align: center;
+            min-height: 120px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .celebration {
+            animation: celebrate 1s ease-in-out;
+        }
+
+        @keyframes celebrate {
+
+            0%,
+            100% {
+                transform: scale(1);
+            }
+
+            50% {
+                transform: scale(1.1);
+            }
+        }
+
+        .sound-button {
+            background: #9f7aea;
+            color: white;
+            border: none;
+            border-radius: 50%;
+            width: 60px;
+            height: 60px;
+            font-size: 1.5em;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin: 10px;
+        }
+
+        .sound-button:hover {
+            background: #805ad5;
+            transform: scale(1.1);
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 20px;
+            background: #e2e8f0;
+            border-radius: 10px;
+            overflow: auto;
+            margin: 20px 0;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #48bb78, #38a169);
+            width: 0%;
+            transition: width 0.5s ease;
+        }
+
+        .virtual-stickers {
+            display: flex;
+            gap: 10px;
+            justify-content: center;
+            margin: 15px 0;
+        }
+
+        .sticker {
+            font-size: 2em;
+            animation: bounce 0.5s ease-in-out;
+        }
+
+        @keyframes bounce {
+
+            0%,
+            100% {
+                transform: translateY(0);
+            }
+
+            50% {
+                transform: translateY(-10px);
+            }
+        }
+    </style>
+    <style>
+        @view-transition {
+            navigation: auto;
+        }
+    </style>
+    <script src="/_sdk/data_sdk.js" type="text/javascript"></script>
+    <script src="https://cdn.tailwindcss.com" type="text/javascript"></script>
+</head>
+
+<body>
+    <div class="slide-container">
+        <!-- Slide 1: Judul -->
+        <div class="slide active">
+            <div class="slide-counter">
+                1 / 17
+            </div>
+            <h1 id="presentation-title">Mengenal Pola — Urutan yang Teratur</h1>
+            <p id="subject-info">Lower Primary — 2-3 SD</p>
+            <div class="highlight">
+                <p id="objective-text">Mengenali pola dan melanjutkan pola berulang</p>
+            </div>
+            <div class="pattern-display">
+                🔴🔵🔴🔵🔴🔵
+            </div>
+        </div>
+
+        <!-- Slide 2: Pengantar -->
+        <div class="slide">
+            <div class="slide-counter">
+                2 / 17
+            </div>
+            <h2>Apa yang Sama?</h2>
+            <p>Dengarkan dua lagu di bawah ini. Apakah ada yang sama?</p>
+            <div class="examples-grid">
+                <!-- AUDIO FILES -->
+                <audio id="audio-kepala"
+                    src="https://dn721804.ca.archive.org/0/items/kepala-pundak-lutut-kaki_202005/Kepala%20Pundak%20Lutut%20Kaki.mp3"></audio>
+                <audio id="audio-tepuk" src="https://cdn.freesound.org/previews/341/341695_5260877-lq.mp3"></audio>
+
+                <div class="example-item">
+                    <h3>Lagu "Kepala, Pundak, Lutut, Kaki"</h3>
+                    <p>🎵 Kepala → Pundak → Lutut → Kaki 🎵</p>
+                    <button class="sound-button" onclick="playRhythm('kepala', this)">🎵</button>
+                    <button class="sound-button" onclick="stopAudio()" title="Hentikan audio">⏹️</button>
+                    <div class="feedback"></div>
+                </div>
+                <div class="example-item">
+                    <h3>Lagu "Kalau Kau Suka Hati"</h3>
+                    <p>👏 Tepuk → Tepuk → Hore! 👏</p>
+                    <button class="sound-button" onclick="playRhythm('tepuk', this)">👏</button>
+                    <button class="sound-button" onclick="stopAudio()" title="Hentikan audio">⏹️</button>
+                    <div class="feedback"></div>
+                </div>
+            </div>
+            <div class="highlight">
+                <p>Kesamaannya adalah: kedua lagu memiliki urutan gerakan yang berulang.</p>
+            </div>
+
+            <div class="interactive-builder" style="margin-top: 20px;">
+                <h3>🎮 Aktivitas: Tepuk Mengikuti Pola!</h3>
+                <div class="pattern-display" id="clap-pattern">
+                    (👏 — 👏 — 👏) x2
+                </div><button class="action-btn" onclick="startClapGame()">🎯 Mulai Permainan Tepuk!</button>
+                <div id="clap-feedback" style="margin-top: 15px; font-size: 1.1em;"></div>
+            </div>
+        </div>
+
+        <!-- Slide 3: Apa Itu Pola? -->
+        <div class="slide">
+            <div class="slide-counter">
+                3 / 17
+            </div>
+            <h2>Apa Itu Pola? 🤔</h2>
+            <div class="highlight">
+                <h3>Pola adalah sesuatu yang berulang dengan cara yang sama.</h3>
+            </div>
+            <p>Pola bisa berupa:</p>
+            <div class="examples-grid">
+                <div class="example-item">
+                    🔺 <strong>Bentuk</strong><br>
+                    <small>Pola dari urutan bentuk yang berulang (contoh: segitiga → lingkaran → segitiga)</small>
+                </div>
+
+                <div class="example-item">
+                    🎨 <strong>Warna</strong><br>
+                    <small>Warna yang muncul berulang dalam urutan yang sama (merah → biru → merah)</small>
+                </div>
+
+                <div class="example-item">
+                    📏 <strong>Ukuran</strong><br>
+                    <small>Benda besar dan kecil yang bergantian sama terus (besar → kecil → besar)</small>
+                </div>
+
+                <div class="example-item">
+                    🎵 <strong>Suara</strong><br>
+                    <small>Ritme atau bunyi yang berulang (tepuk → tepuk → diam → tepuk)</small>
+                </div>
+
+                <div class="example-item">
+                    🔢 <strong>Angka</strong><br>
+                    <small>Angka mengikuti urutan tertentu lalu berulang (1 → 2 → 3 → 1 → 2 → 3)</small>
+                </div>
+
+                <div class="example-item">
+                    💃 <strong>Gerakan</strong><br>
+                    <small>Gerakan yang kembali ke urutan yang sama (lompat → putar → lompat)</small>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 4: Ciri-Ciri Pola -->
+        <div class="slide">
+            <div class="slide-counter">
+                4 / 17
+            </div>
+            <h2>Ciri-Ciri Pola ✨</h2>
+
+            <div class="examples-grid">
+
+                <div class="example-item">
+                    <h3>🎯 Teratur</h3>
+                    <p>
+                        Artinya, susunan bentuk, warna, atau angka tidak acak.<br>
+                        Ada urutan yang jelas dan rapi dari awal sampai akhir.
+                    </p>
+                </div>
+
+                <div class="example-item">
+                    <h3>🔄 Berulang</h3>
+                    <p>
+                        Bagian yang sama muncul lagi dan lagi.<br>
+                        Polanya kembali ke urutan yang sama berulang kali.
+                    </p>
+                </div>
+
+                <div class="example-item">
+                    <h3>🔮 Bisa Diprediksi</h3>
+                    <p>
+                        Karena polanya jelas, kita bisa menebak apa yang akan muncul selanjutnya.<br>
+                        Contoh: merah → biru → merah → biru → ❓
+                    </p>
+                </div>
+
+            </div>
+
+            <div class="highlight">
+                <p><strong>Kita bisa menebak elemen berikutnya karena polanya teratur dan berulang.</strong></p>
+            </div>
+
+            <div class="pattern-display">
+                🟥🟦❓
+            </div>
+        </div>
+
+
+        <!-- Slide 5: Contoh Pola di Sekitar Kita -->
+        <div class="slide">
+            <div class="slide-counter">
+                5 / 17
+            </div>
+
+            <h2>Pola di Sekitar Kita 🌍</h2>
+
+            <div class="examples-grid">
+
+                <div class="example-item">
+                    <h3>👕 Motif Pakaian</h3>
+                    <p>Garis, kotak, atau warna yang berulang.</p>
+                    <div class="pattern-display" style="font-size: 1.5em;">
+                        🔴⚪🔴⚪
+                    </div>
+                </div>
+
+                <div class="example-item">
+                    <h3>🐅 Corak Hewan</h3>
+                    <p>
+                        Belang harimau, garis zebra, atau titik kupu-kupu adalah pola alami
+                        yang berulang pada tubuh hewan.
+                    </p>
+                </div>
+
+                <div class="example-item">
+                    <h3>⏰ Rutinitas Harian</h3>
+                    <p>
+                        Kegiatan kita sering mengikuti urutan yang sama setiap hari.<br>
+                        Contoh: Bangun → Mandi → Sarapan.
+                    </p>
+                </div>
+
+                <div class="example-item">
+                    <h3>🏠 Motif Ubin & Wallpaper</h3>
+                    <p>
+                        Lantai dan dinding sering memakai pola yang berulang agar terlihat rapi dan indah.
+                    </p>
+                    <div class="pattern-display" style="font-size: 1.5em;">
+                        ⬜⬛⬜⬛
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+
+        <!-- Slide 6: Rutinitas Sebagai Pola -->
+        <div class="slide">
+            <div class="slide-counter">
+                6 / 17
+            </div>
+
+            <h2>Rutinitas = Pola Juga! ⏰</h2>
+
+            <p style="text-align:center; max-width:650px; margin: 0 auto 20px;">
+                Rutinitas adalah kegiatan yang kita lakukan setiap hari dengan urutan yang hampir sama.
+                Karena urutannya berulang, rutinitas juga termasuk pola!
+            </p>
+
+            <div class="interactive-pattern">
+
+                <div class="pattern-element" style="background: #fef5e7;">
+                    🛏️<br><small>Bangun</small>
+                </div>
+
+                <div style="font-size: 2em;">→</div>
+
+                <div class="pattern-element" style="background: #e6fffa;">
+                    🚿<br><small>Mandi</small>
+                </div>
+
+                <div style="font-size: 2em;">→</div>
+
+                <div class="pattern-element" style="background: #f0fff4;">
+                    🍽️<br><small>Sarapan</small>
+                </div>
+
+                <div style="font-size: 2em;">→</div>
+
+                <div class="pattern-element" style="background: #f0f8ff;">
+                    🏫<br><small>Sekolah</small>
+                </div>
+
+            </div>
+
+            <div class="highlight" style="margin-top: 20px;">
+                <p><strong>Karena terjadi setiap hari,</strong> urutannya menjadi pola.</p>
+                <p>→ Kita bisa menebak apa kegiatan berikutnya.</p>
+            </div>
+
+        </div>
+
+
+        <!-- Slide 7: Pola Sederhana -->
+        <div class="slide">
+            <div class="slide-counter">
+                7 / 17
+            </div>
+            <h2>Pola Sederhana 🎯</h2>
+            <p>Menggunakan 2–3 elemen</p>
+            <div class="examples-grid">
+                <div class="example-item">
+                    <h3>Pola Warna</h3>
+                    <div class="pattern-display">
+                        🟥🟦🟥🟦
+                    </div>
+                </div>
+                <div class="example-item">
+                    <h3>Pola Bentuk</h3>
+                    <div class="pattern-display">
+                        🔺⚫🔺⚫
+                    </div>
+                </div>
+                <div class="example-item">
+                    <h3>Pola Angka</h3>
+                    <div class="pattern-display" style="font-size: 2em;">
+                        2–4–2–4–2–4
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 8: Pola Rumit -->
+        <div class="slide">
+            <div class="slide-counter">
+                8 / 17
+            </div>
+            <h2>Pola Rumit 🧩</h2>
+            <p>Terdiri dari lebih banyak elemen (4–5 bentuk/warna)</p>
+            <div class="interactive-pattern">
+                <div class="pattern-element" style="background: #fef5e7;">
+                    ⭐
+                </div>
+                <div class="pattern-element" style="background: #e6fffa;">
+                    🔺
+                </div>
+                <div class="pattern-element" style="background: #f0fff4;">
+                    ⚫
+                </div>
+                <div class="pattern-element" style="background: #fef5e7;">
+                    ⭐
+                </div>
+                <div class="pattern-element" style="background: #e6fffa;">
+                    🔺
+                </div>
+                <div class="pattern-element" style="background: #f0fff4;">
+                    ⚫
+                </div>
+                <div class="pattern-element" style="background: #fff0f5;">
+                    ❓
+                </div>
+            </div>
+            <p><strong>Bisakah kamu menebak lanjutan polanya?</strong></p>
+        </div>
+
+        <!-- Slide 9: Latihan -->
+        <div class="slide">
+            <div class="slide-counter">
+                9 / 17
+            </div>
+            <h2>Latihan: Lanjutkan Pola! 🎮</h2>
+            <div class="interactive-pattern">
+                <div class="pattern-element" style="background: #fef5e7;">
+                    🔺
+                </div>
+                <div class="pattern-element" style="background: #e6fffa;">
+                    ⚫
+                </div>
+                <div class="pattern-element" style="background: #f0fff4;">
+                    🔶
+                </div>
+                <div class="pattern-element" style="background: #fef5e7;">
+                    🔺
+                </div>
+                <div class="pattern-element" style="background: #e6fffa;">
+                    ⚫
+                </div>
+                <div class="pattern-element" style="background: #f0fff4;">
+                    🔶
+                </div>
+                <div class="pattern-element" style="background: #fff0f5;">
+                    ❓
+                </div>
+            </div>
+            <p>Pilih jawaban yang benar:</p>
+            <div class="quiz-options">
+                <div class="quiz-option" onclick="checkAnswer(this, true)">
+                    A. 🔺
+                </div>
+                <div class="quiz-option" onclick="checkAnswer(this, false)">
+                    B. ⚫
+                </div>
+                <div class="quiz-option" onclick="checkAnswer(this, false)">
+                    C. 🔶
+                </div>
+            </div>
+            <div id="quiz-feedback" style="margin-top: 20px; font-size: 1.2em; font-weight: bold;"></div>
+        </div>
+
+        <!-- Slide 10: Di Mana Kita Menemukan Pola? -->
+        <div class="slide">
+            <div class="slide-counter">
+                10 / 17
+            </div>
+            <h2>Di Mana Kita Menemukan Pola? 🔍</h2>
+            <div class="examples-grid">
+                <div class="example-item">
+                    🎨 <strong>Warna</strong><br>
+                    Pelangi, lampu lalu lintas
+                </div>
+                <div class="example-item">
+                    📐 <strong>Bentuk</strong><br>
+                    Ubin, puzzle
+                </div>
+                <div class="example-item">
+                    🔢 <strong>Angka</strong><br>
+                    Nomor rumah, jam
+                </div>
+                <div class="example-item">
+                    🔤 <strong>Huruf</strong><br>
+                    Alfabet, nama
+                </div>
+                <div class="example-item">
+                    💃 <strong>Gerakan</strong><br>
+                    Tarian, olahraga
+                </div>
+                <div class="example-item">
+                    🎵 <strong>Suara</strong><br>
+                    Musik, lagu
+                </div>
+            </div>
+            <div class="interactive-builder">
+                <h3>🎮 Permainan: Temukan Pola di Rumahmu!</h3>
+                <p>Klik pada benda yang memiliki pola:</p>
+                <div class="shape-selector">
+                    <div class="shape-btn" onclick="findPattern('wallpaper')" title="Wallpaper dinding">
+                        🏠
+                    </div>
+                    <div class="shape-btn" onclick="findPattern('clothes')" title="Baju bergaris">
+                        👕
+                    </div>
+                    <div class="shape-btn" onclick="findPattern('tiles')" title="Ubin lantai">
+                        ⬜
+                    </div>
+                    <div class="shape-btn" onclick="findPattern('calendar')" title="Kalender">
+                        📅
+                    </div>
+                    <div class="shape-btn" onclick="findPattern('keyboard')" title="Keyboard komputer">
+                        ⌨️
+                    </div>
+                    <div class="shape-btn" onclick="findPattern('book')" title="Buku biasa">
+                        📖
+                    </div>
+                </div>
+                <div id="find-pattern-feedback" style="margin-top: 15px; font-size: 1.1em; text-align: center;"></div>
+                <div class="virtual-stickers" id="find-pattern-reward" style="display: none;"><span
+                        class="sticker">🏆</span> <span class="sticker">🌟</span> <span class="sticker">👍</span>
+                </div>
+            </div>
+            <div class="activity-box">
+                <p><strong>Tantangan:</strong> Ceritakan tentang pola yang kamu temukan di rumah!
+                </p>
+            </div>
+        </div>
+
+        <!-- Slide 11: Cara Membuat Pola -->
+        <div class="slide">
+            <div class="slide-counter">
+                11 / 17
+            </div>
+            <h2>Cara Membuat Pola 🛠️</h2>
+            <div class="examples-grid">
+                <div class="example-item">
+                    <h3>1️⃣ Pilih Jenis Pola</h3>
+                    <p>Warna, bentuk, atau angka?</p>
+                </div>
+                <div class="example-item">
+                    <h3>2️⃣ Buat Urutan</h3>
+                    <p>Tentukan pola dasarnya</p>
+                </div>
+                <div class="example-item">
+                    <h3>3️⃣ Ulangi Urutannya</h3>
+                    <p>Terus ulang pola yang sama</p>
+                </div>
+            </div>
+            <div class="highlight">
+                <h3>Contoh:</h3>
+                <div class="pattern-display" style="font-size: 2em;">
+                    1–2–3 → 1–2–3 → 1–2–3
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 12: Contoh Pola Berulang -->
+        <div class="slide">
+            <div class="slide-counter">
+                12 / 17
+            </div>
+            <h2>Contoh Pola Berulang 🔄</h2>
+            <div class="examples-grid">
+                <div class="example-item">
+                    <h3>Pola Warna:</h3>
+                    <div class="pattern-display">
+                        🟥🟦🟥🟦🟥🟦
+                    </div>
+                </div>
+                <div class="example-item">
+                    <h3>Pola Bentuk:</h3>
+                    <div class="pattern-display">
+                        🔺⚫🔶🔺⚫🔶
+                    </div>
+                </div>
+                <div class="example-item">
+                    <h3>Pola Angka:</h3>
+                    <div class="pattern-display" style="font-size: 2em;">
+                        1–2–3–1–2–3
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 13: Pola Campuran -->
+        <div class="slide">
+            <div class="slide-counter">
+                13 / 17
+            </div>
+            <h2>Pola Campuran 🎨</h2>
+            <p>Campuran warna + bentuk</p>
+            <div class="interactive-pattern">
+                <div class="pattern-element" style="background: #ff6b6b; color: white;">
+                    🔺
+                </div>
+                <div class="pattern-element" style="background: #4ecdc4; color: white;">
+                    ⚫
+                </div>
+                <div class="pattern-element" style="background: #ff6b6b; color: white;">
+                    🔺
+                </div>
+                <div class="pattern-element" style="background: #4ecdc4; color: white;">
+                    ⚫
+                </div>
+                <div class="pattern-element" style="background: #fff0f5;">
+                    ❓
+                </div>
+            </div>
+            <p>Apa yang akan muncul selanjutnya?</p>
+            <div class="quiz-options">
+                <div class="quiz-option" onclick="checkAnswer2(this, true)">
+                    🔺 Merah
+                </div>
+                <div class="quiz-option" onclick="checkAnswer2(this, false)">
+                    ⚫ Biru
+                </div>
+                <div class="quiz-option" onclick="checkAnswer2(this, false)">
+                    🔶 Kuning
+                </div>
+            </div>
+            <div id="quiz-feedback2" style="margin-top: 20px; font-size: 1.2em; font-weight: bold;"></div>
+        </div>
+
+        <!-- Slide 14: Aktivitas Siswa -->
+        <div class="slide">
+            <div class="slide-counter">
+                14 / 17
+            </div>
+            <h2>Aktivitas: Buat Polamu Sendiri! 🎨</h2>
+            <div class="progress-bar">
+                <div class="progress-fill" id="activity-progress"></div>
+            </div>
+            <div class="interactive-builder">
+                <h3>🎯 Pilih Bentuk untuk Polamu:</h3>
+                <div class="shape-selector">
+                    <div class="shape-btn" onclick="selectShape('🔴')" data-shape="🔴">
+                        🔴
+                    </div>
+                    <div class="shape-btn" onclick="selectShape('🔵')" data-shape="🔵">
+                        🔵
+                    </div>
+                    <div class="shape-btn" onclick="selectShape('🟨')" data-shape="🟨">
+                        🟨
+                    </div>
+                    <div class="shape-btn" onclick="selectShape('🔺')" data-shape="🔺">
+                        🔺
+                    </div>
+                    <div class="shape-btn" onclick="selectShape('⭐')" data-shape="⭐">
+                        ⭐
+                    </div>
+                    <div class="shape-btn" onclick="selectShape('🔷')" data-shape="🔷">
+                        🔷
+                    </div>
+                </div>
+                <h3>🎨 Area Kerja Polamu:</h3>
+                <div class="pattern-workspace" id="pattern-workspace">
+                    <p style="color: #a0aec0; font-style: italic;">Klik bentuk di atas, lalu klik di sini untuk membuat
+                        pola!</p>
+                </div>
+                <div class="action-buttons"><button class="action-btn" onclick="addToPattern()">➕ Tambah ke
+                        Pola</button> <button class="action-btn" onclick="checkMyPattern()">✅ Cek Polaku</button>
+                    <button class="action-btn clear" onclick="clearPattern()">🗑️ Hapus Semua</button>
+                </div>
+                <div id="pattern-feedback"
+                    style="margin-top: 20px; font-size: 1.2em; font-weight: bold; text-align: center;"></div>
+                <div class="virtual-stickers" id="sticker-reward" style="display: none;"><span class="sticker">🌟</span>
+                    <span class="sticker">🎉</span> <span class="sticker">👏</span> <span class="sticker">🏆</span>
+                </div>
+            </div>
+            <div class="drag-drop-area">
+                <h3>🎮 Tantangan Bonus!</h3>
+                <p>Bisakah kamu membuat pola dengan 3 bentuk berbeda?</p>
+                <div id="challenge-area"
+                    style="min-height: 60px; display: flex; align-items: center; justify-content: center; gap: 10px; flex-wrap: wrap;">
+                    <p style="color: #666;">Coba buat: 🔴🔺🟨🔴🔺🟨</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 15: Koneksi ke Coding -->
+        <div class="slide">
+            <div class="slide-counter">
+                15 / 17
+            </div>
+            <h2>Pola &amp; Coding 💻</h2>
+            <div class="highlight">
+                <h3>Pola = dasar algoritma</h3>
+                <p>Pola berulang seperti loop (repeat)</p>
+            </div>
+            <div class="examples-grid">
+                <div class="example-item">
+                    <h4>Dalam Coding:</h4>
+                    <p>REPEAT 3 TIMES:<br>
+                        🔴🔵🔴🔵🔴🔵</p>
+                </div>
+                <div class="example-item">
+                    <h4>Dalam Kehidupan:</h4>
+                    <p>Rutinitas harian yang berulang</p>
+                </div>
+            </div>
+            <p>→ Membantu kita memahami konsep pengulangan dalam pemrograman</p>
+        </div>
+
+        <!-- Slide 16: Kesimpulan -->
+        <div class="slide">
+            <div class="slide-counter">
+                16 / 17
+            </div>
+            <h2>Kesimpulan 🎉</h2>
+            <p><strong>Hari ini kita belajar online bersama-sama:</strong></p>
+            <ul class="checklist">
+                <li>✔️ Apa itu pola</li>
+                <li>✔️ Ciri-ciri pola</li>
+                <li>✔️ Pola sederhana &amp; rumit</li>
+                <li>✔️ Cara melanjutkan pola</li>
+                <li>✔️ Cara membuat pola sendiri</li>
+            </ul>
+            <div class="pattern-display">
+                🎯🌟🎯🌟🎯🌟
+            </div>
+            <div class="interactive-builder">
+                <h3>🏆 Sertifikat Virtual Detektif Pola!</h3>
+                <div
+                    style="background: linear-gradient(45deg, #ffd700, #ffed4e); padding: 20px; border-radius: 15px; border: 3px solid #f6ad55;">
+                    <p style="font-size: 1.4em; margin: 10px 0;"><strong>🎖️ SELAMAT! 🎖️</strong></p>
+                    <p style="font-size: 1.2em; margin: 10px 0;">Kamu sudah menjadi <strong>DETEKTIF POLA</strong> yang
+                        hebat!</p>
+                    <div class="virtual-stickers"><span class="sticker">🏆</span> <span class="sticker">🌟</span> <span
+                            class="sticker">🎉</span> <span class="sticker">👏</span> <span class="sticker">🎯</span>
+                    </div>
+                </div>
+            </div>
+            <div class="activity-box">
+                <p><strong>💝 Tugas Rumah yang Menyenangkan:</strong></p>
+                <p>Foto 3 pola yang kamu temukan di rumah dan ceritakan ke guru besok!</p>
+            </div>
+        </div>
+
+        <!-- Slide 17: Exit Ticket -->
+        <div class="slide">
+            <div class="slide-counter">
+                17 / 17
+            </div>
+            <h2>Exit Ticket 🎫</h2>
+            <p><strong>Soal terakhir untuk kalian:</strong></p>
+            <div class="interactive-pattern">
+                <div class="pattern-element" style="background: #ff9ff3;">
+                    🌟
+                </div>
+                <div class="pattern-element" style="background: #70d0e4;">
+                    🔷
+                </div>
+                <div class="pattern-element" style="background: #feca57;">
+                    ⚫
+                </div>
+                <div class="pattern-element" style="background: #ff9ff3;">
+                    🌟
+                </div>
+                <div class="pattern-element" style="background: #70d0e4;">
+                    🔷
+                </div>
+                <div class="pattern-element" style="background: #fff0f5;">
+                    ❓
+                </div>
+            </div>
+            <div class="quiz-options">
+                <div class="quiz-option" onclick="checkFinalAnswer(this, false)">
+                    🌟
+                </div>
+                <div class="quiz-option" onclick="checkFinalAnswer(this, true)">
+                    ⚫
+                </div>
+                <div class="quiz-option" onclick="checkFinalAnswer(this, false)">
+                    🔷
+                </div>
+            </div>
+            <div id="final-feedback" style="margin-top: 20px; font-size: 1.2em; font-weight: bold;"></div>
+            <div class="activity-box" style="margin-top: 20px;">
+                <p><strong>Terima kasih sudah belajar tentang pola! 🎉</strong></p>
+            </div>
+        </div>
+    </div>
+    <div class="navigation"><button class="nav-btn" id="prevBtn" onclick="changeSlide(-1)">⬅️ Sebelumnya</button>
+        <button class="nav-btn" id="nextBtn" onclick="changeSlide(1)">Selanjutnya ➡️</button>
+    </div>
+
+    <script>
+        let currentSlide = 0;
+        const slides = document.querySelectorAll('.slide');
+        const totalSlides = slides.length;
+        let selectedShape = null;
+        let userPattern = [];
+        let studentProgress = 0;
+        let clapGameActive = false;
+        let clapCount = 0;
+
+        const defaultConfig = {
+            presentation_title: "Mengenal Pola & Urutan yang Teratur",
+            subject_info: "Lower Primary — Computational Thinking",
+            objective_text: "🎯 Tujuan: mengenali pola & melanjutkan pola berulang"
+        };
+
+        // Interactive Activities Functions
+        function selectShape(shape) {
+            selectedShape = shape;
+            // Update visual selection
+            document.querySelectorAll('.shape-btn').forEach(btn => {
+                btn.classList.remove('selected');
+            });
+            document.querySelector(`[data-shape="${shape}"]`).classList.add('selected');
+
+            // Show encouraging message
+            const feedback = document.getElementById('pattern-feedback');
+            feedback.innerHTML = `🎯 Bagus! Kamu memilih ${shape}. Sekarang klik "Tambah ke Pola"!`;
+            feedback.style.color = '#48bb78';
+        }
+
+        function addToPattern() {
+            if (!selectedShape) {
+                const feedback = document.getElementById('pattern-feedback');
+                feedback.innerHTML = '⚠️ Pilih bentuk dulu ya!';
+                feedback.style.color = '#f56565';
+                return;
+            }
+
+            userPattern.push(selectedShape);
+            updatePatternDisplay();
+            updateProgress();
+
+            const feedback = document.getElementById('pattern-feedback');
+            feedback.innerHTML = `✨ Keren! Pola kamu sekarang: ${userPattern.join(' ')}`;
+            feedback.style.color = '#4299e1';
+        }
+
+        function updatePatternDisplay() {
+            const workspace = document.getElementById('pattern-workspace');
+            workspace.innerHTML = '';
+
+            userPattern.forEach((shape, index) => {
+                const item = document.createElement('div');
+                item.className = 'workspace-item';
+                item.textContent = shape;
+                item.onclick = () => removeFromPattern(index);
+                item.title = 'Klik untuk hapus';
+                workspace.appendChild(item);
+            });
+
+            if (userPattern.length === 0) {
+                workspace.innerHTML = '<p style="color: #a0aec0; font-style: italic;">Klik bentuk di atas, lalu klik "Tambah ke Pola"!</p>';
+            }
+        }
+
+        function removeFromPattern(index) {
+            userPattern.splice(index, 1);
+            updatePatternDisplay();
+            updateProgress();
+        }
+
+        function clearPattern() {
+            userPattern = [];
+            updatePatternDisplay();
+            updateProgress();
+
+            const feedback = document.getElementById('pattern-feedback');
+            feedback.innerHTML = '🔄 Pola sudah dihapus. Mulai lagi yuk!';
+            feedback.style.color = '#a0aec0';
+
+            document.getElementById('sticker-reward').style.display = 'none';
+        }
+
+        function checkMyPattern() {
+            if (userPattern.length < 4) {
+                const feedback = document.getElementById('pattern-feedback');
+                feedback.innerHTML = '📏 Pola kamu masih pendek. Coba buat minimal 4 bentuk!';
+                feedback.style.color = '#f56565';
+                return;
+            }
+
+            const isPattern = detectPattern(userPattern);
+            const feedback = document.getElementById('pattern-feedback');
+
+            if (isPattern) {
+                feedback.innerHTML = '🎉 WOW! Kamu berhasil membuat pola yang benar! Hebat sekali!';
+                feedback.style.color = '#48bb78';
+                showReward();
+                celebrateSuccess();
+            } else {
+                feedback.innerHTML = '🤔 Hmm, coba periksa lagi. Pola harus berulang ya! Contoh: 🔴🔵🔴🔵';
+                feedback.style.color = '#ed8936';
+            }
+        }
+
+        function detectPattern(arr) {
+            if (arr.length < 4) return false;
+
+            // Check for patterns of length 2, 3, or 4
+            for (let patternLength = 2; patternLength <= Math.floor(arr.length / 2); patternLength++) {
+                let isValidPattern = true;
+                const pattern = arr.slice(0, patternLength);
+
+                for (let i = patternLength; i < arr.length; i++) {
+                    if (arr[i] !== pattern[i % patternLength]) {
+                        isValidPattern = false;
+                        break;
+                    }
+                }
+
+                if (isValidPattern && arr.length >= patternLength * 2) {
+                    return true;
+                }
+            }
+            return false;
+        }
+
+        function showReward() {
+            const stickerReward = document.getElementById('sticker-reward');
+            stickerReward.style.display = 'flex';
+
+            // Animate stickers
+            const stickers = stickerReward.querySelectorAll('.sticker');
+            stickers.forEach((sticker, index) => {
+                setTimeout(() => {
+                    sticker.style.animation = 'bounce 0.5s ease-in-out';
+                }, index * 200);
+            });
+        }
+
+        function celebrateSuccess() {
+            const workspace = document.getElementById('pattern-workspace');
+            workspace.classList.add('celebration');
+            setTimeout(() => {
+                workspace.classList.remove('celebration');
+            }, 1000);
+        }
+
+        function updateProgress() {
+            const progress = Math.min((userPattern.length / 6) * 100, 100);
+            const progressFill = document.getElementById('activity-progress');
+            if (progressFill) {
+                progressFill.style.width = progress + '%';
+            }
+        }
+
+        // Sound and rhythm functions
+        function playRhythm(type, button) {
+            // Cari feedback box di dalam kotak yang sama
+            const box = button.closest('.example-item');
+            const feedback = box.querySelector('.feedback');
+
+            // Ambil elemen audio
+            const kepalaAudio = document.getElementById('audio-kepala');
+            const tepukAudio = document.getElementById('audio-tepuk');
+
+            // Stop dulu kedua audio (biar tidak tumpang tindih)
+            kepalaAudio.pause();
+            kepalaAudio.currentTime = 0;
+            tepukAudio.pause();
+            tepukAudio.currentTime = 0;
+
+            if (type === 'kepala') {
+                feedback.innerHTML = '🎵 Memainkan: Kepala Pundak Lutut Kaki';
+                kepalaAudio.play();
+            } else {
+                feedback.innerHTML = '👏 Memainkan: Tepuk-Tepuk-Hore!';
+                tepukAudio.play();
+            }
+
+            feedback.style.color = '#9f7aea';
+        }
+
+        function stopAudio() {
+            const kepalaAudio = document.getElementById('audio-kepala');
+            const tepukAudio = document.getElementById('audio-tepuk');
+
+            kepalaAudio.pause();
+            kepalaAudio.currentTime = 0;
+
+            tepukAudio.pause();
+            tepukAudio.currentTime = 0;
+
+            // update semua feedback box
+            document.querySelectorAll('.feedback').forEach(fb => {
+                fb.innerHTML = '🔇 Audio dihentikan';
+                fb.style.color = '#555';
+            });
+        }
+
+
+
+        function startClapGame() {
+            clapGameActive = true;
+            clapCount = 0;
+            const feedback = document.getElementById('clap-feedback');
+            feedback.innerHTML = '👏 Tepuk tangan mengikuti pola: 👏 _ 👏 _ (Klik layar untuk tepuk!)';
+            feedback.style.color = '#4299e1';
+
+            // Add click listener to document
+            document.addEventListener('click', handleClap);
+
+            setTimeout(() => {
+                if (clapGameActive) {
+                    endClapGame();
+                }
+            }, 10000); // Game ends after 10 seconds
+        }
+
+        function handleClap(event) {
+            if (!clapGameActive) return;
+
+            clapCount++;
+            const feedback = document.getElementById('clap-feedback');
+
+            if (clapCount <= 6) {
+                feedback.innerHTML = `👏 Tepukan ke-${clapCount}! Terus ikuti polanya!`;
+            } else {
+                endClapGame();
+            }
+        }
+
+        function endClapGame() {
+            clapGameActive = false;
+            document.removeEventListener('click', handleClap);
+
+            const feedback = document.getElementById('clap-feedback');
+            if (clapCount >= 4) {
+                feedback.innerHTML = '🎉 Hebat! Kamu berhasil mengikuti pola tepukan!';
+                feedback.style.color = '#48bb78';
+            } else {
+                feedback.innerHTML = '😊 Bagus! Coba lagi untuk mengikuti pola lebih baik!';
+                feedback.style.color = '#ed8936';
+            }
+        }
+
+        // Find pattern game
+        function findPattern(item) {
+            const feedback = document.getElementById('find-pattern-feedback');
+            const reward = document.getElementById('find-pattern-reward');
+
+            const patternItems = ['wallpaper', 'clothes', 'tiles', 'calendar', 'keyboard'];
+            const nonPatternItems = ['book'];
+
+            if (patternItems.includes(item)) {
+                let message = '';
+                switch (item) {
+                    case 'wallpaper':
+                        message = '🏠 Benar! Wallpaper dinding punya pola berulang!';
+                        break;
+                    case 'clothes':
+                        message = '👕 Bagus! Baju bergaris memiliki pola garis berulang!';
+                        break;
+                    case 'tiles':
+                        message = '⬜ Hebat! Ubin lantai tersusun dalam pola teratur!';
+                        break;
+                    case 'calendar':
+                        message = '📅 Pintar! Kalender punya pola hari dan tanggal!';
+                        break;
+                    case 'keyboard':
+                        message = '⌨️ Keren! Keyboard punya pola susunan huruf QWERTY!';
+                        break;
+                }
+                feedback.innerHTML = message;
+                feedback.style.color = '#48bb78';
+                reward.style.display = 'flex';
+            } else {
+                feedback.innerHTML = '📖 Hmm, buku biasa tidak memiliki pola khusus. Coba yang lain!';
+                feedback.style.color = '#ed8936';
+            }
+        }
+
+        function showSlide(n) {
+            slides.forEach(slide => slide.classList.remove('active'));
+
+            if (n >= totalSlides) currentSlide = 0;
+            if (n < 0) currentSlide = totalSlides - 1;
+
+            slides[currentSlide].classList.add('active');
+
+            // ⭐ Reset scroll ke atas setiap ganti slide
+            slides[currentSlide].scrollTop = 0;
+            document.querySelector('.slide-container').scrollTop = 0;
+
+            // Update navigation buttons
+            document.getElementById('prevBtn').disabled = currentSlide === 0;
+            document.getElementById('nextBtn').disabled = currentSlide === totalSlides - 1;
+        }
+
+        function changeSlide(direction) {
+            currentSlide += direction;
+            showSlide(currentSlide);
+        }
+
+        function checkAnswer(element, isCorrect) {
+            const options = document.querySelectorAll('.quiz-option');
+            const feedback = document.getElementById('quiz-feedback');
+
+            options.forEach(option => {
+                option.style.pointerEvents = 'none';
+                if (option === element) {
+                    if (isCorrect) {
+                        option.classList.add('correct');
+                        feedback.textContent = '🎉 Benar! Jawabannya adalah 🔺';
+                        feedback.style.color = '#38a169';
+                    } else {
+                        option.classList.add('incorrect');
+                        feedback.textContent = '❌ Coba lagi! Perhatikan polanya: 🔺⚫🔶';
+                        feedback.style.color = '#e53e3e';
+                    }
+                }
+            });
+        }
+
+        function checkAnswer2(element, isCorrect) {
+            const options = element.parentNode.querySelectorAll('.quiz-option');
+            const feedback = document.getElementById('quiz-feedback2');
+
+            options.forEach(option => {
+                option.style.pointerEvents = 'none';
+                if (option === element) {
+                    if (isCorrect) {
+                        option.classList.add('correct');
+                        feedback.textContent = '🎉 Benar! Pola: Merah🔺 → Biru⚫ → Merah🔺';
+                        feedback.style.color = '#38a169';
+                    } else {
+                        option.classList.add('incorrect');
+                        feedback.textContent = '❌ Coba lagi! Lihat pola warna dan bentuknya';
+                        feedback.style.color = '#e53e3e';
+                    }
+                }
+            });
+        }
+
+        function checkFinalAnswer(element, isCorrect) {
+            const options = element.parentNode.querySelectorAll('.quiz-option');
+            const feedback = document.getElementById('final-feedback');
+
+            options.forEach(option => {
+                option.style.pointerEvents = 'none';
+                if (option === element) {
+                    if (isCorrect) {
+                        option.classList.add('correct');
+                        feedback.textContent = '🎉 Sempurna! Kalian sudah menguasai pola!';
+                        feedback.style.color = '#38a169';
+                    } else {
+                        option.classList.add('incorrect');
+                        feedback.textContent = '❌ Hampir benar! Pola: 🌟🔷⚫';
+                        feedback.style.color = '#e53e3e';
+                    }
+                }
+            });
+        }
+
+        // Simple Keyboard navigation - Left/Right arrows only
+        document.addEventListener('keydown', function (e) {
+            // Only handle left and right arrow keys
+            if (e.key === 'ArrowLeft' || e.key === 'ArrowRight') {
+                e.preventDefault();
+
+                if (e.key === 'ArrowLeft') {
+                    changeSlide(-1);
+                } else if (e.key === 'ArrowRight') {
+                    changeSlide(1);
+                }
+
+                // Show keyboard hint
+                showKeyboardHint();
+            }
+        });
+
+        // Show keyboard navigation hint
+        function showKeyboardHint() {
+            let hint = document.getElementById('keyboard-hint');
+            if (!hint) {
+                hint = document.createElement('div');
+                hint.id = 'keyboard-hint';
+                hint.style.cssText = `
+                    position: fixed;
+                    top: 20px;
+                    left: 20px;
+                    background: rgba(66, 153, 225, 0.9);
+                    color: white;
+                    padding: 10px 15px;
+                    border-radius: 10px;
+                    font-size: 0.9em;
+                    z-index: 1001;
+                    transition: opacity 0.3s ease;
+                `;
+                hint.innerHTML = `
+                    ⌨️ Navigasi Keyboard:<br>
+                    ← Panah Kiri: Slide sebelumnya<br>
+                    → Panah Kanan: Slide berikutnya
+                `;
+                document.body.appendChild(hint);
+            }
+
+            hint.style.opacity = '0';
+
+            // Hide hint after 3 seconds
+            clearTimeout(window.hintTimeout);
+            window.hintTimeout = setTimeout(() => {
+                hint.style.opacity = '0';
+            }, 3000);
+        }
+
+        // Initialize
+        showSlide(0);
+
+        // Element SDK implementation
+        async function onConfigChange(config) {
+            const titleElement = document.getElementById('presentation-title');
+            const subjectElement = document.getElementById('subject-info');
+            const objectiveElement = document.getElementById('objective-text');
+
+            if (titleElement) {
+                titleElement.textContent = config.presentation_title || defaultConfig.presentation_title;
+            }
+            if (subjectElement) {
+                subjectElement.textContent = config.subject_info || defaultConfig.subject_info;
+            }
+            if (objectiveElement) {
+                objectiveElement.textContent = config.objective_text || defaultConfig.objective_text;
+            }
+        }
+
+        function mapToCapabilities(config) {
+            return {
+                recolorables: [],
+                borderables: [],
+                fontEditable: undefined,
+                fontSizeable: undefined
+            };
+        }
+
+        function mapToEditPanelValues(config) {
+            return new Map([
+                ["presentation_title", config.presentation_title || defaultConfig.presentation_title],
+                ["subject_info", config.subject_info || defaultConfig.subject_info],
+                ["objective_text", config.objective_text || defaultConfig.objective_text]
+            ]);
+        }
+
+        // Initialize Element SDK
+        if (window.elementSdk) {
+            window.elementSdk.init({
+                defaultConfig,
+                onConfigChange,
+                mapToCapabilities,
+                mapToEditPanelValues
+            });
+        }
+    </script>
+    <script>(function () { function c() { var b = a.contentDocument || a.contentWindow.document; if (b) { var d = b.createElement('script'); d.innerHTML = "window.__CF$cv$params={r:'99fdd8cde768e787',t:'MTc2MzM2ODAyNS4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);"; b.getElementsByTagName('head')[0].appendChild(d) } } if (document.body) { var a = document.createElement('iframe'); a.height = 1; a.width = 1; a.style.position = 'absolute'; a.style.top = 0; a.style.left = 0; a.style.border = 'none'; a.style.visibility = 'hidden'; document.body.appendChild(a); if ('loading' !== document.readyState) c(); else if (window.addEventListener) document.addEventListener('DOMContentLoaded', c); else { var e = document.onreadystatechange || function () { }; document.onreadystatechange = function (b) { e(b); 'loading' !== document.readyState && (document.onreadystatechange = e, c()) } } } })();</script>
+</body>
+
+</html>
