@@ -4,32 +4,145 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Komputer dan Komponennya</title>
+  <title>Komputer dan Komponennya – Kelas 2–3 SD</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@400;600;700&display=swap" rel="stylesheet">
+
   <style>
+    :root {
+      --turquoise: #00bcd4;
+      --turquoise-dark: #0097a7;
+      --yellow: #ffeb3b;
+      --orange: #ff9800;
+      --purple: #7e57c2;
+      --bg-soft: #fdfcfb;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
     body {
-      font-family: Arial, sans-serif;
+      font-family: "Baloo 2", system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
       margin: 0;
-      background: #f0f8ff;
+      background: linear-gradient(135deg, #e0f7fa, #fff3e0);
       display: flex;
       flex-direction: column;
       align-items: center;
       justify-content: center;
-      height: 100vh;
+      min-height: 100vh;
+      padding: 10px;
+    }
+
+    .app-wrapper {
+      width: 100%;
+      max-width: 1040px;
+    }
+
+    .status-bar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 8px;
+      padding: 4px 10px;
+      border-radius: 999px;
+      background: rgba(255, 255, 255, 0.8);
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+      font-size: 14px;
+    }
+
+    #slideIndicator {
+      font-weight: 600;
+      color: var(--turquoise-dark);
+    }
+
+    #emojiIndicator {
+      font-size: 18px;
+    }
+
+    .progress-bar {
+      width: 100%;
+      height: 8px;
+      background: #eceff1;
+      border-radius: 999px;
       overflow: hidden;
+      margin-top: 6px;
+    }
+
+    #progressFill {
+      height: 100%;
+      width: 0%;
+      background: linear-gradient(90deg, var(--turquoise), var(--orange));
+      transition: width 0.4s ease;
     }
 
     .slide {
       display: none;
-      max-width: 1000px;
-      width: 90%;
-      padding: 20px;
-      background: #fff;
-      border-radius: 12px;
-      box-shadow: 0 0 20px rgba(0, 0, 0, 0.2);
+      width: 100%;
+      padding: 20px 22px;
+      background: #ffffff;
+      border-radius: 18px;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+      animation: fadeIn 0.4s ease;
     }
 
-    .active {
+    .slide.active {
       display: block;
+    }
+
+    .slide-header-tag {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 4px 10px;
+      border-radius: 999px;
+      font-size: 13px;
+      background: #e1f5fe;
+      color: #0277bd;
+      margin-bottom: 6px;
+    }
+
+    .slide-header-tag span {
+      font-size: 16px;
+    }
+
+    h1,
+    h2 {
+      color: var(--turquoise-dark);
+      margin-top: 4px;
+      margin-bottom: 10px;
+    }
+
+    h1 {
+      font-size: 28px;
+    }
+
+    h2 {
+      font-size: 24px;
+    }
+
+    p {
+      margin: 4px 0 8px;
+      font-size: 18px;
+      color: #37474f;
+    }
+
+    ul {
+      margin-top: 4px;
+      margin-bottom: 8px;
+      padding-left: 20px;
+      font-size: 17px;
+      color: #455a64;
+    }
+
+    .highlight-box {
+      background: #fffde7;
+      border-radius: 14px;
+      padding: 10px 12px;
+      border-left: 6px solid var(--yellow);
+      margin-top: 8px;
+      font-size: 16px;
     }
 
     .slide-content {
@@ -37,6 +150,7 @@
       flex-direction: row;
       gap: 20px;
       justify-content: space-between;
+      margin-top: 8px;
     }
 
     .left,
@@ -45,42 +159,73 @@
     }
 
     .right {
-      background-color: #f1f9ff;
+      background: #e3f2fd;
       padding: 10px;
-      border-left: 4px solid #1e88e5;
-      border-radius: 8px;
+      border-radius: 16px;
+      border: 2px dashed var(--turquoise);
     }
 
-    h1,
-    h2 {
-      color: #1e88e5;
+    .right h3 {
+      margin-top: 0;
+      color: var(--purple);
     }
 
     img {
       width: 100%;
-      max-height: 250px;
+      max-height: 260px;
       margin: 10px auto;
       display: block;
-      border-radius: 8px;
+      border-radius: 14px;
+      cursor: pointer;
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+
+    img:hover {
+      transform: scale(1.02);
+      box-shadow: 0 6px 16px rgba(0, 0, 0, 0.15);
+    }
+
+    img.zoomed {
+      transform: scale(1.18);
     }
 
     .controls {
-      margin-top: 20px;
+      margin-top: 15px;
+      display: flex;
+      justify-content: center;
+      gap: 12px;
     }
 
     button {
-      padding: 10px 20px;
-      margin: 0 10px;
-      font-size: 16px;
-      background-color: #1e88e5;
+      padding: 10px 22px;
+      font-size: 17px;
+      background: var(--turquoise);
       color: white;
       border: none;
-      border-radius: 8px;
+      border-radius: 999px;
       cursor: pointer;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
+      font-weight: 600;
+      letter-spacing: 0.3px;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      transition: transform 0.15s ease, box-shadow 0.15s ease, background 0.2s ease;
+    }
+
+    button span.icon {
+      font-size: 18px;
     }
 
     button:hover {
-      background-color: #0d47a1;
+      background: var(--turquoise-dark);
+      transform: translateY(-1px);
+      box-shadow: 0 6px 14px rgba(0, 0, 0, 0.2);
+    }
+
+    button:active {
+      transform: translateY(1px);
+      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
     }
 
     button.hidden {
@@ -88,6 +233,14 @@
     }
 
     @media (max-width: 768px) {
+      body {
+        padding: 8px;
+      }
+
+      .slide {
+        padding: 16px;
+      }
+
       .slide-content {
         flex-direction: column;
       }
@@ -96,8 +249,22 @@
       .right {
         width: 100%;
       }
+
+      h1 {
+        font-size: 24px;
+      }
+
+      h2 {
+        font-size: 22px;
+      }
+
+      p,
+      li {
+        font-size: 16px;
+      }
     }
 
+    /* Quiz grid */
     .quiz-grid {
       display: grid;
       grid-template-columns: repeat(2, 1fr);
@@ -106,26 +273,33 @@
     }
 
     .quiz-grid button {
-      padding: 12px;
+      padding: 10px;
       font-size: 16px;
-      background-color: #1e88e5;
-      color: white;
-      border: none;
-      border-radius: 8px;
-      cursor: pointer;
+      background: #ffb74d;
+      color: #4e342e;
+      border-radius: 14px;
       width: 100%;
-      transition: background-color 0.3s ease;
+      text-align: center;
+      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
     }
 
-    .quiz-grid button:hover {
-      background-color: #0d47a1;
+    .quiz-grid button.correct {
+      background: #66bb6a !important;
+      color: #ffffff;
     }
 
-    .quiz-grid button:disabled {
-      background-color: #ccc;
-      cursor: default;
+    .quiz-grid button.wrong {
+      background: #ef5350 !important;
+      color: #ffffff;
     }
 
+    .quiz-note {
+      font-size: 15px;
+      color: #546e7a;
+      margin-top: 4px;
+    }
+
+    /* Matching game */
     .matching-container {
       display: flex;
       justify-content: space-around;
@@ -142,228 +316,480 @@
     }
 
     .match-item {
-      background-color: #d0f5d8;
-      padding: 10px 20px;
-      border: 1px solid #6cc46c;
-      border-radius: 8px;
+      background: #c5e1a5;
+      padding: 10px 18px;
+      border-radius: 14px;
       cursor: pointer;
       text-align: center;
       min-width: 150px;
+      font-size: 16px;
+      box-shadow: 0 3px 8px rgba(0, 0, 0, 0.15);
+      transition: transform 0.15s ease, box-shadow 0.15s ease, background 0.2s ease;
     }
 
     .match-item:hover {
-      background-color: #a8e6b1;
+      transform: translateY(-1px);
+      box-shadow: 0 5px 12px rgba(0, 0, 0, 0.2);
+      background: #aed581;
     }
 
     .match-item.matched {
-      background-color: #90caf9;
+      background: #81d4fa;
     }
 
     .match-item.selected {
-      outline: 2px solid #2196F3;
+      outline: 3px solid var(--purple);
     }
 
     .hint-box {
-      background-color: #f0f8ff;
-      border-left: 4px solid #2196F3;
-      padding: 15px;
-      border-radius: 10px;
-      max-width: 250px;
+      background: #fff3e0;
+      border-left: 5px solid var(--orange);
+      padding: 12px;
+      border-radius: 16px;
+      max-width: 230px;
+      font-size: 15px;
     }
 
     .hint-box h3 {
       margin-top: 0;
-      color: #0077cc;
+      color: #e65100;
     }
 
     .hint-box ul {
-      margin: 0;
-      padding-left: 20px;
+      padding-left: 18px;
+    }
+
+    .result-text {
+      font-weight: 700;
+      margin-top: 16px;
+      font-size: 18px;
+      text-align: center;
+    }
+
+    .footer-tip {
+      margin-top: 8px;
+      text-align: center;
+      font-size: 14px;
+      color: #607d8b;
+    }
+
+    @keyframes fadeIn {
+      from {
+        opacity: 0;
+        transform: translateY(6px);
+      }
+
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    /* Kartu interaktif untuk input/output/CPU */
+    .info-cards {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+      gap: 10px;
+      margin-top: 10px;
+    }
+
+    .info-card {
+      background: #fff8e1;
+      border-radius: 14px;
+      padding: 10px 8px;
+      text-align: center;
+      cursor: pointer;
+      font-size: 16px;
+      box-shadow: 0 3px 8px rgba(0, 0, 0, 0.15);
+      border: 2px solid transparent;
+      transition: transform 0.15s ease, box-shadow 0.15s ease, border 0.2s ease,
+        background 0.2s ease;
+    }
+
+    .info-card span.icon {
+      display: block;
+      font-size: 22px;
+      margin-bottom: 4px;
+    }
+
+    .info-card:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 5px 12px rgba(0, 0, 0, 0.2);
+      background: #ffecb3;
+    }
+
+    .info-card.active {
+      border-color: var(--orange);
+      background: #ffe082;
+    }
+
+    .info-detail {
+      margin-top: 12px;
+      padding: 10px 12px;
+      border-radius: 14px;
+      background: #e3f2fd;
+      border-left: 5px solid var(--turquoise);
+      font-size: 16px;
+      min-height: 70px;
+    }
+
+    .info-detail strong {
+      color: var(--turquoise-dark);
     }
   </style>
 </head>
 
 <body>
+  <div class="app-wrapper">
+    <div class="status-bar">
+      <span id="slideIndicator">Slide 1 dari 8</span>
+      <span id="emojiIndicator">👋</span>
+    </div>
+    <div class="progress-bar">
+      <div id="progressFill"></div>
+    </div>
 
-  <!-- Slide dengan dua kolom -->
-  <div class="slide active">
-    <h1>Komputer dan Komponennya</h1>
-    <p>Apa itu komputer?</p>
-    <p>Yuk kita pelajari bersama!</p>
-  </div>
-
-  <div class="slide">
-    <div class="slide-content">
-      <div class="left">
-        <h2>Apa itu Komputer?</h2>
-        <p>Komputer adalah alat elektronik yang digunakan untuk membantu proses belajar dan mengajar.</p>
-        <p>Contohnya: mengetik, menggambar, bermain game, mendengarkan musik, mencari informasi dari internet.</p>
+    <!-- Slide 1: Judul -->
+    <div class="slide active">
+      <div class="slide-header-tag">
+        <span>💻</span> <strong>Kenalan dengan Komputer</strong>
       </div>
-      <div class="right">
-        <h3>Tips Input</h3>
-        <ul>
-          <li>Tekan keyboard dengan lembut</li>
-          <li>Gunakan satu jari untuk klik mouse</li>
-          <li>Jaga kebersihan perangkat input</li>
-        </ul>
+      <h1>Komputer dan Komponennya</h1>
+      <p>Hari ini kita akan belajar tentang <strong>komputer</strong> dan bagian-bagiannya.</p>
+
+      <div class="highlight-box">
+        <p><strong>Ayo mulai!</strong></p>
+        <p>Klik tombol <strong>Berikutnya →</strong> di bawah untuk lanjut.</p>
       </div>
     </div>
-  </div>
 
-  <div class="slide">
-    <div class="slide-content">
-      <div class="left">
-        <h2>Macam-Macam Komputer</h2>
-        <p>Komputer hadir dalam berbagai bentuk dan ukuran, contohnya:</p>
-        <ul>
-          <li>Laptop</li>
-          <li>Komputer PC</li>
-          <li>Tablet</li>
-          <li>Smartwatch</li>
-          <li>Smartphone</li>
-        </ul>
-        <p>Kita akan fokus belajar tentang Komputer PC dan Laptop.</p>
-        <img
-          src="https://rg-learning-material.s3.ap-southeast-1.amazonaws.com/file-uploader/images/bb3481cc-c36d-4f84-bbfc-4683bb3d7e64.png"
-          alt="Macam-macam komputer" style="max-width: 70%; height: auto; margin-top: 10px;">
+    <!-- Slide 2: Apa itu komputer -->
+    <div class="slide">
+      <div class="slide-header-tag">
+        <span>🧠</span> <strong>Pengertian</strong>
       </div>
-      <div class="right">
-        <h3>Fakta Menarik</h3>
-        <ul>
-          <li>Smartwatch adalah komputer mini yang bisa dipakai di pergelangan tangan.</li>
-          <li>Tablet bisa digunakan dengan sentuhan, tanpa mouse atau keyboard.</li>
-          <li>Laptop lebih portabel dibanding PC, cocok untuk belajar di mana saja.</li>
-        </ul>
-      </div>
-    </div>
-  </div>
-
-
-  <div class="slide">
-    <div class="slide-content">
-      <div class="left">
-        <h2>Input: Masukan</h2>
-        <p>Input adalah hal-hal yang kita gunakan untuk memasukkan informasi atau perintah ke komputer, seperti:</p>
-        <ul>
-          <li>Mouse</li>
-          <li>Keyboard</li>
-          <li>Suara (Google Assistant / Siri)</li>
-        </ul>
-        <img src="https://upload.wikimedia.org/wikipedia/commons/4/42/Computer_Mouse.jpg"
-          alt="Mouse sebagai alat input">
-      </div>
-      <div class="right">
-        <h3>Tips Input</h3>
-        <ul>
-          <li>Tekan keyboard dengan lembut</li>
-          <li>Gunakan satu jari untuk klik mouse</li>
-          <li>Jaga kebersihan perangkat input</li>
-        </ul>
-      </div>
-    </div>
-  </div>
-
-  <!-- Slide biasa tanpa dua kolom -->
-  <div class="slide">
-    <h2>Output: Keluaran</h2>
-    <p>Contoh output: layar monitor, printer</p>
-  </div>
-
-  <div class="slide">
-    <h2>Prosesor: Otak Komputer</h2>
-    <p>CPU (Central Processing Unit) adalah otak komputer yang menjalankan semua perintah dan program.</p>
-  </div>
-
-  <!-- Slide Multiple Choice Question -->
-  <div class="slide">
-    <div class="slide-content">
-      <div class="left">
-        <h2>Quiz: Bagian Komputer</h2>
-        <p><strong>Manakah yang termasuk alat input?</strong></p>
-        <div class="quiz-grid">
-          <button onclick="checkAnswer(this, false)">Monitor</button>
-          <button onclick="checkAnswer(this, true)">Keyboard</button>
-          <button onclick="checkAnswer(this, false)">Speaker</button>
-          <button onclick="checkAnswer(this, false)">Printer</button>
+      <div class="slide-content">
+        <div class="left">
+          <h2>Apa itu Komputer?</h2>
+          <p>Komputer adalah alat yang bisa membantu kita:</p>
+          <ul>
+            <li>Mengetik tugas 📝</li>
+            <li>Menggambar 🎨</li>
+            <li>Bermain game 🎮</li>
+            <li>Mendengarkan musik 🎵</li>
+            <li>Mencari informasi di internet 🌐</li>
+          </ul>
+          <p>Komputer bekerja jika kita memberi <strong>perintah</strong>.</p>
         </div>
-        <p id="quiz-feedback" style="margin-top:10px; font-weight:bold;"></p>
-      </div>
-      <div class="right">
-        <h3>Tips</h3>
-        <p>Pikirkan fungsi alat tersebut. Apakah digunakan untuk memasukkan informasi?</p>
+        <div class="right">
+          <h3>Tips Penggunaan</h3>
+          <ul>
+            <li>Duduk dengan posisi nyaman 😊</li>
+            <li>Jaga jarak mata dengan layar 📏</li>
+            <li>Gunakan komputer dengan <strong>bijak</strong></li>
+          </ul>
+        </div>
       </div>
     </div>
-  </div>
 
-  <!-- Slide Matching Game -->
-  <div class="slide">
-    <h2>Hubungkan Input dengan Fungsinya</h2>
-    <div class="matching-container">
+    <!-- Slide 3: Macam-macam komputer -->
+    <div class="slide">
+      <div class="slide-header-tag">
+        <span>🖥️</span> <strong>Macam-Macam Komputer</strong>
+      </div>
+      <div class="slide-content">
+        <div class="left">
+          <h2>Bentuk Komputer</h2>
+          <p>Komputer bisa punya bentuk yang berbeda-beda:</p>
+          <ul>
+            <li>Laptop</li>
+            <li>Komputer PC</li>
+            <li>Tablet</li>
+            <li>Smartwatch</li>
+            <li>Smartphone</li>
+          </ul>
+          <p>Hari ini kita fokus ke <strong>PC</strong> dan <strong>laptop</strong>.</p>
+          <p class="quiz-note">Coba sebutkan: komputer apa yang ada di rumahmu? </p>
+          <img
+            src="https://rg-learning-material.s3.ap-southeast-1.amazonaws.com/file-uploader/images/bb3481cc-c36d-4f84-bbfc-4683bb3d7e64.png"
+            alt="Macam-macam komputer" style="width: 100%; height: auto;" onclick="toggleZoom(this)">
+        </div>
+        <div class="right">
+          <h3>Fakta Seru</h3>
+          <ul>
+            <li><strong>Smartwatch</strong> adalah komputer mini di tanganmu!</li>
+            <li><strong>Tablet</strong> bisa disentuh dengan jari, tanpa mouse.</li>
+            <li><strong>Laptop</strong> mudah dibawa ke sekolah atau rumah teman.</li>
+          </ul>
+        </div>
+      </div>
+    </div>
 
-      <!-- Kolom Kiri: Input -->
-      <div id="left-items" class="column">
-        <div class="match-item" id="item1">Keyboard</div>
-        <div class="match-item" id="item2">Microphone</div>
-        <div class="match-item" id="item3">Mouse</div>
+    <!-- Slide 4: Input -->
+    <div class="slide">
+      <div class="slide-header-tag">
+        <span>⌨️</span> <strong>Alat Input (Klik Kotaknya!)</strong>
+      </div>
+      <div class="slide-content">
+        <div class="left">
+          <h2>Input: Masukan ke Komputer</h2>
+          <p><strong>Input</strong> artinya kita mengirim perintah ke komputer.</p>
+          <p>Klik salah satu kotak di bawah ini ya! </p>
+
+          <div class="info-cards">
+            <div class="info-card" data-input="mouse" onclick="showInputInfo('mouse', this)">
+              <span class="icon">🖱️</span>
+              <div>Mouse</div>
+            </div>
+            <div class="info-card" data-input="keyboard" onclick="showInputInfo('keyboard', this)">
+              <span class="icon">⌨️</span>
+              <div>Keyboard</div>
+            </div>
+            <div class="info-card" data-input="mic" onclick="showInputInfo('mic', this)">
+              <span class="icon">🎤</span>
+              <div>Microphone</div>
+            </div>
+          </div>
+
+          <div id="inputInfoBox" class="info-detail">
+            <strong>Pilih salah satu alat input di atas.</strong>
+            <p>Setelah diklik, di sini akan muncul fungsi dan cara pakainya. </p>
+          </div>
+        </div>
+
+        <div class="right">
+          <h3>Tips Input Sehat</h3>
+          <ul>
+            <li>Jari rileks saat mengetik, jangan terlalu keras.</li>
+            <li>Jangan main komputer sambil makan, supaya keyboard tetap bersih.</li>
+            <li>Gunakan komputer dengan waktu yang wajar, istirahatkan mata.</li>
+          </ul>
+          <p class="quiz-note">
+            Coba sebutkan: alat input apa yang paling sering kamu pakai di rumah?
+          </p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Slide 5: Output -->
+    <div class="slide">
+      <div class="slide-header-tag">
+        <span>📺</span> <strong>Alat Output (Klik Kotaknya!)</strong>
+      </div>
+      <h2>Output: Jawaban dari Komputer</h2>
+      <p><strong>Output</strong> adalah hasil yang keluar dari komputer.</p>
+      <p>Klik salah satu alat output di bawah ini. </p>
+
+      <div class="info-cards">
+        <div class="info-card" data-output="monitor" onclick="showOutputInfo('monitor', this)">
+          <span class="icon">🖥️</span>
+          <div>Monitor</div>
+        </div>
+        <div class="info-card" data-output="speaker" onclick="showOutputInfo('speaker', this)">
+          <span class="icon">🔊</span>
+          <div>Speaker</div>
+        </div>
+        <div class="info-card" data-output="printer" onclick="showOutputInfo('printer', this)">
+          <span class="icon">🖨️</span>
+          <div>Printer</div>
+        </div>
       </div>
 
-      <!-- Kolom Tengah: Output -->
-      <div id="right-items" class="column">
-        <div class="match-item" id="match1">Mengetik huruf</div>
-        <div class="match-item" id="match3">Menggerakkan pointer</div>
-        <div class="match-item" id="match2">Merekam suara</div>
+      <div id="outputInfoBox" class="info-detail">
+        <strong>Pilih salah satu alat output di atas.</strong>
+        <p>Lihat, komputer menjawab kita lewat gambar, suara, atau kertas!</p>
       </div>
 
-      <!-- Kolom Kanan: Hint -->
-      <div class="hint-box">
-        <h3>Tips</h3>
+      <div class="highlight-box" style="margin-top:14px;">
+        <p><strong>Contoh alur:</strong></p>
         <ul>
-          <li>Keyboard digunakan untuk mengetik.</li>
-          <li>Mouse memindahkan kursor di layar.</li>
-          <li>Microphone menangkap suara dari mulut kita.</li>
+          <li>Kamu mengetik di keyboard → <strong>input</strong>.</li>
+          <li>Tulisan muncul di layar monitor → <strong>output</strong>.</li>
         </ul>
       </div>
     </div>
 
-    <div style="text-align: center; margin-top: 20px;">
-      <button onclick="checkMatching()">Cek Jawaban</button>
-      <button onclick="resetMatching()">Ulangi</button>
+
+    <!-- Slide 6: Prosesor -->
+    <div class="slide">
+      <div class="slide-header-tag">
+        <span>🧠</span> <strong>CPU: Otak Komputer</strong>
+      </div>
+      <h2>Bagaimana Komputer Bekerja?</h2>
+      <p>Klik urutan kotak di bawah ini untuk melihat alurnya.</p>
+
+      <div class="info-cards">
+        <div class="info-card" data-cpu="input" onclick="showCpuInfo('input', this)">
+          <span class="icon">🖱️</span>
+          <div>1. Input</div>
+        </div>
+        <div class="info-card" data-cpu="cpu" onclick="showCpuInfo('cpu', this)">
+          <span class="icon">🧠</span>
+          <div>2. CPU</div>
+        </div>
+        <div class="info-card" data-cpu="output" onclick="showCpuInfo('output', this)">
+          <span class="icon">📺</span>
+          <div>3. Output</div>
+        </div>
+      </div>
+
+      <div id="cpuInfoBox" class="info-detail">
+        <strong>CPU = Central Processing Unit</strong>
+        <p>CPU adalah <strong>otak komputer</strong>. Klik kotak di atas untuk melihat apa yang terjadi di setiap
+          langkah.</p>
+      </div>
+
+      <div class="highlight-box" style="margin-top:14px;">
+        <p><strong>Perbandingan dengan kamu:</strong></p>
+        <ul>
+          <li>Mata melihat tulisan → seperti <strong>monitor</strong>.</li>
+          <li>Tangan menulis → seperti <strong>keyboard</strong>.</li>
+          <li>Otakmu yang berpikir → seperti <strong>CPU</strong>.</li>
+        </ul>
+      </div>
+
+      <p class="quiz-note">
+        Saat kamu klik tombol <strong>play</strong> di game, CPU bekerja keras supaya game bisa berjalan.
+      </p>
     </div>
 
-    <p id="resultText" style="font-weight: bold; color: green; margin-top: 20px;"></p>
+
+    <!-- Slide 7: Quiz pilihan ganda -->
+    <div class="slide">
+      <div class="slide-header-tag">
+        <span>🧩</span> <strong>Quiz Cepat</strong>
+      </div>
+      <div class="slide-content">
+        <div class="left">
+          <h2>Quiz: Bagian Komputer</h2>
+          <p><strong>Manakah yang termasuk alat input?</strong></p>
+          <div class="quiz-grid">
+            <button onclick="checkAnswer(this, false)">
+              <span class="icon">📺</span> Monitor
+            </button>
+            <button onclick="checkAnswer(this, true)">
+              <span class="icon">⌨️</span> Keyboard
+            </button>
+            <button onclick="checkAnswer(this, false)">
+              <span class="icon">🔊</span> Speaker
+            </button>
+            <button onclick="checkAnswer(this, false)">
+              <span class="icon">🖨️</span> Printer
+            </button>
+          </div>
+          <p id="quiz-feedback" style="margin-top:10px; font-weight:bold;"></p>
+          <p class="quiz-note">Kalau salah, coba pikir lagi: mana yang dipakai untuk <strong>memasukkan</strong>
+            perintah?</p>
+        </div>
+        <div class="right">
+          <h3>Tips Berpikir</h3>
+          <p>Tanyakan pada diri sendiri:</p>
+          <ul>
+            <li>Apakah alat ini mengeluarkan gambar/suara? Output</li>
+            <li>Atau aku yang memasukkan huruf/klik? Input</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <!-- Slide 8: Matching game -->
+    <div class="slide">
+      <div class="slide-header-tag">
+        <span>🎯</span> <strong>Pencocokan</strong>
+      </div>
+      <h2>Hubungkan Input dengan Fungsinya</h2>
+      <p>Klik satu kotak di kiri, lalu klik pasangannya di kanan.</p>
+      <div class="matching-container">
+
+        <!-- Kolom Kiri: Input -->
+        <div id="left-items" class="column">
+          <div class="match-item" id="item1">Keyboard</div>
+          <div class="match-item" id="item2">Microphone</div>
+          <div class="match-item" id="item3">Mouse</div>
+        </div>
+
+        <!-- Kolom Kanan: Fungsi -->
+        <div id="right-items" class="column">
+          <div class="match-item" id="match1">Mengetik huruf</div>
+          <div class="match-item" id="match3">Menggerakkan pointer</div>
+          <div class="match-item" id="match2">Merekam suara</div>
+        </div>
+
+        <!-- Kolom Kanan: Hint -->
+        <div class="hint-box">
+          <h3>Tips</h3>
+          <ul>
+            <li><strong>Keyboard</strong> → mengetik huruf dan angka.</li>
+            <li><strong>Mouse</strong> → menggerakkan panah di layar.</li>
+            <li><strong>Microphone</strong> → merekam suara kita.</li>
+          </ul>
+        </div>
+      </div>
+
+      <div style="text-align: center; margin-top: 20px;">
+        <button onclick="checkMatching()"><span class="icon">✅</span>Cek Jawaban</button>
+        <button onclick="resetMatching()"><span class="icon">🔁</span>Ulangi</button>
+      </div>
+
+      <p id="resultText" class="result-text"></p>
+      <p class="footer-tip">Kalau sudah bisa, berarti kamu sudah hebat mengenali alat input!</p>
+    </div>
+
+    <!-- Slide 9: Kesimpulan -->
+    <div class="slide">
+      <div class="slide-header-tag">
+        <span>🎉</span> <strong>Penutup</strong>
+      </div>
+      <h2>Kesimpulan</h2>
+      <p>Hari ini kamu sudah belajar:</p>
+      <ul>
+        <li>Apa itu komputer 💻</li>
+        <li>Macam-macam bentuk komputer</li>
+        <li>Perbedaan <strong>input</strong> dan <strong>output</strong></li>
+        <li>CPU sebagai otak komputer 🧠</li>
+      </ul>
+      <p>Teruslah belajar dan gunakan komputer untuk hal-hal yang baik dan bermanfaat. </p>
+      <p class="footer-tip">Kamu luar biasa!</p>
+    </div>
+
+    <div class="controls">
+      <button id="prevBtn" onclick="prevSlide()" class="hidden">
+        <span class="icon">⬅️</span> Sebelumnya
+      </button>
+      <button id="nextBtn" onclick="nextSlide()">
+        Berikutnya <span class="icon">➡️</span>
+      </button>
+    </div>
   </div>
 
-  <!-- Kesimpulan -->
-  <div class="slide">
-    <h2>Kesimpulan</h2>
-    <p>Komputer adalah alat yang sangat berguna untuk belajar dan bermain.</p>
-    <p>Kita telah belajar tentang berbagai komponen komputer, cara input data, dan melakukan beberapa kuis.</p>
-    <p>Terus eksplorasi dan pelajari lebih banyak tentang teknologi!</p>
-    <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/3/3b/Computer_icon.svg/1200px-Computer_icon.svg.png"
-      alt="Komputer" style="max-width: 50%; height: auto; margin-top: 10px;">
-  </div>
-
-  <div class="controls">
-    <button id="prevBtn" onclick="prevSlide()">Sebelumnya</button>
-    <button id="nextBtn" onclick="nextSlide()">Berikutnya</button>
-  </div>
-
-  <script>
-    /*
-    const kodeBenar = "KELASKITA2025";
-    let input = prompt("Masukkan kode akses:");
-    if (input !== kodeBenar) {
-      document.body.innerHTML = "<h2>Akses ditolak!</h2><p>Kode akses salah.</p>";
-    }
-    */
-  </script>
-
+  <!-- LeaderLine library untuk garis pencocokan -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/leader-line/1.0.7/leader-line.min.js"></script>
   <script>
     let currentSlide = 0;
     const slides = document.querySelectorAll('.slide');
     const prevBtn = document.getElementById('prevBtn');
     const nextBtn = document.getElementById('nextBtn');
+    const slideIndicator = document.getElementById('slideIndicator');
+    const emojiIndicator = document.getElementById('emojiIndicator');
+    const progressFill = document.getElementById('progressFill');
+    const totalSlides = slides.length;
+
+    function updateStatusBar() {
+      slideIndicator.textContent = `Slide ${currentSlide + 1} dari ${totalSlides}`;
+
+      // Emoji berbeda di tiap bagian
+      let emoji = "✨";
+      if (currentSlide === 0) emoji = "👋";
+      else if (currentSlide <= 2) emoji = "💻";
+      else if (currentSlide <= 4) emoji = "🧠";
+      else if (currentSlide === 5) emoji = "🧩";
+      else if (currentSlide === 6) emoji = "🎯";
+      else if (currentSlide >= totalSlides - 1) emoji = "🎉";
+      emojiIndicator.textContent = emoji;
+
+      const progress = ((currentSlide + 1) / totalSlides) * 100;
+      progressFill.style.width = progress + "%";
+    }
 
     function showSlide(index) {
       slides.forEach((slide, i) => {
@@ -372,12 +798,13 @@
       });
 
       prevBtn.classList.toggle('hidden', index === 0);
-      nextBtn.classList.toggle('hidden', index === slides.length - 1);
+      nextBtn.classList.toggle('hidden', index === totalSlides - 1);
 
+      updateStatusBar();
     }
 
     function nextSlide() {
-      if (currentSlide < slides.length - 1) {
+      if (currentSlide < totalSlides - 1) {
         currentSlide++;
         showSlide(currentSlide);
       }
@@ -392,23 +819,123 @@
 
     showSlide(currentSlide);
 
+    // ---------- INFO KARTU INPUT ----------
+    function showInputInfo(type, element) {
+      const box = document.getElementById("inputInfoBox");
+
+      // Reset active state semua kartu input
+      document.querySelectorAll('[data-input]').forEach(card => {
+        card.classList.remove('active');
+      });
+      element.classList.add('active');
+
+      if (type === 'mouse') {
+        box.innerHTML = `
+          <strong>Mouse 🖱️</strong>
+          <p>Mouse digunakan untuk <strong>menggerakkan pointer</strong> dan <strong>meng-klik</strong> tombol di layar.</p>
+          <p>Cara pakai yang baik: pegang pelan, klik dengan satu jari, jangan dibanting.</p>
+        `;
+      } else if (type === 'keyboard') {
+        box.innerHTML = `
+          <strong>Keyboard ⌨️</strong>
+          <p>Keyboard digunakan untuk <strong>mengetik huruf, angka, dan simbol</strong>.</p>
+          <p>Cara pakai yang baik: tekan tombol dengan lembut, jaga tangan tetap bersih.</p>
+        `;
+      } else if (type === 'mic') {
+        box.innerHTML = `
+          <strong>Microphone 🎤</strong>
+          <p>Microphone digunakan untuk <strong>memasukkan suara</strong> ke komputer.</p>
+          <p>Cara pakai yang baik: bicara dengan suara jelas, jangan terlalu dekat agar tidak pecah.</p>
+        `;
+      }
+    }
+
+    // ---------- INFO KARTU OUTPUT ----------
+    function showOutputInfo(type, element) {
+      const box = document.getElementById("outputInfoBox");
+
+      // Reset active state semua kartu output
+      document.querySelectorAll('[data-output]').forEach(card => {
+        card.classList.remove('active');
+      });
+      element.classList.add('active');
+
+      if (type === 'monitor') {
+        box.innerHTML = `
+          <strong>Monitor 🖥️</strong>
+          <p>Monitor menampilkan <strong>gambar, video, dan tulisan</strong> dari komputer.</p>
+          <p>Cara pakai yang baik: atur kecerahan, jaga jarak mata sekitar satu lengan.</p>
+        `;
+      } else if (type === 'speaker') {
+        box.innerHTML = `
+          <strong>Speaker 🔊</strong>
+          <p>Speaker mengeluarkan <strong>suara dan musik</strong> dari komputer.</p>
+          <p>Cara pakai yang baik: atur volume tidak terlalu keras agar tidak merusak telinga.</p>
+        `;
+      } else if (type === 'printer') {
+        box.innerHTML = `
+          <strong>Printer 🖨️</strong>
+          <p>Printer mencetak <strong>gambar atau tulisan</strong> ke kertas.</p>
+          <p>Cara pakai yang baik: tunggu sampai selesai mencetak, jangan menarik kertas dengan paksa.</p>
+        `;
+      }
+    }
+
+    // ---------- INFO KARTU CPU / ALUR KERJA ----------
+    function showCpuInfo(step, element) {
+      const box = document.getElementById("cpuInfoBox");
+
+      // Reset active state semua kartu cpu
+      document.querySelectorAll('[data-cpu]').forEach(card => {
+        card.classList.remove('active');
+      });
+      element.classList.add('active');
+
+      if (step === 'input') {
+        box.innerHTML = `
+          <strong>1. Input</strong>
+          <p>Kamu memberi perintah ke komputer, misalnya klik tombol <em>play</em> di game atau mengetik huruf.</p>
+          <p>Ini adalah langkah pertama sebelum komputer berpikir.</p>
+        `;
+      } else if (step === 'cpu') {
+        box.innerHTML = `
+          <strong>2. CPU (Otak Komputer)</strong>
+          <p>CPU menerima perintah dari kamu, lalu <strong>berpikir dan menghitung</strong>.</p>
+          <p>CPU menentukan apa yang harus ditampilkan di layar atau suara apa yang harus diputar.</p>
+        `;
+      } else if (step === 'output') {
+        box.innerHTML = `
+          <strong>3. Output</strong>
+          <p>Setelah CPU selesai berpikir, hasilnya ditunjukkan lewat <strong>monitor, speaker, atau printer</strong>.</p>
+          <p>Inilah jawaban komputer untuk perintahmu tadi.</p>
+        `;
+      }
+    }
+
+
+    // Zoom sederhana untuk gambar
+    function toggleZoom(img) {
+      img.classList.toggle('zoomed');
+    }
+
     // MULTIPLE CHOICE QUESTION
     function checkAnswer(button, isCorrect) {
       const feedback = document.getElementById("quiz-feedback");
 
-      // Reset semua tombol warna
+      // Reset semua tombol warna & kelas
       const buttons = button.parentElement.querySelectorAll("button");
-      buttons.forEach(btn => btn.style.backgroundColor = "#1e88e5");
+      buttons.forEach(btn => {
+        btn.classList.remove("correct", "wrong");
+      });
 
-      // Beri feedback dan warna
       if (isCorrect) {
         feedback.textContent = "✅ Benar! Keyboard adalah alat input.";
         feedback.style.color = "green";
-        button.style.backgroundColor = "green";
+        button.classList.add("correct");
       } else {
-        feedback.textContent = "❌ Coba lagi.";
+        feedback.textContent = "❌ Belum tepat. Coba pikir lagi, mana yang dipakai untuk memasukkan perintah.";
         feedback.style.color = "red";
-        button.style.backgroundColor = "darkred";
+        button.classList.add("wrong");
       }
     }
 
@@ -417,8 +944,8 @@
     const matchedPairs = [];
     const correctPairs = {
       item1: 'match1', // Keyboard → Mengetik huruf
-      item2: 'match2', // Mouse → Menggerakkan pointer
-      item3: 'match3'  // Microphone → Merekam suara
+      item2: 'match2', // Microphone → Merekam suara
+      item3: 'match3'  // Mouse → Menggerakkan pointer
     };
     const lines = [];
 
@@ -444,7 +971,7 @@
             const line = new LeaderLine(
               document.getElementById(leftId),
               document.getElementById(rightId),
-              { color: '#2196F3', size: 2, path: 'straight' }
+              { color: '#2196F3', size: 3, path: 'straight' }
             );
             lines.push(line);
             matchedPairs.push(pairId);
@@ -469,8 +996,15 @@
       });
 
       const resultText = document.getElementById("resultText");
-      resultText.textContent = `Kamu benar ${correct} dari ${Object.keys(correctPairs).length} pasangan.`;
-      resultText.style.color = correct === Object.keys(correctPairs).length ? "green" : "red";
+      const total = Object.keys(correctPairs).length;
+
+      if (correct === total) {
+        resultText.textContent = `🎉 Keren! Semua pasangan benar (${correct} dari ${total}).`;
+        resultText.style.color = "green";
+      } else {
+        resultText.textContent = `🙂 Kamu benar ${correct} dari ${total}. Coba perbaiki lagi ya.`;
+        resultText.style.color = "orange";
+      }
     }
 
     // Fungsi ulangi quiz
@@ -481,13 +1015,11 @@
       lines.length = 0;
 
       document.querySelectorAll('.match-item').forEach(item => {
-        item.classList.remove('matched');
-        item.classList.remove('selected');
+        item.classList.remove('matched', 'selected');
       });
       document.getElementById("resultText").textContent = "";
     }
   </script>
-
 </body>
 
 </html>
