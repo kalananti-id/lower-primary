@@ -440,6 +440,45 @@
 </head>
 
 <body>
+  <!-- ACCESS GATE -->
+  <div id="accessGate" style="position: fixed; inset: 0; background: rgba(0,0,0,0.5);
+              display: flex; align-items: center; justify-content: center; z-index: 9999;">
+    <div style="background: white; padding: 25px; border-radius: 16px;
+                width: 90%; max-width: 360px; text-align: center;
+                font-family: 'Baloo 2', sans-serif; box-shadow: 0 6px 20px rgba(0,0,0,0.25);">
+
+      <h2 style="margin-bottom: 10px; color:#00acc1;">🔐 Kode Akses</h2>
+      <p style="margin-top: 0; font-size: 17px;">Masukkan kode untuk membuka materi:</p>
+
+      <input id="accessInput" type="text" maxlength="15" placeholder="MASUKKAN KODE" style="width: 100%; padding: 12px; border-radius: 12px; border: 2px solid #00acc1;
+                    font-size: 18px; text-align: center; outline: none; font-weight: 600;"
+        oninput="this.value = this.value.toUpperCase();">
+
+      <button onclick="checkAccess()"
+        style="
+          margin-top: 15px;
+          width: 100%;
+          background:#00acc1;
+          color:white;
+          padding: 12px;
+          border-radius: 12px;
+          border:none;
+          cursor:pointer;
+          font-size: 18px;
+          font-weight: 600;
+          display:flex;
+          align-items:center;
+          justify-content:center;
+          text-align:center;
+        ">
+  BUKA
+</button>
+
+
+      <p id="accessError" style="color: red; font-size: 15px; margin-top: 10px;"></p>
+    </div>
+  </div>
+
   <div class="app-wrapper">
     <div class="status-bar">
       <span id="slideIndicator">Slide 1 dari 8</span>
@@ -765,6 +804,20 @@
   <!-- LeaderLine library untuk garis pencocokan -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/leader-line/1.0.7/leader-line.min.js"></script>
   <script>
+    // ----------- ACCESS GATE -----------
+    const correctCode = "RGMDSLP25";
+
+    function checkAccess() {
+      const input = document.getElementById("accessInput").value.trim().toUpperCase();
+      const error = document.getElementById("accessError");
+
+      if (input === correctCode) {
+        document.getElementById("accessGate").style.display = "none";
+      } else {
+        error.textContent = "Kode salah. Coba lagi ya!";
+      }
+    }
+    // ---------- NAVIGASI SLIDE ----------
     let currentSlide = 0;
     const slides = document.querySelectorAll('.slide');
     const prevBtn = document.getElementById('prevBtn');
@@ -818,6 +871,25 @@
     }
 
     showSlide(currentSlide);
+
+    // Navigasi dengan keyboard
+    document.addEventListener('keydown', function (event) {
+      // Supaya huruf besar/kecil aman
+      const key = event.key;
+
+      // Panah kanan atau spasi atau Enter = ke slide berikutnya
+      if (key === 'ArrowRight' || key === ' ' || key === 'Enter') {
+        event.preventDefault();
+        nextSlide();
+      }
+
+      // Panah kiri = ke slide sebelumnya
+      if (key === 'ArrowLeft') {
+        event.preventDefault();
+        prevSlide();
+      }
+    });
+
 
     // ---------- INFO KARTU INPUT ----------
     function showInputInfo(type, element) {
