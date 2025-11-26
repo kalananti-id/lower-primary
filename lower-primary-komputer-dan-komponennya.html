@@ -454,8 +454,7 @@
                     font-size: 18px; text-align: center; outline: none; font-weight: 600;"
         oninput="this.value = this.value.toUpperCase();">
 
-      <button onclick="checkAccess()"
-        style="
+      <button onclick="checkAccess()" style="
           margin-top: 15px;
           width: 100%;
           background:#00acc1;
@@ -471,8 +470,8 @@
           justify-content:center;
           text-align:center;
         ">
-  BUKA
-</button>
+        BUKA
+      </button>
 
 
       <p id="accessError" style="color: red; font-size: 15px; margin-top: 10px;"></p>
@@ -806,17 +805,20 @@
   <script>
     // ----------- ACCESS GATE -----------
     const correctCode = "RGMDSLP25";
+    let accessGranted = false;
 
     function checkAccess() {
       const input = document.getElementById("accessInput").value.trim().toUpperCase();
       const error = document.getElementById("accessError");
 
       if (input === correctCode) {
+        accessGranted = true; // ← akses baru diaktifkan
         document.getElementById("accessGate").style.display = "none";
       } else {
         error.textContent = "Kode salah. Coba lagi ya!";
       }
     }
+
     // ---------- NAVIGASI SLIDE ----------
     let currentSlide = 0;
     const slides = document.querySelectorAll('.slide');
@@ -874,21 +876,21 @@
 
     // Navigasi dengan keyboard
     document.addEventListener('keydown', function (event) {
-      // Supaya huruf besar/kecil aman
+      if (!accessGranted) return; // ← cegah navigasi sebelum akses dibuka
+
       const key = event.key;
 
-      // Panah kanan atau spasi atau Enter = ke slide berikutnya
       if (key === 'ArrowRight' || key === ' ' || key === 'Enter') {
         event.preventDefault();
         nextSlide();
       }
 
-      // Panah kiri = ke slide sebelumnya
       if (key === 'ArrowLeft') {
         event.preventDefault();
         prevSlide();
       }
     });
+
 
 
     // ---------- INFO KARTU INPUT ----------
