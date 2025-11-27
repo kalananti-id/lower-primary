@@ -1,0 +1,1034 @@
+<!doctype html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <title>Sesi 9 – Urutan Langkah dan Instruksi</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      font-family: "Comic Sans MS", system-ui, -apple-system, BlinkMacSystemFont,
+        "Segoe UI", sans-serif;
+      background: linear-gradient(135deg, #90cdf4, #fefcbf);
+      min-height: 100vh;
+      overflow: hidden;
+    }
+
+    @keyframes bgMove {
+      0% {
+        background: linear-gradient(135deg, #90cdf4, #fefcbf);
+      }
+      50% {
+        background: linear-gradient(135deg, #63b3ed, #faf089);
+      }
+      100% {
+        background: linear-gradient(135deg, #90cdf4, #fefcbf);
+      }
+    }
+
+    body {
+      animation: bgMove 18s ease-in-out infinite;
+    }
+
+    .slide-container {
+      width: 100%;
+      height: 100vh;
+      display: flex;
+      align-items: flex-start;
+      justify-content: center;
+      padding: 80px 0 90px;
+      overflow-y: auto;
+    }
+
+    .slide {
+      width: 92%;
+      max-width: 1300px;
+      min-height: 80vh;
+      background: #ffffff;
+      border-radius: 24px;
+      box-shadow: 0 18px 45px rgba(0, 0, 0, 0.18);
+      padding: 32px 32px 40px;
+      display: none;
+      flex-direction: column;
+      position: relative;
+      overflow-y: auto;
+    }
+
+    .slide.active {
+      display: flex;
+      animation: fadeIn 0.4s ease;
+    }
+
+    @keyframes fadeIn {
+      from {
+        opacity: 0;
+        transform: translateY(10px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    h1, h2 {
+      text-align: center;
+      margin-top: 0;
+    }
+
+    h1 {
+      font-size: 2.4rem;
+      color: #2b6cb0;
+      margin-bottom: 8px;
+    }
+
+    h2 {
+      font-size: 2rem;
+      color: #2d3748;
+      margin-bottom: 10px;
+    }
+
+    .subtitle {
+      text-align: center;
+      color: #4a5568;
+      margin-bottom: 18px;
+      font-size: 1.1rem;
+    }
+
+    p {
+      color: #4a5568;
+      font-size: 1.05rem;
+      line-height: 1.55;
+      margin-bottom: 10px;
+    }
+
+    ul {
+      margin: 8px 0 8px 22px;
+      padding: 0;
+      color: #4a5568;
+      font-size: 1.02rem;
+    }
+
+    li {
+      margin-bottom: 4px;
+    }
+
+    .slide-counter {
+      position: absolute;
+      top: 16px;
+      right: 16px;
+      background: #3182ce;
+      color: #fff;
+      padding: 6px 14px;
+      border-radius: 999px;
+      font-size: 0.85rem;
+      font-weight: bold;
+    }
+
+    .tagline {
+      display: inline-block;
+      margin: 0 auto 14px;
+      padding: 6px 14px;
+      border-radius: 999px;
+      background: #ebf8ff;
+      color: #2b6cb0;
+      font-size: 0.9rem;
+      text-align: center;
+    }
+
+    .highlight {
+      background: #fefcbf;
+      border-left: 6px solid #ecc94b;
+      border-radius: 14px;
+      padding: 12px 16px;
+      margin: 12px 0;
+    }
+
+    .two-col {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      gap: 16px;
+      margin-top: 8px;
+    }
+
+    .card {
+      background: #f7fafc;
+      border-radius: 16px;
+      padding: 14px 16px;
+      border: 2px solid #e2e8f0;
+    }
+
+    .card h3 {
+      margin-top: 0;
+      font-size: 1.15rem;
+      color: #2d3748;
+    }
+
+    .emoji-big {
+      font-size: 2.5rem;
+      margin-bottom: 6px;
+      text-align: center;
+    }
+
+    .pattern {
+      font-size: 1.8rem;
+      text-align: center;
+      margin-top: 4px;
+    }
+
+    .navigation {
+      position: fixed;
+      left: 50%;
+      bottom: 18px;
+      transform: translateX(-50%);
+      display: flex;
+      gap: 12px;
+      z-index: 1000;
+    }
+
+    .nav-btn {
+      border: none;
+      border-radius: 999px;
+      padding: 10px 22px;
+      font-size: 1rem;
+      cursor: pointer;
+      background: #3182ce;
+      color: #fff;
+      box-shadow: 0 4px 14px rgba(49, 130, 206, 0.5);
+      transition: all 0.2s ease;
+    }
+
+    .nav-btn:hover:not(:disabled) {
+      transform: translateY(-2px);
+      background: #2b6cb0;
+    }
+
+    .nav-btn:disabled {
+      background: #a0aec0;
+      box-shadow: none;
+      cursor: not-allowed;
+    }
+
+    .quiz-options {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      margin-top: 10px;
+    }
+
+    .quiz-option {
+      background: #edf2f7;
+      border-radius: 16px;
+      padding: 10px 16px;
+      cursor: pointer;
+      border: 2px solid #cbd5e0;
+      font-size: 1rem;
+      transition: all 0.2s ease;
+    }
+
+    .quiz-option:hover {
+      background: #bee3f8;
+      border-color: #3182ce;
+      transform: translateY(-1px);
+    }
+
+    .quiz-option.correct {
+      background: #c6f6d5;
+      border-color: #38a169;
+    }
+
+    .quiz-option.incorrect {
+      background: #fed7d7;
+      border-color: #e53e3e;
+    }
+
+    .feedback {
+      font-weight: bold;
+      margin-top: 6px;
+      min-height: 1.2em;
+    }
+
+    /* Drag & drop list */
+    .dd-container {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      gap: 18px;
+      margin-top: 10px;
+    }
+
+    .dd-pool,
+    .dd-target {
+      background: #f7fafc;
+      border-radius: 16px;
+      border: 2px dashed #cbd5e0;
+      min-height: 160px;
+      padding: 10px;
+    }
+
+    .dd-title {
+      font-weight: bold;
+      font-size: 0.95rem;
+      margin-bottom: 6px;
+      color: #2d3748;
+    }
+
+    .dd-item {
+      background: #ffffff;
+      border-radius: 12px;
+      border: 2px solid #e2e8f0;
+      padding: 6px 10px;
+      margin: 4px 0;
+      cursor: move;
+      font-size: 0.98rem;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .dd-item .step-number {
+      background: #3182ce;
+      color: #fff;
+      border-radius: 999px;
+      width: 22px;
+      height: 22px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.8rem;
+    }
+
+    .dd-target.dragover {
+      background: #ebf8ff;
+      border-color: #63b3ed;
+    }
+
+    .btn-small {
+      border: none;
+      border-radius: 999px;
+      padding: 8px 16px;
+      font-size: 0.9rem;
+      cursor: pointer;
+      background: #38a169;
+      color: #fff;
+      margin-top: 10px;
+      box-shadow: 0 3px 10px rgba(56, 161, 105, 0.4);
+      transition: all 0.2s ease;
+    }
+
+    .btn-small:hover {
+      background: #2f855a;
+      transform: translateY(-1px);
+    }
+
+    .btn-outline {
+      background: #fff;
+      color: #e53e3e;
+      border: 2px solid #feb2b2;
+      box-shadow: none;
+      margin-left: 8px;
+    }
+
+    .btn-outline:hover {
+      background: #fed7d7;
+      transform: translateY(-1px);
+    }
+
+    .checklist {
+      margin: 6px 0 0 0;
+      padding-left: 20px;
+    }
+
+    .checklist li {
+      margin-bottom: 4px;
+    }
+
+    .bubble-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      justify-content: center;
+      margin-top: 8px;
+    }
+
+    .bubble {
+      background: #ebf8ff;
+      border-radius: 999px;
+      padding: 6px 12px;
+      font-size: 0.9rem;
+      color: #2b6cb0;
+    }
+
+    textarea.note {
+      width: 100%;
+      max-width: 700px;
+      min-height: 80px;
+      border-radius: 12px;
+      border: 2px solid #cbd5e0;
+      padding: 8px 10px;
+      font-family: inherit;
+      font-size: 0.95rem;
+      resize: vertical;
+      margin-top: 8px;
+    }
+
+    /* Access code overlay */
+    #access-screen {
+      position: fixed;
+      inset: 0;
+      background: #ffffff;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      z-index: 5000;
+      text-align: center;
+      padding: 20px;
+    }
+
+    #access-screen h2 {
+      margin-bottom: 10px;
+      color: #2b6cb0;
+    }
+
+    #access-screen p {
+      margin-bottom: 14px;
+    }
+
+    #access-input {
+      padding: 10px 14px;
+      border-radius: 999px;
+      border: 2px solid #cbd5e0;
+      font-size: 1rem;
+      text-transform: uppercase;
+      text-align: center;
+      width: 260px;
+      max-width: 90%;
+      margin-bottom: 10px;
+    }
+
+    #access-btn {
+      border: none;
+      border-radius: 999px;
+      padding: 8px 18px;
+      background: #3182ce;
+      color: #fff;
+      font-size: 1rem;
+      cursor: pointer;
+      box-shadow: 0 3px 12px rgba(49, 130, 206, 0.5);
+      transition: all 0.2s;
+    }
+
+    #access-btn:hover {
+      background: #2b6cb0;
+      transform: translateY(-1px);
+    }
+
+    #access-error {
+      color: #e53e3e;
+      font-weight: bold;
+      margin-top: 6px;
+      min-height: 1.2em;
+    }
+
+    @media (max-width: 768px) {
+      .slide {
+        padding: 20px 16px 26px;
+      }
+
+      h1 {
+        font-size: 1.8rem;
+      }
+
+      h2 {
+        font-size: 1.5rem;
+      }
+
+      .navigation {
+        bottom: 12px;
+      }
+
+      .nav-btn {
+        padding: 8px 14px;
+        font-size: 0.9rem;
+      }
+    }
+  </style>
+</head>
+<body>
+  <!-- ACCESS CODE -->
+  <div id="access-screen">
+    <h2>🔒 Masukkan Kode Akses</h2>
+    <p>Masukkan Kode Akses yang Diberikan Guru Pengajar</p>
+    <input id="access-input" type="text" placeholder="KODE AKSES" />
+    <button id="access-btn">BUKA</button>
+    <div id="access-error"></div>
+  </div>
+
+  <div class="slide-container">
+    <!-- SLIDE 1: Judul -->
+    <section class="slide active">
+      <div class="slide-counter">1 / 10</div>
+      <span class="tagline">Lower Primary</span>
+      <h1>Urutan Langkah & Instruksi</h1>
+      <p class="subtitle">
+        Kita akan belajar menyusun kegiatan dengan urutan yang tepat.
+      </p>
+      <div class="highlight">
+        <p><strong>Tujuan sesi ini:</strong></p>
+        <ul class="checklist">
+          <li>Menjelaskan apa itu urutan langkah dan instruksi.</li>
+          <li>Mengurutkan langkah aktivitas sehari-hari dengan benar.</li>
+          <li>Memperbaiki urutan yang masih salah.</li>
+        </ul>
+      </div>
+      <p style="text-align:center; font-size:1.6rem; margin-top:10px;">
+        ☀️ Bangun → Mandi → Sarapan → Berangkat Sekolah 🏫
+      </p>
+      <p style="text-align:center; margin-top:10px;">
+        Tekan <strong>panah kanan</strong> di keyboard atau tombol
+        <strong>Selanjutnya</strong> di bawah untuk pindah slide.
+      </p>
+    </section>
+
+    <!-- SLIDE 2: Apersepsi kegiatan sehari-hari -->
+    <section class="slide">
+      <div class="slide-counter">2 / 10</div>
+      <h2>Apa yang Kamu Lakukan Sehari-hari?</h2>
+      <p>
+        Coba ingat lagi. Saat pagi sampai malam, kamu melakukan banyak
+        kegiatan.
+      </p>
+      <div class="two-col">
+        <div class="card">
+          <div class="emoji-big">🌅</div>
+          <h3>Pagi Hari</h3>
+          <ul>
+            <li>Bangun tidur</li>
+            <li>Merapikan tempat tidur</li>
+            <li>Mandi dan gosok gigi</li>
+            <li>Sarapan</li>
+          </ul>
+        </div>
+        <div class="card">
+          <div class="emoji-big">🌙</div>
+          <h3>Malam Hari</h3>
+          <ul>
+            <li>Makan malam</li>
+            <li>Mengerjakan PR</li>
+            <li>Bersiap tidur</li>
+            <li>Berdoa lalu tidur</li>
+          </ul>
+        </div>
+      </div>
+      <div class="highlight">
+        <p>
+          Semua kegiatan itu punya <strong>urutan</strong>. Kalau urutan
+          berubah, kegiatan bisa terasa aneh.
+        </p>
+      </div>
+    </section>
+
+    <!-- SLIDE 3: Definisi Urutan Langkah -->
+    <section class="slide">
+      <div class="slide-counter">3 / 10</div>
+      <h2>Apa Itu Urutan Langkah?</h2>
+      <p>
+        <strong>Urutan langkah</strong> adalah langkah-langkah yang kita
+        lakukan <strong>satu per satu dari awal sampai akhir</strong>.
+      </p>
+      <p>
+        Urutan tidak boleh dibolak-balik. Kalau salah urutan, hasilnya bisa
+        tidak benar.
+      </p>
+      <div class="two-col">
+        <div class="card">
+          <h3>Contoh: Cuci Tangan 🧼</h3>
+          <ol style="margin-left:20px;">
+            <li>Basahi tangan dengan air.</li>
+            <li>Beri sabun.</li>
+            <li>Gosok sampai berbusa.</li>
+            <li>Bilas dengan air.</li>
+            <li>Keringkan dengan handuk.</li>
+          </ol>
+        </div>
+        <div class="card">
+          <h3>Kalau Dibalik?</h3>
+          <p>
+            Bagaimana kalau kamu mengeringkan tangan dulu sebelum
+            membasahi tangan? Tentu saja tidak bisa.
+          </p>
+          <p>
+            Karena itu, <strong>urutan langkah harus teratur</strong>.
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <!-- SLIDE 4: Drag & Drop cuci tangan -->
+    <section class="slide">
+      <div class="slide-counter">4 / 10</div>
+      <h2>Susun Urutan Cuci Tangan</h2>
+      <p>
+        Tarik kartu di sebelah kiri ke kotak kanan. Susun dari langkah pertama
+        sampai terakhir.
+      </p>
+      <div class="dd-container">
+        <div class="dd-pool" id="dd-pool">
+          <div class="dd-title">Kartu Langkah</div>
+          <div
+            class="dd-item"
+            draggable="true"
+            data-step="1"
+          >
+            <span class="step-number">?</span> Basahi tangan dengan air.
+          </div>
+          <div
+            class="dd-item"
+            draggable="true"
+            data-step="2"
+          >
+            <span class="step-number">?</span> Beri sabun pada tangan.
+          </div>
+          <div
+            class="dd-item"
+            draggable="true"
+            data-step="3"
+          >
+            <span class="step-number">?</span> Gosok telapak dan punggung
+            tangan.
+          </div>
+          <div
+            class="dd-item"
+            draggable="true"
+            data-step="4"
+          >
+            <span class="step-number">?</span> Bilas dengan air bersih.
+          </div>
+          <div
+            class="dd-item"
+            draggable="true"
+            data-step="5"
+          >
+            <span class="step-number">?</span> Keringkan dengan handuk.
+          </div>
+        </div>
+        <div class="dd-target" id="dd-target">
+          <div class="dd-title">Susun di Sini (1 → 5)</div>
+        </div>
+      </div>
+      <button class="btn-small" onclick="checkSequence()">✅ Cek Urutan</button>
+      <button
+        class="btn-small btn-outline"
+        onclick="resetSequence()"
+      >
+        🔄 Ulangi
+      </button>
+      <div id="dd-feedback" class="feedback"></div>
+    </section>
+
+    <!-- SLIDE 5: Instruksi -->
+    <section class="slide">
+      <div class="slide-counter">5 / 10</div>
+      <h2>Apa Itu Instruksi?</h2>
+      <p>
+        <strong>Instruksi</strong> adalah
+        <strong>petunjuk atau perintah</strong> tentang apa yang harus kita
+        lakukan.
+      </p>
+      <p>Instruksi bisa satu kalimat saja, bisa juga beberapa.</p>
+      <div class="two-col">
+        <div class="card">
+          <h3>Contoh Instruksi</h3>
+          <ul>
+            <li>“Warnai gambar apel dengan warna merah.”</li>
+            <li>“Letakkan buku di rak.”</li>
+            <li>“Langkahkan kaki ke depan satu kali.”</li>
+          </ul>
+        </div>
+        <div class="card">
+          <h3>Perbedaan</h3>
+          <ul>
+            <li>
+              Urutan langkah: beberapa langkah yang harus dilakukan <em>berurutan</em>.
+            </li>
+            <li>Instruksi: bisa satu perintah saja.</li>
+          </ul>
+        </div>
+      </div>
+      <div class="bubble-row">
+        <div class="bubble">Urutan langkah = banyak langkah</div>
+        <div class="bubble">Instruksi = perintah</div>
+      </div>
+    </section>
+
+    <!-- SLIDE 6: Quiz urutan vs instruksi -->
+    <section class="slide">
+      <div class="slide-counter">6 / 10</div>
+      <h2>Pilih: Urutan Langkah atau Instruksi?</h2>
+      <p>
+        Baca kalimat berikut. Klik jawaban yang tepat: ini
+        <strong>Urutan langkah</strong> atau <strong>Instruksi</strong>?
+      </p>
+
+      <div class="card">
+        <p><strong>1.</strong> “Ambil piring, tuang nasi, lalu ambil sendok.”</p>
+        <div class="quiz-options">
+          <div
+            class="quiz-option"
+            onclick="checkQuiz('q1', this, true)"
+          >
+            Urutan langkah
+          </div>
+          <div
+            class="quiz-option"
+            onclick="checkQuiz('q1', this, false)"
+          >
+            Instruksi
+          </div>
+        </div>
+        <div id="q1-feedback" class="feedback"></div>
+      </div>
+
+      <div class="card" style="margin-top:10px;">
+        <p><strong>2.</strong> “Tutup pintu kelas.”</p>
+        <div class="quiz-options">
+          <div
+            class="quiz-option"
+            onclick="checkQuiz('q2', this, false)"
+          >
+            Urutan langkah
+          </div>
+          <div
+            class="quiz-option"
+            onclick="checkQuiz('q2', this, true)"
+          >
+            Instruksi
+          </div>
+        </div>
+        <div id="q2-feedback" class="feedback"></div>
+      </div>
+    </section>
+
+    <!-- SLIDE 7: Membuat susu + pilih langkah salah -->
+    <section class="slide">
+      <div class="slide-counter">7 / 10</div>
+      <h2>Urutan Membuat Susu Hangat</h2>
+      <p>
+        Untuk membuat segelas susu yang enak, kita juga perlu urutan langkah
+        yang benar.
+      </p>
+      <ol style="margin-left:20px;">
+        <li>Siapkan gelas bersih.</li>
+        <li>Siapkan air hangat dan susu bubuk.</li>
+        <li>Masukkan susu ke dalam gelas.</li>
+        <li>Tuang air hangat ke dalam gelas.</li>
+        <li>Aduk perlahan sampai rata.</li>
+      </ol>
+      <p><strong>Manakah kalimat yang menunjukan urutan yang SALAH?</strong></p>
+      <div class="quiz-options">
+        <div
+          class="quiz-option"
+          onclick="checkQuiz('q3', this, false)"
+        >
+          “Siapkan gelas bersih yang akan digunakan.”
+        </div>
+        <div
+          class="quiz-option"
+          onclick="checkQuiz('q3', this, true)"
+        >
+          “Aduk susu dulu, baru masukkan ke gelas.”
+        </div>
+        <div
+          class="quiz-option"
+          onclick="checkQuiz('q3', this, false)"
+        >
+          “Tuang air hangat setelah susu dimasukkan ke gelas.”
+        </div>
+      </div>
+      <div id="q3-feedback" class="feedback"></div>
+    </section>
+
+    <!-- SLIDE 8: Pagi hari urutkan -->
+    <section class="slide">
+      <div class="slide-counter">8 / 10</div>
+      <h2>Urutan Pagi Hari</h2>
+      <p>
+        Pilih jawaban yang menunjukkan urutan kegiatan pagi yang paling
+        masuk akal.
+      </p>
+      <div class="quiz-options">
+        <div
+          class="quiz-option"
+          onclick="checkQuiz('q4', this, true)"
+        >
+          Bangun tidur → Mandi → Sarapan → Berangkat sekolah
+        </div>
+        <div
+          class="quiz-option"
+          onclick="checkQuiz('q4', this, false)"
+        >
+          Mandi → Berangkat sekolah → Sarapan → Bangun tidur
+        </div>
+        <div
+          class="quiz-option"
+          onclick="checkQuiz('q4', this, false)"
+        >
+          Sarapan → Tidur lagi → Berangkat sekolah
+        </div>
+      </div>
+      <div id="q4-feedback" class="feedback"></div>
+      <div class="highlight">
+        <p>
+          Kamu boleh punya rutinitas pagi yang berbeda, tapi tetap
+          <strong>perlu urutan</strong> supaya tidak terburu-buru.
+        </p>
+      </div>
+    </section>
+
+    <!-- SLIDE 9: Perbaiki urutan salah -->
+    <section class="slide">
+      <div class="slide-counter">9 / 10</div>
+      <h2>Perbaiki Urutan yang Salah</h2>
+      <p>
+        Lihat urutan berikut. Menurutmu, apa yang salah? Pilih perbaikan yang
+        paling tepat.
+      </p>
+      <div class="card">
+        <p><strong>Urutan:</strong></p>
+        <ol style="margin-left:20px;">
+          <li>Pakai sepatu.</li>
+          <li>Pakai kaus kaki.</li>
+          <li>Berjalan ke sekolah.</li>
+        </ol>
+      </div>
+      <p><strong>Perbaikan yang benar:</strong></p>
+      <div class="quiz-options">
+        <div
+          class="quiz-option"
+          onclick="checkQuiz('q5', this, true)"
+        >
+          Pakai kaus kaki → Pakai sepatu → Berjalan ke sekolah
+        </div>
+        <div
+          class="quiz-option"
+          onclick="checkQuiz('q5', this, false)"
+        >
+          Berjalan ke sekolah → Pakai kaus kaki → Pakai sepatu
+        </div>
+        <div
+          class="quiz-option"
+          onclick="checkQuiz('q5', this, false)"
+        >
+          Pakai sepatu → Berjalan ke sekolah → Pakai kaus kaki
+        </div>
+      </div>
+      <div id="q5-feedback" class="feedback"></div>
+    </section>
+
+    <!-- SLIDE 10: Refleksi & Exit Ticket -->
+    <section class="slide">
+      <div class="slide-counter">10 / 10</div>
+      <h2>Refleksi & Exit Ticket</h2>
+      <p>
+        Sebelum selesai, yuk kita cek sekali lagi. Pilih jawaban yang benar.
+      </p>
+      <p><strong>Urutan langkah yang baik harus...</strong></p>
+      <div class="quiz-options">
+        <div
+          class="quiz-option"
+          onclick="checkQuiz('q6', this, true)"
+        >
+          Dilakukan satu per satu dengan urutan yang tepat.
+        </div>
+        <div
+          class="quiz-option"
+          onclick="checkQuiz('q6', this, false)"
+        >
+          Dilakukan acak, tidak perlu urutan.
+        </div>
+      </div>
+      <div id="q6-feedback" class="feedback"></div>
+
+      <div class="highlight" style="margin-top:16px;">
+        <p><strong>Tuliskan jawabanmu:</strong></p>
+        <p>
+          “Hari ini aku belajar bahwa urutan langkah itu penting karena...”
+        </p>
+        <textarea class="note"></textarea>
+      </div>
+      <p style="margin-top:8px;">
+        Guru dapat meminta beberapa siswa membacakan jawaban mereka.
+      </p>
+    </section>
+  </div>
+
+  <div class="navigation">
+    <button class="nav-btn" id="prevBtn">⬅️ Sebelumnya</button>
+    <button class="nav-btn" id="nextBtn">Selanjutnya ➡️</button>
+  </div>
+
+  <script>
+    // ACCESS CODE
+    const accessInput = document.getElementById("access-input");
+    const accessBtn = document.getElementById("access-btn");
+    const accessError = document.getElementById("access-error");
+
+    function checkAccess() {
+      const value = (accessInput.value || "").toUpperCase().trim();
+      if (value === "RGMDSLP25") {
+        document.getElementById("access-screen").style.display = "none";
+      } else {
+        accessError.textContent = "Kode salah, coba lagi ya 🙂";
+      }
+    }
+
+    accessBtn.addEventListener("click", checkAccess);
+    accessInput.addEventListener("keyup", (e) => {
+      if (e.key === "Enter") checkAccess();
+    });
+
+    // SLIDE NAVIGATION
+    const slides = document.querySelectorAll(".slide");
+    let currentSlide = 0;
+
+    const prevBtn = document.getElementById("prevBtn");
+    const nextBtn = document.getElementById("nextBtn");
+
+    function showSlide(index) {
+      slides.forEach((s) => s.classList.remove("active"));
+      if (index < 0) index = 0;
+      if (index > slides.length - 1) index = slides.length - 1;
+      currentSlide = index;
+      slides[currentSlide].classList.add("active");
+      slides[currentSlide].scrollTop = 0;
+      document.querySelector(".slide-container").scrollTop = 0;
+
+      prevBtn.disabled = currentSlide === 0;
+      nextBtn.disabled = currentSlide === slides.length - 1;
+    }
+
+    prevBtn.addEventListener("click", () => showSlide(currentSlide - 1));
+    nextBtn.addEventListener("click", () => showSlide(currentSlide + 1));
+
+    document.addEventListener("keydown", (e) => {
+      if (e.key === "ArrowRight") {
+        showSlide(currentSlide + 1);
+      } else if (e.key === "ArrowLeft") {
+        showSlide(currentSlide - 1);
+      }
+    });
+
+    // GENERIC QUIZ HANDLER (allow retry on wrong)
+    function checkQuiz(id, el, isCorrect) {
+      const parent = el.parentNode;
+      const options = parent.querySelectorAll(".quiz-option");
+      const feedback = document.getElementById(id + "-feedback");
+
+      if (isCorrect) {
+        options.forEach((opt) => {
+          opt.classList.remove("correct", "incorrect");
+          opt.style.pointerEvents = "none";
+        });
+        el.classList.add("correct");
+        feedback.textContent = "Yeay, jawabanmu tepat! 🎉";
+        feedback.style.color = "#38a169";
+      } else {
+        el.classList.add("incorrect");
+        feedback.textContent = "Belum tepat, coba pilih jawaban lain ya.";
+        feedback.style.color = "#e53e3e";
+        setTimeout(() => {
+          el.classList.remove("incorrect");
+          feedback.textContent = "";
+        }, 900);
+      }
+    }
+
+    // DRAG & DROP – URUTAN CUCI TANGAN
+    const ddPool = document.getElementById("dd-pool");
+    const ddTarget = document.getElementById("dd-target");
+    let draggedItem = null;
+
+    function addDDListeners(container) {
+      container.querySelectorAll(".dd-item").forEach((item) => {
+        item.addEventListener("dragstart", (e) => {
+          draggedItem = item;
+          setTimeout(() => {
+            item.style.opacity = "0.4";
+          }, 0);
+        });
+
+        item.addEventListener("dragend", () => {
+          draggedItem = null;
+          item.style.opacity = "1";
+        });
+      });
+    }
+
+    [ddPool, ddTarget].forEach((zone) => {
+      zone.addEventListener("dragover", (e) => {
+        e.preventDefault();
+        zone.classList.add("dragover");
+      });
+
+      zone.addEventListener("dragleave", () => {
+        zone.classList.remove("dragover");
+      });
+
+      zone.addEventListener("drop", (e) => {
+        e.preventDefault();
+        zone.classList.remove("dragover");
+        if (draggedItem) {
+          zone.appendChild(draggedItem);
+        }
+      });
+    });
+
+    function checkSequence() {
+      const feedback = document.getElementById("dd-feedback");
+      const items = ddTarget.querySelectorAll(".dd-item");
+      if (items.length !== 5) {
+        feedback.textContent = "Masih ada langkah yang belum dipindah. Coba lagi ya.";
+        feedback.style.color = "#e53e3e";
+        return;
+      }
+      const expected = ["1", "2", "3", "4", "5"];
+      let ok = true;
+      items.forEach((item, idx) => {
+        const step = item.getAttribute("data-step");
+        const numberSpan = item.querySelector(".step-number");
+        numberSpan.textContent = idx + 1;
+        if (step !== expected[idx]) {
+          ok = false;
+        }
+      });
+      if (ok) {
+        feedback.textContent = "Bagus sekali! Urutan cuci tanganmu sudah benar. 👍";
+        feedback.style.color = "#38a169";
+      } else {
+        feedback.textContent = "Masih ada yang tertukar. Coba susun lagi ya.";
+        feedback.style.color = "#e53e3e";
+      }
+    }
+
+    function resetSequence() {
+      const feedback = document.getElementById("dd-feedback");
+      const items = ddTarget.querySelectorAll(".dd-item");
+      items.forEach((item) => {
+        const numberSpan = item.querySelector(".step-number");
+        numberSpan.textContent = "?";
+        ddPool.appendChild(item);
+      });
+      feedback.textContent = "";
+    }
+
+    addDDListeners(ddPool);
+    addDDListeners(ddTarget);
+
+    // Init first slide
+    showSlide(0);
+  </script>
+</body>
+</html>
