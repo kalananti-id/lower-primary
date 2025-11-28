@@ -1,0 +1,749 @@
+<!doctype html>
+<html lang="id">
+
+<head>
+    <meta charset="UTF-8" />
+    <title>Game Tambahan – Urutan Langkah & Instruksi</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            font-family: "Comic Sans MS", system-ui, -apple-system, BlinkMacSystemFont,
+                "Segoe UI", sans-serif;
+            background: linear-gradient(135deg, #fbd38d, #bee3f8);
+            min-height: 100vh;
+            animation: bgMove 18s ease-in-out infinite;
+        }
+
+        @keyframes bgMove {
+            0% {
+                background: linear-gradient(135deg, #fbd38d, #bee3f8);
+            }
+
+            50% {
+                background: linear-gradient(135deg, #faf089, #90cdf4);
+            }
+
+            100% {
+                background: linear-gradient(135deg, #fbd38d, #bee3f8);
+            }
+        }
+
+        .wrapper {
+            max-width: 1200px;
+            margin: 90px auto 80px;
+            padding: 0 16px 40px;
+        }
+
+        h1 {
+            text-align: center;
+            font-size: 2.4rem;
+            color: #b83280;
+            margin-bottom: 4px;
+        }
+
+        .subtitle {
+            text-align: center;
+            color: #4a5568;
+            margin-bottom: 20px;
+            font-size: 1.05rem;
+        }
+
+        .game-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 18px;
+        }
+
+        .game-card {
+            background: #ffffff;
+            border-radius: 24px;
+            padding: 18px 18px 20px;
+            box-shadow: 0 16px 40px rgba(0, 0, 0, 0.18);
+            position: relative;
+        }
+
+        .game-badge {
+            display: inline-block;
+            padding: 4px 12px;
+            border-radius: 999px;
+            background: #fed7e2;
+            color: #b83280;
+            font-size: 0.8rem;
+            margin-bottom: 6px;
+        }
+
+        .game-title {
+            font-size: 1.3rem;
+            font-weight: bold;
+            color: #2d3748;
+            margin: 0 0 8px;
+            text-align: left;
+        }
+
+        p {
+            color: #4a5568;
+            font-size: 0.95rem;
+            line-height: 1.5;
+            margin: 4px 0 8px;
+        }
+
+        .feedback {
+            font-weight: bold;
+            margin-top: 6px;
+            font-size: 0.9rem;
+            min-height: 1.2em;
+        }
+
+        .btn {
+            border: none;
+            border-radius: 999px;
+            padding: 8px 14px;
+            font-size: 0.9rem;
+            cursor: pointer;
+            background: #38a169;
+            color: #fff;
+            margin-top: 8px;
+            margin-right: 6px;
+            box-shadow: 0 4px 14px rgba(56, 161, 105, 0.45);
+            transition: all 0.2s ease;
+        }
+
+        .btn:hover {
+            transform: translateY(-1px);
+            background: #2f855a;
+        }
+
+        .btn.secondary {
+            background: #ffffff;
+            color: #e53e3e;
+            border: 2px solid #feb2b2;
+            box-shadow: none;
+        }
+
+        .btn.secondary:hover {
+            background: #fed7d7;
+            transform: translateY(-1px);
+        }
+
+        /* GAME 1 – Numbering inputs */
+        .step-list {
+            margin-top: 6px;
+        }
+
+        .step-row {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 6px;
+            font-size: 0.95rem;
+            color: #4a5568;
+            background: #f7fafc;
+            border-radius: 12px;
+            padding: 4px 8px;
+            border: 1px solid #e2e8f0;
+        }
+
+        .step-input {
+            width: 40px;
+            padding: 4px;
+            border-radius: 8px;
+            border: 2px solid #cbd5e0;
+            text-align: center;
+            font-size: 0.9rem;
+        }
+
+        .step-label {
+            flex: 1;
+        }
+
+        /* GAME 2 – Drag & drop before sleep */
+        .dd-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 12px;
+            margin-top: 6px;
+        }
+
+        .dd-column {
+            background: #f7fafc;
+            border-radius: 16px;
+            border: 2px dashed #cbd5e0;
+            min-height: 150px;
+            padding: 10px;
+        }
+
+        .dd-title {
+            font-weight: bold;
+            font-size: 0.9rem;
+            margin-bottom: 6px;
+            color: #2d3748;
+        }
+
+        .dd-item {
+            background: #ffffff;
+            border-radius: 12px;
+            border: 2px solid #e2e8f0;
+            padding: 6px 10px;
+            margin: 4px 0;
+            cursor: move;
+            font-size: 0.9rem;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .dd-item .step-number {
+            background: #d53f8c;
+            color: #fff;
+            border-radius: 999px;
+            width: 22px;
+            height: 22px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.8rem;
+        }
+
+        .dd-column.dragover {
+            background: #fff5f7;
+            border-color: #f687b3;
+        }
+
+        /* GAME 3 & 4 – Quiz */
+        .quiz-options {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            margin-top: 6px;
+        }
+
+        .quiz-option {
+            background: #edf2f7;
+            border-radius: 16px;
+            padding: 8px 10px;
+            cursor: pointer;
+            border: 2px solid #cbd5e0;
+            font-size: 0.95rem;
+            transition: all 0.2s ease;
+        }
+
+        .quiz-option:hover {
+            background: #feebc8;
+            border-color: #dd6b20;
+            transform: translateY(-1px);
+        }
+
+        .quiz-option.correct {
+            background: #c6f6d5;
+            border-color: #38a169;
+        }
+
+        .quiz-option.incorrect {
+            background: #fed7d7;
+            border-color: #e53e3e;
+        }
+
+        .emoji-big {
+            font-size: 1.8rem;
+            margin-bottom: 4px;
+        }
+
+        /* GAME 5 – Dropdown */
+        .step-select-row {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 6px;
+            background: #f7fafc;
+            border-radius: 12px;
+            padding: 4px 8px;
+            border: 1px solid #e2e8f0;
+            font-size: 0.95rem;
+            color: #4a5568;
+        }
+
+        .step-select {
+            border-radius: 8px;
+            border: 2px solid #cbd5e0;
+            padding: 4px;
+            font-size: 0.9rem;
+        }
+
+        .footer-note {
+            text-align: center;
+            font-size: 0.85rem;
+            color: #4a5568;
+            margin-top: 14px;
+        }
+
+        /* Access code overlay */
+        #access-screen {
+            position: fixed;
+            inset: 0;
+            background: rgba(255, 255, 255, 0.98);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            z-index: 5000;
+            text-align: center;
+            padding: 20px;
+        }
+
+        #access-screen h2 {
+            margin-bottom: 8px;
+            color: #b83280;
+        }
+
+        #access-screen p {
+            margin-bottom: 14px;
+            color: #4a5568;
+            font-size: 0.95rem;
+        }
+
+        #access-input {
+            padding: 10px 14px;
+            border-radius: 999px;
+            border: 2px solid #cbd5e0;
+            font-size: 1rem;
+            text-transform: uppercase;
+            text-align: center;
+            width: 240px;
+            max-width: 90%;
+            margin-bottom: 10px;
+        }
+
+        #access-btn {
+            border: none;
+            border-radius: 999px;
+            padding: 8px 18px;
+            background: #b83280;
+            color: #fff;
+            font-size: 0.95rem;
+            cursor: pointer;
+            box-shadow: 0 3px 12px rgba(184, 50, 128, 0.5);
+            transition: all 0.2s;
+        }
+
+        #access-btn:hover {
+            background: #97266d;
+            transform: translateY(-1px);
+        }
+
+        #access-error {
+            color: #e53e3e;
+            font-weight: bold;
+            margin-top: 6px;
+            min-height: 1.2em;
+            font-size: 0.9rem;
+        }
+
+        @media (max-width: 768px) {
+            .wrapper {
+                margin-top: 70px;
+            }
+
+            h1 {
+                font-size: 2rem;
+            }
+
+            .game-card {
+                border-radius: 18px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <!-- ACCESS CODE -->
+    <div id="access-screen">
+        <h2>🔒 Game Tambahan Sesi 9</h2>
+        <p>Masukkan kode akses kelas (huruf besar semua).</p>
+        <p><strong>Kode:</strong> RGMDSLP25</p>
+        <input id="access-input" type="text" placeholder="KODE AKSES" />
+        <button id="access-btn">BUKA GAME</button>
+        <div id="access-error"></div>
+    </div>
+
+    <div class="wrapper">
+        <h1>Game Tambahan – Urutan Langkah & Instruksi</h1>
+        <div class="subtitle">
+            Latihan ekstra: rutinitas pagi, sebelum tidur, piknik, instruksi, dan perpustakaan 📚
+        </div>
+
+        <div class="game-grid">
+            <!-- GAME 1: Numbering – Rutinitas Pagi -->
+            <div class="game-card">
+                <div class="game-badge">Game 1</div>
+                <div class="game-title">Rutinitas Pagi Hari 🌅</div>
+                <p>Tulis angka 1–4 di kotak sesuai urutan yang paling masuk akal.</p>
+                <div class="step-list" id="pagi-container">
+                    <div class="step-row">
+                        <input type="number" class="step-input" min="1" max="4" data-answer="1" />
+                        <div class="step-label">Bangun tidur dari kasur.</div>
+                    </div>
+                    <div class="step-row">
+                        <input type="number" class="step-input" min="1" max="4" data-answer="2" />
+                        <div class="step-label">Mandi dan gosok gigi.</div>
+                    </div>
+                    <div class="step-row">
+                        <input type="number" class="step-input" min="1" max="4" data-answer="3" />
+                        <div class="step-label">Sarapan bersama keluarga.</div>
+                    </div>
+                    <div class="step-row">
+                        <input type="number" class="step-input" min="1" max="4" data-answer="4" />
+                        <div class="step-label">Berangkat ke sekolah.</div>
+                    </div>
+                </div>
+                <button class="btn" onclick="checkNumbering('pagi')">✅ Cek Jawaban</button>
+                <button class="btn secondary" onclick="resetNumbering('pagi')">🔄 Ulangi</button>
+                <div id="pagi-feedback" class="feedback"></div>
+            </div>
+
+            <!-- GAME 2: Drag & drop – Sebelum Tidur -->
+            <div class="game-card">
+                <div class="game-badge">Game 2</div>
+                <div class="game-title">Sebelum Tidur 😴</div>
+                <p>Tarik kartu ke kolom kanan dan susun urutan sebelum tidur.</p>
+                <div class="dd-container">
+                    <div class="dd-column" id="tidur-pool">
+                        <div class="dd-title">Kartu Langkah</div>
+                        <div class="dd-item" draggable="true" data-step="3">
+                            <span class="step-number">?</span> Berdoa sebelum tidur.
+                        </div>
+                        <div class="dd-item" draggable="true" data-step="1">
+                            <span class="step-number">?</span> Merapikan mainan dan buku.
+                        </div>
+                        <div class="dd-item" draggable="true" data-step="2">
+                            <span class="step-number">?</span> Menggosok gigi dan cuci muka.
+                        </div>
+                        <div class="dd-item" draggable="true" data-step="4">
+                            <span class="step-number">?</span> Berbaring dan memejamkan mata.
+                        </div>
+                    </div>
+                    <div class="dd-column" id="tidur-target">
+                        <div class="dd-title">Susun di sini (1 → 4)</div>
+                    </div>
+                </div>
+                <button class="btn" onclick="checkSequence('tidur', 4)">✅ Cek Urutan</button>
+                <button class="btn secondary" onclick="resetSequence('tidur')">🔄 Ulangi</button>
+                <div id="tidur-feedback" class="feedback"></div>
+            </div>
+
+            <!-- GAME 3: Langkah hilang – Piknik -->
+            <div class="game-card">
+                <div class="game-badge">Game 3</div>
+                <div class="game-title">Langkah Hilang – Pergi Piknik 🧺</div>
+                <p>Baca urutan ini. Langkah mana yang hilang?</p>
+                <p><strong>1.</strong> Menyiapkan makanan dan minuman.</p>
+                <p><strong>2.</strong> Memasukkan barang ke tas dan keranjang.</p>
+                <p><strong>3.</strong> (hilang)</p>
+                <p><strong>4.</strong> Menikmati piknik di taman.</p>
+                <p><strong>Pilih langkah yang tepat untuk nomor 3:</strong></p>
+                <div class="quiz-options">
+                    <div class="quiz-option" onclick="checkQuiz('g3q1', this, true)">
+                        Berangkat ke taman atau tempat piknik.
+                    </div>
+                    <div class="quiz-option" onclick="checkQuiz('g3q1', this, false)">
+                        Mencuci tangan setelah makan.
+                    </div>
+                    <div class="quiz-option" onclick="checkQuiz('g3q1', this, false)">
+                        Menonton TV di rumah.
+                    </div>
+                </div>
+                <div id="g3q1-feedback" class="feedback"></div>
+            </div>
+
+            <!-- GAME 4: Instruksi atau Urutan? Versi baru -->
+            <div class="game-card">
+                <div class="game-badge">Game 4</div>
+                <div class="game-title">Instruksi atau Urutan? 2️⃣</div>
+                <p>Klik jenis yang benar untuk setiap kalimat.</p>
+
+                <div class="emoji-big">1️⃣</div>
+                <p><strong>“Letakkan buku di dalam tas.”</strong></p>
+                <div class="quiz-options">
+                    <div class="quiz-option" onclick="checkQuiz('g4q1', this, false)">Urutan langkah</div>
+                    <div class="quiz-option" onclick="checkQuiz('g4q1', this, true)">Instruksi</div>
+                </div>
+                <div id="g4q1-feedback" class="feedback"></div>
+
+                <div class="emoji-big">2️⃣</div>
+                <p><strong>“Ambil sapu, lalu sapu lantai sampai bersih.”</strong></p>
+                <div class="quiz-options">
+                    <div class="quiz-option" onclick="checkQuiz('g4q2', this, true)">Urutan langkah</div>
+                    <div class="quiz-option" onclick="checkQuiz('g4q2', this, false)">Instruksi</div>
+                </div>
+                <div id="g4q2-feedback" class="feedback"></div>
+
+                <div class="emoji-big">3️⃣</div>
+                <p><strong>“Buka pintu lemari es.”</strong></p>
+                <div class="quiz-options">
+                    <div class="quiz-option" onclick="checkQuiz('g4q3', this, false)">Urutan langkah</div>
+                    <div class="quiz-option" onclick="checkQuiz('g4q3', this, true)">Instruksi</div>
+                </div>
+                <div id="g4q3-feedback" class="feedback"></div>
+            </div>
+
+            <!-- GAME 5: Dropdown – Perpustakaan -->
+            <div class="game-card">
+                <div class="game-badge">Game 5</div>
+                <div class="game-title">Perjalanan ke Perpustakaan 📚</div>
+                <p>Pilih nomor urutan yang tepat (1–4) di tiap baris.</p>
+
+                <div class="step-list" id="perpus-container">
+
+  <div class="step-select-row">
+    <select class="step-select" data-answer="4">
+      <option value="">-</option>
+      <option>1</option><option>2</option><option>3</option><option>4</option>
+    </select>
+    <span class="step-label">Mengembalikan buku dan kembali ke kelas.</span>
+  </div>
+
+  <div class="step-select-row">
+    <select class="step-select" data-answer="2">
+      <option value="">-</option>
+      <option>1</option><option>2</option><option>3</option><option>4</option>
+    </select>
+    <span class="step-label">Masuk dan memberi salam kepada petugas.</span>
+  </div>
+
+  <div class="step-select-row">
+    <select class="step-select" data-answer="1">
+      <option value="">-</option>
+      <option>1</option><option>2</option><option>3</option><option>4</option>
+    </select>
+    <span class="step-label">Berjalan dari kelas menuju perpustakaan.</span>
+  </div>
+
+  <div class="step-select-row">
+    <select class="step-select" data-answer="3">
+      <option value="">-</option>
+      <option>1</option><option>2</option><option>3</option><option>4</option>
+    </select>
+    <span class="step-label">Memilih dan membaca buku dengan tenang.</span>
+  </div>
+
+</div>
+
+                <button class="btn" onclick="checkSelect('perpus')">✅ Cek Jawaban</button>
+                <button class="btn secondary" onclick="resetSelect('perpus')">🔄 Ulangi</button>
+                <div id="perpus-feedback" class="feedback"></div>
+            </div>
+        </div>
+
+    </div>
+
+    <script>
+        // ACCESS CODE
+        const accessScreen = document.getElementById("access-screen");
+        const accessInput = document.getElementById("access-input");
+        const accessBtn = document.getElementById("access-btn");
+        const accessError = document.getElementById("access-error");
+
+        function checkAccess() {
+            const value = (accessInput.value || "").toUpperCase().trim();
+            if (value === "RGMDSLP25") {
+                accessScreen.style.display = "none";
+            } else {
+                accessError.textContent = "Kode salah. Coba lagi ya 🙂";
+            }
+        }
+
+        accessBtn.addEventListener("click", checkAccess);
+        accessInput.addEventListener("keyup", (e) => {
+            if (e.key === "Enter") checkAccess();
+        });
+
+        // GENERIC QUIZ HANDLER
+        function checkQuiz(id, el, isCorrect) {
+            const parent = el.parentNode;
+            const options = parent.querySelectorAll(".quiz-option");
+            const feedback = document.getElementById(id + "-feedback");
+
+            if (isCorrect) {
+                options.forEach((opt) => {
+                    opt.classList.remove("correct", "incorrect");
+                    opt.style.pointerEvents = "none";
+                });
+                el.classList.add("correct");
+                feedback.textContent = "Bagus! Jawabanmu tepat 🎉";
+                feedback.style.color = "#38a169";
+            } else {
+                el.classList.add("incorrect");
+                feedback.textContent = "Belum tepat, coba pilih jawaban lain.";
+                feedback.style.color = "#e53e3e";
+                setTimeout(() => {
+                    el.classList.remove("incorrect");
+                    feedback.textContent = "";
+                }, 900);
+            }
+        }
+
+        // GAME 1 – Numbering
+        function checkNumbering(prefix) {
+            const container = document.getElementById(prefix + "-container");
+            const inputs = container.querySelectorAll(".step-input");
+            const feedback = document.getElementById(prefix + "-feedback");
+            let allFilled = true;
+            let allCorrect = true;
+
+            inputs.forEach((inp) => {
+                const val = inp.value.trim();
+                const ans = inp.getAttribute("data-answer");
+                if (!val) allFilled = false;
+                if (val !== ans) allCorrect = false;
+            });
+
+            if (!allFilled) {
+                feedback.textContent = "Masih ada kotak kosong. Isi semua dulu ya.";
+                feedback.style.color = "#e53e3e";
+                return;
+            }
+
+            if (allCorrect) {
+                feedback.textContent = "Hebat! Urutan pagi harimu sudah benar 👍";
+                feedback.style.color = "#38a169";
+            } else {
+                feedback.textContent = "Ada angka yang masih salah. Coba periksa lagi urutannya.";
+                feedback.style.color = "#e53e3e";
+            }
+        }
+
+        function resetNumbering(prefix) {
+            const container = document.getElementById(prefix + "-container");
+            const inputs = container.querySelectorAll(".step-input");
+            const feedback = document.getElementById(prefix + "-feedback");
+            inputs.forEach((inp) => {
+                inp.value = "";
+            });
+            feedback.textContent = "";
+        }
+
+        // GAME 2 – Drag & Drop Sebelum Tidur
+        let draggedItem = null;
+
+        function addDDListeners(columnId) {
+            const column = document.getElementById(columnId);
+            column.addEventListener("dragover", (e) => {
+                e.preventDefault();
+                column.classList.add("dragover");
+            });
+            column.addEventListener("dragleave", () => {
+                column.classList.remove("dragover");
+            });
+            column.addEventListener("drop", (e) => {
+                e.preventDefault();
+                column.classList.remove("dragover");
+                if (draggedItem) {
+                    column.appendChild(draggedItem);
+                }
+            });
+            column.querySelectorAll(".dd-item").forEach((item) => {
+                item.addEventListener("dragstart", () => {
+                    draggedItem = item;
+                    setTimeout(() => {
+                        item.style.opacity = "0.4";
+                    }, 0);
+                });
+                item.addEventListener("dragend", () => {
+                    draggedItem = null;
+                    item.style.opacity = "1";
+                });
+            });
+        }
+
+        ["tidur-pool", "tidur-target"].forEach((id) => addDDListeners(id));
+
+        function checkSequence(prefix, totalSteps) {
+            const target = document.getElementById(prefix + "-target");
+            const feedback = document.getElementById(prefix + "-feedback");
+            const items = target.querySelectorAll(".dd-item");
+
+            if (items.length !== totalSteps) {
+                feedback.textContent = "Pindahkan semua kartu dulu ke kolom urutan ya.";
+                feedback.style.color = "#e53e3e";
+                return;
+            }
+
+            let ok = true;
+            items.forEach((item, index) => {
+                const step = item.getAttribute("data-step");
+                const numSpan = item.querySelector(".step-number");
+                numSpan.textContent = index + 1;
+                if (step !== String(index + 1)) ok = false;
+            });
+
+            if (ok) {
+                feedback.textContent = "Keren! Urutan sebelum tidurmu sudah tepat 😴✨";
+                feedback.style.color = "#38a169";
+            } else {
+                feedback.textContent = "Masih ada yang tertukar. Coba susun ulang lagi.";
+                feedback.style.color = "#e53e3e";
+            }
+        }
+
+        function resetSequence(prefix) {
+            const pool = document.getElementById(prefix + "-pool");
+            const target = document.getElementById(prefix + "-target");
+            const feedback = document.getElementById(prefix + "-feedback");
+            const items = target.querySelectorAll(".dd-item");
+
+            items.forEach((item) => {
+                const numSpan = item.querySelector(".step-number");
+                numSpan.textContent = "?";
+                pool.appendChild(item);
+            });
+            feedback.textContent = "";
+        }
+
+        // GAME 5 – Dropdown Perpustakaan
+        function checkSelect(prefix) {
+            const container = document.getElementById(prefix + "-container");
+            const selects = container.querySelectorAll(".step-select");
+            const feedback = document.getElementById(prefix + "-feedback");
+
+            let allFilled = true;
+            let allCorrect = true;
+
+            selects.forEach((sel) => {
+                const val = sel.value;
+                const ans = sel.getAttribute("data-answer");
+                if (!val) allFilled = false;
+                if (val !== ans) allCorrect = false;
+            });
+
+            if (!allFilled) {
+                feedback.textContent = "Pilih nomor untuk semua langkah dulu ya.";
+                feedback.style.color = "#e53e3e";
+                return;
+            }
+
+            if (allCorrect) {
+                feedback.textContent = "Mantap! Perjalananmu ke perpustakaan sudah runtut 📚";
+                feedback.style.color = "#38a169";
+            } else {
+                feedback.textContent = "Masih ada urutan yang salah. Coba cek lagi.";
+                feedback.style.color = "#e53e3e";
+            }
+        }
+
+        function resetSelect(prefix) {
+            const container = document.getElementById(prefix + "-container");
+            const selects = container.querySelectorAll(".step-select");
+            const feedback = document.getElementById(prefix + "-feedback");
+            selects.forEach((sel) => {
+                sel.value = "";
+            });
+            feedback.textContent = "";
+        }
+    </script>
+</body>
+
+</html>
