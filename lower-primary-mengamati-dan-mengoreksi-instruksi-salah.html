@@ -1,0 +1,709 @@
+<!doctype html>
+<html lang="id">
+
+<head>
+    <meta charset="UTF-8" />
+    <title>Mengamati & Mengoreksi Instruksi Salah – Latihan</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            font-family: "Comic Sans MS", system-ui, -apple-system, BlinkMacSystemFont,
+                "Segoe UI", sans-serif;
+            background: linear-gradient(135deg, #90cdf4, #fefcbf);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .slide-container {
+            width: 100%;
+            max-width: 1200px;
+            padding: 24px 0 80px;
+            display: flex;
+            align-items: flex-start;
+            justify-content: center;
+        }
+
+        .slide {
+            width: 94%;
+            max-width: 1100px;
+            background: #ffffff;
+            border-radius: 24px;
+            box-shadow: 0 18px 45px rgba(0, 0, 0, 0.18);
+            padding: 28px 30px 34px;
+            display: none;
+        }
+
+        .slide.active {
+            display: block;
+        }
+
+        h1 {
+            margin: 0 0 6px;
+            text-align: center;
+            font-size: 2rem;
+            color: #2b6cb0;
+        }
+
+        .subtitle {
+            text-align: center;
+            color: #4a5568;
+            margin-bottom: 18px;
+        }
+
+        p,
+        li {
+            color: #4a5568;
+            font-size: 1.02rem;
+            line-height: 1.5;
+        }
+
+        .tagline {
+            display: inline-block;
+            padding: 4px 12px;
+            border-radius: 999px;
+            background: #ebf8ff;
+            color: #2b6cb0;
+            font-size: 0.88rem;
+            margin-bottom: 8px;
+        }
+
+        .two-col {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+            gap: 16px;
+            margin-top: 10px;
+        }
+
+        .card {
+            background: #f7fafc;
+            border-radius: 18px;
+            border: 2px solid #e2e8f0;
+            padding: 14px 16px;
+        }
+
+        .card h2 {
+            margin-top: 0;
+            font-size: 1.3rem;
+            color: #2d3748;
+        }
+
+        ol {
+            margin: 8px 0 0 20px;
+            padding: 0;
+        }
+
+        .highlight {
+            margin-top: 12px;
+            background: #fefcbf;
+            border-radius: 14px;
+            border-left: 6px solid #ecc94b;
+            padding: 10px 14px;
+            font-size: 0.98rem;
+        }
+
+        .quiz-options {
+            margin-top: 10px;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .quiz-option {
+            background: #edf2f7;
+            border-radius: 16px;
+            border: 2px solid #cbd5e0;
+            padding: 9px 12px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            font-size: 0.98rem;
+        }
+
+        .quiz-option:hover {
+            background: #bee3f8;
+            border-color: #3182ce;
+            transform: translateY(-1px);
+        }
+
+        .quiz-option.correct {
+            background: #c6f6d5;
+            border-color: #38a169;
+        }
+
+        .quiz-option.incorrect {
+            background: #fed7d7;
+            border-color: #e53e3e;
+        }
+
+        .feedback {
+            margin-top: 8px;
+            min-height: 1.2em;
+            font-weight: bold;
+            font-size: 0.98rem;
+        }
+
+        .explanation {
+            margin-top: 6px;
+            display: none;
+            font-size: 0.96rem;
+            color: #2d3748;
+        }
+
+        .btn-small {
+            margin-top: 10px;
+            border-radius: 999px;
+            border: none;
+            padding: 7px 16px;
+            font-size: 0.9rem;
+            cursor: pointer;
+            background: #3182ce;
+            color: #fff;
+            box-shadow: 0 3px 12px rgba(49, 130, 206, 0.45);
+            transition: all 0.2s ease;
+        }
+
+        .btn-small:hover {
+            background: #2b6cb0;
+            transform: translateY(-1px);
+        }
+
+        .slide-counter {
+            position: absolute;
+            top: 14px;
+            right: 20px;
+            background: #3182ce;
+            color: #fff;
+            padding: 4px 12px;
+            border-radius: 999px;
+            font-size: 0.8rem;
+            font-weight: bold;
+        }
+
+        .navigation {
+            position: fixed;
+            bottom: 16px;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            gap: 10px;
+        }
+
+        .nav-btn {
+            border-radius: 999px;
+            border: none;
+            padding: 8px 18px;
+            font-size: 0.9rem;
+            cursor: pointer;
+            background: #3182ce;
+            color: #fff;
+            box-shadow: 0 3px 12px rgba(49, 130, 206, 0.45);
+            transition: 0.2s;
+        }
+
+        .nav-btn:disabled {
+            background: #a0aec0;
+            box-shadow: none;
+            cursor: not-allowed;
+        }
+
+        .nav-btn:hover:not(:disabled) {
+            background: #2b6cb0;
+            transform: translateY(-1px);
+        }
+
+        @media (max-width: 768px) {
+            .slide {
+                padding: 20px 16px 24px;
+            }
+
+            h1 {
+                font-size: 1.6rem;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="slide-container">
+
+        <!-- SLIDE 1 – Memakai Kaus Kaki & Sepatu -->
+        <section class="slide active" data-slide="1">
+            <div class="slide-counter">Latihan 1 / 6</div>
+            <div style="text-align:center;">
+                <span class="tagline">Lower Primary – Urutan & Instruksi</span>
+            </div>
+            <h1>Mengamati & Mengoreksi<br />Instruksi yang Salah</h1>
+            <p class="subtitle">
+                Perhatikan contoh urutan memakai kaus kaki dan sepatu. Lalu pilih perbaikan yang paling benar.
+            </p>
+
+            <div class="two-col">
+                <div class="card">
+                    <h2>👀 Contoh Instruksi yang Salah</h2>
+                    <p>Anak ingin bersiap ke sekolah. Ia mengikuti urutan ini:</p>
+                    <ol>
+                        <li>Pakai sepatu.</li>
+                        <li>Berjalan keluar rumah.</li>
+                        <li>Baru memakai kaus kaki.</li>
+                    </ol>
+                    <div class="highlight">
+                        <strong>Pertanyaan untuk siswa:</strong>
+                        <ul style="margin-top:4px; margin-left:20px;">
+                            <li>Apa yang terasa aneh dari urutan ini?</li>
+                            <li>Bagaimana urutan yang seharusnya?</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <h2>🧠 Pilih Perbaikan Urutan</h2>
+                    <p>Klik urutan yang menurutmu <strong>paling tepat</strong>.</p>
+
+                    <div class="quiz-options">
+                        <div class="quiz-option" data-correct="true">
+                            1) Memakai kaus kaki<br />
+                            2) Memakai sepatu<br />
+                            3) Berjalan keluar rumah
+                        </div>
+                        <div class="quiz-option" data-correct="false">
+                            1) Berjalan keluar rumah<br />
+                            2) Memakai sepatu<br />
+                            3) Memakai kaus kaki
+                        </div>
+                        <div class="quiz-option" data-correct="false">
+                            1) Memakai sepatu di satu kaki<br />
+                            2) Memakai kaus kaki di kaki lainnya<br />
+                            3) Berjalan keluar rumah
+                        </div>
+                    </div>
+
+                    <div class="feedback"></div>
+                    <div class="explanation">
+                        Urutan yang benar dimulai dengan <strong>memakai kaus kaki</strong>
+                        terlebih dahulu, lalu <strong>memakai sepatu</strong>, dan setelah
+                        itu baru <strong>berjalan keluar rumah</strong>. Jika urutan
+                        dibalik, kaki bisa tidak nyaman atau bahkan terluka.
+                    </div>
+                    <button class="btn-small btn-reset">🔄 Coba Lagi</button>
+                </div>
+            </div>
+        </section>
+
+        <!-- SLIDE 2 – Memakai Masker -->
+        <section class="slide" data-slide="2">
+            <div class="slide-counter">Latihan 2 / 6</div>
+            <div style="text-align:center;">
+                <span class="tagline">Lower Primary – Urutan & Instruksi</span>
+            </div>
+            <h1>Mengamati & Mengoreksi<br />Instruksi yang Salah</h1>
+            <p class="subtitle">
+                Sekarang perhatikan urutan memakai masker. Pilih perbaikan yang paling benar.
+            </p>
+
+            <div class="two-col">
+                <div class="card">
+                    <h2>👀 Contoh Instruksi yang Salah</h2>
+                    <p>Seorang anak ingin memakai masker. Ia mengikuti urutan ini:</p>
+                    <ol>
+                        <li>Pakai masker ke wajah.</li>
+                        <li>Cuci tangan.</li>
+                        <li>Atur masker agar menutup hidung dan mulut.</li>
+                    </ol>
+                    <div class="highlight">
+                        <strong>Pertanyaan untuk siswa:</strong>
+                        <ul style="margin-top:4px; margin-left:20px;">
+                            <li>Kenapa cuci tangan dilakukan di tengah?</li>
+                            <li>Urutan mana yang lebih bersih dan aman?</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <h2>🧠 Pilih Perbaikan Urutan</h2>
+                    <p>Klik urutan yang menurutmu <strong>paling tepat</strong>.</p>
+                    <div class="quiz-options">
+                        <div class="quiz-option" data-correct="false">
+                            1) Atur masker dulu<br>
+                            2) Pakai masker<br>
+                            3) Cuci tangan terakhir
+                        </div>
+                        <div class="quiz-option" data-correct="false">
+                            1) Pakai masker<br>
+                            2) Tidak perlu cuci tangan<br>
+                            3) Atur masker seadanya
+                        </div>
+                        <div class="quiz-option" data-correct="true">
+                            1) Cuci tangan<br>
+                            2) Pakai masker ke wajah<br>
+                            3) Atur masker agar menutup hidung dan mulut
+                        </div>
+                    </div>
+                    <div class="feedback"></div>
+                    <div class="explanation">
+                        Urutan yang benar adalah <strong>cuci tangan → pakai masker → atur masker</strong>.<br><br>
+                        Kita harus <strong>mencuci tangan terlebih dahulu</strong> agar tangan bersih sebelum menyentuh
+                        masker.
+                        Setelah itu, <strong>pakai masker dengan benar</strong> dan pastikan masker menutup hidung dan
+                        mulut.
+                        Terakhir, <strong>atur masker hingga pas</strong> supaya kita terlindungi dengan baik.
+                    </div>
+                    <button class="btn-small btn-reset">🔄 Coba Lagi</button>
+                </div>
+            </div>
+        </section>
+
+        <!-- SLIDE 3 – Menyikat Gigi -->
+        <section class="slide" data-slide="3">
+            <div class="slide-counter">Latihan 3 / 6</div>
+            <div style="text-align:center;">
+                <span class="tagline">Lower Primary – Urutan & Instruksi</span>
+            </div>
+            <h1>Mengamati & Mengoreksi<br />Instruksi yang Salah</h1>
+            <p class="subtitle">
+                Perhatikan urutan menyikat gigi berikut. Pilih perbaikan yang paling tepat.
+            </p>
+
+            <div class="two-col">
+                <div class="card">
+                    <h2>👀 Contoh Instruksi yang Salah</h2>
+                    <p>Seorang anak ingin menyikat gigi. Ia mengikuti urutan ini:</p>
+                    <ol>
+                        <li>Sikat gigi sampai bersih.</li>
+                        <li>Keluarkan pasta gigi.</li>
+                        <li>Basahi sikat gigi.</li>
+                    </ol>
+                    <div class="highlight">
+                        <strong>Pertanyaan untuk siswa:</strong>
+                        <ul style="margin-top:4px; margin-left:20px;">
+                            <li>Apakah bisa menyikat gigi tanpa pasta?</li>
+                            <li>Langkah mana yang harus dilakukan dulu?</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <h2>🧠 Pilih Perbaikan Urutan</h2>
+                    <p>Klik urutan yang menurutmu <strong>paling tepat</strong>.</p>
+                    <div class="quiz-options">
+                        <div class="quiz-option" data-correct="true">
+                            1) Basahi sikat gigi<br>
+                            2) Keluarkan pasta gigi<br>
+                            3) Sikat gigi sampai bersih
+                        </div>
+                        <div class="quiz-option" data-correct="false">
+                            1) Sikat gigi dulu<br>
+                            2) Basahi sikat<br>
+                            3) Baru pakai pasta gigi
+                        </div>
+                        <div class="quiz-option" data-correct="false">
+                            1) Keluarkan pasta gigi ke tangan<br>
+                            2) Sikat gigi tanpa air<br>
+                            3) Bilas sekali saja
+                        </div>
+                    </div>
+                    <div class="feedback"></div>
+                    <div class="explanation">
+                        Urutan yang benar dimulai dari <strong>membasahi sikat → memberi pasta gigi → menyikat
+                            gigi</strong>.<br><br>
+                        Kita perlu <strong>membasahi sikat dulu</strong> supaya sikat terasa lembut dan nyaman dipakai.
+                        Setelah itu, <strong>beri pasta gigi secukupnya</strong> agar busanya bisa membantu membersihkan
+                        kuman.
+                        Terakhir, barulah <strong>menyikat gigi dengan gerakan yang benar</strong> sampai semua bagian
+                        bersih.
+                    </div>
+
+                    <button class="btn-small btn-reset">🔄 Coba Lagi</button>
+                </div>
+            </div>
+        </section>
+
+        <!-- SLIDE 4 – Membuat Teh -->
+        <section class="slide" data-slide="4">
+            <div class="slide-counter">Latihan 4 / 6</div>
+            <div style="text-align:center;">
+                <span class="tagline">Lower Primary – Urutan & Instruksi</span>
+            </div>
+            <h1>Mengamati & Mengoreksi<br />Instruksi yang Salah</h1>
+            <p class="subtitle">
+                Sekarang kita lihat urutan membuat teh hangat. Pilih perbaikan yang benar.
+            </p>
+
+            <div class="two-col">
+                <div class="card">
+                    <h2>👀 Contoh Instruksi yang Salah</h2>
+                    <p>Anak ingin membuat teh. Ia mengikuti urutan ini:</p>
+                    <ol>
+                        <li>Masukkan teh celup ke gelas.</li>
+                        <li>Aduk sampai tercampur.</li>
+                        <li>Tuang air panas.</li>
+                    </ol>
+                    <div class="highlight">
+                        <strong>Pertanyaan untuk siswa:</strong>
+                        <ul style="margin-top:4px; margin-left:20px;">
+                            <li>Apa yang salah dengan mengaduk dulu?</li>
+                            <li>Kapan teh bisa bercampur dengan air?</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <h2>🧠 Pilih Perbaikan Urutan</h2>
+                    <p>Klik urutan yang menurutmu <strong>paling tepat</strong>.</p>
+                    <div class="quiz-options">
+                        <div class="quiz-option" data-correct="false">
+                            1) Aduk dulu gelas kosong<br>
+                            2) Masukkan teh celup<br>
+                            3) Tuang air panas
+                        </div>
+                        <div class="quiz-option" data-correct="true">
+                            1) Masukkan teh celup ke gelas<br>
+                            2) Tuang air panas ke dalam gelas<br>
+                            3) Aduk sampai warna teh merata
+                        </div>
+                        <div class="quiz-option" data-correct="false">
+                            1) Tuang air panas ke meja<br>
+                            2) Lap tumpahannya<br>
+                            3) Masukkan teh celup
+                        </div>
+                    </div>
+                    <div class="feedback"></div>
+                    <div class="explanation">
+                        Teh akan tercampur <strong>setelah air panas dituang</strong>, baru kemudian diaduk.<br><br>
+                        Kita perlu <strong>memasukkan teh celup dulu</strong>, lalu <strong>menuang air panas</strong>
+                        agar teh bisa larut dan mengeluarkan warna serta rasa.
+                        Setelah itu, barulah kita <strong>mengaduk perlahan</strong> supaya teh tercampur merata dan
+                        siap diminum.
+                    </div>
+
+                    <button class="btn-small btn-reset">🔄 Coba Lagi</button>
+                </div>
+            </div>
+        </section>
+
+        <!-- SLIDE 5 – Merapikan Tempat Tidur -->
+        <section class="slide" data-slide="5">
+            <div class="slide-counter">Latihan 5 / 6</div>
+            <div style="text-align:center;">
+                <span class="tagline">Lower Primary – Urutan & Instruksi</span>
+            </div>
+            <h1>Mengamati & Mengoreksi<br />Instruksi yang Salah</h1>
+            <p class="subtitle">
+                Perhatikan urutan merapikan tempat tidur. Pilih perbaikan yang paling tepat.
+            </p>
+
+            <div class="two-col">
+                <div class="card">
+                    <h2>👀 Contoh Instruksi yang Salah</h2>
+                    <p>Seorang anak ingin merapikan tempat tidur. Ia mengikuti urutan ini:</p>
+                    <ol>
+                        <li>Taruh bantal.</li>
+                        <li>Naik ke tempat tidur.</li>
+                        <li>Lipat selimut.</li>
+                    </ol>
+                    <div class="highlight">
+                        <strong>Pertanyaan untuk siswa:</strong>
+                        <ul style="margin-top:4px; margin-left:20px;">
+                            <li>Apakah merapikan tempat tidur dilakukan sambil duduk di atasnya?</li>
+                            <li>Bagian mana yang sebaiknya dirapikan dulu?</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <h2>🧠 Pilih Perbaikan Urutan</h2>
+                    <p>Klik urutan yang menurutmu <strong>paling tepat</strong>.</p>
+                    <div class="quiz-options">
+                        <div class="quiz-option" data-correct="false">
+                            1) Naik ke tempat tidur<br>
+                            2) Taruh bantal sembarangan<br>
+                            3) Lipat selimut setengah saja
+                        </div>
+                        <div class="quiz-option" data-correct="false">
+                            1) Menumpuk semua bantal dan selimut<br>
+                            2) Menutupinya dengan satu selimut<br>
+                            3) Selesai
+                        </div>
+                        <div class="quiz-option" data-correct="true">
+                            1) Lipat selimut<br>
+                            2) Meletakkan selimut yang sudah rapi di tempatnya<br>
+                            3) Meletakkan bantal di posisi yang benar
+                        </div>
+                    </div>
+                    <div class="feedback"></div>
+                    <div class="explanation">
+                        Menata tempat tidur dimulai dari <strong>melipat selimut</strong>, lalu menata selimut dan
+                        bantal dengan rapi.<br><br>
+                        Kita perlu <strong>melipat selimut terlebih dahulu</strong> supaya tempat tidur terlihat lebih
+                        bersih dan tidak berantakan.
+                        Setelah itu, <strong>selimut yang sudah rapi diletakkan kembali</strong> di posisi yang benar.
+                        Terakhir, <strong>bantal disusun dengan rapi</strong> agar tempat tidur siap digunakan dan enak
+                        dipandang.
+                    </div>
+
+                    <button class="btn-small btn-reset">🔄 Coba Lagi</button>
+                </div>
+            </div>
+        </section>
+
+        <!-- SLIDE 6 – Menyiapkan Tas Sekolah -->
+        <section class="slide" data-slide="6">
+            <div class="slide-counter">Latihan 6 / 6</div>
+            <div style="text-align:center;">
+                <span class="tagline">Lower Primary – Urutan & Instruksi</span>
+            </div>
+            <h1>Mengamati & Mengoreksi<br />Instruksi yang Salah</h1>
+            <p class="subtitle">
+                Terakhir, kita lihat urutan menyiapkan tas sekolah. Pilih perbaikan yang paling benar.
+            </p>
+
+            <div class="two-col">
+                <div class="card">
+                    <h2>👀 Contoh Instruksi yang Salah</h2>
+                    <p>Seorang anak ingin menyiapkan tas sekolah. Ia mengikuti urutan ini:</p>
+                    <ol>
+                        <li>Memakai tas.</li>
+                        <li>Memasukkan buku pelajaran.</li>
+                        <li>Menutup ritsleting tas.</li>
+                    </ol>
+                    <div class="highlight">
+                        <strong>Pertanyaan untuk siswa:</strong>
+                        <ul style="margin-top:4px; margin-left:20px;">
+                            <li>Apakah tas dipakai dulu sebelum diisi?</li>
+                            <li>Urutan mana yang membuat tas rapi dan aman?</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <h2>🧠 Pilih Perbaikan Urutan</h2>
+                    <p>Klik urutan yang menurutmu <strong>paling tepat</strong>.</p>
+                    <div class="quiz-options">
+                        <div class="quiz-option" data-correct="false">
+                            1) Memakai tas dulu<br>
+                            2) Menutup ritsleting<br>
+                            3) Baru memasukkan buku
+                        </div>
+                        <div class="quiz-option" data-correct="true">
+                            1) Memasukkan buku pelajaran ke dalam tas<br>
+                            2) Menutup ritsleting tas<br>
+                            3) Memakai tas di punggung
+                        </div>
+                        <div class="quiz-option" data-correct="false">
+                            1) Memasukkan buku dan mainan<br>
+                            2) Membuka ritsleting lebar-lebar<br>
+                            3) Membiarkan tas terbuka
+                        </div>
+                    </div>
+                    <div class="feedback"></div>
+                    <div class="explanation">
+                        Menyiapkan tas dilakukan <strong>sebelum tas dipakai</strong>: isi tas → tutup ritsleting → baru
+                        dipakai.<br><br>
+                        Kita perlu <strong>memasukkan buku dan perlengkapan terlebih dahulu</strong> agar semua barang
+                        aman di dalam tas.
+                        Setelah itu, <strong>tutup ritsleting tas dengan rapat</strong> supaya tidak ada barang yang
+                        jatuh.
+                        Terakhir, barulah kita <strong>memakai tas di punggung</strong> dan siap berangkat.
+                    </div>
+
+                    <button class="btn-small btn-reset">🔄 Coba Lagi</button>
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <div class="navigation">
+        <button class="nav-btn" id="prevBtn">⬅️ Sebelumnya</button>
+        <button class="nav-btn" id="nextBtn">Selanjutnya ➡️</button>
+    </div>
+
+    <script>
+        // SLIDE NAV
+        const slides = document.querySelectorAll(".slide");
+        let currentSlide = 0;
+
+        const prevBtn = document.getElementById("prevBtn");
+        const nextBtn = document.getElementById("nextBtn");
+
+        function showSlide(index) {
+            slides.forEach((s) => s.classList.remove("active"));
+            if (index < 0) index = 0;
+            if (index > slides.length - 1) index = slides.length - 1;
+            currentSlide = index;
+            slides[currentSlide].classList.add("active");
+
+            prevBtn.disabled = currentSlide === 0;
+            nextBtn.disabled = currentSlide === slides.length - 1;
+        }
+
+        prevBtn.addEventListener("click", () => showSlide(currentSlide - 1));
+        nextBtn.addEventListener("click", () => showSlide(currentSlide + 1));
+
+        document.addEventListener("keydown", (e) => {
+            if (e.key === "ArrowRight") showSlide(currentSlide + 1);
+            if (e.key === "ArrowLeft") showSlide(currentSlide - 1);
+        });
+
+        // QUIZ LOGIC PER SLIDE
+        document.querySelectorAll(".slide").forEach((slide) => {
+            const options = slide.querySelectorAll(".quiz-option");
+            const feedback = slide.querySelector(".feedback");
+            const explanation = slide.querySelector(".explanation");
+            const resetBtn = slide.querySelector(".btn-reset");
+
+            function clearState() {
+                options.forEach((opt) => {
+                    opt.classList.remove("correct", "incorrect");
+                    opt.style.pointerEvents = "auto";
+                });
+                if (feedback) feedback.textContent = "";
+                if (explanation) explanation.style.display = "none";
+            }
+
+            options.forEach((opt) => {
+                opt.addEventListener("click", () => {
+                    const isCorrect = opt.getAttribute("data-correct") === "true";
+                    if (isCorrect) {
+                        options.forEach((o) => {
+                            o.style.pointerEvents = "none";
+                            o.classList.remove("incorrect");
+                        });
+                        opt.classList.add("correct");
+                        if (feedback) {
+                            feedback.textContent = "Yeay! Ini urutan yang benar. 🎉";
+                            feedback.style.color = "#38a169";
+                        }
+                        if (explanation) explanation.style.display = "block";
+                    } else {
+                        opt.classList.add("incorrect");
+                        if (feedback) {
+                            feedback.textContent =
+                                "Belum tepat, coba pilih urutan lain yang lebih masuk akal ya.";
+                            feedback.style.color = "#e53e3e";
+                        }
+                        setTimeout(() => {
+                            opt.classList.remove("incorrect");
+                            if (feedback) feedback.textContent = "";
+                        }, 900);
+                    }
+                });
+            });
+
+            if (resetBtn) {
+                resetBtn.addEventListener("click", clearState);
+            }
+
+            clearState();
+        });
+
+        // init
+        showSlide(0);
+    </script>
+</body>
+
+</html>
