@@ -1,0 +1,522 @@
+<!doctype html>
+<html lang="id">
+
+<head>
+    <meta charset="UTF-8" />
+    <title>Menyusun Instruksi Sendiri</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            font-family: "Comic Sans MS", sans-serif;
+            background: linear-gradient(135deg, #90cdf4, #fefcbf);
+            min-height: 100vh;
+            overflow: hidden;
+            animation: bgMove 18s ease-in-out infinite;
+        }
+
+        @keyframes bgMove {
+            0% {
+                background: linear-gradient(135deg, #90cdf4, #fefcbf);
+            }
+
+            50% {
+                background: linear-gradient(135deg, #63b3ed, #faf089);
+            }
+
+            100% {
+                background: linear-gradient(135deg, #90cdf4, #fefcbf);
+            }
+        }
+
+        .slide-container {
+            width: 100%;
+            height: 100vh;
+            display: flex;
+            align-items: flex-start;
+            justify-content: center;
+            padding: 70px 0 90px;
+            overflow-y: auto;
+        }
+
+        .slide {
+            width: 92%;
+            max-width: 1300px;
+            min-height: 80vh;
+            background: #ffffff;
+            border-radius: 24px;
+            box-shadow: 0 18px 45px rgba(0, 0, 0, 0.18);
+            padding: 32px;
+            display: none;
+            flex-direction: column;
+            position: relative;
+        }
+
+        .slide.active {
+            display: flex;
+            animation: fadeIn 0.4s ease;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        h1,
+        h2 {
+            text-align: center;
+            margin-top: 0;
+        }
+
+        h1 {
+            font-size: 2rem;
+            color: #2b6cb0;
+        }
+
+        h2 {
+            font-size: 1.7rem;
+            color: #2d3748;
+        }
+
+        p,
+        ul,
+        ol {
+            color: #4a5568;
+            font-size: 1.05rem;
+        }
+
+        .highlight {
+            background: #fefcbf;
+            padding: 14px;
+            border-left: 6px solid #ecc94b;
+            border-radius: 14px;
+            margin: 12px 0;
+        }
+
+        .two-col {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 16px;
+            margin-top: 16px;
+        }
+
+        .card {
+            background: #f7fafc;
+            border: 2px solid #e2e8f0;
+            border-radius: 16px;
+            padding: 16px;
+        }
+
+        .slide-counter {
+            position: absolute;
+            top: 16px;
+            right: 16px;
+            background: #3182ce;
+            color: #fff;
+            padding: 6px 14px;
+            border-radius: 999px;
+            font-size: 0.85rem;
+            font-weight: bold;
+        }
+
+        .nav-btn {
+            border: none;
+            border-radius: 999px;
+            padding: 10px 22px;
+            font-size: 1rem;
+            background: #3182ce;
+            color: #fff;
+            cursor: pointer;
+            margin: 0 8px;
+            transition: 0.2s;
+        }
+
+        .nav-btn:hover {
+            background: #2b6cb0;
+            transform: translateY(-2px);
+        }
+
+        .navigation {
+            position: fixed;
+            left: 50%;
+            bottom: 20px;
+            transform: translateX(-50%);
+        }
+    </style>
+</head>
+
+<body>
+    <!-- ACCESS GATE OVERLAY -->
+    <div id="accessGate" style="
+    position: fixed;
+    top: 0; left: 0;
+    width: 100%; height: 100vh;
+    background: rgba(255, 255, 255, 0.95);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    z-index: 9999;
+    text-align: center;
+">
+        <h2 style="font-size: 2rem; color:#2b6cb0;">Masukkan Kode Akses</h2>
+        <p style="color:#4a5568; margin-bottom:20px;">Tuliskan kode yang diberikan gurumu untuk membuka slide.</p>
+
+        <input id="accessInput" type="text" placeholder="KODE AKSES" style="
+            padding: 12px 18px; 
+            border-radius: 12px; 
+            border: 2px solid #3182ce; 
+            font-size: 1.2rem; 
+            text-align:center;
+            width: 240px;
+            outline:none;
+        " />
+
+        <button id="accessBtn" style="
+        margin-top:16px;
+        padding: 10px 28px;
+        font-size: 1.1rem;
+        background:#3182ce;
+        color:white;
+        border:none;
+        border-radius:999px;
+        cursor:pointer;
+    ">
+            Akses
+        </button>
+
+        <p id="errorMsg" style="color:red; margin-top:12px; display:none;">
+            Kode salah, coba lagi ya!
+        </p>
+    </div>
+
+
+    <div class="slide-container">
+
+        <!-- SLIDE 1 – REVIEW PART 1 -->
+        <section class="slide active">
+            <div class="slide-counter">1 / 8</div>
+            <h1>Review Part 1 – Urutan & Instruksi</h1>
+
+            <div class="highlight">
+                <p>
+                    Pada sesi sebelumnya, kita belajar bahwa <strong>urutan langkah</strong> adalah
+                    langkah-langkah yang dilakukan dari awal sampai akhir secara berurutan.
+                </p>
+                <p>
+                    Kita juga mengenal <strong>instruksi</strong>, yaitu perintah yang memberi tahu
+                    kita apa yang harus dilakukan.
+                </p>
+            </div>
+
+            <p><strong>Contoh dari Part 1:</strong></p>
+            <ul>
+                <li>Cuci tangan → sabun → gosok → bilas → keringkan</li>
+                <li>Bangun tidur → mandi → sarapan → sekolah</li>
+            </ul>
+
+            <p style="margin-top:10px;">
+                Hari ini, kita akan melanjutkan ke langkah berikutnya:
+                <strong>menyusun instruksi kita sendiri</strong>!
+            </p>
+        </section>
+
+        <!-- SLIDE 2 – APA ITU INSTRUKSI LANGKAH DEMI LANGKAH -->
+        <section class="slide">
+            <div class="slide-counter">2 / 8</div>
+            <h2>Apa Itu Instruksi Langkah demi Langkah?</h2>
+
+            <p>
+                Instruksi langkah demi langkah adalah <strong>serangkaian perintah yang jelas,
+                    runtut, dan lengkap</strong> agar seseorang bisa melakukan sesuatu dengan benar.
+            </p>
+
+            <div class="two-col">
+                <div class="card">
+                    <h3>Instruksi yang Baik ✔ (Gambaran Umum)</h3>
+                    <ul>
+                        <li>Dimulai dari hal yang paling awal.</li>
+                        <li>Tidak melompat-lompat.</li>
+                        <li>Menggunakan kata kerja (ambil, buka, tuang).</li>
+                        <li>Memandu sampai tugas selesai.</li>
+                    </ul>
+                </div>
+
+                <div class="card">
+                    <h3>Jika Instruksi Kurang Jelas ✘</h3>
+                    <ul>
+                        <li>Orang yang membaca bisa bingung.</li>
+                        <li>Tugas bisa tidak selesai atau salah.</li>
+                        <li>Harus ditebak-tebak sendiri apa yang dimaksud.</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="highlight">
+                <p>
+                    Nanti saat kita menulis instruksi untuk komputer,
+                    <strong>komputer tidak bisa menebak</strong>. Ia hanya mengikuti langkah yang kita tulis.
+                </p>
+            </div>
+        </section>
+
+        <!-- SLIDE 3 – CONTOH INSTRUKSI LENGKAP -->
+        <section class="slide">
+            <div class="slide-counter">3 / 8</div>
+            <h2>Contoh Instruksi yang Jelas</h2>
+
+            <p>Misalnya kita ingin membuat susu hangat:</p>
+
+            <ol>
+                <li>Siapkan gelas.</li>
+                <li>Masukkan susu bubuk.</li>
+                <li>Tuang air hangat.</li>
+                <li>Aduk sampai rata.</li>
+            </ol>
+
+            <div class="highlight">
+                <p>
+                    Jika langkah ditukar-tukar, hasilnya bisa aneh atau gagal.
+                    Itulah mengapa <strong>kita belajar menyusun instruksi</strong>.
+                </p>
+            </div>
+
+            <p style="margin-top:10px;">
+                Sebentar lagi, kamu akan mencoba membuat instruksimu sendiri!
+            </p>
+        </section>
+
+        <!-- SLIDE 4 – KENAPA INSTRUKSI HARUS URUT? -->
+        <section class="slide">
+            <div class="slide-counter">4 / 8</div>
+            <h2>Mengapa Instruksi Harus Berurutan?</h2>
+
+            <div class="highlight">
+                <p><strong>1. Agar hasilnya benar</strong><br>
+                    Jika langkah salah urut, hasilnya tidak sesuai atau gagal.
+                </p>
+                <p><strong>2. Agar mudah diikuti</strong><br>
+                    Temanmu (atau robot) jadi tahu apa yang harus dilakukan dulu.
+                </p>
+                <p><strong>3. Untuk melatih berpikir logis</strong><br>
+                    Ini adalah dasar penting dari <strong>computational thinking</strong>.
+                </p>
+            </div>
+
+            <p style="margin-top:10px;">
+                Sekarang setelah paham konsepnya… kita masuk ke cara menulis instruksi!
+            </p>
+        </section>
+
+        <!-- SLIDE 5 – Prinsip Menulis Instruksi -->
+        <section class="slide">
+            <div class="slide-counter">5 / 8</div>
+            <h2>Bagaimana Menulis Instruksi dengan Benar?</h2>
+
+            <div class="highlight">
+                <p>
+                    Instruksi yang baik membantu orang lain <strong>mengerti apa yang harus dilakukan</strong>
+                    dan <strong>kapan melakukannya</strong>.
+                </p>
+            </div>
+
+            <p><strong>Beberapa aturan penting:</strong></p>
+            <ul>
+                <li><strong>Mulai dengan kata kerja</strong> (ambil, buka, tuang, lipat, jalan).</li>
+                <li><strong>Satu baris = satu langkah</strong>, jangan digabung menjadi cerita panjang.</li>
+                <li><strong>Sebutkan benda / objeknya</strong> (ambil <em>gelas</em>, buka <em>buku</em>).</li>
+                <li><strong>Urutkan dari awal → akhir</strong>, jangan melompat langkah.</li>
+                <li>Gunakan kalimat yang <strong>pendek dan jelas</strong>, tidak bertele-tele.</li>
+            </ul>
+
+            <div class="highlight">
+                <p>
+                    Pikirkan: <br>
+                    <strong>"Kalau teman atau robot membaca kalimatku, apakah dia langsung tahu harus apa?"</strong>
+                </p>
+            </div>
+        </section>
+
+        <!-- SLIDE 6 – Fokus ke Instruksi yang Perlu Diperbaiki -->
+        <section class="slide">
+            <div class="slide-counter">6 / 8</div>
+            <h2>Mengenali Instruksi yang Perlu Diperbaiki</h2>
+
+            <div class="two-col">
+                <div class="card">
+                    <h3>Contoh Instruksi Kurang Jelas</h3>
+                    <ul>
+                        <li>"Pokoknya bikin susu sampai jadi."</li>
+                        <li>"Terus kayak biasa aja."</li>
+                        <li>"Beresin kamar dong."</li>
+                        <li>"Ya udah, lakukan semuanya."</li>
+                    </ul>
+                </div>
+
+                <div class="card">
+                    <h3>Cara Memperbaikinya</h3>
+                    <ul>
+                        <li>"Buka kaleng susu, ambil 2 sendok, lalu masukkan ke gelas."</li>
+                        <li>"Lakukan langkah mencuci tangan seperti tadi."</li>
+                        <li>"Rapikan tempat tidur, sapu lantai, lalu buang sampah ke tempat sampah."</li>
+                        <li>"Ikuti semua langkah yang tertulis di buku tugas halaman 3."</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="highlight">
+                <p><strong>Pikirkan bersama:</strong></p>
+                <ul>
+                    <li>Bagian mana dari contoh di kiri yang membuatmu bingung?</li>
+                    <li>Apa yang membuat contoh di kanan lebih jelas?</li>
+                    <li>Apakah kalimatnya sudah memakai pola <strong>kata kerja + apa + keterangan</strong>?</li>
+                </ul>
+            </div>
+
+        </section>
+
+        <!-- SLIDE 7 – Pola Kalimat Instruksi -->
+        <section class="slide">
+            <div class="slide-counter">7 / 8</div>
+            <h2>Gunakan Pola Ini Saat Menulis Instruksi</h2>
+
+            <div class="card">
+                <p><strong>Pola sederhana:</strong></p>
+                <p style="font-size:1.1rem; text-align:center; margin:10px 0;">
+                    <strong>Kata kerja + apa + keterangan</strong>
+                </p>
+                <ul>
+                    <li>"Ambil <strong>buku</strong> dari <strong>meja</strong>."</li>
+                    <li>"Letakkan <strong>tas</strong> di <strong>kursi</strong>."</li>
+                    <li>"Tuang <strong>susu</strong> ke dalam <strong>gelas</strong>."</li>
+                    <li>"Lipat <strong>selimut</strong> dengan <strong>rapi</strong>."</li>
+                </ul>
+            </div>
+
+            <div class="highlight">
+                <p><strong>Ayo coba latihan cepat:</strong></p>
+                <ol>
+                    <li>Pilih satu kegiatan sederhana, misalnya "<em>menutup buku</em>".</li>
+                    <li>Cobalah tulis satu kalimat instruksi dengan pola <strong>kata kerja + apa + keterangan</strong>.
+                    </li>
+                    <li>Bacakan hasilmu, lalu lihat apakah sudah jelas dan mudah diikuti.</li>
+                </ol>
+            </div>
+
+            <p style="margin-top:8px;">
+                Kamu juga bisa membandingkan beberapa contoh dari temanmu untuk melihat
+                mana yang paling jelas dan mana yang masih bisa diperbaiki.
+            </p>
+
+        </section>
+
+        <section class="slide">
+            <div class="slide-counter">8 / 8</div>
+            <h2>Kesimpulan Hari Ini</h2>
+
+            <div class="highlight">
+                <p><strong>Hari ini kamu sudah belajar:</strong></p>
+                <ul>
+                    <li>Instruksi adalah perintah yang harus jelas dan mudah diikuti.</li>
+                    <li>Instruksi harus ditulis <strong>berurutan</strong> dari awal sampai akhir.</li>
+                    <li>Kamu bisa menulis instruksi dengan pola <strong>kata kerja + apa + keterangan</strong>.</li>
+                    <li>Instruksi yang tidak jelas bisa membuat orang bingung atau salah langkah.</li>
+                </ul>
+            </div>
+
+            <p style="margin-top:10px;">
+                Dengan memahami cara menulis instruksi yang baik,
+                kamu sedang belajar dasar-dasar penting dari <strong>computational thinking</strong>.
+            </p>
+
+        </section>
+
+
+    </div>
+
+    <div class="navigation">
+        <button class="nav-btn" id="prevBtn">⬅ Sebelumnya</button>
+        <button class="nav-btn" id="nextBtn">Selanjutnya ➡</button>
+    </div>
+
+    <script>
+        const slides = document.querySelectorAll(".slide");
+        let currentSlide = 0;
+
+        const ACCESS_CODE = "RGMDSLP25";
+
+        const gate = document.getElementById("accessGate");
+        const accessInput = document.getElementById("accessInput");
+        const accessBtn = document.getElementById("accessBtn");
+        const errorMsg = document.getElementById("errorMsg");
+
+        function unlockSlides() {
+            gate.style.display = "none";
+            document.body.style.overflow = "auto";
+        }
+
+        function checkAccess() {
+            const val = accessInput.value.trim().toUpperCase();
+            if (val === ACCESS_CODE) {
+                unlockSlides();
+            } else {
+                errorMsg.style.display = "block";
+            }
+        }
+
+        // Klik tombol
+        accessBtn.addEventListener("click", checkAccess);
+
+        // Tekan Enter
+        accessInput.addEventListener("keydown", function (e) {
+            if (e.key === "Enter") {
+                checkAccess();
+            }
+        });
+
+
+
+        function showSlide(index) {
+            slides.forEach(s => s.classList.remove("active"));
+            currentSlide = index;
+            slides[currentSlide].classList.add("active");
+
+            document.getElementById("prevBtn").disabled = currentSlide === 0;
+            document.getElementById("nextBtn").disabled = currentSlide === slides.length - 1;
+        }
+
+        document.getElementById("prevBtn").onclick = () => showSlide(currentSlide - 1);
+        document.getElementById("nextBtn").onclick = () => showSlide(currentSlide + 1);
+
+        document.addEventListener("keydown", (e) => {
+
+            // Arrow Right → maju slide, tapi jangan lebih dari slide terakhir (index 7)
+            if (e.key === "ArrowRight" && currentSlide < slides.length - 1) {
+                showSlide(currentSlide + 1);
+            }
+
+            // Arrow Left → mundur slide, tapi jangan kurang dari 0
+            if (e.key === "ArrowLeft" && currentSlide > 0) {
+                showSlide(currentSlide - 1);
+            }
+
+        });
+
+
+        showSlide(0);
+    </script>
+
+</body>
+
+</html>
