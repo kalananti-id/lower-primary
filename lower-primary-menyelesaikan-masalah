@@ -1,0 +1,645 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <title>Masalah dan Cara Menyelesaikannya - Lower Primary</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    :root {
+      --lp-bg: #fef3c7;
+      --lp-primary: #fbbf24;
+      --lp-blue: #38bdf8;
+      --lp-text: #1f2933;
+    }
+    body {
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      background: radial-gradient(circle at top, #e0f2fe, #fef3c7);
+      color: var(--lp-text);
+      margin: 0;
+      padding: 0;
+    }
+    .slide {
+      display: none;
+    }
+    .slide-active {
+      display: flex;
+    }
+    .btn-main {
+      background-color: var(--lp-primary);
+      border-radius: 9999px;
+      padding: 0.5rem 1.4rem;
+      font-weight: 700;
+      box-shadow: 0 4px 0 #d97706;
+      transition: transform 0.1s, box-shadow 0.1s;
+    }
+    .btn-main:active {
+      transform: translateY(2px);
+      box-shadow: 0 2px 0 #d97706;
+    }
+    .pill {
+      border-radius: 9999px;
+      background-color: white;
+      box-shadow: 0 4px 12px rgba(15, 23, 42, 0.12);
+    }
+    .badge-step {
+      background-color: var(--lp-blue);
+      color: white;
+      font-size: 0.75rem;
+      border-radius: 9999px;
+      padding: 0.15rem 0.6rem;
+      font-weight: 700;
+      margin-right: 0.3rem;
+    }
+    .hidden-answer {
+      display: none;
+    }
+    .bubble {
+      border-radius: 1.5rem;
+      background: white;
+      box-shadow: 0 6px 18px rgba(15, 23, 42, 0.16);
+    }
+    .nav-dot {
+      width: 10px;
+      height: 10px;
+      border-radius: 9999px;
+      background-color: rgba(148, 163, 184, 0.6);
+      cursor: pointer;
+    }
+    .nav-dot-active {
+      background-color: var(--lp-blue);
+      transform: scale(1.2);
+    }
+  </style>
+</head>
+<body class="min-h-screen flex flex-col">
+
+  <!-- Top Bar -->
+  <header class="w-full px-4 py-2 flex items-center justify-between bg-white/70 backdrop-blur border-b border-blue-100">
+    <div class="flex items-center gap-2">
+      <div class="w-8 h-8 rounded-full bg-gradient-to-tr from-yellow-400 to-sky-400 flex items-center justify-center text-sm font-bold text-white">
+        LP
+      </div>
+      <div>
+        <p class="text-xs text-slate-500 leading-tight">UOB My Digital Space</p>
+        <p class="text-sm font-semibold leading-tight">Lower Primary Coding</p>
+      </div>
+    </div>
+    <div class="text-right">
+      <p class="text-[10px] text-slate-500 uppercase tracking-wide">Topik</p>
+      <p class="text-xs font-semibold">Masalah & Cara Menyelesaikannya</p>
+    </div>
+  </header>
+
+  <!-- Slides Container -->
+  <main id="slides" class="flex-1 relative overflow-hidden">
+    <!-- Slide 1 – Judul -->
+    <section class="slide slide-active items-center justify-center p-4">
+      <div class="max-w-3xl w-full mx-auto bubble p-6 md:p-8">
+        <div class="flex flex-col md:flex-row items-center gap-6">
+          <div class="flex-1 space-y-4">
+            <p class="text-xs uppercase tracking-wide text-slate-500">Sesi 2.4</p>
+            <h1 class="text-3xl md:text-4xl font-extrabold text-slate-800">
+              Masalah dan Cara<br><span class="text-sky-500">Menyelesaikannya</span>
+            </h1>
+            <p class="text-base md:text-lg">
+              Hai, teman! 😊 Pernah bingung karena ada masalah? Tenang,
+              hari ini kita belajar cara <span class="font-semibold text-sky-600">menyelesaikan masalah</span>
+              dengan pelan-pelan dan rapi.
+            </p>
+            <p class="text-sm text-slate-500">
+              Ayo ikuti sampai akhir. Kamu pasti bisa! 💪
+            </p>
+          </div>
+          <div class="w-40 h-40 md:w-48 md:h-48 rounded-3xl bg-gradient-to-tr from-yellow-300 to-sky-300 flex items-center justify-center">
+            <div class="text-center text-white font-bold text-xl leading-snug">
+              💭<br/>Masalah?<br/>Yuk Cari<br/>Solusi!
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Slide 2 – Apa itu Masalah? -->
+    <section class="slide items-center justify-center p-4">
+      <div class="max-w-3xl w-full mx-auto bubble p-6 md:p-8">
+        <h2 class="text-2xl font-bold mb-4">Apa itu <span class="text-sky-500">masalah</span>?</h2>
+        <p class="mb-4 text-base">
+          Masalah adalah hal yang membuat kita:
+        </p>
+        <ul class="space-y-2 mb-4 text-base">
+          <li>• Bingung 😵</li>
+          <li>• Kesulitan 😓</li>
+          <li>• Atau ada tugas yang belum selesai 📘</li>
+        </ul>
+        <p class="mb-4 text-base">
+          Masalah bisa muncul saat kamu <span class="font-semibold">bermain</span>, 
+          <span class="font-semibold">belajar</span>, atau bahkan saat mau berangkat sekolah.
+        </p>
+
+        <div class="mt-4">
+          <button onclick="toggleAnswer('contohMasalah')"
+                  class="btn-main text-sm">
+            Klik di sini untuk lihat contoh masalah
+          </button>
+          <div id="contohMasalah" class="hidden-answer mt-4 grid md:grid-cols-3 gap-3 text-sm">
+            <div class="pill p-3">
+              ✏️ <span class="font-semibold">Pensil hilang</span> jadi tidak bisa menulis.
+            </div>
+            <div class="pill p-3">
+              🧦 <span class="font-semibold">Kaos kaki tidak sama</span> saat mau berangkat.
+            </div>
+            <div class="pill p-3">
+              🍽️ <span class="font-semibold">Kantin tutup</span> padahal kamu lapar.
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Slide 3 – Otak Hebat -->
+    <section class="slide items-center justify-center p-4">
+      <div class="max-w-3xl w-full mx-auto bubble p-6 md:p-8 flex flex-col gap-4">
+        <h2 class="text-2xl font-bold">Otakmu itu <span class="text-sky-500">hebat</span>! 🧠✨</h2>
+        <p class="text-base">
+          Walaupun ada masalah, kamu tidak perlu takut.
+        </p>
+        <p class="text-base">
+          <span class="font-semibold text-sky-600">Otak manusia</span> dibuat Tuhan dengan sangat hebat.
+          Otak membantumu:
+        </p>
+        <ul class="text-base space-y-2">
+          <li>• Memikirkan jalan keluar</li>
+          <li>• Mencari ide dan solusi</li>
+          <li>• Membuat rencana</li>
+        </ul>
+
+        <div class="mt-3">
+          <p class="text-sm mb-2 font-semibold">Coba klik perasaan yang pernah kamu rasakan saat ada masalah:</p>
+          <div class="flex flex-wrap gap-2">
+            <button class="pill px-3 py-2 text-sm" onclick="showFeeling('takut')">😨 Takut</button>
+            <button class="pill px-3 py-2 text-sm" onclick="showFeeling('sedih')">😢 Sedih</button>
+            <button class="pill px-3 py-2 text-sm" onclick="showFeeling('bingung')">😵 Bingung</button>
+            <button class="pill px-3 py-2 text-sm" onclick="showFeeling('marah')">😡 Marah</button>
+          </div>
+          <p id="feelingMsg" class="mt-3 text-sm font-semibold text-sky-700 hidden-answer">
+            Apa pun perasaanmu, kamu tetap anak hebat. Kita belajar pelan-pelan ya. 💛
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <!-- Slide 4 – Langkah Menyelesaikan Masalah -->
+    <section class="slide items-center justify-center p-4">
+      <div class="max-w-3xl w-full mx-auto bubble p-6 md:p-8">
+        <h2 class="text-2xl font-bold mb-4">5 Langkah <span class="text-sky-500">Menyelesaikan Masalah</span></h2>
+        <p class="mb-4 text-base">
+          Saat ada masalah, kamu bisa mengikuti langkah ini:
+        </p>
+        <ol class="space-y-2 text-base">
+          <li><span class="badge-step">1</span>Kenali dulu masalahnya.</li>
+          <li><span class="badge-step">2</span>Pikirkan penyebabnya.</li>
+          <li><span class="badge-step">3</span>Cari beberapa ide solusi.</li>
+          <li><span class="badge-step">4</span>Pilih dan lakukan solusi terbaik.</li>
+          <li><span class="badge-step">5</span>Cek lagi, apakah masalah sudah selesai?</li>
+        </ol>
+
+        <div class="mt-4 text-sm text-slate-600">
+          <p><span class="font-semibold text-sky-600">Tip:</span> Kalau masih belum selesai, kamu boleh coba cara lain atau minta bantuan orang tua/guru.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- Slide 5 – Interaktif: Urutkan Langkah -->
+    <section class="slide items-center justify-center p-4">
+      <div class="max-w-3xl w-full mx-auto bubble p-6 md:p-8">
+        <h2 class="text-2xl font-bold mb-4">Ayo Urutkan Langkahnya! 🔁</h2>
+        <p class="mb-3 text-base">
+          Klik tombol dari langkah <span class="font-semibold">1 sampai 5</span>.
+        </p>
+
+        <div class="grid md:grid-cols-5 gap-3 mb-4 text-sm">
+          <button class="pill p-3 text-left" onclick="highlightStep(1)">
+            <span class="badge-step">1</span>Kenali masalahnya
+          </button>
+          <button class="pill p-3 text-left" onclick="highlightStep(2)">
+            <span class="badge-step">2</span>Cari penyebabnya
+          </button>
+          <button class="pill p-3 text-left" onclick="highlightStep(3)">
+            <span class="badge-step">3</span>Cari solusi
+          </button>
+          <button class="pill p-3 text-left" onclick="highlightStep(4)">
+            <span class="badge-step">4</span>Lakukan solusi
+          </button>
+          <button class="pill p-3 text-left" onclick="highlightStep(5)">
+            <span class="badge-step">5</span>Periksa hasil
+          </button>
+        </div>
+
+        <p id="stepMessage" class="text-sm font-semibold text-sky-700">
+          Mulai dari langkah 1 dulu ya.
+        </p>
+      </div>
+    </section>
+
+    <!-- Slide 6 – Cerita Amel -->
+    <section class="slide items-center justify-center p-4">
+      <div class="max-w-3xl w-full mx-auto bubble p-6 md:p-8 space-y-4">
+        <h2 class="text-2xl font-bold">Cerita Amel 📚</h2>
+        <p class="text-base">
+          Amel anak yang rajin dan selalu mengerjakan PR. Tapi suatu hari,
+          Amel <span class="font-semibold text-rose-500">lupa membawa buku tugas</span> ke sekolah.
+        </p>
+        <p class="text-base">
+          Waktu pelajaran tinggal <span class="font-semibold">setengah jam</span> lagi.
+          Amel panik. Kalau kamu jadi Amel, apa yang kamu rasakan?
+        </p>
+
+        <div class="grid md:grid-cols-2 gap-3 text-sm">
+          <button class="pill p-3 text-left" onclick="selectFeelingCard(this)">
+            😰 Deg-degan takut dimarahi guru
+          </button>
+          <button class="pill p-3 text-left" onclick="selectFeelingCard(this)">
+            😢 Sedih karena sudah susah payah mengerjakan
+          </button>
+          <button class="pill p-3 text-left" onclick="selectFeelingCard(this)">
+            😵 Bingung harus bagaimana
+          </button>
+          <button class="pill p-3 text-left" onclick="selectFeelingCard(this)">
+            🙂 Tenang, cari cara pelan-pelan
+          </button>
+        </div>
+
+        <p class="text-sm text-slate-600">
+          Semua perasaan boleh dirasakan. Yang penting, setelah itu kita belajar cari solusi. 💡
+        </p>
+      </div>
+    </section>
+
+    <!-- Slide 7 – Interaktif: Solusi untuk Amel -->
+    <section class="slide items-center justify-center p-4">
+      <div class="max-w-3xl w-full mx-auto bubble p-6 md:p-8 space-y-4">
+        <h2 class="text-2xl font-bold">Solusi untuk Amel 💡</h2>
+        <p class="text-base">
+          Dari cerita di modul, apa solusi terbaik yang Amel lakukan?
+        </p>
+
+        <form id="quizAmel" class="space-y-2 text-sm">
+          <label class="flex items-start gap-2 pill p-3 cursor-pointer">
+            <input type="radio" name="amel" value="a" class="mt-1">
+            <span>Mengerjakan ulang PR di kelas dan tidak ikut pelajaran.</span>
+          </label>
+          <label class="flex items-start gap-2 pill p-3 cursor-pointer">
+            <input type="radio" name="amel" value="b" class="mt-1">
+            <span>Pulang sendiri tanpa izin untuk mengambil buku.</span>
+          </label>
+          <label class="flex items-start gap-2 pill p-3 cursor-pointer">
+            <input type="radio" name="amel" value="c" class="mt-1" data-correct="true">
+            <span>Meminta izin guru untuk menelpon ibu agar mengantarkan buku.</span>
+          </label>
+        </form>
+
+        <button class="btn-main text-sm mt-2" onclick="checkAmel()">
+          Cek Jawaban
+        </button>
+        <p id="amelFeedback" class="text-sm font-semibold mt-2"></p>
+      </div>
+    </section>
+
+    <!-- Slide 8 – Manfaat Problem Solving (1) -->
+    <section class="slide items-center justify-center p-4">
+      <div class="max-w-3xl w-full mx-auto bubble p-6 md:p-8 space-y-4">
+        <h2 class="text-2xl font-bold">Kenapa Perlu Belajar Menyelesaikan Masalah?</h2>
+        <p class="text-base">
+          Kalau kamu sering berlatih menyelesaikan masalah, kamu akan:
+        </p>
+        <ul class="space-y-2 text-base">
+          <li>1. <span class="font-semibold text-sky-600">Melatih otak untuk berpikir</span> – otak jadi suka mencari ide dan solusi.</li>
+          <li>2. <span class="font-semibold text-sky-600">Menjadi lebih mandiri</span> – tidak mudah panik, bisa mengatur tugas sendiri.</li>
+          <li>3. <span class="font-semibold text-sky-600">Belajar bekerja sama</span> – mendengarkan dan menghargai pendapat teman.</li>
+        </ul>
+
+        <div class="mt-3 text-sm">
+          <p class="font-semibold mb-1">Ayo pilih:</p>
+          <select id="benefitSelect" class="border rounded-lg px-3 py-2 text-sm">
+            <option value="">Pilih salah satu manfaat...</option>
+            <option value="otak">Melatih otak untuk berpikir</option>
+            <option value="mandiri">Menjadi lebih mandiri</option>
+            <option value="kerjasama">Belajar bekerja sama</option>
+          </select>
+          <p id="benefitFeedback" class="mt-2 text-sm text-sky-700 hidden-answer"></p>
+        </div>
+      </div>
+    </section>
+
+    <!-- Slide 9 – Manfaat Problem Solving (2) + Coding -->
+    <section class="slide items-center justify-center p-4">
+      <div class="max-w-3xl w-full mx-auto bubble p-6 md:p-8 space-y-4">
+        <h2 class="text-2xl font-bold">Siap Tantangan & Belajar Coding 🚀</h2>
+        <p class="text-base">
+          Kalau terbiasa menyelesaikan masalah, kamu akan:
+        </p>
+        <ul class="space-y-2 text-base">
+          <li>4. <span class="font-semibold text-sky-600">Siap menghadapi tantangan</span> di sekolah dan rumah.</li>
+          <li>5. <span class="font-semibold text-sky-600">Tidak cepat menyerah</span> dan berani mencoba lagi.</li>
+          <li>6. Punya <span class="font-semibold text-sky-600">bekal untuk belajar coding</span> – saat program error, kamu bisa menganalisis dan memperbaiki.</li>
+        </ul>
+        <p class="text-sm text-slate-600">
+          Dalam coding, masalah (error) itu wajar. Yang penting, kita <span class="font-semibold">cari tahu pelan-pelan</span> dan mencoba lagi. 🙂
+        </p>
+      </div>
+    </section>
+
+    <!-- Slide 10 – Refleksi Interaktif -->
+    <section class="slide items-center justify-center p-4">
+      <div class="max-w-3xl w-full mx-auto bubble p-6 md:p-8 space-y-4">
+        <h2 class="text-2xl font-bold">Yuk Cerita Sedikit ✍️</h2>
+        <p class="text-base">
+          Coba ingat satu masalah kecil yang pernah kamu alami di rumah atau di sekolah.
+        </p>
+        <ol class="text-base space-y-1">
+          <li>1. Masalah apa itu?</li>
+          <li>2. Apa yang kamu lakukan?</li>
+          <li>3. Apa yang bisa kamu lakukan lain kali?</li>
+        </ol>
+        <textarea
+          id="refleksi"
+          class="w-full mt-3 border rounded-xl p-3 text-sm"
+          rows="4"
+          placeholder="Tulis jawabanmu di sini. Tidak apa-apa kalau masih pendek. 😊"
+        ></textarea>
+        <button class="btn-main text-sm mt-2" onclick="showRefleksi()">
+          Sudah, Kak!
+        </button>
+        <p id="refleksiMsg" class="text-sm font-semibold text-sky-700 hidden-answer">
+          Terima kasih sudah mencoba menulis. Kamu sedang melatih otakmu untuk jadi pemecah masalah yang hebat! 🌟
+        </p>
+      </div>
+    </section>
+
+    <!-- Slide 11 – Mini Kuis -->
+    <section class="slide items-center justify-center p-4">
+      <div class="max-w-3xl w-full mx-auto bubble p-6 md:p-8 space-y-4">
+        <h2 class="text-2xl font-bold">Mini Kuis 🎯</h2>
+        <p class="text-base">Jawab beberapa pertanyaan ini ya.</p>
+
+        <div class="space-y-3 text-sm">
+          <!-- Q1 -->
+          <div>
+            <p class="font-semibold mb-1">
+              1. Hal pertama yang perlu kamu lakukan saat ada masalah adalah...
+            </p>
+            <div>
+              <label class="flex gap-2 items-start">
+                <input type="radio" name="q1" value="salah" class="mt-1">
+                <span>Langsung marah dan menangis.</span>
+              </label>
+              <label class="flex gap-2 items-start">
+                <input type="radio" name="q1" value="benar" class="mt-1">
+                <span>Mengenali dulu apa masalahnya.</span>
+              </label>
+            </div>
+          </div>
+          <!-- Q2 -->
+          <div>
+            <p class="font-semibold mb-1">
+              2. Jika masalah belum selesai, kamu boleh...
+            </p>
+            <div>
+              <label class="flex gap-2 items-start">
+                <input type="radio" name="q2" value="benar" class="mt-1">
+                <span>Mencoba solusi lain atau minta bantuan orang dewasa.</span>
+              </label>
+              <label class="flex gap-2 items-start">
+                <input type="radio" name="q2" value="salah" class="mt-1">
+                <span>Menyerah dan tidak mau mencoba lagi.</span>
+              </label>
+            </div>
+          </div>
+          <!-- Q3 -->
+          <div>
+            <p class="font-semibold mb-1">
+              3. Dalam coding, kemampuan menyelesaikan masalah penting karena...
+            </p>
+            <div>
+              <label class="flex gap-2 items-start">
+                <input type="radio" name="q3" value="benar" class="mt-1">
+                <span>Kalau program error, kita bisa mencari dan memperbaiki kesalahannya.</span>
+              </label>
+              <label class="flex gap-2 items-start">
+                <input type="radio" name="q3" value="salah" class="mt-1">
+                <span>Agar kita tidak perlu berpikir lagi.</span>
+              </label>
+            </div>
+          </div>
+        </div>
+
+        <button class="btn-main text-sm" onclick="checkMiniQuiz()">Cek Skor</button>
+        <p id="miniQuizScore" class="text-sm font-semibold mt-2"></p>
+      </div>
+    </section>
+
+    <!-- Slide 12 – Penutup & Motivasi -->
+    <section class="slide items-center justify-center p-4">
+      <div class="max-w-3xl w-full mx-auto bubble p-6 md:p-8 space-y-4">
+        <h2 class="text-2xl font-bold">Kamu Anak Kuat & Hebat! 💛</h2>
+        <p class="text-base">
+          Hari ini kamu sudah belajar:
+        </p>
+        <ul class="space-y-1 text-base">
+          <li>• Apa itu masalah.</li>
+          <li>• 5 langkah menyelesaikan masalah.</li>
+          <li>• Cerita Amel dan cara mencari solusi.</li>
+          <li>• Manfaat problem solving untuk hidup dan coding.</li>
+        </ul>
+        <p class="text-base">
+          Ingat, <span class="font-semibold text-sky-600">jangan takut dengan masalah</span>.
+          Masalah membuatmu belajar dan tumbuh jadi anak yang:
+        </p>
+        <ul class="space-y-1 text-base">
+          <li>• Cerdas 🧠</li>
+          <li>• Mandiri 💪</li>
+          <li>• Tidak mudah menyerah 🌟</li>
+        </ul>
+        <p class="text-sm text-slate-600">
+          Teruslah berlatih ya. Besok kita belajar lagi untuk jadi jagoan coding! 🚀
+        </p>
+      </div>
+    </section>
+  </main>
+
+  <!-- Navigation -->
+  <footer class="w-full px-4 py-3 bg-white/80 backdrop-blur border-t border-blue-100 flex items-center justify-between">
+    <button id="prevBtn" class="btn-main text-xs md:text-sm disabled:opacity-40" onclick="changeSlide(-1)">
+      ⬅️ Sebelumnya
+    </button>
+    <div class="flex gap-1">
+      <!-- nav dots will be created by JS -->
+    </div>
+    <button id="nextBtn" class="btn-main text-xs md:text-sm" onclick="changeSlide(1)">
+      Berikutnya ➡️
+    </button>
+  </footer>
+
+  <script>
+    const slides = document.querySelectorAll('.slide');
+    const dotsContainer = document.querySelector('footer .flex.gap-1');
+    let currentSlide = 0;
+
+    // Create navigation dots
+    slides.forEach((_, index) => {
+      const dot = document.createElement('div');
+      dot.className = 'nav-dot' + (index === 0 ? ' nav-dot-active' : '');
+      dot.dataset.index = index;
+      dot.addEventListener('click', () => goToSlide(index));
+      dotsContainer.appendChild(dot);
+    });
+
+    function updateDots() {
+      const dots = document.querySelectorAll('.nav-dot');
+      dots.forEach(dot => {
+        dot.classList.remove('nav-dot-active');
+        if (parseInt(dot.dataset.index) === currentSlide) {
+          dot.classList.add('nav-dot-active');
+        }
+      });
+    }
+
+    function showSlide(index) {
+      slides.forEach((slide, i) => {
+        slide.classList.remove('slide-active');
+        if (i === index) {
+          slide.classList.add('slide-active');
+        }
+      });
+      document.getElementById('prevBtn').disabled = index === 0;
+      document.getElementById('nextBtn').disabled = index === slides.length - 1;
+      updateDots();
+    }
+
+    function changeSlide(step) {
+      let newIndex = currentSlide + step;
+      if (newIndex < 0) newIndex = 0;
+      if (newIndex >= slides.length) newIndex = slides.length - 1;
+      currentSlide = newIndex;
+      showSlide(currentSlide);
+    }
+
+    function goToSlide(index) {
+      currentSlide = index;
+      showSlide(currentSlide);
+    }
+
+    // Interaktif: toggle jawaban
+    function toggleAnswer(id) {
+      const el = document.getElementById(id);
+      if (!el) return;
+      if (el.style.display === 'block') {
+        el.style.display = 'none';
+      } else {
+        el.style.display = 'block';
+      }
+    }
+
+    // Slide 3: feeling
+    function showFeeling(type) {
+      const msg = document.getElementById('feelingMsg');
+      if (!msg) return;
+      msg.style.display = 'block';
+    }
+
+    // Slide 5: highlight steps
+    let lastStep = 0;
+    function highlightStep(step) {
+      lastStep = step;
+      const stepMessage = document.getElementById('stepMessage');
+      if (stepMessage) {
+        if (step === 5) {
+          stepMessage.textContent = 'Hebat! Kamu sudah sampai langkah 5. Semua langkah penting ya.';
+        } else {
+          stepMessage.textContent = 'Bagus! Sekarang lanjut ke langkah ' + (step + 1) + '.';
+        }
+      }
+    }
+
+    // Slide 6: pilih perasaan
+    function selectFeelingCard(el) {
+      const cards = el.parentElement.querySelectorAll('.pill');
+      cards.forEach(card => card.classList.remove('ring-2', 'ring-sky-400'));
+      el.classList.add('ring-2', 'ring-sky-400');
+    }
+
+    // Slide 7: cek jawaban Amel
+    function checkAmel() {
+      const feedback = document.getElementById('amelFeedback');
+      const radios = document.querySelectorAll('#quizAmel input[type="radio"]');
+      let selected = null;
+      let correct = false;
+      radios.forEach(r => {
+        if (r.checked) {
+          selected = r;
+          if (r.dataset.correct === 'true') correct = true;
+        }
+      });
+      if (!selected) {
+        feedback.textContent = 'Pilih dulu salah satu jawaban ya 😊';
+        feedback.style.color = '#f97316';
+        return;
+      }
+      if (correct) {
+        feedback.textContent = 'Benar! Amel meminta izin guru untuk menelpon ibunya. 👍';
+        feedback.style.color = '#16a34a';
+      } else {
+        feedback.textContent = 'Belum tepat. Coba pikir lagi, mana solusi yang paling aman dan sopan?';
+        feedback.style.color = '#b91c1c';
+      }
+    }
+
+    // Slide 8: select benefit
+    function showBenefitText(value) {
+      const feedback = document.getElementById('benefitFeedback');
+      if (!feedback) return;
+      feedback.style.display = 'block';
+      if (value === 'otak') {
+        feedback.textContent = 'Saat kamu berpikir mencari solusi, otakmu jadi makin kuat dan terlatih! 🧠';
+      } else if (value === 'mandiri') {
+        feedback.textContent = 'Kamu belajar mengurus masalahmu sendiri. Itu tanda kamu makin mandiri. 💪';
+      } else if (value === 'kerjasama') {
+        feedback.textContent = 'Kamu belajar mendengar teman dan mencari solusi bersama. 🤝';
+      } else {
+        feedback.style.display = 'none';
+      }
+    }
+
+    const benefitSelect = document.getElementById('benefitSelect');
+    if (benefitSelect) {
+      benefitSelect.addEventListener('change', (e) => showBenefitText(e.target.value));
+    }
+
+    // Slide 10: refleksi
+    function showRefleksi() {
+      const msg = document.getElementById('refleksiMsg');
+      if (!msg) return;
+      msg.style.display = 'block';
+    }
+
+    // Slide 11: mini quiz
+    function checkMiniQuiz() {
+      const questions = ['q1', 'q2', 'q3'];
+      let score = 0;
+      questions.forEach(name => {
+        const radios = document.querySelectorAll('input[name="' + name + '"]');
+        radios.forEach(r => {
+          if (r.checked && r.value === 'benar') {
+            score += 1;
+          }
+        });
+      });
+      const msg = document.getElementById('miniQuizScore');
+      msg.textContent = 'Skor kamu: ' + score + ' dari 3. ' +
+        (score === 3 ? 'Keren! Kamu sudah paham sekali. 🌟'
+                     : 'Tidak apa-apa, nanti kita bisa latihan lagi. 🙂');
+    }
+  </script>
+</body>
+</html>
