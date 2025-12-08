@@ -1,0 +1,762 @@
+<!DOCTYPE html>
+<html lang="id">
+
+<head>
+  <meta charset="UTF-8" />
+  <title>Urutan Kode di ScratchJr - Sesi 11 (Siswa)</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    :root {
+      --lp-yellow: #fde68a;
+      --lp-blue: #38bdf8;
+      --lp-pink: #f9a8d4;
+      --lp-bg: #fef9c3;
+      --lp-text: #0f172a;
+    }
+
+    body {
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      background: radial-gradient(circle at top, #e0f2fe, var(--lp-bg));
+      color: var(--lp-text);
+      margin: 0;
+    }
+
+    .slide {
+      display: none;
+    }
+
+    .slide-active {
+      display: flex;
+    }
+
+    .bubble {
+      border-radius: 1.5rem;
+      background: white;
+      box-shadow: 0 8px 20px rgba(15, 23, 42, 0.15);
+    }
+
+    .btn-main {
+      background-color: #fbbf24;
+      border-radius: 9999px;
+      padding: 0.5rem 1.4rem;
+      font-weight: 700;
+      box-shadow: 0 4px 0 #d97706;
+      transition: transform 0.1s, box-shadow 0.1s;
+    }
+
+    .btn-main:active {
+      transform: translateY(2px);
+      box-shadow: 0 2px 0 #d97706;
+    }
+
+    .pill {
+      border-radius: 9999px;
+      background-color: white;
+      box-shadow: 0 4px 12px rgba(15, 23, 42, 0.1);
+    }
+
+    .nav-dot {
+      width: 10px;
+      height: 10px;
+      border-radius: 9999px;
+      background-color: rgba(148, 163, 184, 0.6);
+      cursor: pointer;
+    }
+
+    .nav-dot-active {
+      background-color: var(--lp-blue);
+      transform: scale(1.2);
+    }
+
+    .block {
+      display: inline-block;
+      padding: 0.35rem 0.7rem;
+      border-radius: 9999px;
+      font-size: 0.75rem;
+      font-weight: 700;
+      color: white;
+      margin: 0.15rem;
+    }
+
+    .block-event {
+      background-color: #f97316;
+    }
+
+    .block-motion {
+      background-color: #0ea5e9;
+    }
+
+    .block-say {
+      background-color: #22c55e;
+    }
+
+    .block-end {
+      background-color: #64748b;
+    }
+
+    .option-card {
+      cursor: pointer;
+      transition: transform 0.1s, box-shadow 0.1s;
+    }
+
+    .option-card:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 18px rgba(15, 23, 42, 0.2);
+    }
+
+    .hidden-el {
+      display: none;
+    }
+
+    /* Access overlay */
+    #accessOverlay {
+      position: fixed;
+      inset: 0;
+      background: radial-gradient(circle at top, rgba(248, 250, 252, 0.96), rgba(251, 191, 36, 0.8));
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 50;
+    }
+  </style>
+</head>
+
+<body class="min-h-screen flex flex-col">
+
+  <!-- ACCESS CODE OVERLAY -->
+  <div id="accessOverlay">
+    <div class="max-w-md w-full mx-4 bubble p-6 md:p-8 text-center">
+      <p class="text-xs uppercase tracking-wide text-slate-500 mb-1">Kode Akses</p>
+      <h1 class="text-2xl font-extrabold text-slate-800 mb-2">
+        Masukkan Kode untuk Membuka Slide
+      </h1>
+      <p class="text-sm text-slate-600 mb-4">
+        Masukkan kode akses yang diberikan oleh gurumu.
+      </p>
+      <div class="mb-3">
+        <label for="accessCode" class="block text-xs font-semibold text-slate-600 mb-1">
+          Kode Akses
+        </label>
+        <input id="accessCode" type="text" maxlength="20"
+          class="w-full border border-slate-300 rounded-xl px-3 py-2 text-center tracking-[0.3em] font-mono text-sm"
+          style="text-transform: uppercase;" oninput="this.value = this.value.toUpperCase();"
+          onkeydown="if(event.key === 'Enter'){checkAccess();}" />
+
+      </div>
+      <button class="btn-main text-xs md:text-sm w-full" onclick="checkAccess()">
+        Buka Slide
+      </button>
+      <p id="accessError" class="mt-2 text-xs text-red-600 hidden-el">
+        Ups, kodenya belum tepat. Coba lagi ya, atau tanya guru. 😊
+      </p>
+
+    </div>
+  </div>
+
+  <!-- WRAPPER UNTUK SLIDE, DISembunyikan dulu -->
+  <div id="slideWrapper" style="display: none; flex: 1 1 auto; flex-direction: column;">
+
+    <!-- Top Bar -->
+    <header
+      class="w-full px-4 py-2 flex items-center justify-between bg-white/70 backdrop-blur border-b border-blue-100">
+      <div class="flex items-center gap-2">
+        <div
+          class="w-8 h-8 rounded-full bg-gradient-to-tr from-yellow-400 to-sky-400 flex items-center justify-center text-xs font-bold text-white">
+          LP
+        </div>
+        <div>
+          <p class="text-[10px] text-slate-500 leading-tight">UOB My Digital Space</p>
+          <p class="text-xs font-semibold leading-tight">Lower Primary Coding</p>
+        </div>
+      </div>
+      <div class="text-right">
+        <p class="text-[10px] text-slate-500 uppercase tracking-wide">Sesi 11</p>
+        <p class="text-xs font-semibold">Urutan Kode di ScratchJr</p>
+      </div>
+    </header>
+
+    <!-- Slides Container -->
+    <main id="slides" class="flex-1 relative overflow-hidden">
+
+      <!-- SLIDE 1 – Judul -->
+      <section class="slide slide-active items-center justify-center p-4">
+        <div class="max-w-3xl w-full mx-auto bubble p-6 md:p-8 flex flex-col md:flex-row items-center gap-6">
+          <div class="flex-1 space-y-3">
+            <p class="text-xs uppercase tracking-wide text-slate-500">Sesi 11</p>
+            <h1 class="text-3xl md:text-4xl font-extrabold text-slate-800 leading-tight">
+              Urutan Kode<br>
+              di <span class="text-sky-500">ScratchJr</span> 🐱
+            </h1>
+            <p class="text-base md:text-lg">
+              Hai teman! 😊 Hari ini kita belajar bagaimana
+              <span class="font-semibold text-sky-600">menyusun urutan kode</span>
+              supaya kucing di ScratchJr bergerak dengan benar.
+            </p>
+            <p class="text-sm text-slate-500">
+              Siap main dan belajar bareng? 🚀
+            </p>
+          </div>
+          <div
+            class="w-40 h-40 md:w-48 md:h-48 rounded-3xl bg-gradient-to-tr from-yellow-300 to-sky-300 flex items-center justify-center">
+            <div class="text-center text-white font-bold text-xl leading-snug">
+              🐱<br />Klik,<br />Susun,<br />Gerak!
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- SLIDE 2 – Ingat Urutan Kegiatan -->
+      <section class="slide items-center justify-center p-4">
+        <div class="max-w-3xl w-full mx-auto bubble p-6 md:p-8">
+          <h2 class="text-2xl font-bold mb-3">Yuk Ingat Urutan Kegiatan ⏱️</h2>
+          <p class="text-base mb-3">
+            Sebelum ke ScratchJr, kita ingat dulu urutan kegiatan sehari-hari.
+          </p>
+          <p class="text-sm mb-2 font-semibold">Klik salah satu kegiatan di bawah:</p>
+
+          <div class="grid md:grid-cols-3 gap-3 text-sm">
+            <button class="pill p-3 text-left option-card" onclick="showRoutine('sepatu')">
+              👟 Mengikat tali sepatu
+            </button>
+            <button class="pill p-3 text-left option-card" onclick="showRoutine('cucitangan')">
+              🧼 Mencuci tangan
+            </button>
+            <button class="pill p-3 text-left option-card" onclick="showRoutine('sarapan')">
+              🍽️ Sarapan pagi
+            </button>
+          </div>
+
+          <div id="routineBox" class="mt-4 text-sm hidden-el">
+            <p class="font-semibold mb-1">Contoh urutan:</p>
+            <ul id="routineList" class="list-decimal list-inside space-y-1"></ul>
+          </div>
+        </div>
+      </section>
+
+      <!-- SLIDE 3 – Kenalan Lagi dengan ScratchJr -->
+      <section class="slide items-center justify-center p-4">
+        <div class="max-w-3xl mx-auto bubble p-6 md:p-8 space-y-4">
+          <h2 class="text-2xl font-bold">ScratchJr itu Apa, ya? 🐱📱</h2>
+          <p class="text-base">
+            ScratchJr adalah aplikasi untuk membuat <span class="font-semibold text-sky-600">cerita dan animasi</span>.
+            Kamu bisa:
+          </p>
+          <ul class="list-disc list-inside text-base space-y-1">
+            <li>Memilih <span class="font-semibold">backdrop</span> (latar belakang).</li>
+            <li>Memilih <span class="font-semibold">sprite</span> (tokoh, misalnya kucing).</li>
+            <li>Menyusun <span class="font-semibold">blok kode</span> supaya tokoh bisa bergerak dan bicara.</li>
+          </ul>
+
+          <div class="mt-3 text-sm">
+            <p class="font-semibold mb-1">Klik tulisan di bawah untuk lihat artinya:</p>
+            <div class="flex flex-wrap gap-2">
+              <button class="pill px-3 py-2" onclick="toggleExplain('exSprite')">🐱 Sprite</button>
+              <button class="pill px-3 py-2" onclick="toggleExplain('exBackdrop')">🌄 Backdrop</button>
+              <button class="pill px-3 py-2" onclick="toggleExplain('exBlok')">🧱 Blok Kode</button>
+            </div>
+            <p id="exSprite" class="mt-2 text-sm hidden-el">
+              <span class="font-semibold">Sprite</span> adalah tokoh yang bisa bergerak, misalnya kucing, anak, mobil.
+            </p>
+            <p id="exBackdrop" class="mt-2 text-sm hidden-el">
+              <span class="font-semibold">Backdrop</span> adalah latar belakang, misalnya pantai, kota, taman.
+            </p>
+            <p id="exBlok" class="mt-2 text-sm hidden-el">
+              <span class="font-semibold">Blok kode</span> adalah potongan perintah yang disusun berurutan untuk
+              mengatur
+              sprite.
+            </p>
+          </div>
+        </div>
+      </section>
+
+      <!-- SLIDE 4 – Blok Gerak & Bendera Hijau -->
+      <section class="slide items-center justify-center p-4">
+        <div class="max-w-3xl mx-auto bubble p-6 md:p-8 space-y-4">
+          <h2 class="text-2xl font-bold">Blok Bendera & Blok Gerak 🧱</h2>
+          <p class="text-base">
+            Di ScratchJr, kita sering memakai:
+          </p>
+          <div class="space-y-2 text-sm">
+            <p>
+              <span class="block block-event"><img
+                  src="https://uob-1328237036.cos.ap-singapore.myqcloud.com//file-uploader/images/9fafbec3-26d3-4914-9d7a-78e222e74a85.png"
+                  style="margin-left: 10%; max-width: 30%;"></span>
+              = tanda <span class="font-semibold">“Mulai!”</span>
+            </p>
+            <p>
+              <span class="block block-motion"><img
+                  src="https://uob-1328237036.cos.ap-singapore.myqcloud.com//file-uploader/images/452e01f4-d337-48a4-a83a-93c4e692a524.png"
+                  style="margin-left: 10%; max-width: 20%;"></span> =
+              sprite jalan 1 langkah ke kanan.
+            </p>
+            <p>
+              <span class="block block-say"><img
+                  src="https://uob-1328237036.cos.ap-singapore.myqcloud.com//file-uploader/images/1d464bb5-ea02-4304-b87f-a2b5c7a0de80.png"
+                  style="margin-left: 10%; max-width: 20%;"></span> =
+              sprite mengucapkan kata “hi”.
+            </p>
+          </div>
+
+          <button class="btn-main text-xs mt-2" onclick="toggleExplain('exTapGreen')">
+            Apa yang terjadi kalau bendera hijau diklik?
+          </button>
+          <p id="exTapGreen" class="mt-2 text-sm hidden-el">
+            Saat kamu klik <span class="font-semibold">bendera hijau</span>, semua blok kode yang tersambung di bawahnya
+            akan berjalan
+            dari <span class="font-semibold">kiri ke kanan</span>, berurutan.
+          </p>
+        </div>
+      </section>
+
+      <!-- SLIDE 5 – Urutan Itu Penting -->
+      <section class="slide items-center justify-center p-4">
+        <div class="max-w-3xl mx-auto bubble p-6 md:p-8 space-y-4">
+          <h2 class="text-2xl font-bold">Urutan Blok Itu Penting! 🔁</h2>
+          <p class="text-base">
+            Lihat dua urutan blok di bawah ini.
+          </p>
+
+          <div class="grid md:grid-cols-2 gap-4 text-sm">
+            <div class="border rounded-xl p-3 bg-slate-50">
+              <p class="font-semibold mb-1">Urutan A</p>
+              <div class="mb-2">
+                <span class="block block-event"><img
+                    src="https://uob-1328237036.cos.ap-singapore.myqcloud.com//file-uploader/images/9fafbec3-26d3-4914-9d7a-78e222e74a85.png"
+                    style="margin-left: 10%; max-width: 30%;"></span>
+                <span class="block block-motion"><img
+                    src="https://uob-1328237036.cos.ap-singapore.myqcloud.com//file-uploader/images/2578cb0f-dea5-4970-8247-032a1168117a.png"
+                    style="margin-left: 10%; max-width: 30%;"></span>
+                <span class="block block-say"><img
+                    src="https://uob-1328237036.cos.ap-singapore.myqcloud.com//file-uploader/images/1d464bb5-ea02-4304-b87f-a2b5c7a0de80.png"
+                    style="margin-left: 10%; max-width: 30%;"></span>
+              </div>
+              <p class="text-xs text-slate-500">Kucing jalan dulu, lalu bicara.</p>
+            </div>
+            <div class="border rounded-xl p-3 bg-slate-50">
+              <p class="font-semibold mb-1">Urutan B</p>
+              <div class="mb-2">
+                <span class="block block-event"><img
+                    src="https://uob-1328237036.cos.ap-singapore.myqcloud.com//file-uploader/images/9fafbec3-26d3-4914-9d7a-78e222e74a85.png"
+                    style="margin-left: 10%; max-width: 30%;"></span>
+                <span class="block block-say"><img
+                    src="https://uob-1328237036.cos.ap-singapore.myqcloud.com//file-uploader/images/1d464bb5-ea02-4304-b87f-a2b5c7a0de80.png"
+                    style="margin-left: 10%; max-width: 30%;"></span>
+                <span class="block block-motion"><img
+                    src="https://uob-1328237036.cos.ap-singapore.myqcloud.com//file-uploader/images/2578cb0f-dea5-4970-8247-032a1168117a.png"
+                    style="margin-left: 10%; max-width: 30%;"></span>
+              </div>
+              <p class="text-xs text-slate-500">Kucing bicara dulu, lalu jalan.</p>
+            </div>
+          </div>
+
+          <p class="text-sm font-semibold mt-2">
+            Kalau kamu ingin kucing <span class="underline">jalan dulu baru bicara</span>, mana yang harus kamu pilih?
+          </p>
+          <div class="flex flex-wrap gap-2 text-sm mt-1">
+            <button class="pill px-3 py-2 option-card" onclick="checkOrder('A')">Pilih Urutan A</button>
+            <button class="pill px-3 py-2 option-card" onclick="checkOrder('B')">Pilih Urutan B</button>
+          </div>
+          <p id="orderFeedback" class="text-sm font-semibold mt-2"></p>
+        </div>
+      </section>
+
+      <!-- SLIDE 6 – Coba Tebak Hasil Kode -->
+      <section class="slide items-center justify-center p-4">
+        <div class="max-w-3xl mx-auto bubble p-6 md:p-8 space-y-4">
+          <h2 class="text-2xl font-bold">Coba Tebak, Kucing Ngapain? 🤔</h2>
+          <p class="text-base">
+            Perhatikan urutan blok ini:
+          </p>
+          <div class="mt-1 mb-2">
+            <span class="block block-event"><img
+                src="https://uob-1328237036.cos.ap-singapore.myqcloud.com//file-uploader/images/9fafbec3-26d3-4914-9d7a-78e222e74a85.png"
+                style="margin-left: 10%; max-width: 25%;"></span>
+            <span class="block block-motion"><img
+                src="https://uob-1328237036.cos.ap-singapore.myqcloud.com//file-uploader/images/64c5d649-9986-4842-8da8-9eedebb79dbb.png"
+                style="margin-left: 10%; max-width: 20%;"></span>
+            <span class="block block-motion"><img
+                src="https://uob-1328237036.cos.ap-singapore.myqcloud.com//file-uploader/images/b511ec7c-3404-485d-98e7-e210ecf8a490.png"
+                style="margin-left: 10%; max-width: 20%;"></span>
+          </div>
+
+          <p class="text-sm mb-2 font-semibold">Menurutmu, apa yang terjadi?</p>
+          <div class="space-y-2 text-sm">
+            <label class="flex gap-2 items-start pill p-3 option-card">
+              <input type="radio" name="guessMove" value="a" class="mt-1">
+              <span>Kucing tetap di tempat, tidak bergerak.</span>
+            </label>
+            <label class="flex gap-2 items-start pill p-3 option-card">
+              <input type="radio" name="guessMove" value="b" class="mt-1">
+              <span>Kucing maju 2 langkah ke kanan, lalu 1 langkah ke kiri.</span>
+            </label>
+            <label class="flex gap-2 items-start pill p-3 option-card">
+              <input type="radio" name="guessMove" value="c" class="mt-1">
+              <span>Kucing berbicara "hi."</span>
+            </label>
+          </div>
+          <button class="btn-main text-xs mt-2" onclick="checkGuessMove()">Cek Jawaban</button>
+          <p id="guessMoveFeedback" class="text-sm font-semibold mt-2"></p>
+        </div>
+      </section>
+
+      <!-- SLIDE 7 – Tantangan Gerakkan Kucing -->
+      <section class="slide items-center justify-center p-4">
+        <div class="max-w-3xl mx-auto bubble p-6 md:p-8 space-y-4">
+          <h2 class="text-2xl font-bold">Tantangan: Gerakkan Kucing 🐱➡️</h2>
+          <p class="text-base">
+            Kamu ingin sprite jalan 3 langkah ke kanan, bilang “hi”, lalu jalan lagi 3 langkah ke kanan.
+          </p>
+          <p class="text-sm mb-2 font-semibold">
+            Pilih urutan blok yang paling tepat:
+          </p>
+
+          <div class="grid md:grid-cols-2 gap-3 text-sm">
+            <div class="border rounded-xl p-3 bg-slate-50 option-card" onclick="selectChallenge('1')">
+              <p class="font-semibold mb-1">Pilihan 1</p>
+              <span class="block block-event"><img
+                  src="https://uob-1328237036.cos.ap-singapore.myqcloud.com//file-uploader/images/9fafbec3-26d3-4914-9d7a-78e222e74a85.png"
+                  style="margin-left: 10%; max-width: 25%;"></span>
+              <span class="block block-motion"><img
+                  src="https://uob-1328237036.cos.ap-singapore.myqcloud.com//file-uploader/images/2578cb0f-dea5-4970-8247-032a1168117a.png"
+                  style="margin-left: 10%; max-width: 20%;"></span>
+              <span class="block block-say"><img
+                  src="https://uob-1328237036.cos.ap-singapore.myqcloud.com//file-uploader/images/1d464bb5-ea02-4304-b87f-a2b5c7a0de80.png"
+                  style="margin-left: 10%; max-width: 20%;"></span>
+              <span class="block block-motion"><img
+                  src="https://uob-1328237036.cos.ap-singapore.myqcloud.com//file-uploader/images/2578cb0f-dea5-4970-8247-032a1168117a.png"
+                  style="margin-left: 10%; max-width: 20%;"></span>
+            </div>
+            <div class="border rounded-xl p-3 bg-slate-50 option-card" onclick="selectChallenge('2')">
+              <p class="font-semibold mb-1">Pilihan 2</p>
+              <span class="block block-event"><img
+                  src="https://uob-1328237036.cos.ap-singapore.myqcloud.com//file-uploader/images/9fafbec3-26d3-4914-9d7a-78e222e74a85.png"
+                  style="margin-left: 10%; max-width: 25%;"></span>
+              <span class="block block-say"><img
+                  src="https://uob-1328237036.cos.ap-singapore.myqcloud.com//file-uploader/images/1d464bb5-ea02-4304-b87f-a2b5c7a0de80.png"
+                  style="margin-left: 10%; max-width: 20%;"></span>
+              <span class="block block-motion"><img
+                  src="https://uob-1328237036.cos.ap-singapore.myqcloud.com//file-uploader/images/2578cb0f-dea5-4970-8247-032a1168117a.png"
+                  style="margin-left: 10%; max-width: 20%;"></span>
+              <span class="block block-motion"><img
+                  src="https://uob-1328237036.cos.ap-singapore.myqcloud.com//file-uploader/images/2578cb0f-dea5-4970-8247-032a1168117a.png"
+                  style="margin-left: 10%; max-width: 20%;"></span>
+            </div>
+          </div>
+
+          <button class="btn-main text-xs mt-2" onclick="checkChallenge()">Cek Pilihan</button>
+          <p id="challengeFeedback" class="text-sm font-semibold mt-2"></p>
+        </div>
+      </section>
+
+      <!-- SLIDE 9 – Mini Kuis -->
+      <section class="slide items-center justify-center p-4">
+        <div class="max-w-3xl mx-auto bubble p-6 md:p-8 space-y-4">
+          <h2 class="text-2xl font-bold">Mini Kuis 🎯</h2>
+          <p class="text-base">Jawab beberapa pertanyaan ini ya.</p>
+
+          <div class="space-y-3 text-sm">
+            <!-- Q1 -->
+            <div>
+              <p class="font-semibold mb-1">
+                1. Fungsi blok <span class="block block-event align-middle"><img
+                    src="https://uob-1328237036.cos.ap-singapore.myqcloud.com//file-uploader/images/9fafbec3-26d3-4914-9d7a-78e222e74a85.png"
+                    style="margin-left: 10%; max-width: 20%;"></span> adalah...
+              </p>
+              <label class="flex gap-2 items-start">
+                <input type="radio" name="q1" value="salah" class="mt-1">
+                <span>Untuk menghentikan semua kode.</span>
+              </label>
+              <label class="flex gap-2 items-start">
+                <input type="radio" name="q1" value="benar" class="mt-1">
+                <span>Untuk memulai menjalankan urutan blok kode.</span>
+              </label>
+            </div>
+            <!-- Q2 -->
+            <div>
+              <p class="font-semibold mb-1">
+                2. Kenapa urutan blok itu penting?
+              </p>
+              <label class="flex gap-2 items-start">
+                <input type="radio" name="q2" value="benar" class="mt-1">
+                <span>Karena urutan menentukan aksi mana yang terjadi duluan.</span>
+              </label>
+              <label class="flex gap-2 items-start">
+                <input type="radio" name="q2" value="salah" class="mt-1">
+                <span>Karena komputer akan memilih sendiri urutannya.</span>
+              </label>
+            </div>
+          </div>
+
+          <button class="btn-main text-xs" onclick="checkMiniQuiz()">Cek Skor</button>
+          <p id="miniQuizScore" class="text-sm font-semibold mt-2"></p>
+        </div>
+      </section>
+
+      <!-- SLIDE 10 – Refleksi -->
+      <section class="slide items-center justify-center p-4">
+        <div class="max-w-3xl mx-auto bubble p-6 md:p-8 space-y-4">
+          <h2 class="text-2xl font-bold">Refleksi Kecil ✍️</h2>
+          <p class="text-base">
+            Coba isi satu pertanyaan ini:
+          </p>
+          <p class="text-base">
+            <span class="font-semibold">Jika urutan blok salah, apa yang bisa kamu lakukan?</span>
+          </p>
+          <textarea id="refleksi" class="w-full mt-3 border rounded-xl p-3 text-sm" rows="4"
+            placeholder="Tulis jawabanmu di sini. Misalnya: 'Aku akan mencoba mengubah urutannya dan klik bendera hijau lagi.'"></textarea>
+          <button class="btn-main text-xs mt-2" onclick="showRefleksi()">
+            Sudah, Kak!
+          </button>
+          <p id="refleksiMsg" class="text-sm font-semibold text-sky-700 hidden-el mt-2">
+            Keren! Kamu sudah berpikir seperti programmer kecil yang tidak mudah menyerah. 🌟
+          </p>
+        </div>
+      </section>
+
+    </main>
+
+    <!-- Navigation -->
+    <footer
+      class="w-full px-4 py-3 bg-white/80 backdrop-blur border-t border-blue-100 flex items-center justify-between">
+      <button id="prevBtn" class="btn-main text-xs md:text-sm disabled:opacity-40" onclick="changeSlide(-1)">
+        ⬅️ Sebelumnya
+      </button>
+      <div class="flex gap-1">
+        <!-- dots via JS -->
+      </div>
+      <button id="nextBtn" class="btn-main text-xs md:text-sm" onclick="changeSlide(1)">
+        Berikutnya ➡️
+      </button>
+    </footer>
+
+  </div> <!-- /slideWrapper -->
+
+  <script>
+    const slides = document.querySelectorAll('.slide');
+    const dotsContainer = document.querySelector('footer .flex.gap-1');
+    let currentSlide = 0;
+
+    // create dots
+    slides.forEach((_, index) => {
+      const dot = document.createElement('div');
+      dot.className = 'nav-dot' + (index === 0 ? ' nav-dot-active' : '');
+      dot.dataset.index = index;
+      dot.addEventListener('click', () => goToSlide(index));
+      dotsContainer.appendChild(dot);
+    });
+
+    function updateDots() {
+      document.querySelectorAll('.nav-dot').forEach(dot => {
+        dot.classList.remove('nav-dot-active');
+        if (parseInt(dot.dataset.index) === currentSlide) {
+          dot.classList.add('nav-dot-active');
+        }
+      });
+    }
+
+    function showSlide(index) {
+      slides.forEach((slide, i) => {
+        slide.classList.toggle('slide-active', i === index);
+      });
+      const prevBtn = document.getElementById('prevBtn');
+      const nextBtn = document.getElementById('nextBtn');
+      if (prevBtn && nextBtn) {
+        prevBtn.disabled = index === 0;
+        nextBtn.disabled = index === slides.length - 1;
+      }
+      updateDots();
+    }
+
+    function changeSlide(step) {
+      let newIndex = currentSlide + step;
+      if (newIndex < 0) newIndex = 0;
+      if (newIndex >= slides.length) newIndex = slides.length - 1;
+      currentSlide = newIndex;
+      showSlide(currentSlide);
+    }
+
+    function goToSlide(index) {
+      currentSlide = index;
+      showSlide(currentSlide);
+    }
+
+    // Slide 2 – routines
+    function showRoutine(type) {
+      const box = document.getElementById('routineBox');
+      const list = document.getElementById('routineList');
+      box.style.display = 'block';
+      list.innerHTML = '';
+      let steps = [];
+      if (type === 'sepatu') {
+        steps = [
+          'Memasukkan kaki ke dalam sepatu.',
+          'Menarik kedua tali ke atas.',
+          'Menyilangkan tali kiri dan kanan.',
+          'Mengikat tali hingga kencang.'
+        ];
+      } else if (type === 'cucitangan') {
+        steps = [
+          'Membasahi tangan dengan air.',
+          'Memberi sabun dan menggosok tangan.',
+          'Membilas dengan air sampai bersih.',
+          'Mengeringkan tangan dengan handuk.'
+        ];
+      } else if (type === 'sarapan') {
+        steps = [
+          'Mencuci tangan.',
+          'Duduk rapi di meja makan.',
+          'Berdoa sebelum makan.',
+          'Makan pelan-pelan sampai habis.'
+        ];
+      }
+      steps.forEach(s => {
+        const li = document.createElement('li');
+        li.textContent = s;
+        list.appendChild(li);
+      });
+    }
+
+    // generic toggle
+    function toggleExplain(id) {
+      const el = document.getElementById(id);
+      if (!el) return;
+      el.style.display = el.style.display === 'block' ? 'none' : 'block';
+    }
+
+    // Slide 5 – order
+    function checkOrder(choice) {
+      const fb = document.getElementById('orderFeedback');
+      if (choice === 'A') {
+        fb.textContent = 'Betul! Urutan A membuat kucing jalan dulu 3 langkah baru bicara "Halo". 👍';
+        fb.style.color = '#16a34a';
+      } else {
+        fb.textContent = 'Belum tepat. Urutan B membuat kucing bicara dulu baru jalan.';
+        fb.style.color = '#b91c1c';
+      }
+    }
+
+    // Slide 6 – guess move
+    function checkGuessMove() {
+      const fb = document.getElementById('guessMoveFeedback');
+      const radios = document.querySelectorAll('input[name="guessMove"]');
+      let val = null;
+      radios.forEach(r => {
+        if (r.checked) val = r.value;
+      });
+      if (!val) {
+        fb.textContent = 'Pilih dulu salah satu jawaban ya 😊';
+        fb.style.color = '#f97316';
+        return;
+      }
+      if (val === 'b') {
+        fb.textContent = 'Benar! Sprite maju 2 langkah ke kanan, lalu 1 langkah ke kiri. Jadi sprite bergeser 1 langkah ke kanan. 🐱➡️';
+        fb.style.color = '#16a34a';
+      } else {
+        fb.textContent = 'Belum tepat. Coba bayangkan: maju 2, mundur 1. Sisanya berapa langkah?';
+        fb.style.color = '#b91c1c';
+      }
+    }
+
+    // Slide 7 – challenge
+    let challengeChoice = null;
+    function selectChallenge(id) {
+      challengeChoice = id;
+      const cards = document.querySelectorAll('#slides .slide:nth-child(7) .option-card');
+      cards.forEach(c => c.classList.remove('ring-2', 'ring-sky-400'));
+      // mark clicked
+      if (id === '1') {
+        cards[0].classList.add('ring-2', 'ring-sky-400');
+      } else {
+        cards[1].classList.add('ring-2', 'ring-sky-400');
+      }
+    }
+
+    function checkChallenge() {
+      const fb = document.getElementById('challengeFeedback');
+      if (!challengeChoice) {
+        fb.textContent = 'Pilih dulu salah satu pilihan ya 😊';
+        fb.style.color = '#f97316';
+        return;
+      }
+      if (challengeChoice === '1') {
+        fb.textContent = 'Keren! Kucing jalan 3 langkah dulu, bilang "hi", lalu jalan lagi 3 langkah. Itu sesuai dengan keinginanmu.';
+        fb.style.color = '#16a34a';
+      } else {
+        fb.textContent = 'Urutan ini membuat kucing bicara dulu, baru jalan. Coba pikir lagi urutan yang kamu mau.';
+        fb.style.color = '#b91c1c';
+      }
+    }
+
+    // Slide 8 (pair) sudah dihapus di versi ini, jadi checkPair tidak dipakai
+
+    // Slide 9 – mini quiz
+    function checkMiniQuiz() {
+      const qs = ['q1', 'q2'];
+      let score = 0;
+      qs.forEach(name => {
+        const rs = document.querySelectorAll('input[name="' + name + '"]');
+        rs.forEach(r => {
+          if (r.checked && r.value === 'benar') score += 1;
+        });
+      });
+      const msg = document.getElementById('miniQuizScore');
+      msg.textContent = 'Skor kamu: ' + score + ' dari 2. ' +
+        (score === 2 ? 'Wah, kamu sudah sangat paham! 🔥'
+          : 'Tidak apa-apa, kita bisa latihan lagi bersama. 🙂');
+    }
+
+    // Slide 10 – refleksi
+    function showRefleksi() {
+      const msg = document.getElementById('refleksiMsg');
+      msg.style.display = 'block';
+    }
+
+    // === AKSES KODE ===
+    function checkAccess() {
+      const input = document.getElementById('accessCode');
+      const error = document.getElementById('accessError');
+      const wrapper = document.getElementById('slideWrapper');
+      const overlay = document.getElementById('accessOverlay');
+      const value = (input.value || '').trim().toUpperCase();
+
+      if (value === 'RGMDSLP25') {
+        // buka slide
+        overlay.style.display = 'none';
+        wrapper.style.display = 'flex';
+        // memastikan slide pertama & dots sinkron
+        currentSlide = 0;
+        showSlide(currentSlide);
+      } else {
+        error.classList.remove('hidden-el');
+      }
+    }
+
+    // Fokuskan input kode saat halaman dimuat
+    window.addEventListener('load', () => {
+      const input = document.getElementById('accessCode');
+      if (input) input.focus();
+    });
+
+    // === NAVIGASI KEYBOARD UNTUK SLIDE ===
+    document.addEventListener('keydown', (e) => {
+      // Jangan ganggu saat mengetik di form input/textarea/select
+      const tag = (e.target && e.target.tagName) ? e.target.tagName.toUpperCase() : '';
+      if (tag === 'INPUT' || tag === 'TEXTAREA' || tag === 'SELECT') return;
+
+      // Jika overlay masih aktif, abaikan navigasi slide
+      const overlay = document.getElementById('accessOverlay');
+      if (overlay && overlay.style.display !== 'none') return;
+
+      if (e.key === 'ArrowRight' || e.key === 'PageDown') {
+        e.preventDefault();
+        changeSlide(1);
+      } else if (e.key === 'ArrowLeft' || e.key === 'PageUp') {
+        e.preventDefault();
+        changeSlide(-1);
+      }
+    });
+  </script>
+</body>
+
+</html>
