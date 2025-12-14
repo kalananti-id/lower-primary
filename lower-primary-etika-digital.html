@@ -1,0 +1,1646 @@
+<!doctype html>
+<html lang="id">
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>Lower Primary - Etika Digital</title>
+    <style>
+        :root {
+            --bg1: #e0f2fe;
+            /* sky */
+            --bg2: #fff7ed;
+            /* peach */
+            --bg3: #fce7f3;
+            /* pink */
+            --bg4: #ecfccb;
+            /* lime */
+            --card: #ffffff;
+            --text: #0f172a;
+            --muted: #475569;
+            --accent: #60a5fa;
+            --accent2: #fb7185;
+            --good: #16a34a;
+            --bad: #dc2626;
+            --line: rgba(15, 23, 42, .10);
+            --shadow: 0 18px 35px rgba(15, 23, 42, .10);
+            --radius: 26px;
+            --font: ui-rounded, system-ui, -apple-system, "Segoe UI", Roboto, Helvetica, Arial;
+        }
+
+        * {
+            box-sizing: border-box
+        }
+
+        body {
+            margin: 0;
+            font-family: var(--font);
+            color: var(--text);
+            overflow: hidden;
+            background:
+                radial-gradient(900px 520px at 18% 12%, rgba(96, 165, 250, .55), transparent 60%),
+                radial-gradient(900px 520px at 80% 15%, rgba(251, 113, 133, .45), transparent 60%),
+                radial-gradient(900px 520px at 50% 92%, rgba(34, 197, 94, .28), transparent 58%),
+                linear-gradient(135deg, var(--bg1), var(--bg2) 45%, var(--bg3));
+        }
+
+        .app {
+            height: 100vh;
+            width: 100vw;
+            display: flex;
+            flex-direction: column
+        }
+
+        header {
+            display: flex;
+            gap: 12px;
+            align-items: center;
+            justify-content: space-between;
+            padding: 14px 18px;
+        }
+
+        .brand {
+            display: flex;
+            align-items: center;
+            gap: 12px
+        }
+
+        .badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            padding: 10px 12px;
+            border-radius: 999px;
+            background: rgba(255, 255, 255, .80);
+            border: 1px solid var(--line);
+            box-shadow: var(--shadow);
+            font-weight: 900;
+        }
+
+        .badge .dot {
+            width: 12px;
+            height: 12px;
+            border-radius: 999px;
+            background: linear-gradient(180deg, #60a5fa, #fb7185);
+            box-shadow: 0 0 0 6px rgba(96, 165, 250, .22);
+        }
+
+        .hint {
+            font-size: 13px;
+            color: var(--muted);
+            border: 1px dashed rgba(15, 23, 42, .18);
+            padding: 10px 12px;
+            border-radius: 16px;
+            background: rgba(255, 255, 255, .65);
+            max-width: min(640px, 62vw);
+        }
+
+        .hint b {
+            color: var(--text)
+        }
+
+        .progressWrap {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            min-width: 240px;
+            justify-content: flex-end
+        }
+
+        .progress {
+            width: 190px;
+            height: 12px;
+            border-radius: 999px;
+            background: rgba(255, 255, 255, .80);
+            border: 1px solid var(--line);
+            overflow: hidden;
+        }
+
+        .bar {
+            height: 100%;
+            width: 0%;
+            background: linear-gradient(90deg, var(--accent), var(--accent2));
+            border-radius: 999px;
+            transition: width .35s ease;
+        }
+
+        .counter {
+            font-weight: 900;
+            font-size: 14px;
+            color: var(--muted);
+            min-width: 70px;
+            text-align: right
+        }
+
+        main {
+            flex: 1;
+            padding: 0 18px 18px;
+            display: flex;
+            align-items: stretch;
+            justify-content: center;
+            min-height: 0;
+        }
+
+        .slide {
+            width: min(1040px, 100%);
+            height: 100%;
+            border-radius: var(--radius);
+            border: 1px solid var(--line);
+            background: rgba(255, 255, 255, .55);
+            box-shadow: var(--shadow);
+            position: relative;
+            overflow: hidden;
+            display: none;
+            flex-direction: column;
+            min-height: 0;
+        }
+
+        .slide.active {
+            display: block
+        }
+
+        .slide.scrollable .inner {
+            overflow-y: flex;
+            padding-bottom: 18px;
+        }
+
+        .blob {
+            position: absolute;
+            border-radius: 999px;
+            opacity: .9;
+            pointer-events: none
+        }
+
+        .blob.b1 {
+            width: 220px;
+            height: 220px;
+            left: -70px;
+            top: -80px;
+            background: rgba(96, 165, 250, .25)
+        }
+
+        .blob.b2 {
+            width: 240px;
+            height: 240px;
+            right: -90px;
+            top: -90px;
+            background: rgba(251, 113, 133, .22)
+        }
+
+        .blob.b3 {
+            width: 260px;
+            height: 260px;
+            left: 30%;
+            bottom: -120px;
+            background: rgba(34, 197, 94, .18)
+        }
+
+        .inner {
+            height: 100%;
+            padding: 26px 26px 86px;
+            display: grid;
+            gap: 18px;
+            overflow: auto;
+            min-height: 0;
+        }
+
+        .grid2 {
+            display: grid;
+            grid-template-columns: 1.1fr .9fr;
+            gap: 18px;
+            align-items: stretch
+        }
+
+        @media (max-width: 920px) {
+            .grid2 {
+                grid-template-columns: 1fr
+            }
+
+            .hint {
+                display: none
+            }
+        }
+
+        .card {
+            border: 1px solid var(--line);
+            border-radius: var(--radius);
+            background: rgba(255, 255, 255, .90);
+            padding: 18px;
+            box-shadow: 0 14px 26px rgba(15, 23, 42, .08);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .card.soft {
+            background: rgba(255, 255, 255, .80)
+        }
+
+        .title {
+            font-size: clamp(28px, 3.1vw, 44px);
+            line-height: 1.1;
+            margin: 0;
+            letter-spacing: -.02em;
+        }
+
+        .subtitle {
+            margin: 10px 0 0;
+            color: var(--muted);
+            font-size: clamp(16px, 1.6vw, 19px);
+            line-height: 1.65;
+        }
+
+        .pillRow {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-top: 14px
+        }
+
+        .pill {
+            border: 1px solid var(--line);
+            border-radius: 999px;
+            padding: 10px 12px;
+            background: rgba(96, 165, 250, .10);
+            color: var(--text);
+            font-weight: 900;
+            font-size: 14px;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .pill.pink {
+            background: rgba(251, 113, 133, .10)
+        }
+
+        .pill.green {
+            background: rgba(34, 197, 94, .10)
+        }
+
+        .actions {
+            position: absolute;
+            left: 18px;
+            right: 18px;
+            bottom: 14px;
+            display: flex;
+            justify-content: space-between;
+            gap: 12px;
+            align-items: center;
+            padding: 12px 12px;
+            border-radius: 18px;
+            border: 1px solid var(--line);
+            background: rgba(255, 255, 255, .75);
+            box-shadow: 0 10px 22px rgba(15, 23, 42, .08);
+        }
+
+        .btn {
+            appearance: none;
+            border: none;
+            cursor: pointer;
+            padding: 12px 14px;
+            border-radius: 18px;
+            font-weight: 900;
+            color: #fff;
+            background: linear-gradient(180deg, var(--accent), #3b82f6);
+            box-shadow: 0 14px 24px rgba(59, 130, 246, .22);
+            transition: transform .08s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            user-select: none;
+        }
+
+        .btn:active {
+            transform: translateY(1px)
+        }
+
+        .btn.secondary {
+            background: rgba(15, 23, 42, .06);
+            color: var(--text);
+            border: 1px solid var(--line);
+            box-shadow: none;
+        }
+
+        .btn.ghost {
+            background: rgba(251, 113, 133, .10);
+            color: var(--text);
+            border: 1px dashed rgba(251, 113, 133, .35);
+            box-shadow: none;
+        }
+
+        .kbd {
+            font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+            font-size: 12px;
+            color: var(--muted);
+            border: 1px solid rgba(15, 23, 42, .18);
+            padding: 2px 6px;
+            border-radius: 10px;
+            background: rgba(255, 255, 255, .70);
+            margin-left: 6px;
+        }
+
+        .list {
+            margin: 12px 0 0;
+            padding: 0;
+            list-style: none;
+            display: grid;
+            gap: 10px
+        }
+
+        .li {
+            padding: 12px 12px;
+            border-radius: 18px;
+            border: 1px solid var(--line);
+            background: rgba(255, 255, 255, .78);
+            display: flex;
+            gap: 10px;
+            align-items: flex-start;
+        }
+
+        .li b {
+            color: var(--text)
+        }
+
+        .li .tag {
+            margin-left: auto;
+            font-size: 12px;
+            font-weight: 900;
+            padding: 6px 10px;
+            border-radius: 999px;
+            border: 1px solid var(--line);
+            color: var(--muted);
+            background: rgba(96, 165, 250, .10);
+            white-space: nowrap;
+        }
+
+        .twoBtns {
+            display: flex;
+            gap: 12px;
+            flex-wrap: wrap;
+            margin-top: 14px
+        }
+
+        .choice {
+            flex: 1 1 200px;
+            min-width: 200px;
+            padding: 14px 14px;
+            border-radius: 20px;
+            border: 2px solid rgba(15, 23, 42, .08);
+            background: rgba(255, 255, 255, .92);
+            cursor: pointer;
+            font-weight: 900;
+            color: var(--text);
+            text-align: left;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 12px;
+            transition: transform .08s ease, background .2s ease, border-color .2s ease;
+            user-select: none;
+        }
+
+        .choice:hover {
+            background: rgba(96, 165, 250, .10);
+            border-color: rgba(96, 165, 250, .25)
+        }
+
+        .choice:active {
+            transform: translateY(1px)
+        }
+
+        .choice .mini {
+            font-size: 12px;
+            color: var(--muted);
+            font-weight: 900
+        }
+
+        .toast {
+            margin-top: 12px;
+            padding: 12px 14px;
+            border-radius: 18px;
+            border: 1px solid var(--line);
+            background: rgba(255, 255, 255, .92);
+            color: var(--muted);
+            display: none;
+        }
+
+        .toast.show {
+            display: block
+        }
+
+        .toast.good {
+            border-color: rgba(22, 163, 74, .25);
+            background: rgba(22, 163, 74, .10);
+            color: #14532d
+        }
+
+        .toast.bad {
+            border-color: rgba(220, 38, 38, .25);
+            background: rgba(220, 38, 38, .10);
+            color: #7f1d1d
+        }
+
+        /* drag drop */
+        .dragWrap {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 16px;
+            margin-top: 10px
+        }
+
+        @media (max-width: 760px) {
+            .dragWrap {
+                grid-template-columns: 1fr
+            }
+        }
+
+        .bucketTitle {
+            margin: 0 0 10px;
+            font-size: 16px;
+            color: var(--muted);
+            font-weight: 900
+        }
+
+        .bucket {
+            min-height: 210px;
+            border-radius: 22px;
+            border: 2px dashed rgba(15, 23, 42, .14);
+            background: rgba(255, 255, 255, .78);
+            padding: 12px;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .chip {
+            border-radius: 18px;
+            border: 2px solid rgba(15, 23, 42, .08);
+            background: rgba(255, 255, 255, .95);
+            padding: 10px 12px;
+            font-weight: 900;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 10px;
+            cursor: grab;
+            user-select: none;
+        }
+
+        .chip small {
+            color: var(--muted);
+            font-weight: 900
+        }
+
+        .bucket.over {
+            border-color: rgba(251, 113, 133, .45);
+            background: rgba(251, 113, 133, .10)
+        }
+
+        .scoreBox {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 12px;
+            flex-wrap: wrap;
+            margin-top: 10px
+        }
+
+        .meter {
+            flex: 1 1 280px;
+            border: 1px solid var(--line);
+            border-radius: 18px;
+            padding: 12px;
+            background: rgba(255, 255, 255, .88);
+        }
+
+        .meter b {
+            color: var(--text)
+        }
+
+        .meter .val {
+            color: var(--muted);
+            font-weight: 900
+        }
+
+        .miniNote {
+            font-size: 13px;
+            color: var(--muted);
+            line-height: 1.55;
+            margin: 10px 0 0
+        }
+
+        /* mini simulator */
+        .simRow {
+            display: grid;
+            gap: 10px;
+            margin-top: 12px
+        }
+
+        .simCard {
+            border: 1px solid var(--line);
+            border-radius: 18px;
+            background: rgba(255, 255, 255, .88);
+            padding: 12px;
+            display: flex;
+            gap: 12px;
+            align-items: flex-start;
+        }
+
+        .simAvatar {
+            width: 44px;
+            height: 44px;
+            border-radius: 16px;
+            background: rgba(96, 165, 250, .18);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: 1px solid rgba(15, 23, 42, .10);
+            font-weight: 900;
+        }
+
+        .simText b {
+            display: block
+        }
+
+        .simText {
+            color: var(--muted);
+            line-height: 1.55
+        }
+
+        .simActions {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+            margin-top: 10px
+        }
+
+        .smallBtn {
+            border: none;
+            cursor: pointer;
+            padding: 10px 12px;
+            border-radius: 14px;
+            font-weight: 900;
+            background: rgba(15, 23, 42, .06);
+            border: 1px solid var(--line);
+            color: var(--text);
+        }
+
+        /* illustration container */
+        .ill {
+            width: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .ill svg {
+            width: min(260px, 100%);
+            height: auto;
+            filter: drop-shadow(0 12px 18px rgba(15, 23, 42, .10))
+        }
+
+        .spark {
+            position: absolute;
+            width: 10px;
+            height: 10px;
+            border-radius: 4px;
+            opacity: 0;
+            pointer-events: none;
+            transform: translate(-50%, -50%);
+        }
+
+        /* ACCESS GATE */
+        .gate {
+            position: fixed;
+            inset: 0;
+            background:
+                radial-gradient(900px 520px at 18% 12%, rgba(96, 165, 250, .55), transparent 60%),
+                radial-gradient(900px 520px at 80% 15%, rgba(251, 113, 133, .45), transparent 60%),
+                linear-gradient(135deg, var(--bg1), var(--bg2));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 9999;
+        }
+
+        .gateCard {
+            background: #fff;
+            border-radius: 24px;
+            padding: 28px;
+            width: min(360px, 90%);
+            text-align: center;
+            box-shadow: 0 20px 40px rgba(15, 23, 42, .18);
+        }
+
+        .gateCard h2 {
+            margin: 0 0 8px;
+        }
+
+        .gateCard p {
+            margin: 0 0 16px;
+            color: var(--muted);
+        }
+
+        .gateCard input {
+            width: 100%;
+            padding: 14px;
+            border-radius: 16px;
+            border: 2px solid var(--line);
+            font-size: 18px;
+            font-weight: 900;
+            text-align: center;
+            letter-spacing: 2px;
+            outline: none;
+        }
+
+        .gateCard input:focus {
+            border-color: var(--accent);
+        }
+
+        .gateError {
+            display: none;
+            margin-top: 12px;
+            color: #b91c1c;
+            font-weight: 700;
+        }
+    </style>
+</head>
+
+<body>
+    <!-- ACCESS GATE -->
+    <div id="accessGate" class="gate">
+        <div class="gateCard">
+            <h2>Masuk Kelas 🔐</h2>
+            <p>Masukkan kode dari guru untuk memulai pembelajaran.</p>
+
+            <input id="accessInput" type="text" placeholder="KODE AKSES" maxlength="12" autocomplete="off" />
+
+            <button id="accessBtn" class="btn">Masuk</button>
+            <p id="accessError" class="gateError">Kode salah. Coba lagi ya.</p>
+        </div>
+    </div>
+
+    <div class="app">
+        <header>
+            <div class="brand">
+                <div class="badge"><span class="dot"></span> Etika Digital</div>
+
+            </div>
+            <div class="progressWrap">
+                <div class="progress">
+                    <div class="bar" id="bar"></div>
+                </div>
+                <div class="counter" id="counter">1 / 12</div>
+            </div>
+        </header>
+
+        <main>
+
+            <!-- SVG templates (simple illustrations, not emoji-heavy) -->
+            <template id="svg-mail-to-phone">
+                <svg viewBox="0 0 520 320" aria-hidden="true">
+                    <defs>
+                        <linearGradient id="gA" x1="0" y1="0" x2="1" y2="1">
+                            <stop offset="0" stop-color="#60a5fa" stop-opacity=".25" />
+                            <stop offset="1" stop-color="#fb7185" stop-opacity=".22" />
+                        </linearGradient>
+                    </defs>
+                    <rect x="18" y="18" width="484" height="284" rx="28" fill="url(#gA)" stroke="rgba(15,23,42,.10)" />
+                    <!-- mail -->
+                    <rect x="70" y="98" width="150" height="110" rx="18" fill="#fff" stroke="rgba(15,23,42,.12)"
+                        stroke-width="4" />
+                    <path d="M70 110 L145 165 L220 110" fill="none" stroke="rgba(15,23,42,.18)" stroke-width="5"
+                        stroke-linecap="round" />
+                    <path d="M70 208 L125 162" fill="none" stroke="rgba(15,23,42,.12)" stroke-width="4" />
+                    <path d="M220 208 L165 162" fill="none" stroke="rgba(15,23,42,.12)" stroke-width="4" />
+                    <!-- arrow -->
+                    <path d="M240 155 C275 140 300 140 335 155" fill="none" stroke="#60a5fa" stroke-width="10"
+                        stroke-linecap="round" />
+                    <path d="M328 130 L365 155 L328 180" fill="none" stroke="#60a5fa" stroke-width="10"
+                        stroke-linecap="round" stroke-linejoin="round" />
+                    <!-- phone -->
+                    <rect x="360" y="78" width="95" height="170" rx="20" fill="#fff" stroke="rgba(15,23,42,.12)"
+                        stroke-width="4" />
+                    <rect x="376" y="100" width="64" height="115" rx="12" fill="rgba(96,165,250,.12)" />
+                    <circle cx="408" cy="232" r="8" fill="rgba(15,23,42,.25)" />
+                    <!-- bubbles -->
+                    <circle cx="405" cy="130" r="10" fill="#fb7185" opacity=".75" />
+                    <circle cx="428" cy="156" r="10" fill="#22c55e" opacity=".70" />
+                    <circle cx="392" cy="165" r="10" fill="#60a5fa" opacity=".75" />
+                </svg>
+            </template>
+
+            <template id="svg-shield">
+                <svg viewBox="0 0 320 320" aria-hidden="true">
+                    <path d="M160 24 L266 70 V154 C266 230 214 276 160 296 C106 276 54 230 54 154 V70 Z"
+                        fill="rgba(34,197,94,.18)" stroke="rgba(15,23,42,.12)" stroke-width="6" />
+                    <path d="M160 62 L236 96 V154 C236 205 200 236 160 252 C120 236 84 205 84 154 V96 Z" fill="#fff"
+                        stroke="rgba(15,23,42,.10)" stroke-width="6" />
+                    <path d="M118 158 L148 188 L208 124" fill="none" stroke="#16a34a" stroke-width="14"
+                        stroke-linecap="round" stroke-linejoin="round" />
+                </svg>
+            </template>
+
+            <template id="svg-clock">
+                <svg viewBox="0 0 320 320" aria-hidden="true">
+                    <circle cx="160" cy="170" r="110" fill="#fff" stroke="rgba(15,23,42,.12)" stroke-width="6" />
+                    <circle cx="160" cy="170" r="12" fill="rgba(15,23,42,.45)" />
+                    <path d="M160 170 L160 105" stroke="#60a5fa" stroke-width="14" stroke-linecap="round" />
+                    <path d="M160 170 L220 196" stroke="#fb7185" stroke-width="14" stroke-linecap="round" />
+                    <rect x="120" y="46" width="80" height="36" rx="14" fill="rgba(251,113,133,.18)"
+                        stroke="rgba(15,23,42,.08)" />
+                </svg>
+            </template>
+
+            <template id="svg-chat">
+                <svg viewBox="0 0 320 320" aria-hidden="true">
+                    <rect x="40" y="70" width="240" height="150" rx="28" fill="#fff" stroke="rgba(15,23,42,.12)"
+                        stroke-width="6" />
+                    <path d="M120 220 L108 276 L160 232" fill="#fff" stroke="rgba(15,23,42,.12)" stroke-width="6"
+                        stroke-linejoin="round" />
+                    <circle cx="120" cy="145" r="12" fill="#60a5fa" />
+                    <circle cx="160" cy="145" r="12" fill="#fb7185" />
+                    <circle cx="200" cy="145" r="12" fill="#22c55e" />
+                </svg>
+            </template>
+
+            <!-- SLIDE 1 -->
+            <section class="slide active" data-slide>
+                <div class="blob b1"></div>
+                <div class="blob b2"></div>
+                <div class="blob b3"></div>
+                <div class="inner">
+                    <div class="grid2">
+                        <div class="card">
+                            <h1 class="title">Etika Digital</h1>
+                            <p class="subtitle">
+                                Hari ini kita belajar cara menggunakan teknologi dengan <b>baik</b>, <b>aman</b>, dan
+                                <b>bertanggung jawab</b>.
+                                Kita akan belajar tentang <b>era digital</b> dan <b>aturan sopan santun</b> saat online.
+                            </p>
+                            <div class="pillRow">
+                                <div class="pill">Sopan saat online</div>
+                                <div class="pill pink">Jaga privasi</div>
+                                <div class="pill green">Atur waktu layar</div>
+                            </div>
+
+                        </div>
+
+                        <div class="card soft">
+                            <div class="ill" id="ill1"></div>
+                            <p class="miniNote" style="margin-top:10px">
+                                Dulu orang berkabar dengan surat dan menunggu lama. Sekarang kita bisa berkirim pesan
+                                dalam hitungan detik.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+                <div class="actions">
+                    <button class="btn secondary" data-prev disabled>← Sebelumnya</button>
+                    <div style="color:var(--muted);font-weight:900">Tip: pakai tombol panah</div>
+                    <button class="btn" data-next>Mulai →</button>
+                </div>
+            </section>
+
+            <!-- SLIDE 2: Era Digital definition -->
+            <section class="slide" data-slide>
+                <div class="blob b1"></div>
+                <div class="blob b2"></div>
+                <div class="blob b3"></div>
+                <div class="inner">
+                    <div class="grid2">
+                        <div class="card">
+                            <h2 class="title">Apa itu Era Digital?</h2>
+                            <p class="subtitle">
+                                Era digital adalah zaman ketika banyak hal dibantu oleh teknologi seperti
+                                <b>komputer</b>, <b>tablet</b>, <b>HP</b>, dan <b>internet</b>.
+                                Sekarang informasi dan komunikasi bisa dilakukan lebih cepat.
+                            </p>
+                            <ul class="list">
+                                <li class="li"><b>Dulu:</b> surat & menunggu lama <span class="tag">lama</span></li>
+                                <li class="li"><b>Sekarang:</b> chat / email cepat <span class="tag">cepat</span></li>
+                                <li class="li">Banyak hal bisa dilakukan dengan satu alat: <b>smartphone</b> <span
+                                        class="tag">praktis</span></li>
+                            </ul>
+                        </div>
+
+                        <div class="card soft">
+                            <div class="ill" id="ill2"></div>
+                            <h3 style="margin:10px 0 0;font-size:20px">Mini Aktivitas</h3>
+                            <p class="subtitle" style="margin-top:6px">Pilih yang termasuk kegiatan di era digital:</p>
+
+                            <div class="twoBtns" data-quiz="q1">
+                                <button class="choice" data-answer="no">Menunggu surat berhari-hari</button>
+                                <button class="choice" data-answer="yes">Mengirim pesan lewat chat</button>
+                                <button class="choice" data-answer="yes">Belajar lewat video</button>
+                                <button class="choice" data-answer="no">Mengetik dengan mesin ketik saja</button>
+                            </div>
+
+                            <div class="toast" id="toast-q1"></div>
+                        </div>
+                    </div>
+                </div>
+                <div class="actions">
+                    <button class="btn secondary" data-prev>← Sebelumnya</button>
+                    <button class="btn ghost" data-reset-slide>Ulang slide (R)</button>
+                    <button class="btn" data-next>Lanjut →</button>
+                </div>
+            </section>
+
+            <!-- SLIDE 3: Ciri era digital -->
+            <section class="slide" data-slide>
+                <div class="blob b1"></div>
+                <div class="blob b2"></div>
+                <div class="blob b3"></div>
+                <div class="inner">
+                    <div class="grid2">
+                        <div class="card">
+                            <h2 class="title">Ciri-ciri Era Digital</h2>
+                            <p class="subtitle">
+                                Di era digital, ada beberapa ciri yang sering kita lihat:
+                            </p>
+                            <ul class="list">
+                                <li class="li">Ada <b>komputer</b> dan <b>internet</b></li>
+                                <li class="li">Informasi bisa dicari <b>cepat</b></li>
+                                <li class="li">Banyak hal bisa dilakukan <b>online</b></li>
+                                <li class="li">Orang terbiasa memakai <b>gadget</b> (HP/laptop/tablet)</li>
+                            </ul>
+                        </div>
+
+                        <div class="card soft">
+                            <h3 style="margin:0;font-size:20px">Contoh kegiatan</h3>
+                            <p class="subtitle" style="margin-top:6px">
+                                Contohnya: belajar dari rumah lewat video, kirim pesan dalam hitungan detik, main game
+                                online bersama teman,
+                                bahkan belanja atau pesan makanan dari HP.
+                            </p>
+                            <div class="simRow" id="sim-examples">
+                                <div class="simCard">
+                                    <div class="simAvatar">A</div>
+                                    <div class="simText"><b>Belajar lewat video</b> Kamu bisa belajar di rumah lewat
+                                        video.</div>
+                                </div>
+                                <div class="simCard">
+                                    <div class="simAvatar">B</div>
+                                    <div class="simText"><b>Kirim pesan cepat</b> Pesan bisa sampai dalam hitungan
+                                        detik.</div>
+                                </div>
+                                <div class="simCard">
+                                    <div class="simAvatar">C</div>
+                                    <div class="simText"><b>Main online</b> Bisa bermain bersama teman dari jauh.</div>
+                                </div>
+                            </div>
+                            <p class="miniNote">Karena semuanya mudah, kita harus belajar cara memakai teknologi dengan
+                                bijak.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="actions">
+                    <button class="btn secondary" data-prev>← Sebelumnya</button>
+                    <button class="btn ghost" data-reset-slide>Ulang slide (R)</button>
+                    <button class="btn" data-next>Lanjut →</button>
+                </div>
+            </section>
+
+            <!-- SLIDE 4: What is Etika Digital -->
+            <section class="slide" data-slide>
+                <div class="blob b1"></div>
+                <div class="blob b2"></div>
+                <div class="blob b3"></div>
+                <div class="inner">
+                    <div class="grid2">
+                        <div class="card">
+                            <h2 class="title">Apa itu Etika Digital?</h2>
+                            <p class="subtitle">
+                                Sama seperti di dunia nyata, di dunia digital juga ada aturan, norma, dan sopan santun.
+                                <b>Etika digital</b> adalah aturan agar kita tetap bersikap baik saat menggunakan
+                                internet, HP, komputer, dan teknologi lain.
+                            </p>
+                            <ul class="list">
+                                <li class="li">Tujuannya supaya kita <b>tidak menyakiti orang lain</b></li>
+                                <li class="li">Supaya kita <b>tidak berkata kasar</b></li>
+                                <li class="li">Supaya kita <b>tidak membagikan hal berbahaya</b></li>
+                            </ul>
+                        </div>
+
+                        <div class="card soft">
+                            <div class="ill" id="ill4"></div>
+                            <h3 style="margin:10px 0 0;font-size:20px">Cek Cepat</h3>
+                            <p class="subtitle" style="margin-top:6px">Pilih tindakan yang menunjukkan etika digital:
+                            </p>
+
+                            <div class="twoBtns" data-quiz="q2">
+                                <button class="choice" data-answer="yes">Menulis komentar yang sopan</button>
+                                <button class="choice" data-answer="no">Menulis kata-kata kasar</button>
+                                <button class="choice" data-answer="yes">Meminta maaf jika salah</button>
+                                <button class="choice" data-answer="no">Mengejek teman di grup chat</button>
+                            </div>
+
+                            <div class="toast" id="toast-q2"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="actions">
+                    <button class="btn secondary" data-prev>← Sebelumnya</button>
+                    <button class="btn ghost" data-reset-slide>Ulang slide (R)</button>
+                    <button class="btn" data-next>Lanjut →</button>
+                </div>
+            </section>
+
+            <!-- SLIDE 5: 5 rules -->
+            <section class="slide" data-slide>
+                <div class="blob b1"></div>
+                <div class="blob b2"></div>
+                <div class="blob b3"></div>
+                <div class="inner">
+                    <div class="grid2">
+                        <div class="card">
+                            <h2 class="title">5 Aturan Etika Digital</h2>
+                            <p class="subtitle">Ini 5 aturan penting saat online:</p>
+                            <ul class="list">
+                                <li class="li"><b>1) Bersikap sopan</b> pakai kata baik di chat/komentar</li>
+                                <li class="li"><b>2) Menjaga privasi</b> jangan beri data pribadi ke orang tak dikenal
+                                </li>
+                                <li class="li"><b>3) Tidak membully</b> tidak mengejek/menghina</li>
+                                <li class="li"><b>4) Berpikir sebelum mengirim</b> apakah ini baik? apakah menyakiti?
+                                </li>
+                                <li class="li"><b>5) Menghormati karya orang lain</b> tidak mengambil dan mengaku milik
+                                    sendiri</li>
+                            </ul>
+                        </div>
+
+                        <div class="card soft">
+                            <h3 style="margin:0;font-size:20px">Mini Simulasi: Sebelum Mengirim</h3>
+                            <p class="subtitle" style="margin-top:6px">
+                                Bayangkan kamu mau mengirim pesan. Pilih langkah yang benar.
+                            </p>
+
+                            <div class="simRow">
+                                <div class="simCard">
+                                    <div class="simAvatar">1</div>
+                                    <div class="simText"><b>Berhenti sebentar</b> Jangan buru-buru menekan tombol kirim.
+                                    </div>
+                                </div>
+                                <div class="simCard">
+                                    <div class="simAvatar">2</div>
+                                    <div class="simText"><b>Tanya ke diri sendiri</b> “Apakah pesanku baik? Apakah bisa
+                                        menyakiti?”</div>
+                                </div>
+                                <div class="simCard">
+                                    <div class="simAvatar">3</div>
+                                    <div class="simText"><b>Baru kirim jika aman</b> Kalau ragu, ubah kalimatnya jadi
+                                        lebih baik.</div>
+                                </div>
+                            </div>
+
+                            <div class="twoBtns" data-quiz="q3">
+                                <button class="choice" data-answer="yes">Aku pikir dulu sebelum mengirim</button>
+                                <button class="choice" data-answer="no">Aku kirim saja tanpa membaca lagi</button>
+                            </div>
+
+                            <div class="toast" id="toast-q3"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="actions">
+                    <button class="btn secondary" data-prev>← Sebelumnya</button>
+                    <button class="btn ghost" data-reset-slide>Ulang slide (R)</button>
+                    <button class="btn" data-next>Lanjut →</button>
+                </div>
+            </section>
+
+            <!-- SLIDE 6: Device wise usage (from module) -->
+            <section class="slide" data-slide>
+                <div class="blob b1"></div>
+                <div class="blob b2"></div>
+                <div class="blob b3"></div>
+                <div class="inner">
+                    <div class="grid2">
+                        <div class="card">
+                            <h2 class="title">Menggunakan Perangkat dengan Bijak</h2>
+                            <p class="subtitle">
+                                Gadget bisa dipakai untuk belajar dan komunikasi. Tapi kalau terlalu sering atau salah
+                                cara,
+                                bisa membuat mata lelah, lupa waktu belajar, dan malas bergerak.
+                            </p>
+                            <ul class="list">
+                                <li class="li"><b>Atur waktu pemakaian</b> contoh: 1 jam belajar, 30 menit hiburan</li>
+                                <li class="li"><b>Gunakan untuk hal positif</b> video belajar, game edukasi, baca cerita
+                                </li>
+                                <li class="li"><b>Istirahat dan bergerak</b> setelah menatap layar lama</li>
+                            </ul>
+                        </div>
+
+                        <div class="card soft">
+                            <div class="ill" id="ill6"></div>
+                            <h3 style="margin:10px 0 0;font-size:20px">Pilih kebiasaan yang baik</h3>
+                            <p class="subtitle" style="margin-top:6px">
+                                Pilih kegiatan yang menunjukkan “bijak memakai gadget”.
+                            </p>
+
+                            <div class="twoBtns" data-quiz="q4">
+                                <button class="choice" data-answer="yes">Pasang alarm supaya ingat waktu</button>
+                                <button class="choice" data-answer="no">Main terus sampai lupa belajar</button>
+                                <button class="choice" data-answer="yes">Istirahat lalu bergerak sebentar</button>
+                                <button class="choice" data-answer="no">Menatap layar tanpa jeda lama</button>
+                            </div>
+
+                            <div class="toast" id="toast-q4"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="actions">
+                    <button class="btn secondary" data-prev>← Sebelumnya</button>
+                    <button class="btn ghost" data-reset-slide>Ulang slide (R)</button>
+                    <button class="btn" data-next>Lanjut →</button>
+                </div>
+            </section>
+
+            <!-- SLIDE 7: extra wise points (eye health, sopan, info pribadi, discuss) -->
+            <section class="slide" data-slide>
+                <div class="blob b1"></div>
+                <div class="blob b2"></div>
+                <div class="blob b3"></div>
+                <div class="inner">
+                    <div class="grid2">
+                        <div class="card">
+                            <h2 class="title">Tambahan Kebiasaan Bijak</h2>
+                            <p class="subtitle">Selain mengatur waktu, kita juga perlu:</p>
+                            <ul class="list">
+                                <li class="li"><b>Jaga kesehatan mata</b> jaga jarak, jangan sambil tiduran</li>
+                                <li class="li"><b>Sopan saat online</b> tidak berkata kasar di chat/komentar</li>
+                                <li class="li"><b>Jaga informasi pribadi</b> jangan beri nama lengkap/alamat/nomor
+                                    telepon</li>
+                                <li class="li"><b>Ajak orang tua/guru berdiskusi</b> jika bingung atau melihat hal aneh
+                                </li>
+                            </ul>
+                        </div>
+
+                        <div class="card soft">
+                            <h3 style="margin:0;font-size:20px">Mini Aktivitas</h3>
+                            <p class="subtitle" style="margin-top:6px">
+                                Kalau kamu melihat sesuatu yang membuatmu bingung saat online, apa yang sebaiknya kamu
+                                lakukan?
+                            </p>
+
+                            <div class="twoBtns" data-quiz="q5">
+                                <button class="choice" data-answer="yes">Cerita ke orang tua atau guru</button>
+                                <button class="choice" data-answer="no">Diam saja dan lanjut klik-klik</button>
+                                <button class="choice" data-answer="yes">Minta bantuan orang dewasa yang kamu
+                                    percaya</button>
+                                <button class="choice" data-answer="no">Kasih data pribadi supaya cepat selesai</button>
+                            </div>
+
+                            <div class="toast" id="toast-q5"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="actions">
+                    <button class="btn secondary" data-prev>← Sebelumnya</button>
+                    <button class="btn ghost" data-reset-slide>Ulang slide (R)</button>
+                    <button class="btn" data-next>Lanjut →</button>
+                </div>
+            </section>
+
+            <!-- SLIDE 8: Dangers + hoaks -->
+            <section class="slide" data-slide>
+                <div class="blob b1"></div>
+                <div class="blob b2"></div>
+                <div class="blob b3"></div>
+                <div class="inner">
+                    <div class="grid2">
+                        <div class="card">
+                            <h2 class="title">Bahaya di Dunia Digital</h2>
+                            <p class="subtitle">
+                                Di internet, kita juga harus waspada. Ini beberapa contoh bahaya:
+                            </p>
+                            <ul class="list">
+                                <li class="li"><b>Cyberbullying</b> mengejek/menghina lewat chat/komentar</li>
+                                <li class="li"><b>Orang asing mencurigakan</b> pura-pura jadi teman</li>
+                                <li class="li"><b>Kebocoran informasi pribadi</b> data disalahgunakan</li>
+                                <li class="li"><b>Konten tidak cocok</b> perlu didampingi orang tua/guru</li>
+                                <li class="li"><b>Terlalu lama menatap layar</b> mata lelah, lupa aktivitas lain</li>
+                                <li class="li"><b>Hoaks</b> berita bohong, perlu dicek kebenarannya</li>
+                            </ul>
+                        </div>
+
+                        <div class="card soft">
+                            <div class="ill" id="ill8"></div>
+                            <h3 style="margin:10px 0 0;font-size:20px">Coba Pilih</h3>
+                            <p class="subtitle" style="margin-top:6px">
+                                Ada pesan dari orang asing: “Kasih alamat rumah dan nama sekolahmu ya.”
+                            </p>
+
+                            <div class="twoBtns" data-quiz="q6">
+                                <button class="choice" data-answer="yes">Aku menolak dan cerita ke orang
+                                    tua/guru</button>
+                                <button class="choice" data-answer="no">Aku kasih supaya terlihat ramah</button>
+                                <button class="choice" data-answer="yes">Aku berhati-hati dan tidak mudah
+                                    percaya</button>
+                                <button class="choice" data-answer="no">Aku kirim foto pribadi juga</button>
+                            </div>
+
+                            <div class="toast" id="toast-q6"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="actions">
+                    <button class="btn secondary" data-prev>← Sebelumnya</button>
+                    <button class="btn ghost" data-reset-slide>Ulang slide (R)</button>
+                    <button class="btn" data-next>Lanjut →</button>
+                </div>
+            </section>
+
+            <!-- SLIDE 9: Why privacy selective (reasons) -->
+            <section class="slide" data-slide>
+                <div class="blob b1"></div>
+                <div class="blob b2"></div>
+                <div class="blob b3"></div>
+                <div class="inner">
+                    <div class="grid2">
+                        <div class="card">
+                            <h2 class="title">Kenapa Harus Selektif?</h2>
+                            <p class="subtitle">
+                                Di dunia nyata, kita bisa tahu siapa yang kita ajak bicara. Tapi di internet, kita tidak
+                                selalu tahu siapa yang melihat.
+                                Karena itu, tidak semua informasi aman untuk dibagikan.
+                            </p>
+                            <ul class="list">
+                                <li class="li"><b>Melindungi diri</b> data bisa dipakai untuk menipu</li>
+                                <li class="li"><b>Tidak semua orang di internet itu asli</b> ada yang menyamar</li>
+                                <li class="li"><b>Belajar menjaga privasi</b> tidak sembarang berbagi</li>
+                                <li class="li"><b>Menghindari penyesalan</b> lebih baik pikir dulu</li>
+                            </ul>
+                        </div>
+
+                        <div class="card soft">
+                            <h3 style="margin:0;font-size:20px">Drag & Drop: Boleh / Tidak Boleh</h3>
+                            <p class="subtitle" style="margin-top:6px">
+                                Seret kartu ke kotak yang benar.
+                            </p>
+
+                            <div class="dragWrap">
+                                <div>
+                                    <p class="bucketTitle">Kartu</p>
+                                    <div class="bucket" id="pool" data-bucket="pool"></div>
+                                </div>
+                                <div>
+                                    <p class="bucketTitle">Boleh dibagikan</p>
+                                    <div class="bucket" id="boleh" data-bucket="boleh"></div>
+
+                                    <p class="bucketTitle" style="margin-top:12px">Tidak boleh dibagikan</p>
+                                    <div class="bucket" id="tidak" data-bucket="tidak"></div>
+                                </div>
+                            </div>
+
+                            <div class="scoreBox">
+                                <div class="meter"><b>Skor:</b> <span class="val" id="dragScore">0</span>/6</div>
+                                <button class="btn secondary" data-check-drag>Cek Jawaban</button>
+                            </div>
+                            <div class="toast" id="toast-drag"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="actions">
+                    <button class="btn secondary" data-prev>← Sebelumnya</button>
+                    <button class="btn ghost" data-reset-slide>Ulang slide (R)</button>
+                    <button class="btn" data-next>Lanjut →</button>
+                </div>
+            </section>
+
+            <!-- SLIDE 10: Consequences (module) -->
+            <section class="slide" data-slide>
+                <div class="blob b1"></div>
+                <div class="blob b2"></div>
+                <div class="blob b3"></div>
+                <div class="inner">
+                    <div class="grid2">
+                        <div class="card">
+                            <h2 class="title">Kalau Ceroboh, Apa yang Bisa Terjadi?</h2>
+                            <p class="subtitle">
+                                Informasi pribadi itu seperti <b>kunci rumah</b>. Kalau diberikan ke orang yang salah,
+                                bisa berbahaya.
+                                Ini contoh konsekuensinya:
+                            </p>
+                            <ul class="list">
+                                <li class="li"><b>Bisa dimanfaatkan orang jahat</b> pura-pura jadi kita/menipu</li>
+                                <li class="li"><b>Keamanan rumah & keluarga terancam</b> jika alamat diketahui</li>
+                                <li class="li"><b>Terjebak penipuan</b> (scam/phishing)</li>
+                                <li class="li"><b>Bisa dipermalukan</b> jika foto/cerita pribadi disebar</li>
+                                <li class="li"><b>Kehilangan kendali akun</b> kalau membagi username/password</li>
+                            </ul>
+                        </div>
+
+                        <div class="card soft">
+                            <div class="ill" id="ill10"></div>
+                            <h3 style="margin:10px 0 0;font-size:20px">Latihan Cepat</h3>
+                            <p class="subtitle" style="margin-top:6px">
+                                Pilih aturan yang paling tepat:
+                            </p>
+
+                            <div class="twoBtns" data-quiz="q7">
+                                <button class="choice" data-answer="yes">Aku tidak membagikan username dan
+                                    password</button>
+                                <button class="choice" data-answer="no">Password boleh dibagi ke teman dekat</button>
+                                <button class="choice" data-answer="yes">Aku tidak membagikan alamat dan nama sekolah ke
+                                    orang asing</button>
+                                <button class="choice" data-answer="no">Boleh kirim foto pribadi ke orang yang baru
+                                    dikenal</button>
+                            </div>
+
+                            <div class="toast" id="toast-q7"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="actions">
+                    <button class="btn secondary" data-prev>← Sebelumnya</button>
+                    <button class="btn ghost" data-reset-slide>Ulang slide (R)</button>
+                    <button class="btn" data-next>Checkout Quiz →</button>
+                </div>
+            </section>
+
+
+
+            <!-- SLIDE 12: Summary -->
+            <section class="slide" data-slide>
+                <div class="blob b1"></div>
+                <div class="blob b2"></div>
+                <div class="blob b3"></div>
+                <div class="inner">
+                    <div class="grid2">
+                        <div class="card">
+                            <h2 class="title">Ringkasan</h2>
+                            <p class="subtitle">
+                                Kita hidup di era digital. Teknologi membuat banyak hal jadi cepat dan mudah.
+                                Karena itu kita harus punya etika digital dan menjaga privasi.
+                            </p>
+                            <ul class="list">
+                                <li class="li"><b>Era digital</b> teknologi membantu aktivitas sehari-hari</li>
+                                <li class="li"><b>Etika digital</b> sopan, tidak membully, pikir sebelum kirim, hormati
+                                    karya</li>
+                                <li class="li"><b>Bijak memakai perangkat</b> atur waktu, istirahat, jaga mata</li>
+                                <li class="li"><b>Privasi</b> jangan bagikan nama lengkap, alamat, nomor telepon, nama
+                                    sekolah, password</li>
+                            </ul>
+                            <p class="miniNote">
+                                Kalau ada hal aneh di internet: <b>cerita ke orang tua atau guru</b>.
+                            </p>
+                        </div>
+
+                        <div class="card soft">
+                            <h3 style="margin:0;font-size:20px">Tantangan di rumah</h3>
+                            <p class="subtitle" style="margin-top:6px">
+                                Buat aturan gadget bersama keluarga: kapan belajar, kapan hiburan, dan kapan istirahat.
+                            </p>
+                            <div style="margin-top:12px;display:flex;gap:10px;flex-wrap:wrap">
+                                <button class="btn" id="restartAll">Ulang dari awal</button>
+                                <button class="btn secondary" id="celebrate">Tepuk tangan!</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="actions">
+                    <button class="btn secondary" data-prev>← Sebelumnya</button>
+                    <div style="color:var(--muted);font-weight:900">Selesai</div>
+                    <button class="btn" data-next style="opacity:.65" disabled>—</button>
+                </div>
+            </section>
+
+        </main>
+    </div>
+
+    <script>
+        const ACCESS_CODE = "RGMDSLP25";
+
+        const gate = document.getElementById("accessGate");
+        const input = document.getElementById("accessInput");
+        const btn = document.getElementById("accessBtn");
+        const error = document.getElementById("accessError");
+
+        // otomatis uppercase
+        input.addEventListener("input", () => {
+            input.value = input.value.toUpperCase();
+        });
+
+        function checkAccess() {
+            if (input.value.trim() === ACCESS_CODE) {
+                gate.style.display = "none";
+            } else {
+                error.style.display = "block";
+                input.value = "";
+                input.focus();
+            }
+        }
+
+        btn.addEventListener("click", checkAccess);
+
+        input.addEventListener("keydown", (e) => {
+            if (e.key === "Enter") checkAccess();
+        });
+
+        // ---------- Slide navigation ----------
+        const slides = Array.from(document.querySelectorAll("[data-slide]"));
+        const bar = document.getElementById("bar");
+        const counter = document.getElementById("counter");
+        let idx = 0;
+
+        function show(i) {
+            idx = Math.max(0, Math.min(slides.length - 1, i));
+            slides.forEach((s, n) => s.classList.toggle("active", n === idx));
+            const pct = ((idx + 1) / slides.length) * 100;
+            bar.style.width = pct + "%";
+            counter.textContent = `${idx + 1} / ${slides.length}`;
+
+            slides[idx].querySelectorAll("[data-prev]").forEach(b => {
+                b.disabled = (idx === 0);
+                b.style.opacity = (idx === 0) ? .55 : 1;
+            });
+        }
+        function next() { show(idx + 1); }
+        function prev() { show(idx - 1); }
+
+        document.addEventListener("click", (e) => {
+            const t = e.target.closest("[data-next],[data-prev],[data-reset-slide]");
+            if (!t) return;
+            if (t.matches("[data-next]")) next();
+            if (t.matches("[data-prev]")) prev();
+            if (t.matches("[data-reset-slide]")) resetSlide(idx);
+        });
+
+        document.addEventListener("keydown", (e) => {
+            const key = e.key.toLowerCase();
+            if (key === "arrowright" || key === " ") { e.preventDefault(); next(); }
+            if (key === "arrowleft") { e.preventDefault(); prev(); }
+            if (key === "r") { resetSlide(idx); }
+        });
+
+        // ---------- Illustrations mount ----------
+        function cloneSvg(tplId) {
+            const tpl = document.getElementById(tplId);
+            return tpl ? tpl.content.cloneNode(true) : null;
+        }
+        function mount(id, tplId) {
+            const el = document.getElementById(id);
+            if (!el) return;
+            el.innerHTML = "";
+            const node = cloneSvg(tplId);
+            if (node) el.appendChild(node);
+        }
+        mount("ill1", "svg-mail-to-phone");
+        mount("ill2", "svg-mail-to-phone");
+        mount("ill4", "svg-chat");
+        mount("ill6", "svg-clock");
+        mount("ill8", "svg-shield");
+        mount("ill10", "svg-shield");
+
+        // ---------- Click quizzes ----------
+        function setToast(id, type, text) {
+            const el = document.getElementById(id);
+            if (!el) return;
+            el.className = "toast show " + type;
+            el.textContent = text;
+        }
+
+        document.addEventListener("click", (e) => {
+            const btn = e.target.closest(".choice");
+            if (!btn) return;
+            const wrap = btn.closest("[data-quiz]");
+            if (!wrap) return;
+
+            const q = wrap.getAttribute("data-quiz");
+            const ans = btn.getAttribute("data-answer"); // yes/no
+            const toastId = "toast-" + q;
+
+            wrap.querySelectorAll(".choice").forEach(c => c.style.outline = "none");
+            btn.style.outline = "3px solid " + (ans === "yes" ? "rgba(22,163,74,.30)" : "rgba(220,38,38,.30)");
+
+            if (ans === "yes") {
+                setToast(toastId, "good", "Benar. Ini pilihan yang aman dan baik.");
+            } else {
+                setToast(toastId, "bad", "Belum tepat. Coba ingat: sopan, aman, bijak.");
+            }
+        });
+
+        // ---------- Drag & drop (Slide 9) ----------
+        const pool = document.getElementById("pool");
+        const boleh = document.getElementById("boleh");
+        const tidak = document.getElementById("tidak");
+        const dragScore = document.getElementById("dragScore");
+
+        const dragItems = [
+            { text: "Hobi (misal: suka membaca)", key: "boleh" },
+            { text: "Nama panggilan (misal: Dika)", key: "boleh" },
+            { text: "Warna favorit", key: "boleh" },
+            { text: "Nama lengkap", key: "tidak" },
+            { text: "Alamat rumah", key: "tidak" },
+            { text: "Username & password", key: "tidak" },
+        ];
+
+        function makeChip(item) {
+            const div = document.createElement("div");
+            div.className = "chip";
+            div.draggable = true;
+            div.dataset.key = item.key;
+            div.innerHTML = `<span>${item.text}</span>`;
+            div.addEventListener("dragstart", (e) => {
+                e.dataTransfer.setData("text/plain", "chip");
+                window.__dragEl = div;
+            });
+            div.addEventListener("dragend", () => window.__dragEl = null);
+            return div;
+        }
+
+        function initDrag() {
+            if (!pool) return;
+            pool.innerHTML = ""; boleh.innerHTML = ""; tidak.innerHTML = "";
+            dragItems.forEach(it => pool.appendChild(makeChip(it)));
+            dragScore.textContent = "0";
+            const t = document.getElementById("toast-drag");
+            if (t) { t.className = "toast"; t.textContent = ""; }
+        }
+
+        function bucketEvents(bucket) {
+            bucket.addEventListener("dragover", (e) => { e.preventDefault(); bucket.classList.add("over"); });
+            bucket.addEventListener("dragleave", () => bucket.classList.remove("over"));
+            bucket.addEventListener("drop", (e) => {
+                e.preventDefault(); bucket.classList.remove("over");
+                const el = window.__dragEl;
+                if (el) bucket.appendChild(el);
+            });
+        }
+        if (pool && boleh && tidak) { bucketEvents(pool); bucketEvents(boleh); bucketEvents(tidak); }
+
+        document.querySelectorAll("[data-check-drag]").forEach(btn => {
+            btn.addEventListener("click", () => {
+                let score = 0;
+                const all = [...boleh.querySelectorAll(".chip"), ...tidak.querySelectorAll(".chip")];
+                all.forEach(ch => {
+                    const correct = ch.dataset.key;
+                    const placed = boleh.contains(ch) ? "boleh" : (tidak.contains(ch) ? "tidak" : "pool");
+                    if (placed === correct) score++;
+                });
+                dragScore.textContent = String(score);
+                if (score === 6) {
+                    setToast("toast-drag", "good", "Hebat! Kamu sudah bisa memilih informasi yang aman.");
+                } else {
+                    setToast("toast-drag", "bad", "Masih ada yang tertukar. Coba cek lagi pelan-pelan.");
+                }
+            });
+        });
+
+        // ---------- Checkout quiz (Slide 11) ----------
+        const state = { checkout: Array(6).fill(null) };
+
+        const checkoutData = [
+            { q: "Era digital adalah zaman ketika banyak hal dibantu teknologi (HP, komputer, internet).", a: true },
+            { q: "Boleh berkata kasar di komentar asalkan bercanda.", a: false },
+            { q: "Sebelum mengirim pesan, kita perlu berpikir: apakah ini baik dan tidak menyakiti.", a: true },
+            { q: "Aku boleh membagikan alamat rumah ke orang asing di internet.", a: false },
+            { q: "Kalau melihat berita aneh, aku perlu cek dulu dan bisa tanya orang tua/guru.", a: true },
+            { q: "Username dan password boleh dibagikan ke teman.", a: false },
+        ];
+
+        const checkoutEl = document.getElementById("checkout");
+
+        function renderCheckout() {
+            if (!checkoutEl) return;
+            checkoutEl.innerHTML = "";
+            checkoutData.forEach((item, i) => {
+                const wrap = document.createElement("div");
+                wrap.className = "li";
+                wrap.style.alignItems = "center";
+                wrap.style.gap = "12px";
+
+                const left = document.createElement("div");
+                left.style.flex = "1";
+                left.innerHTML = `<b>${i + 1}.</b> ${item.q}`;
+
+                const right = document.createElement("div");
+                right.style.display = "flex";
+                right.style.gap = "10px";
+                right.style.flexWrap = "wrap";
+
+                const btnTrue = document.createElement("button");
+                btnTrue.className = "choice";
+                btnTrue.style.minWidth = "140px";
+                btnTrue.textContent = "Benar";
+                btnTrue.addEventListener("click", () => chooseCheckout(i, true, wrap));
+
+                const btnFalse = document.createElement("button");
+                btnFalse.className = "choice";
+                btnFalse.style.minWidth = "140px";
+                btnFalse.textContent = "Salah";
+                btnFalse.addEventListener("click", () => chooseCheckout(i, false, wrap));
+
+                right.appendChild(btnTrue);
+                right.appendChild(btnFalse);
+
+                wrap.appendChild(left);
+                wrap.appendChild(right);
+                checkoutEl.appendChild(wrap);
+            });
+        }
+
+        function chooseCheckout(i, val, row) {
+            state.checkout[i] = val;
+            row.style.borderColor = "rgba(96,165,250,.30)";
+            row.style.background = "rgba(96,165,250,.10)";
+        }
+
+        function gradeCheckout() {
+            let score = 0, answered = 0;
+            checkoutData.forEach((item, i) => {
+                if (state.checkout[i] === null) return;
+                answered++;
+                if (state.checkout[i] === item.a) score++;
+            });
+            document.getElementById("checkoutScore").textContent = String(score);
+
+            if (answered < checkoutData.length) {
+                setToast("toast-checkout", "bad", "Masih ada yang belum dijawab. Isi semua dulu ya.");
+                return;
+            }
+            if (score === checkoutData.length) {
+                setToast("toast-checkout", "good", "Nilai sempurna! Kamu sudah paham etika digital.");
+            } else if (score >= 4) {
+                setToast("toast-checkout", "good", "Bagus! Tinggal sedikit lagi.");
+            } else {
+                setToast("toast-checkout", "bad", "Tidak apa-apa. Kita bisa ulang materi pelan-pelan.");
+            }
+        }
+
+        function resetCheckout() {
+            state.checkout = Array(6).fill(null);
+            document.getElementById("checkoutScore").textContent = "0";
+            const t = document.getElementById("toast-checkout");
+            if (t) { t.className = "toast"; t.textContent = ""; }
+            renderCheckout();
+        }
+
+        document.getElementById("gradeCheckout")?.addEventListener("click", gradeCheckout);
+        document.getElementById("resetCheckout")?.addEventListener("click", resetCheckout);
+
+        // ---------- Reset per slide ----------
+        function resetSlide(i) {
+            const s = slides[i];
+            s.querySelectorAll(".choice").forEach(c => c.style.outline = "none");
+            s.querySelectorAll(".toast").forEach(t => { t.className = "toast"; t.textContent = ""; });
+            if (s.querySelector("#pool")) initDrag();
+            if (s.querySelector("#checkout")) resetCheckout();
+        }
+
+        // ---------- small celebration ----------
+        function spark(x = window.innerWidth / 2, y = window.innerHeight / 2) {
+            const root = document.body;
+            const colors = ["#60a5fa", "#fb7185", "#22c55e", "#f59e0b"];
+            for (let i = 0; i < 24; i++) {
+                const el = document.createElement("div");
+                el.className = "spark";
+                el.style.left = x + "px";
+                el.style.top = y + "px";
+                el.style.opacity = 1;
+                el.style.background = colors[i % colors.length];
+                root.appendChild(el);
+
+                const ang = (Math.PI * 2) * (i / 24);
+                const dist = 110 + Math.random() * 130;
+                const dx = Math.cos(ang) * dist;
+                const dy = Math.sin(ang) * dist;
+
+                el.animate([
+                    { transform: "translate(-50%,-50%) scale(1)", opacity: 1 },
+                    { transform: `translate(calc(-50% + ${dx}px), calc(-50% + ${dy}px)) rotate(${Math.random() * 240}deg) scale(.9)`, opacity: .95, offset: .7 },
+                    { transform: `translate(calc(-50% + ${dx * 1.05}px), calc(-50% + ${dy * 1.05}px)) rotate(${Math.random() * 360}deg) scale(.7)`, opacity: 0 }
+                ], { duration: 900 + Math.random() * 450, easing: "cubic-bezier(.2,.8,.2,1)" });
+
+                setTimeout(() => el.remove(), 1400);
+            }
+        }
+
+        document.getElementById("celebrate")?.addEventListener("click", (e) => {
+            const r = e.target.getBoundingClientRect();
+            spark(r.left + r.width / 2, r.top + r.height / 2);
+        });
+        document.getElementById("restartAll")?.addEventListener("click", () => {
+            initDrag();
+            resetCheckout();
+            show(0);
+        });
+
+        // ---------- Init ----------
+        show(0);
+        initDrag();
+        renderCheckout();
+    </script>
+</body>
+
+</html>
