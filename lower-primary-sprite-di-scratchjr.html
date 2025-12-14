@@ -1,0 +1,1104 @@
+<!doctype html>
+<html lang="id">
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>ScratchJr: Tambah & Modifikasi Sprite</title>
+    <style>
+        :root {
+            --bg1: #fff7fb;
+            --bg2: #f3fbff;
+            --bg3: #f7fff6;
+            --card: #ffffff;
+            --text: #1f2a44;
+            --muted: #56627a;
+            --accent: #7c5cff;
+            --accent2: #32c7ff;
+            --accent3: #2ee59d;
+            --bad: #ff5c7a;
+            --border: rgba(31, 42, 68, .12);
+            --shadow: 0 18px 60px rgba(31, 42, 68, .12);
+            --shadow2: 0 10px 30px rgba(31, 42, 68, .10);
+            --radius: 22px;
+            --radius2: 16px;
+            --font: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Arial, "Noto Sans", "Helvetica Neue", sans-serif;
+        }
+
+        * {
+            box-sizing: border-box
+        }
+
+        body {
+            margin: 0;
+            font-family: var(--font);
+            color: var(--text);
+            overflow: hidden;
+            background:
+                radial-gradient(900px 600px at 12% 12%, rgba(124, 92, 255, .14), transparent 60%),
+                radial-gradient(900px 600px at 88% 18%, rgba(50, 199, 255, .16), transparent 60%),
+                radial-gradient(900px 600px at 35% 92%, rgba(46, 229, 157, .12), transparent 60%),
+                linear-gradient(135deg, var(--bg1), var(--bg2), var(--bg3));
+        }
+
+        .topbar {
+            position: fixed;
+            inset: 14px 14px auto 14px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 12px;
+            z-index: 50;
+        }
+
+        .brand {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 10px 14px;
+            border-radius: 999px;
+            background: rgba(255, 255, 255, .82);
+            backdrop-filter: blur(10px);
+            border: 1px solid var(--border);
+            box-shadow: var(--shadow2);
+            user-select: none;
+        }
+
+        .dot {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--accent), var(--accent2));
+            box-shadow: 0 0 0 7px rgba(124, 92, 255, .14);
+        }
+
+        .brand .title {
+            font-weight: 1000;
+            font-size: 14px;
+        }
+
+        .brand .subtitle {
+            font-size: 12px;
+            color: var(--muted);
+            margin-left: 6px;
+            font-weight: 800;
+        }
+
+        .controls {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .pill {
+            padding: 10px 12px;
+            border-radius: 999px;
+            background: rgba(255, 255, 255, .82);
+            border: 1px solid var(--border);
+            box-shadow: var(--shadow2);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            user-select: none;
+        }
+
+        .pill kbd {
+            font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", monospace;
+            font-size: 12px;
+            padding: 4px 7px;
+            border-radius: 10px;
+            background: rgba(31, 42, 68, .06);
+            border: 1px solid rgba(31, 42, 68, .10);
+            color: var(--text);
+        }
+
+        .btn {
+            border: none;
+            padding: 10px 14px;
+            border-radius: 999px;
+            color: #fff;
+            background: linear-gradient(135deg, var(--accent), var(--accent2));
+            box-shadow: 0 10px 24px rgba(124, 92, 255, .18);
+            cursor: pointer;
+            font-weight: 1000;
+        }
+
+        .btn:active {
+            transform: translateY(1px);
+        }
+
+        .progress {
+            position: fixed;
+            left: 14px;
+            right: 14px;
+            top: 66px;
+            height: 10px;
+            border-radius: 999px;
+            background: rgba(31, 42, 68, .06);
+            border: 1px solid rgba(31, 42, 68, .10);
+            overflow: hidden;
+            z-index: 40;
+        }
+
+        .progress>div {
+            height: 100%;
+            width: 0%;
+            background: linear-gradient(90deg, var(--accent), var(--accent2), var(--accent3));
+            border-radius: 999px;
+            transition: width .35s ease;
+        }
+
+        .deck {
+            position: fixed;
+            inset: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 96px 18px 24px;
+        }
+
+        .slide {
+            width: min(1100px, 96vw);
+            height: min(640px, 76vh);
+            border-radius: var(--radius);
+            background: rgba(255, 255, 255, .72);
+            border: 1px solid var(--border);
+            backdrop-filter: blur(10px);
+            box-shadow: var(--shadow);
+            position: absolute;
+            opacity: 0;
+            transform: translateY(10px) scale(.985);
+            transition: opacity .28s ease, transform .28s ease;
+            padding: 28px;
+            overflow: hidden;
+        }
+
+        .slide.active {
+            opacity: 1;
+            transform: translateY(0) scale(1);
+            position: relative;
+        }
+
+        .grid {
+            display: grid;
+            grid-template-columns: 1.2fr .8fr;
+            gap: 18px;
+            height: 100%;
+        }
+
+        .card {
+            background: var(--card);
+            border: 1px solid var(--border);
+            border-radius: var(--radius2);
+            padding: 18px;
+            box-shadow: var(--shadow2);
+        }
+
+        .h1 {
+            font-size: 44px;
+            line-height: 1.05;
+            margin: 0 0 10px;
+        }
+
+        .h2 {
+            font-size: 28px;
+            margin: 0 0 8px;
+        }
+
+        .p {
+            font-size: 18px;
+            color: var(--muted);
+            margin: 0 0 12px;
+            line-height: 1.5;
+        }
+
+        ul {
+            margin: 10px 0 0 20px;
+            padding: 0;
+        }
+
+        li {
+            margin: 6px 0;
+            color: var(--muted);
+            font-size: 18px;
+            line-height: 1.4;
+        }
+
+        .tagrow {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-top: 14px;
+        }
+
+        .tag {
+            padding: 8px 10px;
+            border-radius: 999px;
+            font-weight: 1000;
+            font-size: 12px;
+            background: rgba(31, 42, 68, .05);
+            border: 1px solid rgba(31, 42, 68, .10);
+            color: var(--text);
+        }
+
+        .imgph {
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            padding: 14px;
+            background: linear-gradient(180deg, rgba(124, 92, 255, .10), rgba(50, 199, 255, .08));
+            border: 2px dashed rgba(31, 42, 68, .18);
+            border-radius: var(--radius2);
+            overflow: hidden;
+            position: relative;
+        }
+
+        .imgph img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            border-radius: var(--radius2);
+        }
+
+        .imgph .overlaylabel {
+            position: absolute;
+            left: 12px;
+            top: 12px;
+            padding: 8px 10px;
+            border-radius: 999px;
+            background: rgba(255, 255, 255, .88);
+            border: 1px solid var(--border);
+            font-weight: 1000;
+            box-shadow: var(--shadow2);
+        }
+
+        /* DnD */
+        .board {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 14px;
+            height: 100%;
+        }
+
+        .panelTitle {
+            font-size: 18px;
+            font-weight: 1000;
+            margin: 0 0 10px;
+        }
+
+        .chips {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            align-content: flex-start;
+            min-height: 220px;
+        }
+
+        .chip {
+            padding: 10px 12px;
+            border-radius: 999px;
+            background: rgba(124, 92, 255, .10);
+            border: 1px solid rgba(124, 92, 255, .22);
+            cursor: grab;
+            font-weight: 1000;
+            user-select: none;
+        }
+
+        .dropzones {
+            display: grid;
+            gap: 12px;
+        }
+
+        .zone {
+            padding: 14px;
+            border-radius: 16px;
+            background: rgba(31, 42, 68, .03);
+            border: 2px dashed rgba(31, 42, 68, .16);
+            min-height: 76px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            gap: 6px;
+        }
+
+        .zone strong {
+            font-size: 14px;
+        }
+
+        .zone .hint {
+            font-size: 13px;
+            color: rgba(31, 42, 68, .62);
+        }
+
+        .zone.filled {
+            border-style: solid;
+            border-color: rgba(46, 229, 157, .40);
+            background: rgba(46, 229, 157, .12);
+        }
+
+        /* Quiz */
+        .quiz {
+            display: grid;
+            grid-template-columns: 1.1fr .9fr;
+            gap: 14px;
+            height: 100%;
+        }
+
+        .qBox {
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .q {
+            font-size: 22px;
+            font-weight: 1000;
+            margin: 0;
+        }
+
+        .opts {
+            display: grid;
+            gap: 10px;
+            margin-top: 8px;
+        }
+
+        .opt {
+            padding: 12px 14px;
+            border-radius: 16px;
+            background: rgba(31, 42, 68, .03);
+            border: 1px solid rgba(31, 42, 68, .12);
+            cursor: pointer;
+            font-weight: 1000;
+            color: var(--text);
+            text-align: left;
+        }
+
+        .opt.good {
+            background: rgba(46, 229, 157, .18);
+            border-color: rgba(46, 229, 157, .40);
+        }
+
+        .opt.bad {
+            background: rgba(255, 92, 122, .16);
+            border-color: rgba(255, 92, 122, .38);
+        }
+
+        .score {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 10px;
+            margin-top: auto;
+            padding-top: 10px;
+            border-top: 1px solid rgba(31, 42, 68, .12);
+            font-weight: 1000;
+            color: rgba(31, 42, 68, .85);
+        }
+
+        /* Checklist */
+        .checklist {
+            display: grid;
+            gap: 10px;
+            margin-top: 10px;
+        }
+
+        .check {
+            display: flex;
+            gap: 10px;
+            align-items: flex-start;
+            padding: 12px 12px;
+            border-radius: 16px;
+            background: rgba(31, 42, 68, .03);
+            border: 1px solid rgba(31, 42, 68, .12);
+            cursor: pointer;
+            user-select: none;
+        }
+
+        .check input {
+            margin-top: 4px;
+            transform: scale(1.2);
+        }
+
+        .check span {
+            color: var(--muted);
+            font-size: 18px;
+            line-height: 1.35;
+        }
+
+        .check.done {
+            border-color: rgba(46, 229, 157, .45);
+            background: rgba(46, 229, 157, .14);
+        }
+
+        .mini {
+            font-size: 14px;
+            color: rgba(31, 42, 68, .70);
+            margin-top: 8px;
+        }
+
+        /* Footer nav */
+        .nav {
+            position: fixed;
+            inset: auto 14px 14px 14px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 12px;
+            z-index: 50;
+        }
+
+        .navbtn {
+            border: none;
+            padding: 12px 14px;
+            border-radius: 16px;
+            background: rgba(255, 255, 255, .88);
+            border: 1px solid var(--border);
+            cursor: pointer;
+            font-weight: 1000;
+            min-width: 120px;
+            box-shadow: var(--shadow2);
+        }
+
+        .navbtn.primary {
+            background: linear-gradient(135deg, var(--accent), var(--accent2));
+            border: none;
+            color: #fff;
+            box-shadow: 0 12px 26px rgba(124, 92, 255, .18);
+        }
+
+        .counter {
+            padding: 12px 14px;
+            border-radius: 16px;
+            background: rgba(255, 255, 255, .88);
+            border: 1px solid var(--border);
+            font-weight: 1100;
+            min-width: 130px;
+            text-align: center;
+            box-shadow: var(--shadow2);
+        }
+
+        .toast {
+            position: fixed;
+            left: 50%;
+            bottom: 18px;
+            transform: translateX(-50%);
+            padding: 12px 14px;
+            border-radius: 999px;
+            background: rgba(255, 255, 255, .92);
+            border: 1px solid var(--border);
+            box-shadow: var(--shadow);
+            font-weight: 1000;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity .25s ease, transform .25s ease;
+            z-index: 60;
+            max-width: min(90vw, 840px);
+            text-align: center;
+        }
+
+        .toast.show {
+            opacity: 1;
+            transform: translateX(-50%) translateY(-2px);
+        }
+
+        .svgwrap {
+            height: 100%;
+            width: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .svgwrap svg {
+            width: 100%;
+            height: 100%;
+        }
+
+        @media (max-width: 900px) {
+
+            .grid,
+            .quiz {
+                grid-template-columns: 1fr;
+            }
+
+            .slide {
+                height: min(760px, 80vh);
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="topbar">
+        <div class="brand">
+            <div class="dot"></div>
+            <div class="title">ScratchJr</div>
+            <div class="subtitle">Tambah & Modifikasi Sprite</div>
+        </div>
+        <div class="controls">
+            <div class="pill">
+                <span style="font-weight:1000;color:rgba(31,42,68,.9)">Keyboard:</span>
+                <kbd>←</kbd><kbd>→</kbd><kbd>Space</kbd>
+            </div>
+            <button class="btn" id="btnHelp">Cara Pakai</button>
+        </div>
+    </div>
+
+    <div class="progress">
+        <div id="bar"></div>
+    </div>
+
+    <main class="deck">
+
+        <!-- 1 -->
+        <section class="slide active" data-title="Welcome">
+            <div class="grid">
+                <div class="card">
+                    <h1 class="h1">Yuk bikin cerita di ScratchJr 🌈</h1>
+                    <p class="p">Hari ini kita fokus 3 hal: <b>tambah sprite</b>, <b>pindah posisi</b>, <b>ubah
+                            ukuran</b>.</p>
+                    <div class="tagrow">
+                        <span class="tag">Tambah Sprite</span>
+                        <span class="tag">Pindah Posisi</span>
+                        <span class="tag">Besar–Kecil</span>
+                    </div>
+                    <div class="card" style="margin-top:14px;background:rgba(31,42,68,.02)">
+                        <div class="h2" style="margin:0 0 6px">Aturan cepat ✨</div>
+                        <ul>
+                            <li>Coba dulu (tidak apa-apa salah).</li>
+                            <li>Kalau bingung, angkat tangan.</li>
+                            <li>Hargai karya teman 😊</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- SVG illustration: stage -->
+                <div class="imgph">
+                    <div class="overlaylabel">Ilustrasi</div>
+                    <div class="svgwrap">
+                        <svg viewBox="0 0 900 600" xmlns="http://www.w3.org/2000/svg">
+                            <defs>
+                                <linearGradient id="g1" x1="0" x2="1">
+                                    <stop offset="0" stop-color="#7c5cff" stop-opacity=".22" />
+                                    <stop offset="1" stop-color="#32c7ff" stop-opacity=".22" />
+                                </linearGradient>
+                            </defs>
+                            <rect x="40" y="60" rx="26" ry="26" width="820" height="480" fill="white"
+                                stroke="rgba(31,42,68,.16)" stroke-width="3" />
+                            <rect x="70" y="100" rx="18" ry="18" width="520" height="380" fill="url(#g1)"
+                                stroke="rgba(31,42,68,.10)" stroke-width="2" />
+                            <rect x="610" y="100" rx="18" ry="18" width="220" height="120" fill="rgba(46,229,157,.18)"
+                                stroke="rgba(31,42,68,.12)" stroke-width="2" />
+                            <rect x="610" y="240" rx="18" ry="18" width="220" height="240" fill="rgba(31,42,68,.03)"
+                                stroke="rgba(31,42,68,.12)" stroke-width="2" />
+                            <circle cx="720" cy="160" r="46" fill="rgba(255,204,102,.55)" />
+                            <path
+                                d="M 210 410 C 240 340, 320 330, 350 410 C 360 450, 300 480, 280 470 C 255 460, 195 450, 210 410 Z"
+                                fill="rgba(255,92,122,.28)" stroke="rgba(31,42,68,.16)" stroke-width="3" />
+                            <text x="88" y="92" font-size="22" font-weight="900" fill="rgba(31,42,68,.85)">Stage
+                                (panggung)</text>
+                            <text x="620" y="92" font-size="22" font-weight="900" fill="rgba(31,42,68,.85)">Sprite
+                                list</text>
+                            <text x="625" y="268" font-size="20" font-weight="900" fill="rgba(31,42,68,.75)">Blok
+                                (nanti)</text>
+                            <text x="88" y="520" font-size="18" font-weight="800" fill="rgba(31,42,68,.65)">Hari ini:
+                                tambah sprite + pindah posisi + ubah ukuran</text>
+                        </svg>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 2 (PDF screenshot: ScratchJr UI) -->
+        <section class="slide" data-title="Contoh Tampilan ScratchJr">
+            <div class="grid">
+                <div class="card">
+                    <h2 class="h2">Contoh tampilan ScratchJr</h2>
+                    <p class="p">Ini contoh layar ScratchJr (biar kamu familiar dulu).</p>
+                    <div class="card" style="background:rgba(31,42,68,.02)">
+                        <div class="panelTitle">Tanya cepat (klik!)</div>
+                        <div class="opts">
+                            <button class="opt" data-toast="Benar! Sprite itu tokoh/benda di cerita 😊">Sprite itu
+                                tokoh/benda</button>
+                            <button class="opt" data-toast="Betul! Kita bisa tambahkan sprite baru ➕">Kita bisa tambah
+                                sprite</button>
+                            <button class="opt" data-toast="Yes! Kita juga bisa pindahkan & ubah ukuran 🔍">Bisa pindah
+                                & ubah ukuran</button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="imgph" id="imgScratchUI">
+                    <div class="overlaylabel">Screenshot (dari PDF)</div>
+                    <img alt="ScratchJr UI screenshot" />
+                </div>
+            </div>
+        </section>
+
+        <!-- 3 (Tambah Sprite - SVG) -->
+        <section class="slide" data-title="Tambah Sprite">
+            <div class="grid">
+                <div class="card">
+                    <h2 class="h2">Langkah 1: Tambah Sprite ➕</h2>
+                    <p class="p">Tugasmu: tambah minimal <b>1 sprite baru</b>.</p>
+                    <ol style="margin:0 0 0 18px; color:var(--muted); font-size:18px; line-height:1.5;">
+                        <li>Tekan tombol tambah sprite.</li>
+                        <li>Pilih sprite yang kamu suka.</li>
+                        <li>Sprite muncul di panggung 🎉</li>
+                    </ol>
+                    <div class="card" style="margin-top:14px;background:rgba(31,42,68,.02)">
+                        <div class="panelTitle">Misi kecil</div>
+                        <div class="p" style="margin:0;color:rgba(31,42,68,.85)">
+                            Pilih 1 sprite: <b>hewan / robot / benda</b>.
+                        </div>
+                    </div>
+                </div>
+
+                <div class="imgph">
+                    <div class="overlaylabel">Ilustrasi</div>
+                    <div class="svgwrap">
+                        <svg viewBox="0 0 900 600" xmlns="http://www.w3.org/2000/svg">
+                            <rect x="60" y="70" rx="26" ry="26" width="780" height="460" fill="white"
+                                stroke="rgba(31,42,68,.16)" stroke-width="3" />
+                            <rect x="95" y="120" rx="18" ry="18" width="520" height="360" fill="rgba(50,199,255,.12)"
+                                stroke="rgba(31,42,68,.10)" stroke-width="2" />
+                            <rect x="635" y="120" rx="18" ry="18" width="175" height="360" fill="rgba(31,42,68,.03)"
+                                stroke="rgba(31,42,68,.12)" stroke-width="2" />
+                            <circle cx="722" cy="420" r="44" fill="rgba(124,92,255,.16)" stroke="rgba(31,42,68,.12)"
+                                stroke-width="3" />
+                            <path d="M722 396 v48 M698 420 h48" stroke="rgba(31,42,68,.75)" stroke-width="8"
+                                stroke-linecap="round" />
+                            <text x="110" y="110" font-size="22" font-weight="900"
+                                fill="rgba(31,42,68,.85)">Panggung</text>
+                            <text x="640" y="110" font-size="22" font-weight="900"
+                                fill="rgba(31,42,68,.85)">Sprite</text>
+                            <text x="635" y="508" font-size="18" font-weight="900" fill="rgba(31,42,68,.70)">Klik tombol
+                                ➕ untuk tambah sprite</text>
+                        </svg>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 4 Drag & Drop -->
+        <section class="slide" data-title="Drag & Drop">
+            <div class="board">
+                <div class="card">
+                    <h2 class="h2">Susun langkahnya 🧩</h2>
+                    <p class="p">Seret chip ke kotak yang cocok.</p>
+                    <div class="chips" id="chips">
+                        <div class="chip" draggable="true" data-answer="a">Tekan tombol tambah sprite</div>
+                        <div class="chip" draggable="true" data-answer="b">Pilih sprite yang kamu suka</div>
+                        <div class="chip" draggable="true" data-answer="c">Sprite muncul di panggung</div>
+                        <div class="chip" draggable="true" data-answer="d">Pindahkan posisi sprite</div>
+                    </div>
+                    <div class="mini">Kalau sudah, klik “Cek Jawaban”.</div>
+                    <div style="display:flex; gap:10px; margin-top:10px;">
+                        <button class="navbtn primary" id="checkDnD">Cek Jawaban</button>
+                        <button class="navbtn" id="resetDnD">Reset</button>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div class="panelTitle">Kotak Pasangan</div>
+                    <div class="dropzones">
+                        <div class="zone" data-expect="a"><strong>Langkah awal</strong>
+                            <div class="hint">Mulai dari tombol ➕</div>
+                            <div class="slot"></div>
+                        </div>
+                        <div class="zone" data-expect="b"><strong>Langkah memilih</strong>
+                            <div class="hint">Pilih karakter/benda</div>
+                            <div class="slot"></div>
+                        </div>
+                        <div class="zone" data-expect="c"><strong>Hasilnya</strong>
+                            <div class="hint">Sprite tampil</div>
+                            <div class="slot"></div>
+                        </div>
+                        <div class="zone" data-expect="d"><strong>Sesudah itu</strong>
+                            <div class="hint">Geser posisinya</div>
+                            <div class="slot"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 5 Posisi -->
+        <section class="slide" data-title="Posisi">
+            <div class="grid">
+                <div class="card">
+                    <h2 class="h2">Langkah 2: Pindah Posisi 🧭</h2>
+                    <p class="p">Pindahkan sprite ke tempat berbeda supaya ceritanya jelas.</p>
+                    <div class="card" style="background:rgba(31,42,68,.02)">
+                        <div class="panelTitle">Latihan</div>
+                        <ul>
+                            <li>Pindahkan sprite ke <b>pojok kiri bawah</b>.</li>
+                            <li>Lalu ke <b>pojok kanan atas</b>.</li>
+                        </ul>
+                    </div>
+                    <div class="card" style="margin-top:14px;background:rgba(31,42,68,.02)">
+                        <div class="panelTitle">Pertanyaan cepat</div>
+                        <div class="opts">
+                            <button class="opt" data-toast="Betul! Posisi bikin cerita jelas ✨">Supaya ceritanya
+                                jelas</button>
+                            <button class="opt" data-toast="Hehe, bukan itu ya 😄">Supaya tablet cepat panas</button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="imgph">
+                    <div class="overlaylabel">Ilustrasi</div>
+                    <div class="svgwrap">
+                        <svg viewBox="0 0 900 600" xmlns="http://www.w3.org/2000/svg">
+                            <rect x="70" y="90" rx="26" ry="26" width="760" height="420" fill="white"
+                                stroke="rgba(31,42,68,.16)" stroke-width="3" />
+                            <circle cx="160" cy="440" r="46" fill="rgba(255,92,122,.22)" stroke="rgba(31,42,68,.14)"
+                                stroke-width="3" />
+                            <circle cx="740" cy="150" r="46" fill="rgba(46,229,157,.22)" stroke="rgba(31,42,68,.14)"
+                                stroke-width="3" />
+                            <path d="M240 420 C 360 360, 520 260, 660 190" fill="none" stroke="rgba(124,92,255,.55)"
+                                stroke-width="10" stroke-linecap="round" />
+                            <path d="M650 176 l30 12 -22 25" fill="none" stroke="rgba(124,92,255,.55)" stroke-width="10"
+                                stroke-linecap="round" />
+                            <text x="95" y="78" font-size="22" font-weight="900" fill="rgba(31,42,68,.85)">Pindahkan
+                                sprite</text>
+                            <text x="95" y="540" font-size="18" font-weight="900" fill="rgba(31,42,68,.70)">Coba kiri
+                                bawah → kanan atas</text>
+                        </svg>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 6 Ukuran -->
+        <section class="slide" data-title="Ukuran">
+            <div class="grid">
+                <div class="card">
+                    <h2 class="h2">Langkah 3: Ubah Ukuran 🔍</h2>
+                    <p class="p">Tokoh utama bisa lebih besar, teman/benda bisa lebih kecil.</p>
+                    <div class="card" style="background:rgba(31,42,68,.02)">
+                        <div class="panelTitle">Latihan</div>
+                        <ul>
+                            <li>Buat <b>sprite 1</b> jadi besar (tokoh utama).</li>
+                            <li>Buat <b>sprite 2</b> jadi kecil (teman/benda).</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="imgph">
+                    <div class="overlaylabel">Ilustrasi</div>
+                    <div class="svgwrap">
+                        <svg viewBox="0 0 900 600" xmlns="http://www.w3.org/2000/svg">
+                            <rect x="70" y="100" rx="26" ry="26" width="760" height="400" fill="white"
+                                stroke="rgba(31,42,68,.16)" stroke-width="3" />
+                            <circle cx="280" cy="320" r="90" fill="rgba(50,199,255,.18)" stroke="rgba(31,42,68,.14)"
+                                stroke-width="3" />
+                            <circle cx="620" cy="360" r="45" fill="rgba(124,92,255,.18)" stroke="rgba(31,42,68,.14)"
+                                stroke-width="3" />
+                            <path d="M410 230 L500 190" stroke="rgba(31,42,68,.45)" stroke-width="8"
+                                stroke-linecap="round" />
+                            <path d="M500 190 l-12 36 36-12" fill="none" stroke="rgba(31,42,68,.45)" stroke-width="8"
+                                stroke-linecap="round" />
+                            <text x="95" y="90" font-size="22" font-weight="900" fill="rgba(31,42,68,.85)">Besar vs
+                                Kecil</text>
+                            <text x="95" y="540" font-size="18" font-weight="900" fill="rgba(31,42,68,.70)">Tokoh utama
+                                biasanya lebih besar</text>
+                        </svg>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 7 Quiz -->
+        <section class="slide" data-title="Quiz">
+            <div class="quiz">
+                <div class="card qBox">
+                    <h2 class="h2">Quiz Cepat 🧠</h2>
+                    <p class="p">Klik jawaban yang benar.</p>
+                    <div class="card" style="background:rgba(31,42,68,.02)">
+                        <p class="q" id="qText">1) Sprite itu…</p>
+                        <div class="opts" id="qOpts"></div>
+                    </div>
+                    <div class="score">
+                        <span id="scoreText">Skor: 0</span>
+                        <div style="display:flex; gap:10px;">
+                            <button class="navbtn" id="prevQ">Sebelumnya</button>
+                            <button class="navbtn primary" id="nextQ">Lanjut</button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="imgph">
+                    <div class="overlaylabel">Ilustrasi</div>
+                    <div class="svgwrap">
+                        <svg viewBox="0 0 900 600" xmlns="http://www.w3.org/2000/svg">
+                            <rect x="90" y="90" rx="26" ry="26" width="720" height="420" fill="white"
+                                stroke="rgba(31,42,68,.16)" stroke-width="3" />
+                            <circle cx="450" cy="300" r="120" fill="rgba(255,204,102,.45)" />
+                            <text x="450" y="290" text-anchor="middle" font-size="54" font-weight="1000"
+                                fill="rgba(31,42,68,.88)">QUIZ</text>
+                            <text x="450" y="345" text-anchor="middle" font-size="22" font-weight="900"
+                                fill="rgba(31,42,68,.70)">Ayo jawab ya 😊</text>
+                            <path d="M160 520 C 240 470, 300 470, 380 520" stroke="rgba(124,92,255,.45)"
+                                stroke-width="10" fill="none" stroke-linecap="round" />
+                            <path d="M520 520 C 600 470, 660 470, 740 520" stroke="rgba(50,199,255,.45)"
+                                stroke-width="10" fill="none" stroke-linecap="round" />
+                        </svg>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 8 Checklist -->
+        <section class="slide" data-title="Checklist">
+            <div class="grid">
+                <div class="card">
+                    <h2 class="h2">Checklist Misi ✅</h2>
+                    <p class="p">Centang kalau sudah berhasil.</p>
+
+                    <div class="checklist" id="checklist">
+                        <label class="check"><input type="checkbox" /> <span>Aku menambahkan <b>1 sprite
+                                    baru</b>.</span></label>
+                        <label class="check"><input type="checkbox" /> <span>Aku memindahkan sprite ke <b>tempat
+                                    berbeda</b>.</span></label>
+                        <label class="check"><input type="checkbox" /> <span>Aku mengubah ukuran sprite jadi
+                                <b>besar/kecil</b>.</span></label>
+                        <label class="check"><input type="checkbox" /> <span>Aku bisa menjelaskan sprite itu
+                                <b>tokoh/benda</b>.</span></label>
+                    </div>
+
+                    <div style="display:flex; gap:10px; margin-top:12px;">
+                        <button class="navbtn primary" id="finishCheck">Aku Sudah!</button>
+                        <button class="navbtn" id="resetCheck">Reset</button>
+                    </div>
+                    <div class="mini" id="checkMsg">Target: selesai minimal 3 checklist ✨</div>
+                </div>
+
+                <!-- PDF screenshot: Paint Editor tools -->
+                <div class="imgph" id="imgPaintEditor">
+                    <div class="overlaylabel">Screenshot (dari PDF)</div>
+                    <img alt="Paint Editor screenshot" />
+                </div>
+            </div>
+        </section>
+
+        <!-- 9 Penutup -->
+        <section class="slide" data-title="Penutup">
+            <div class="grid">
+                <div class="card">
+                    <h1 class="h1">Keren! Kamu kreator hebat 🎉</h1>
+                    <p class="p">Kamu sudah bisa tambah sprite, pindah posisi, dan ubah ukuran.</p>
+                    <div class="card" style="background:rgba(31,42,68,.02)">
+                        <div class="panelTitle">Misi opsional</div>
+                        <ul>
+                            <li>Tambahkan 1 sprite lagi.</li>
+                            <li>Buat ukurannya berbeda.</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="imgph">
+                    <div class="overlaylabel">Ilustrasi</div>
+                    <div class="svgwrap">
+                        <svg viewBox="0 0 900 600" xmlns="http://www.w3.org/2000/svg">
+                            <rect x="90" y="90" rx="26" ry="26" width="720" height="420" fill="white"
+                                stroke="rgba(31,42,68,.16)" stroke-width="3" />
+                            <text x="450" y="250" text-anchor="middle" font-size="46" font-weight="1000"
+                                fill="rgba(31,42,68,.88)">GOOD JOB!</text>
+                            <text x="450" y="305" text-anchor="middle" font-size="22" font-weight="900"
+                                fill="rgba(31,42,68,.70)">Sampai ketemu lagi 😊</text>
+                            <circle cx="190" cy="170" r="18" fill="rgba(124,92,255,.40)" />
+                            <circle cx="250" cy="140" r="14" fill="rgba(50,199,255,.45)" />
+                            <circle cx="710" cy="160" r="16" fill="rgba(46,229,157,.45)" />
+                            <circle cx="650" cy="140" r="12" fill="rgba(255,92,122,.35)" />
+                            <path d="M160 420 C 240 360, 320 360, 400 420" stroke="rgba(124,92,255,.35)"
+                                stroke-width="12" fill="none" stroke-linecap="round" />
+                            <path d="M500 420 C 580 360, 660 360, 740 420" stroke="rgba(50,199,255,.35)"
+                                stroke-width="12" fill="none" stroke-linecap="round" />
+                        </svg>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <div class="nav">
+        <div style="display:flex; gap:10px; align-items:center;">
+            <button class="navbtn" id="prevBtn">← Sebelumnya</button>
+            <div class="counter" id="counter">1 / 9</div>
+        </div>
+        <button class="navbtn primary" id="nextBtn">Berikutnya →</button>
+    </div>
+
+    <div class="toast" id="toast"></div>
+
+    <script>
+        const $ = (q, el = document) => el.querySelector(q);
+        const $$ = (q, el = document) => Array.from(el.querySelectorAll(q));
+
+        // Toast
+        const toast = $("#toast");
+        let toastTimer = null;
+        function showToast(msg) {
+            toast.textContent = msg;
+            toast.classList.add("show");
+            clearTimeout(toastTimer);
+            toastTimer = setTimeout(() => toast.classList.remove("show"), 1600);
+        }
+        $$("[data-toast]").forEach(btn => btn.addEventListener("click", () => showToast(btn.dataset.toast)));
+
+        // Slides
+        const slides = $$(".slide");
+        const bar = $("#bar");
+        const counter = $("#counter");
+        const prevBtn = $("#prevBtn");
+        const nextBtn = $("#nextBtn");
+        let idx = 0;
+
+        function render() {
+            slides.forEach((s, i) => s.classList.toggle("active", i === idx));
+            counter.textContent = `${idx + 1} / ${slides.length}`;
+            bar.style.width = `${((idx + 1) / slides.length) * 100}%`;
+            prevBtn.disabled = idx === 0;
+            nextBtn.disabled = idx === slides.length - 1;
+            document.title = `(${idx + 1}/${slides.length}) ${slides[idx].dataset.title || "Slide"} — ScratchJr`;
+        }
+        function next() { if (idx < slides.length - 1) { idx++; render(); } }
+        function prev() { if (idx > 0) { idx--; render(); } }
+        prevBtn.addEventListener("click", prev);
+        nextBtn.addEventListener("click", next);
+
+        // Keyboard
+        document.addEventListener("keydown", (e) => {
+            const tag = (e.target && e.target.tagName) ? e.target.tagName.toLowerCase() : "";
+            if (["input", "textarea", "select"].includes(tag)) return;
+            if (e.key === "ArrowRight" || e.key === " ") { e.preventDefault(); next(); }
+            if (e.key === "ArrowLeft") { e.preventDefault(); prev(); }
+        });
+
+        $("#btnHelp").addEventListener("click", () => showToast("Gunakan ← → / Space. Ada drag & drop, quiz, checklist!"));
+
+        // Drag & Drop
+        let dragged = null;
+        $$(".chip").forEach(ch => {
+            ch.addEventListener("dragstart", (e) => {
+                dragged = ch;
+                e.dataTransfer.setData("text/plain", ch.dataset.answer);
+                setTimeout(() => ch.style.opacity = "0.55", 0);
+            });
+            ch.addEventListener("dragend", () => { if (dragged) dragged.style.opacity = "1"; dragged = null; });
+        });
+        $$(".zone").forEach(zone => {
+            zone.addEventListener("dragover", (e) => e.preventDefault());
+            zone.addEventListener("drop", (e) => {
+                e.preventDefault();
+                if (!dragged) return;
+                const slot = $(".slot", zone);
+                if (slot.firstChild) $("#chips").appendChild(slot.firstChild);
+                slot.appendChild(dragged);
+                zone.classList.add("filled");
+                showToast("Bagus! Lanjutkan sampai penuh.");
+            });
+        });
+        $("#resetDnD").addEventListener("click", () => {
+            const chipsWrap = $("#chips");
+            $$(".zone").forEach(z => {
+                const slot = $(".slot", z);
+                if (slot.firstChild) chipsWrap.appendChild(slot.firstChild);
+                z.classList.remove("filled");
+            });
+            showToast("Di-reset. Coba lagi ya!");
+        });
+        $("#checkDnD").addEventListener("click", () => {
+            let correct = 0;
+            $$(".zone").forEach(z => {
+                const expect = z.dataset.expect;
+                const got = $(".slot", z).firstChild ? $(".slot", z).firstChild.dataset.answer : null;
+                if (got === expect) correct++;
+            });
+            showToast(correct === 4 ? "Mantap! Semua benar 🎉" : `Benar ${correct}/4. Coba cek lagi ya 🙂`);
+        });
+
+        // Quiz
+        const quiz = [
+            { q: "1) Sprite itu…", opts: [{ t: "Tokoh atau benda di cerita", ok: true }, { t: "Tombol keluar", ok: false }, { t: "Nama aplikasi", ok: false }] },
+            { q: "2) Kalau mau tambah sprite, kita…", opts: [{ t: "Tekan tombol tambah sprite", ok: true }, { t: "Matikan tablet", ok: false }, { t: "Hapus proyek", ok: false }] },
+            { q: "3) Ukuran sprite penting karena…", opts: [{ t: "Jelas tokoh utama & pendukung", ok: true }, { t: "Supaya layar gelap", ok: false }, { t: "Supaya tidak bisa dipindah", ok: false }] }
+        ];
+        const qText = $("#qText"), qOpts = $("#qOpts"), scoreText = $("#scoreText"), prevQ = $("#prevQ"), nextQ = $("#nextQ");
+        let qIdx = 0, score = 0;
+        const answered = new Array(quiz.length).fill(false);
+
+        function renderQ() {
+            const item = quiz[qIdx];
+            qText.textContent = item.q;
+            qOpts.innerHTML = "";
+            item.opts.forEach((o) => {
+                const b = document.createElement("button");
+                b.className = "opt";
+                b.textContent = o.t;
+                b.addEventListener("click", () => {
+                    if (answered[qIdx]) return showToast("Soal ini sudah dijawab 🙂");
+                    answered[qIdx] = true;
+                    if (o.ok) { b.classList.add("good"); score++; showToast("Benar! 🎉"); }
+                    else {
+                        b.classList.add("bad"); showToast("Belum tepat. Coba ingat lagi!");
+                        const btns = $$(".opt", qOpts);
+                        const correctIndex = item.opts.findIndex(x => x.ok);
+                        if (btns[correctIndex]) btns[correctIndex].classList.add("good");
+                    }
+                    scoreText.textContent = `Skor: ${score}`;
+                });
+                qOpts.appendChild(b);
+            });
+            prevQ.disabled = qIdx === 0;
+            nextQ.textContent = (qIdx === quiz.length - 1) ? "Selesai" : "Lanjut";
+            scoreText.textContent = `Skor: ${score}`;
+        }
+        prevQ.addEventListener("click", () => { if (qIdx > 0) { qIdx--; renderQ(); } });
+        nextQ.addEventListener("click", () => {
+            if (qIdx < quiz.length - 1) { qIdx++; renderQ(); }
+            else showToast(`Quiz selesai! Skor kamu: ${score}/${quiz.length}`);
+        });
+        renderQ();
+
+        // Checklist
+        const checks = $$("#checklist .check");
+        const checkMsg = $("#checkMsg");
+        checks.forEach(c => {
+            c.addEventListener("click", (e) => {
+                const input = $("input", c);
+                if (e.target.tagName.toLowerCase() !== "input") input.checked = !input.checked;
+                c.classList.toggle("done", input.checked);
+            });
+        });
+        $("#resetCheck").addEventListener("click", () => {
+            checks.forEach(c => { $("input", c).checked = false; c.classList.remove("done"); });
+            checkMsg.textContent = "Target: selesai minimal 3 checklist ✨";
+            showToast("Checklist di-reset.");
+        });
+        $("#finishCheck").addEventListener("click", () => {
+            const done = checks.filter(c => $("input", c).checked).length;
+            if (done >= 3) { checkMsg.textContent = `Keren! Kamu menuntaskan ${done}/4 🎉`; showToast("Mantap! Siap share karya."); }
+            else { checkMsg.textContent = `Masih ${done}/4. Ayo minimal 3 ya 🙂`; showToast("Ayo lanjut sedikit lagi!"); }
+        });
+
+        // --- Embedded images (from your PDF) ---
+        // 1) ScratchJr UI screenshot (page 3 in the PDF file; embedded as base64)
+        // 2) Paint Editor tools screenshot (page 4 in the PDF file; embedded as base64)
+        const PDF_IMG_SCRATCH_UI = "data:image/png;base64,{{PDF_IMG_SCRATCH_UI}}";
+        const PDF_IMG_PAINT_EDITOR = "data:image/png;base64,{{PDF_IMG_PAINT_EDITOR}}";
+
+        $("#imgScratchUI img").src = PDF_IMG_SCRATCH_UI;
+        $("#imgPaintEditor img").src = PDF_IMG_PAINT_EDITOR;
+
+        render();
+    </script>
+</body>
+
+</html>
