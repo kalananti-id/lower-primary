@@ -1,0 +1,1081 @@
+<!doctype html>
+<html lang="id">
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>Story Assessment Etika Digital</title>
+    <style>
+        :root {
+            --bg1: #e0f2fe;
+            --bg2: #fff7ed;
+            --bg3: #fce7f3;
+            --text: #0f172a;
+            --muted: #475569;
+            --accent: #60a5fa;
+            --accent2: #fb7185;
+            --good: #16a34a;
+            --bad: #dc2626;
+            --line: rgba(15, 23, 42, .10);
+            --shadow: 0 18px 35px rgba(15, 23, 42, .10);
+            --radius: 26px;
+            --font: ui-rounded, system-ui, -apple-system, "Segoe UI", Roboto, Helvetica, Arial;
+        }
+
+        * {
+            box-sizing: border-box
+        }
+
+        body {
+            margin: 0;
+            font-family: var(--font);
+            color: var(--text);
+            overflow: hidden;
+            background:
+                radial-gradient(900px 520px at 18% 12%, rgba(96, 165, 250, .55), transparent 60%),
+                radial-gradient(900px 520px at 80% 15%, rgba(251, 113, 133, .45), transparent 60%),
+                radial-gradient(900px 520px at 50% 92%, rgba(34, 197, 94, .28), transparent 58%),
+                linear-gradient(135deg, var(--bg1), var(--bg2) 45%, var(--bg3));
+        }
+
+        .app {
+            height: 100vh;
+            width: 100vw;
+            display: flex;
+            flex-direction: column
+        }
+
+        header {
+            display: flex;
+            gap: 12px;
+            align-items: center;
+            justify-content: space-between;
+            padding: 14px 18px
+        }
+
+        .brand {
+            display: flex;
+            align-items: center;
+            gap: 12px
+        }
+
+        .badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            padding: 10px 12px;
+            border-radius: 999px;
+            background: rgba(255, 255, 255, .80);
+            border: 1px solid var(--line);
+            box-shadow: var(--shadow);
+            font-weight: 900;
+        }
+
+        .badge .dot {
+            width: 12px;
+            height: 12px;
+            border-radius: 999px;
+            background: linear-gradient(180deg, #60a5fa, #fb7185);
+            box-shadow: 0 0 0 6px rgba(96, 165, 250, .22);
+        }
+
+        .hint {
+            font-size: 13px;
+            color: var(--muted);
+            border: 1px dashed rgba(15, 23, 42, .18);
+            padding: 10px 12px;
+            border-radius: 16px;
+            background: rgba(255, 255, 255, .65);
+            max-width: min(680px, 62vw);
+        }
+
+        .hint b {
+            color: var(--text)
+        }
+
+        .progressWrap {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            min-width: 240px;
+            justify-content: flex-end
+        }
+
+        .progress {
+            width: 190px;
+            height: 12px;
+            border-radius: 999px;
+            background: rgba(255, 255, 255, .80);
+            border: 1px solid var(--line);
+            overflow: hidden
+        }
+
+        .bar {
+            height: 100%;
+            width: 0%;
+            background: linear-gradient(90deg, var(--accent), var(--accent2));
+            border-radius: 999px;
+            transition: width .35s ease
+        }
+
+        .counter {
+            font-weight: 900;
+            font-size: 14px;
+            color: var(--muted);
+            min-width: 78px;
+            text-align: right
+        }
+
+        main {
+            flex: 1;
+            padding: 0 18px 18px;
+            display: flex;
+            align-items: stretch;
+            justify-content: center;
+            min-height: 0
+        }
+
+        .slide {
+            width: min(1040px, 100%);
+            height: 100%;
+            border-radius: var(--radius);
+            border: 1px solid var(--line);
+            background: rgba(255, 255, 255, .55);
+            box-shadow: var(--shadow);
+            position: relative;
+            overflow: hidden;
+            display: none;
+            flex-direction: column;
+            min-height: 0;
+        }
+
+        .slide.active {
+            display: flex
+        }
+
+        .blob {
+            position: absolute;
+            border-radius: 999px;
+            opacity: .9;
+            pointer-events: none
+        }
+
+        .blob.b1 {
+            width: 220px;
+            height: 220px;
+            left: -70px;
+            top: -80px;
+            background: rgba(96, 165, 250, .25)
+        }
+
+        .blob.b2 {
+            width: 240px;
+            height: 240px;
+            right: -90px;
+            top: -90px;
+            background: rgba(251, 113, 133, .22)
+        }
+
+        .blob.b3 {
+            width: 260px;
+            height: 260px;
+            left: 30%;
+            bottom: -120px;
+            background: rgba(34, 197, 94, .18)
+        }
+
+        .inner {
+            flex: 1;
+            min-height: 0;
+            overflow-y: auto;
+            padding: 26px 26px 18px;
+            display: grid;
+            gap: 18px
+        }
+
+        .card {
+            border: 1px solid var(--line);
+            border-radius: var(--radius);
+            background: rgba(255, 255, 255, .90);
+            padding: 18px;
+            box-shadow: 0 14px 26px rgba(15, 23, 42, .08);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .card.soft {
+            background: rgba(255, 255, 255, .80)
+        }
+
+        .title {
+            font-size: clamp(26px, 3vw, 40px);
+            line-height: 1.1;
+            margin: 0;
+            letter-spacing: -.02em
+        }
+
+        .subtitle {
+            margin: 10px 0 0;
+            color: var(--muted);
+            font-size: clamp(15px, 1.55vw, 18px);
+            line-height: 1.65
+        }
+
+        .pillRow {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-top: 12px
+        }
+
+        .pill {
+            border: 1px solid var(--line);
+            border-radius: 999px;
+            padding: 10px 12px;
+            background: rgba(96, 165, 250, .10);
+            color: var(--text);
+            font-weight: 900;
+            font-size: 14px;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .pill.pink {
+            background: rgba(251, 113, 133, .10)
+        }
+
+        .pill.green {
+            background: rgba(34, 197, 94, .10)
+        }
+
+        .actions {
+            margin: 12px 18px 14px;
+            display: flex;
+            justify-content: space-between;
+            gap: 12px;
+            align-items: center;
+            padding: 12px 12px;
+            border-radius: 18px;
+            border: 1px solid var(--line);
+            background: rgba(255, 255, 255, .75);
+            box-shadow: 0 10px 22px rgba(15, 23, 42, .08);
+            flex-shrink: 0;
+        }
+
+        .btn {
+            appearance: none;
+            border: none;
+            cursor: pointer;
+            padding: 12px 14px;
+            border-radius: 18px;
+            font-weight: 900;
+            color: #fff;
+            background: linear-gradient(180deg, var(--accent), #3b82f6);
+            box-shadow: 0 14px 24px rgba(59, 130, 246, .22);
+            transition: transform .08s ease, opacity .15s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            user-select: none;
+        }
+
+        .btn:active {
+            transform: translateY(1px)
+        }
+
+        .btn.secondary {
+            background: rgba(15, 23, 42, .06);
+            color: var(--text);
+            border: 1px solid var(--line);
+            box-shadow: none
+        }
+
+        .btn.ghost {
+            background: rgba(251, 113, 133, .10);
+            color: var(--text);
+            border: 1px dashed rgba(251, 113, 133, .35);
+            box-shadow: none
+        }
+
+        .btn[disabled] {
+            opacity: .55;
+            cursor: not-allowed;
+            transform: none
+        }
+
+        .grid2 {
+            display: grid;
+            grid-template-columns: 1.05fr .95fr;
+            gap: 18px;
+            align-items: start
+        }
+
+        @media (max-width: 920px) {
+            .grid2 {
+                grid-template-columns: 1fr
+            }
+
+            .hint {
+                display: none;
+            }
+        }
+
+        .storyBox {
+            border: 1px solid var(--line);
+            border-radius: 22px;
+            background: rgba(255, 255, 255, .92);
+            padding: 14px
+        }
+
+        .storyBox h3 {
+            margin: 0;
+            font-size: 20px
+        }
+
+        .storyBox p {
+            margin: 8px 0 0;
+            color: var(--muted);
+            line-height: 1.65
+        }
+
+        .AB {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+            margin-top: 12px
+        }
+
+        @media (max-width:760px) {
+            .AB {
+                grid-template-columns: 1fr
+            }
+        }
+
+        .choice {
+            border-radius: 20px;
+            border: 2px solid rgba(15, 23, 42, .08);
+            background: rgba(255, 255, 255, .96);
+            padding: 14px;
+            cursor: pointer;
+            font-weight: 900;
+            text-align: left;
+            display: flex;
+            align-items: flex-start;
+            justify-content: space-between;
+            gap: 12px;
+            user-select: none;
+            transition: transform .08s ease, background .2s ease, border-color .2s ease;
+        }
+
+        .choice:hover {
+            background: rgba(96, 165, 250, .10);
+            border-color: rgba(96, 165, 250, .25)
+        }
+
+        .choice:active {
+            transform: translateY(1px)
+        }
+
+        .choice small {
+            color: var(--muted);
+            font-weight: 900;
+            display: block;
+            margin-top: 6px
+        }
+
+        .tag {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 6px 10px;
+            border-radius: 999px;
+            border: 1px solid var(--line);
+            font-weight: 900;
+            font-size: 12px;
+            color: var(--muted);
+            background: rgba(255, 255, 255, .92);
+            white-space: nowrap
+        }
+
+        .tag.good {
+            background: rgba(22, 163, 74, .10);
+            color: #14532d;
+            border-color: rgba(22, 163, 74, .22)
+        }
+
+        .tag.bad {
+            background: rgba(220, 38, 38, .10);
+            color: #7f1d1d;
+            border-color: rgba(220, 38, 38, .22)
+        }
+
+        .pickedA {
+            outline: 3px solid rgba(22, 163, 74, .22);
+            background: rgba(22, 163, 74, .08)
+        }
+
+        .pickedB {
+            outline: 3px solid rgba(220, 38, 38, .20);
+            background: rgba(220, 38, 38, .07)
+        }
+
+        .toast {
+            margin-top: 12px;
+            padding: 12px 14px;
+            border-radius: 18px;
+            border: 1px solid var(--line);
+            background: rgba(255, 255, 255, .92);
+            color: var(--muted);
+            display: none;
+            line-height: 1.55
+        }
+
+        .toast.show {
+            display: block
+        }
+
+        .toast.good {
+            border-color: rgba(22, 163, 74, .25);
+            background: rgba(22, 163, 74, .10);
+            color: #14532d
+        }
+
+        .toast.bad {
+            border-color: rgba(220, 38, 38, .25);
+            background: rgba(220, 38, 38, .10);
+            color: #7f1d1d
+        }
+
+        input {
+            width: 100%;
+            padding: 14px;
+            border-radius: 18px;
+            border: 2px solid rgba(15, 23, 42, .10);
+            background: rgba(255, 255, 255, .92);
+            font-size: 16px;
+            font-weight: 900;
+            outline: none
+        }
+
+        input:focus {
+            border-color: rgba(96, 165, 250, .55)
+        }
+
+        .miniNote {
+            font-size: 13px;
+            color: var(--muted);
+            line-height: 1.55;
+            margin: 10px 0 0
+        }
+
+        table {
+            width: 100%;
+            border-collapse: separate;
+            border-spacing: 0;
+            overflow: hidden;
+            border-radius: 22px;
+            border: 1px solid var(--line);
+            background: rgba(255, 255, 255, .92);
+            margin-top: 10px
+        }
+
+        th,
+        td {
+            padding: 12px 12px;
+            border-bottom: 1px solid rgba(15, 23, 42, .08);
+            text-align: left;
+            font-size: 14px
+        }
+
+        th {
+            background: rgba(96, 165, 250, .10);
+            font-weight: 900
+        }
+
+        tr:last-child td {
+            border-bottom: none
+        }
+
+        .lock {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            border: 1px solid var(--line);
+            background: rgba(255, 255, 255, .75);
+            border-radius: 999px;
+            padding: 8px 10px;
+            color: var(--muted);
+            font-weight: 900;
+            font-size: 13px
+        }
+    </style>
+</head>
+
+<body>
+    <div class="app">
+        <header>
+            <div class="brand">
+                <div class="badge"><span class="dot"></span> Story Assessment Etika Digital</div>
+                <div class="hint">Navigasi: <b>← / →</b> atau <b>Space</b> • Pilih <b>A/B</b> dulu baru bisa lanjut
+                </div>
+            </div>
+            <div class="progressWrap">
+                <div class="progress">
+                    <div class="bar" id="bar"></div>
+                </div>
+                <div class="counter" id="counter">1 / 7</div>
+            </div>
+        </header>
+
+        <main>
+            <!-- 1 -->
+            <section class="slide active" data-slide>
+                <div class="blob b1"></div>
+                <div class="blob b2"></div>
+                <div class="blob b3"></div>
+                <div class="inner">
+                    <div class="card">
+                        <h1 class="title">Misi Aman Online bersama Dika</h1>
+                        <p class="subtitle">
+                            Kamu akan membaca cerita pendek. Di tiap bagian, pilih tindakan yang <b>aman</b> dan
+                            <b>sopan</b>.
+                            Setelah selesai, kamu bisa <b>unduh hasil</b> untuk dikirim ke guru.
+                        </p>
+                        <div class="pillRow">
+                            <div class="pill">Privasi</div>
+                            <div class="pill pink">Sopan</div>
+                            <div class="pill green">Tidak membully</div>
+                        </div>
+                        <p class="miniNote">Klik <b>Lanjut</b> untuk isi nama.</p>
+                    </div>
+                </div>
+                <div class="actions">
+                    <button class="btn secondary" data-prev disabled>← Sebelumnya</button>
+                    <button class="btn" data-next>Lanjut →</button>
+                </div>
+            </section>
+
+            <!-- 2 -->
+            <section class="slide" data-slide>
+                <div class="blob b1"></div>
+                <div class="blob b2"></div>
+                <div class="blob b3"></div>
+                <div class="inner">
+                    <div class="grid2">
+                        <div class="card">
+                            <h2 class="title">Nama Kamu</h2>
+                            <p class="subtitle">Tulis nama kamu dulu ya 😊</p>
+                            <input id="studentName" placeholder="Contoh: Alya" />
+                            <div class="toast" id="nameToast"></div>
+                            <p class="miniNote">Kalau sudah, klik <b>Mulai Cerita</b>.</p>
+                        </div>
+                        <div class="card soft">
+                            <h3 style="margin:0;font-size:20px">Aturan Main</h3>
+                            <p class="subtitle" style="margin-top:6px">
+                                • Pilih <b>A</b> atau <b>B</b><br>
+                                • Setelah memilih, kamu dapat feedback<br>
+                                • Baru bisa lanjut ke layar berikutnya
+                            </p>
+                            <div class="lock">🔒 Layar terkunci sampai kamu memilih</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="actions">
+                    <button class="btn secondary" data-prev>← Sebelumnya</button>
+                    <button class="btn" id="startBtn">Mulai Cerita →</button>
+                </div>
+            </section>
+
+            <!-- 3 -->
+            <section class="slide" data-slide>
+                <div class="blob b1"></div>
+                <div class="blob b2"></div>
+                <div class="blob b3"></div>
+
+                <div class="inner">
+                    <div class="card">
+                        <h2 class="title">Cerita Dimulai…</h2>
+
+                        <div class="storyBox">
+                            <h3>Tahap 1 — Cerita Pendek</h3>
+                            <p>
+                                Ini cerita tentang <b>Dika</b>.<br>
+                                Sore ini, Dika main HP sebentar setelah belajar.<br>
+                                Tiba-tiba… <b>ting!</b> ada pesan masuk.
+                            </p>
+                        </div>
+
+                        <!-- ILUSTRASI (IMAGE PLACEHOLDER) -->
+                        <div class="illustration-wrap">
+                            <p></p>
+
+                            <!-- KARAKTER DIKA -->
+                            <img src="https://uob-1328237036.cos.ap-singapore.myqcloud.com//file-uploader/images/dc1a56b1-04d1-48e0-b7f0-c92c42cd4952.jpg"
+                                alt="Karakter Dika" class="illus illus-float" style="width: 50%;" />
+                        </div>
+
+                        <p class="miniNote">
+                            Yuk, bantu Dika memilih yang <b>aman</b> dan <b>sopan</b>.
+                        </p>
+
+                    </div>
+                </div>
+
+                <div class="actions">
+                    <button class="btn secondary" data-prev>← Sebelumnya</button>
+                    <button class="btn" data-next>Lanjut →</button>
+                </div>
+            </section>
+
+            <!-- 4 -->
+            <section class="slide" data-slide data-q="q1">
+                <div class="blob b1"></div>
+                <div class="blob b2"></div>
+                <div class="blob b3"></div>
+                <div class="inner">
+                    <div class="card">
+                        <h2 class="title">Tahap 2 — Pilih Tindakan</h2>
+                        <div class="storyBox">
+                            <h3>Pesan dari orang yang tidak dikenal</h3>
+                            <p>
+                                Pesan itu dari orang yang Dika <b>tidak kenal</b>.<br>
+                                Orang itu bilang: “Hai! Kamu sekolah di mana? Rumah kamu di mana?”
+                            </p>
+                        </div>
+                        <p class="subtitle" style="margin-top:12px"><b>Menurutmu Dika sebaiknya apa?</b></p>
+                        <div class="AB">
+                            <button class="choice" data-answer="A" data-q="q1">
+                                <div>
+                                    <div><b>A.</b> Dika membalas dan memberi alamat rumah</div>
+                                </div>
+                                <span class="tag bad">A</span>
+                            </button>
+                            <button class="choice" data-answer="B" data-q="q1">
+                                <div>
+                                    <div><b>B.</b> Dika tidak membalas dan cerita ke orang tua/guru</div>
+                                </div>
+                                <span class="tag good">B</span>
+                            </button>
+                        </div>
+                        <div class="toast" id="fb-q1"></div>
+                    </div>
+                </div>
+                <div class="actions">
+                    <button class="btn secondary" data-prev>← Sebelumnya</button>
+                    <button class="btn ghost" data-reset-q>Ulang pilihan</button>
+                    <button class="btn" data-next data-lock-next>Ke Cerita Berikutnya →</button>
+                </div>
+            </section>
+
+            <!-- TRANSISI CERITA -->
+            <section class="slide" data-slide>
+                <div class="blob b1"></div>
+                <div class="blob b2"></div>
+                <div class="blob b3"></div>
+
+                <div class="inner">
+                    <div class="card">
+                        <h2 class="title">Tahap 3 — Lanjut Cerita</h2>
+
+                        <div class="storyBox">
+                            <h3>Besoknya...</h3>
+                            <p>
+                                Dika masuk ke <b>grup chat kelas</b>.<br>
+                                Di sana, Dika ingin mengirim <b>sesuatu</b>…
+                            </p>
+                        </div>
+                        <!-- ILUSTRASI (PLACEHOLDER GAMBAR) -->
+                        <div class="illustration-wrap">
+                            <p></p>
+                            <!-- Grup chat kelas -->
+                            <img src="https://uob-1328237036.cos.ap-singapore.myqcloud.com//file-uploader/images/1e2f3f6b-B3d1-4e2c-8f7e-6f5e2f4e4c3a.jpg"
+                                alt="Grup Chat Kelas" class="illus illus-float" style="width: 60%;" />
+
+                        </div>
+
+                        <p class="miniNote">
+                            Yuk, kita lanjutkan ceritanya 😊
+                        </p>
+
+                    </div>
+                </div>
+
+                <div class="actions">
+                    <button class="btn secondary" data-prev>← Sebelumnya</button>
+                    <button class="btn" data-next>Lanjut →</button>
+                </div>
+            </section>
+
+
+            <!-- 5 -->
+            <section class="slide" data-slide data-q="q2">
+                <div class="blob b1"></div>
+                <div class="blob b2"></div>
+                <div class="blob b3"></div>
+                <div class="inner">
+                    <div class="card">
+                        <h2 class="title">Tahap 4 — Lanjut Cerita</h2>
+                        <div class="storyBox">
+                            <p>
+                                Dika memiliki gambar teman sebangkunya yang membuat wajah lucu.<br>
+                                Ia ingin membagikannya, tapi Dika perlu berpikir dulu…
+
+                            </p>
+                        </div>
+                        <p class="subtitle" style="margin-top:12px"><b>Dika sebaiknya bagaimana?</b></p>
+                        <div class="AB">
+                            <button class="choice" data-answer="A" data-q="q2">
+                                <div>
+                                    <div><b>A.</b> Minta izin dulu ke temannya</div>
+                                </div>
+                                <span class="tag good">A</span>
+                            </button>
+                            <button class="choice" data-answer="B" data-q="q2">
+                                <div>
+                                    <div><b>B.</b> Langsung kirim fotonya ke grup</div>
+                                </div>
+                                <span class="tag bad">B</span>
+                            </button>
+                        </div>
+                        <div class="toast" id="fb-q2"></div>
+                    </div>
+                </div>
+                <div class="actions">
+                    <button class="btn secondary" data-prev>← Sebelumnya</button>
+                    <button class="btn ghost" data-reset-q>Ulang pilihan</button>
+                    <button class="btn" data-next data-lock-next>Lanjut →</button>
+                </div>
+            </section>
+
+            <!-- 6 -->
+            <section class="slide" data-slide data-q="q3">
+                <div class="blob b1"></div>
+                <div class="blob b2"></div>
+                <div class="blob b3"></div>
+                <div class="inner">
+                    <div class="card">
+                        <h2 class="title">Tahap 5 — Satu Tantangan Lagi</h2>
+                        <div class="storyBox">
+                            <h3>Komentar di grup</h3>
+                            <p>
+                                Di grup chat, ada teman yang tiba-tiba mengirim pesan.<br>
+                                Pesan tidak sopan muncul di chat: “Kamu bodoh!”<br>
+                                Dika melihat chat itu…
+                            </p>
+                        </div>
+                        <p class="subtitle" style="margin-top:12px"><b>Dika sebaiknya memilih yang mana?</b></p>
+                        <div class="AB">
+                            <button class="choice" data-answer="A" data-q="q3">
+                                <div>
+                                    <div><b>A.</b> Menulis kata-kata sopan / memberi semangat</div>
+                                </div>
+                                <span class="tag good">A</span>
+                            </button>
+                            <button class="choice" data-answer="B" data-q="q3">
+                                <div>
+                                    <div><b>B.</b> Ikut mengejek di chat</div>
+                                </div>
+                                <span class="tag bad">B</span>
+                            </button>
+                        </div>
+                        <div class="toast" id="fb-q3"></div>
+
+
+                    </div>
+                </div>
+                <div class="actions">
+                    <button class="btn secondary" data-prev>← Sebelumnya</button>
+                    <button class="btn ghost" data-reset-q>Ulang pilihan</button>
+                    <button class="btn" data-next data-lock-next>Lihat Hasil</button>
+                </div>
+            </section>
+
+            <!-- 7: HASIL KAMU -->
+            <section class="slide" data-slide>
+                <div class="blob b1"></div>
+                <div class="blob b2"></div>
+                <div class="blob b3"></div>
+
+                <div class="inner">
+                    <div class="card">
+                        <h2 class="title">Hasil Kamu 🌟</h2>
+                        <p class="subtitle">
+                            Ini hasil pilihanmu saat membantu Dika.
+                        </p>
+
+                        <div class="card soft" style="margin-top:12px">
+                            <div id="resultBox" class="miniNote">
+                                Klik <b>Tampilkan Hasil</b> ya.
+                            </div>
+
+                            <div style="overflow:auto;margin-top:10px">
+                                <table>
+                                    <thead>
+                                        <tr>
+                                            <th>Tahap</th>
+                                            <th>Pilihanmu</th>
+                                            <th>Status</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="resultTable"></tbody>
+                                </table>
+                            </div>
+
+                            <div style="display:flex;gap:10px;flex-wrap:wrap;margin-top:14px">
+                                <button class="btn secondary" id="calcBtn">Tampilkan Hasil</button>
+                                <button class="btn ghost" id="downloadBtn">Unduh Hasil (CSV)</button>
+                                <button class="btn secondary" id="resetAll">Ulang dari Awal</button>
+                            </div>
+
+                            <div class="toast" id="finalToast"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="actions">
+                    <button class="btn secondary" data-prev>← Kembali</button>
+                    <button class="btn" disabled>Selesai 🎉</button>
+                </div>
+            </section>
+
+        </main>
+    </div>
+
+    <script>
+        const slides = Array.from(document.querySelectorAll("[data-slide]"));
+        const bar = document.getElementById("bar");
+        const counter = document.getElementById("counter");
+        let idx = 0;
+
+        function show(i) {
+            idx = Math.max(0, Math.min(slides.length - 1, i));
+            slides.forEach((s, n) => s.classList.toggle("active", n === idx));
+            bar.style.width = (((idx + 1) / slides.length) * 100) + "%";
+            counter.textContent = `${idx + 1} / ${slides.length}`;
+
+            slides[idx].querySelectorAll("[data-prev]").forEach(b => {
+                b.disabled = (idx === 0);
+            });
+
+            const q = slides[idx].getAttribute("data-q");
+            const lockNext = slides[idx].querySelector("[data-lock-next]");
+            if (lockNext) {
+                lockNext.disabled = !(q && state.answers[q]);
+            }
+        }
+        function next() { show(idx + 1); }
+        function prev() { show(idx - 1); }
+
+        document.addEventListener("click", (e) => {
+            const t = e.target.closest("[data-next],[data-prev]");
+            if (!t) return;
+            if (t.matches("[data-next]")) next();
+            if (t.matches("[data-prev]")) prev();
+        });
+        document.addEventListener("keydown", (e) => {
+            const k = e.key.toLowerCase();
+            if (k === "arrowright" || k === " ") { e.preventDefault(); next(); }
+            if (k === "arrowleft") { e.preventDefault(); prev(); }
+        });
+
+        const STORAGE_KEY = "LP13_STORY_ED_ASSESS";
+        const state = { name: "", answers: { q1: null, q2: null, q3: null }, correct: { q1: "B", q2: "A", q3: "A" } };
+
+        function save() { localStorage.setItem(STORAGE_KEY, JSON.stringify(state)); }
+        function load() {
+            try {
+                const raw = localStorage.getItem(STORAGE_KEY);
+                if (!raw) return;
+                const obj = JSON.parse(raw);
+                if (obj && obj.answers) { state.name = obj.name || ""; state.answers = obj.answers; }
+            } catch { }
+        }
+
+        function toast(id, type, text) {
+            const el = document.getElementById(id);
+            if (!el) return;
+            el.className = "toast show " + type;
+            el.textContent = text;
+        }
+        function clearToast(id) {
+            const el = document.getElementById(id);
+            if (!el) return;
+            el.className = "toast";
+            el.textContent = "";
+        }
+
+        // Name gate
+        const nameInput = document.getElementById("studentName");
+        document.getElementById("startBtn").addEventListener("click", () => {
+            const nm = (nameInput.value || "").trim();
+            if (!nm) { toast("nameToast", "bad", "Nama belum diisi. Tulis nama kamu dulu ya."); return; }
+            clearToast("nameToast");
+            state.name = nm;
+            save();
+            next();
+        });
+
+        function feedback(q, picked) {
+            if (q === "q1") {
+                if (picked === "B") return { ok: true, msg: "Pilihan Dika tepat dan aman. Alamat rumah & nama sekolah itu informasi pribadi. Kalau ada orang asing chat, lebih baik tidak membalas dan minta bantuan orang dewasa." };
+                return { ok: false, msg: "Pilihan ini kurang aman. Alamat rumah & nama sekolah itu rahasia. Jangan dibagikan ke orang yang tidak dikenal." };
+            }
+            if (q === "q2") {
+                if (picked === "A") return { ok: true, msg: "Bagus! Meminta izin itu sopan dan menghargai teman. Kalau teman setuju, baru boleh dibagikan." };
+                return { ok: false, msg: "Pilihan ini kurang tepat. Mengirim foto teman tanpa izin bisa membuat teman malu atau sedih. Lebih baik tanya dulu ya." };
+            }
+            if (q === "q3") {
+                if (picked === "A") return { ok: true, msg: "Hebat! Kata-kata sopan membuat teman merasa aman. Ini termasuk etika digital dan tidak membully." };
+                return { ok: false, msg: "Ini kurang aman untuk perasaan teman. Mengejek di chat bisa jadi cyberbullying. Lebih baik berhenti dan minta bantuan guru/orang tua." };
+            }
+            return { ok: false, msg: "" };
+        }
+
+        function setPickedUI(q, picked) {
+            const slide = document.querySelector(`[data-q="${q}"]`);
+            if (!slide) return;
+            slide.querySelectorAll(".choice").forEach(b => {
+                b.classList.remove("pickedA", "pickedB");
+                if (b.getAttribute("data-answer") === picked) {
+                    b.classList.add(picked === "A" ? "pickedA" : "pickedB");
+                }
+            });
+            const lockNext = slide.querySelector("[data-lock-next]");
+            if (lockNext) lockNext.disabled = !picked;
+        }
+
+        document.querySelectorAll(".choice[data-q]").forEach(btn => {
+            btn.addEventListener("click", () => {
+                const q = btn.getAttribute("data-q");
+                const picked = btn.getAttribute("data-answer");
+                state.answers[q] = picked;
+                setPickedUI(q, picked);
+
+                const fb = feedback(q, picked);
+                toast("fb-" + q, fb.ok ? "good" : "bad", fb.msg);
+
+                save();
+            });
+        });
+
+        document.querySelectorAll("[data-reset-q]").forEach(btn => {
+            btn.addEventListener("click", () => {
+                const slide = btn.closest("[data-q]");
+                if (!slide) return;
+                const q = slide.getAttribute("data-q");
+                state.answers[q] = null;
+                slide.querySelectorAll(".choice").forEach(b => b.classList.remove("pickedA", "pickedB"));
+                clearToast("fb-" + q);
+                const lockNext = slide.querySelector("[data-lock-next]");
+                if (lockNext) lockNext.disabled = true;
+                save();
+            });
+        });
+
+        function statusTag(ok) {
+            return ok ? '<span class="tag good"></span>' : '<span class="tag.bad"></span>';
+        }
+        function compute() {
+            const qs = ["q1", "q2", "q3"];
+            const unanswered = qs.filter(q => !state.answers[q]);
+            if (unanswered.length) { toast("finalToast", "bad", "Masih ada tahap yang belum dijawab. Jawab semua dulu ya."); return null; }
+            clearToast("finalToast");
+
+            let score = 0;
+            const rows = qs.map((q, i) => {
+                const picked = state.answers[q];
+                const ok = picked === state.correct[q];
+                if (ok) score++;
+                return { no: i + 1, picked, ok };
+            });
+
+            let cat = "Perlu Bimbingan";
+            if (score === 3 && state.answers.q1 === "B") cat = "Sudah Menerapkan";
+            else if (score <= 1) cat = "Butuh Pendampingan";
+            else if (state.answers.q1 !== "B") cat = "Perlu Bimbingan (Privasi)";
+
+            return { score, cat, rows };
+        }
+
+        const resultBox = document.getElementById("resultBox");
+        const resultTable = document.getElementById("resultTable");
+
+        document.getElementById("calcBtn").addEventListener("click", () => {
+            const r = compute();
+            if (!r) return;
+            resultBox.innerHTML = `<b>${escapeHTML(state.name || "Siswa")}</b> • Skor <b>${r.score}/3</b> • Kategori: <b>${escapeHTML(r.cat)}</b>`;
+            resultTable.innerHTML = r.rows.map(row => {
+                const tag = row.ok ? '<span class="tag good"></span>' : '<span class="tag bad"></span>';
+                return `<tr><td>${row.no}</td><td><b>${escapeHTML(row.picked)}</b></td><td>${tag}</td></tr>`;
+            }).join("");
+
+            toast("finalToast", r.score >= 2 ? "good" : "bad",
+                r.score === 3 ? "Hebat! Kamu sudah menerapkan etika digital." :
+                    (r.score >= 2 ? "Bagus! Tinggal sedikit lagi ya." : "Tidak apa-apa. Kita belajar lagi pelan-pelan.")
+            );
+        });
+
+        function csv(s) {
+            const t = String(s ?? "");
+            if (/[",]/.test(t)) return `"${t.replace(/"/g, '""')}"`;
+            return t;
+        }
+
+        function safeFile(s) {
+            return String(s || "siswa").trim().toLowerCase().replace(/\s+/g, "-").replace(/[^a-z0-9\-]/g, "");
+        }
+
+        function escapeHTML(s) {
+            return String(s ?? "")
+                .replace(/&/g, "&amp;").replace(/</g, "&lt;")
+                .replace(/>/g, "&gt;").replace(/"/g, "&quot;")
+                .replace(/'/g, "&#039;");
+        }
+
+        document.getElementById("downloadBtn").addEventListener("click", () => {
+            const r = compute();
+            if (!r) return;
+
+            const header = ["Nama", "Q1_OrangAsing", "Q2_FotoTeman", "Q3_KomentarGrup", "Skor", "Kategori"];
+            const line = [
+                csv(state.name),
+                state.answers.q1, state.answers.q2, state.answers.q3,
+                `${r.score}/3`,
+                csv(r.cat)
+            ];
+            const csvText = [header.join(","), line.join(",")].join("\n");
+
+            const blob = new Blob([csvText], { type: "text/csv;charset=utf-8;" });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement("a");
+            a.href = url;
+            a.download = `LP13_EtikaDigital_${safeFile(state.name)}.csv`;
+            document.body.appendChild(a);
+            a.click();
+            a.remove();
+            URL.revokeObjectURL(url);
+        });
+
+        document.getElementById("resetAll").addEventListener("click", () => {
+            state.answers = { q1: null, q2: null, q3: null };
+            localStorage.removeItem(STORAGE_KEY);
+            document.querySelectorAll(".choice").forEach(b => b.classList.remove("pickedA", "pickedB"));
+            ["q1", "q2", "q3"].forEach(q => clearToast("fb-" + q));
+            resultBox.textContent = "Pilih jawaban di semua tahap untuk melihat hasil.";
+            resultTable.innerHTML = "";
+            clearToast("finalToast");
+            show(1);
+        });
+
+        // Init
+        load();
+        show(0);
+        if (state.name) nameInput.value = state.name;
+        setPickedUI("q1", state.answers.q1);
+        setPickedUI("q2", state.answers.q2);
+        setPickedUI("q3", state.answers.q3);
+    </script>
+</body>
+
+</html>
