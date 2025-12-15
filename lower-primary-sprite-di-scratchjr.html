@@ -528,10 +528,77 @@
                 height: min(760px, 80vh);
             }
         }
+
+        /* ACCESS GATE */
+        .gate {
+            position: fixed;
+            inset: 0;
+            background:
+                radial-gradient(900px 520px at 18% 12%, rgba(96, 165, 250, .55), transparent 60%),
+                radial-gradient(900px 520px at 80% 15%, rgba(251, 113, 133, .45), transparent 60%),
+                linear-gradient(135deg, var(--bg1), var(--bg2));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 9999;
+        }
+
+        .gateCard {
+            background: #fff;
+            border-radius: 24px;
+            padding: 28px;
+            width: min(360px, 90%);
+            text-align: center;
+            box-shadow: 0 20px 40px rgba(15, 23, 42, .18);
+        }
+
+        .gateCard h2 {
+            margin: 0 0 8px;
+        }
+
+        .gateCard p {
+            margin: 0 0 16px;
+            color: var(--muted);
+        }
+
+        .gateCard input {
+            width: 100%;
+            padding: 14px;
+            border-radius: 16px;
+            border: 2px solid var(--line);
+            font-size: 18px;
+            font-weight: 900;
+            text-align: center;
+            letter-spacing: 2px;
+            outline: none;
+        }
+
+        .gateCard input:focus {
+            border-color: var(--accent);
+        }
+
+        .gateError {
+            display: none;
+            margin-top: 12px;
+            color: #b91c1c;
+            font-weight: 700;
+        }
     </style>
 </head>
 
 <body>
+    <!-- ACCESS GATE -->
+    <div id="accessGate" class="gate">
+        <div class="gateCard">
+            <h2>Masuk Kelas 🔐</h2>
+            <p>Masukkan kode dari guru untuk memulai pembelajaran.</p>
+
+            <input id="accessInput" type="text" placeholder="KODE AKSES" maxlength="12" autocomplete="off" />
+
+            <button id="accessBtn" class="btn">Masuk</button>
+            <p id="accessError" class="gateError">Kode salah. Coba lagi ya.</p>
+        </div>
+    </div>
 
     <div class="topbar">
         <div class="brand">
@@ -558,7 +625,7 @@
         <section class="slide active" data-title="Welcome">
             <div class="grid">
                 <div class="card">
-                    <h1 class="h1">Yuk bikin cerita di ScratchJr 🌈</h1>
+                    <h1 class="h1">Yuk bikin proyek di ScratchJr</h1>
                     <p class="p">Hari ini kita fokus 3 hal: <b>tambah sprite</b>, <b>pindah posisi</b>, <b>ubah
                             ukuran</b>.</p>
                     <div class="tagrow">
@@ -567,7 +634,7 @@
                         <span class="tag">Besar–Kecil</span>
                     </div>
                     <div class="card" style="margin-top:14px;background:rgba(31,42,68,.02)">
-                        <div class="h2" style="margin:0 0 6px">Aturan cepat ✨</div>
+                        <div class="h2" style="margin:0 0 6px">Aturan cepat</div>
                         <ul>
                             <li>Coba dulu (tidak apa-apa salah).</li>
                             <li>Kalau bingung, angkat tangan.</li>
@@ -576,40 +643,19 @@
                     </div>
                 </div>
 
-                <!-- SVG illustration: stage -->
                 <div class="imgph">
                     <div class="overlaylabel">Ilustrasi</div>
                     <div class="svgwrap">
-                        <svg viewBox="0 0 900 600" xmlns="http://www.w3.org/2000/svg">
-                            <defs>
-                                <linearGradient id="g1" x1="0" x2="1">
-                                    <stop offset="0" stop-color="#7c5cff" stop-opacity=".22" />
-                                    <stop offset="1" stop-color="#32c7ff" stop-opacity=".22" />
-                                </linearGradient>
-                            </defs>
-                            <rect x="40" y="60" rx="26" ry="26" width="820" height="480" fill="white"
-                                stroke="rgba(31,42,68,.16)" stroke-width="3" />
-                            <rect x="70" y="100" rx="18" ry="18" width="520" height="380" fill="url(#g1)"
-                                stroke="rgba(31,42,68,.10)" stroke-width="2" />
-                            <rect x="610" y="100" rx="18" ry="18" width="220" height="120" fill="rgba(46,229,157,.18)"
-                                stroke="rgba(31,42,68,.12)" stroke-width="2" />
-                            <rect x="610" y="240" rx="18" ry="18" width="220" height="240" fill="rgba(31,42,68,.03)"
-                                stroke="rgba(31,42,68,.12)" stroke-width="2" />
-                            <circle cx="720" cy="160" r="46" fill="rgba(255,204,102,.55)" />
-                            <path
-                                d="M 210 410 C 240 340, 320 330, 350 410 C 360 450, 300 480, 280 470 C 255 460, 195 450, 210 410 Z"
-                                fill="rgba(255,92,122,.28)" stroke="rgba(31,42,68,.16)" stroke-width="3" />
-                            <text x="88" y="92" font-size="22" font-weight="900" fill="rgba(31,42,68,.85)">Stage
-                                (panggung)</text>
-                            <text x="620" y="92" font-size="22" font-weight="900" fill="rgba(31,42,68,.85)">Sprite
-                                list</text>
-                            <text x="625" y="268" font-size="20" font-weight="900" fill="rgba(31,42,68,.75)">Blok
-                                (nanti)</text>
-                            <text x="88" y="520" font-size="18" font-weight="800" fill="rgba(31,42,68,.65)">Hari ini:
-                                tambah sprite + pindah posisi + ubah ukuran</text>
-                        </svg>
+                        <img src="https://uob-1328237036.cos.ap-singapore.myqcloud.com//file-uploader/images/13593640-c5cc-4a03-9e12-c763420798b6.png"
+                            style="
+                            max-width: 100%;
+                            max-height: 100%;
+                            width: auto;
+                            height: auto;
+                        ">
                     </div>
                 </div>
+
             </div>
         </section>
 
@@ -632,10 +678,19 @@
                     </div>
                 </div>
 
-                <div class="imgph" id="imgScratchUI">
-                    <div class="overlaylabel">Screenshot (dari PDF)</div>
-                    <img alt="ScratchJr UI screenshot" />
+                <div class="imgph">
+                    <div class="overlaylabel">Ilustrasi</div>
+                    <div class="svgwrap">
+                        <img src="https://uob-1328237036.cos.ap-singapore.myqcloud.com//file-uploader/images/13593640-c5cc-4a03-9e12-c763420798b6.png"
+                            style="
+                            max-width: 100%;
+                            max-height: 100%;
+                            width: auto;
+                            height: auto;
+                        ">
+                    </div>
                 </div>
+
             </div>
         </section>
 
@@ -661,67 +716,13 @@
                 <div class="imgph">
                     <div class="overlaylabel">Ilustrasi</div>
                     <div class="svgwrap">
-                        <svg viewBox="0 0 900 600" xmlns="http://www.w3.org/2000/svg">
-                            <rect x="60" y="70" rx="26" ry="26" width="780" height="460" fill="white"
-                                stroke="rgba(31,42,68,.16)" stroke-width="3" />
-                            <rect x="95" y="120" rx="18" ry="18" width="520" height="360" fill="rgba(50,199,255,.12)"
-                                stroke="rgba(31,42,68,.10)" stroke-width="2" />
-                            <rect x="635" y="120" rx="18" ry="18" width="175" height="360" fill="rgba(31,42,68,.03)"
-                                stroke="rgba(31,42,68,.12)" stroke-width="2" />
-                            <circle cx="722" cy="420" r="44" fill="rgba(124,92,255,.16)" stroke="rgba(31,42,68,.12)"
-                                stroke-width="3" />
-                            <path d="M722 396 v48 M698 420 h48" stroke="rgba(31,42,68,.75)" stroke-width="8"
-                                stroke-linecap="round" />
-                            <text x="110" y="110" font-size="22" font-weight="900"
-                                fill="rgba(31,42,68,.85)">Panggung</text>
-                            <text x="640" y="110" font-size="22" font-weight="900"
-                                fill="rgba(31,42,68,.85)">Sprite</text>
-                            <text x="635" y="508" font-size="18" font-weight="900" fill="rgba(31,42,68,.70)">Klik tombol
-                                ➕ untuk tambah sprite</text>
-                        </svg>
-                    </div>
-                </div>
-            </div>
-        </section>
-
-        <!-- 4 Drag & Drop -->
-        <section class="slide" data-title="Drag & Drop">
-            <div class="board">
-                <div class="card">
-                    <h2 class="h2">Susun langkahnya 🧩</h2>
-                    <p class="p">Seret chip ke kotak yang cocok.</p>
-                    <div class="chips" id="chips">
-                        <div class="chip" draggable="true" data-answer="a">Tekan tombol tambah sprite</div>
-                        <div class="chip" draggable="true" data-answer="b">Pilih sprite yang kamu suka</div>
-                        <div class="chip" draggable="true" data-answer="c">Sprite muncul di panggung</div>
-                        <div class="chip" draggable="true" data-answer="d">Pindahkan posisi sprite</div>
-                    </div>
-                    <div class="mini">Kalau sudah, klik “Cek Jawaban”.</div>
-                    <div style="display:flex; gap:10px; margin-top:10px;">
-                        <button class="navbtn primary" id="checkDnD">Cek Jawaban</button>
-                        <button class="navbtn" id="resetDnD">Reset</button>
-                    </div>
-                </div>
-
-                <div class="card">
-                    <div class="panelTitle">Kotak Pasangan</div>
-                    <div class="dropzones">
-                        <div class="zone" data-expect="a"><strong>Langkah awal</strong>
-                            <div class="hint">Mulai dari tombol ➕</div>
-                            <div class="slot"></div>
-                        </div>
-                        <div class="zone" data-expect="b"><strong>Langkah memilih</strong>
-                            <div class="hint">Pilih karakter/benda</div>
-                            <div class="slot"></div>
-                        </div>
-                        <div class="zone" data-expect="c"><strong>Hasilnya</strong>
-                            <div class="hint">Sprite tampil</div>
-                            <div class="slot"></div>
-                        </div>
-                        <div class="zone" data-expect="d"><strong>Sesudah itu</strong>
-                            <div class="hint">Geser posisinya</div>
-                            <div class="slot"></div>
-                        </div>
+                        <img src="https://uob-1328237036.cos.ap-singapore.myqcloud.com//file-uploader/images/4f026033-6995-4575-93e7-b5c42f0285b7.png"
+                            style="
+                            max-width: 100%;
+                            max-height: 100%;
+                            width: auto;
+                            height: auto;
+                        ">
                     </div>
                 </div>
             </div>
@@ -753,22 +754,13 @@
                 <div class="imgph">
                     <div class="overlaylabel">Ilustrasi</div>
                     <div class="svgwrap">
-                        <svg viewBox="0 0 900 600" xmlns="http://www.w3.org/2000/svg">
-                            <rect x="70" y="90" rx="26" ry="26" width="760" height="420" fill="white"
-                                stroke="rgba(31,42,68,.16)" stroke-width="3" />
-                            <circle cx="160" cy="440" r="46" fill="rgba(255,92,122,.22)" stroke="rgba(31,42,68,.14)"
-                                stroke-width="3" />
-                            <circle cx="740" cy="150" r="46" fill="rgba(46,229,157,.22)" stroke="rgba(31,42,68,.14)"
-                                stroke-width="3" />
-                            <path d="M240 420 C 360 360, 520 260, 660 190" fill="none" stroke="rgba(124,92,255,.55)"
-                                stroke-width="10" stroke-linecap="round" />
-                            <path d="M650 176 l30 12 -22 25" fill="none" stroke="rgba(124,92,255,.55)" stroke-width="10"
-                                stroke-linecap="round" />
-                            <text x="95" y="78" font-size="22" font-weight="900" fill="rgba(31,42,68,.85)">Pindahkan
-                                sprite</text>
-                            <text x="95" y="540" font-size="18" font-weight="900" fill="rgba(31,42,68,.70)">Coba kiri
-                                bawah → kanan atas</text>
-                        </svg>
+                        <img src="https://uob-1328237036.cos.ap-singapore.myqcloud.com//file-uploader/images/d06527ce-9073-462d-a6d3-ceabbe2b1356.png"
+                            style="
+                            max-width: 100%;
+                            max-height: 100%;
+                            width: auto;
+                            height: auto;
+                        ">
                     </div>
                 </div>
             </div>
@@ -792,99 +784,19 @@
                 <div class="imgph">
                     <div class="overlaylabel">Ilustrasi</div>
                     <div class="svgwrap">
-                        <svg viewBox="0 0 900 600" xmlns="http://www.w3.org/2000/svg">
-                            <rect x="70" y="100" rx="26" ry="26" width="760" height="400" fill="white"
-                                stroke="rgba(31,42,68,.16)" stroke-width="3" />
-                            <circle cx="280" cy="320" r="90" fill="rgba(50,199,255,.18)" stroke="rgba(31,42,68,.14)"
-                                stroke-width="3" />
-                            <circle cx="620" cy="360" r="45" fill="rgba(124,92,255,.18)" stroke="rgba(31,42,68,.14)"
-                                stroke-width="3" />
-                            <path d="M410 230 L500 190" stroke="rgba(31,42,68,.45)" stroke-width="8"
-                                stroke-linecap="round" />
-                            <path d="M500 190 l-12 36 36-12" fill="none" stroke="rgba(31,42,68,.45)" stroke-width="8"
-                                stroke-linecap="round" />
-                            <text x="95" y="90" font-size="22" font-weight="900" fill="rgba(31,42,68,.85)">Besar vs
-                                Kecil</text>
-                            <text x="95" y="540" font-size="18" font-weight="900" fill="rgba(31,42,68,.70)">Tokoh utama
-                                biasanya lebih besar</text>
-                        </svg>
+                        <img src="https://uob-1328237036.cos.ap-singapore.myqcloud.com//file-uploader/images/a411891a-66a4-4682-8ed4-112f0c51824e.png"
+                            style="
+                            max-width: 100%;
+                            max-height: 100%;
+                            width: auto;
+                            height: auto;
+                        ">
                     </div>
                 </div>
             </div>
         </section>
 
-        <!-- 7 Quiz -->
-        <section class="slide" data-title="Quiz">
-            <div class="quiz">
-                <div class="card qBox">
-                    <h2 class="h2">Quiz Cepat 🧠</h2>
-                    <p class="p">Klik jawaban yang benar.</p>
-                    <div class="card" style="background:rgba(31,42,68,.02)">
-                        <p class="q" id="qText">1) Sprite itu…</p>
-                        <div class="opts" id="qOpts"></div>
-                    </div>
-                    <div class="score">
-                        <span id="scoreText">Skor: 0</span>
-                        <div style="display:flex; gap:10px;">
-                            <button class="navbtn" id="prevQ">Sebelumnya</button>
-                            <button class="navbtn primary" id="nextQ">Lanjut</button>
-                        </div>
-                    </div>
-                </div>
 
-                <div class="imgph">
-                    <div class="overlaylabel">Ilustrasi</div>
-                    <div class="svgwrap">
-                        <svg viewBox="0 0 900 600" xmlns="http://www.w3.org/2000/svg">
-                            <rect x="90" y="90" rx="26" ry="26" width="720" height="420" fill="white"
-                                stroke="rgba(31,42,68,.16)" stroke-width="3" />
-                            <circle cx="450" cy="300" r="120" fill="rgba(255,204,102,.45)" />
-                            <text x="450" y="290" text-anchor="middle" font-size="54" font-weight="1000"
-                                fill="rgba(31,42,68,.88)">QUIZ</text>
-                            <text x="450" y="345" text-anchor="middle" font-size="22" font-weight="900"
-                                fill="rgba(31,42,68,.70)">Ayo jawab ya 😊</text>
-                            <path d="M160 520 C 240 470, 300 470, 380 520" stroke="rgba(124,92,255,.45)"
-                                stroke-width="10" fill="none" stroke-linecap="round" />
-                            <path d="M520 520 C 600 470, 660 470, 740 520" stroke="rgba(50,199,255,.45)"
-                                stroke-width="10" fill="none" stroke-linecap="round" />
-                        </svg>
-                    </div>
-                </div>
-            </div>
-        </section>
-
-        <!-- 8 Checklist -->
-        <section class="slide" data-title="Checklist">
-            <div class="grid">
-                <div class="card">
-                    <h2 class="h2">Checklist Misi ✅</h2>
-                    <p class="p">Centang kalau sudah berhasil.</p>
-
-                    <div class="checklist" id="checklist">
-                        <label class="check"><input type="checkbox" /> <span>Aku menambahkan <b>1 sprite
-                                    baru</b>.</span></label>
-                        <label class="check"><input type="checkbox" /> <span>Aku memindahkan sprite ke <b>tempat
-                                    berbeda</b>.</span></label>
-                        <label class="check"><input type="checkbox" /> <span>Aku mengubah ukuran sprite jadi
-                                <b>besar/kecil</b>.</span></label>
-                        <label class="check"><input type="checkbox" /> <span>Aku bisa menjelaskan sprite itu
-                                <b>tokoh/benda</b>.</span></label>
-                    </div>
-
-                    <div style="display:flex; gap:10px; margin-top:12px;">
-                        <button class="navbtn primary" id="finishCheck">Aku Sudah!</button>
-                        <button class="navbtn" id="resetCheck">Reset</button>
-                    </div>
-                    <div class="mini" id="checkMsg">Target: selesai minimal 3 checklist ✨</div>
-                </div>
-
-                <!-- PDF screenshot: Paint Editor tools -->
-                <div class="imgph" id="imgPaintEditor">
-                    <div class="overlaylabel">Screenshot (dari PDF)</div>
-                    <img alt="Paint Editor screenshot" />
-                </div>
-            </div>
-        </section>
 
         <!-- 9 Penutup -->
         <section class="slide" data-title="Penutup">
@@ -904,22 +816,13 @@
                 <div class="imgph">
                     <div class="overlaylabel">Ilustrasi</div>
                     <div class="svgwrap">
-                        <svg viewBox="0 0 900 600" xmlns="http://www.w3.org/2000/svg">
-                            <rect x="90" y="90" rx="26" ry="26" width="720" height="420" fill="white"
-                                stroke="rgba(31,42,68,.16)" stroke-width="3" />
-                            <text x="450" y="250" text-anchor="middle" font-size="46" font-weight="1000"
-                                fill="rgba(31,42,68,.88)">GOOD JOB!</text>
-                            <text x="450" y="305" text-anchor="middle" font-size="22" font-weight="900"
-                                fill="rgba(31,42,68,.70)">Sampai ketemu lagi 😊</text>
-                            <circle cx="190" cy="170" r="18" fill="rgba(124,92,255,.40)" />
-                            <circle cx="250" cy="140" r="14" fill="rgba(50,199,255,.45)" />
-                            <circle cx="710" cy="160" r="16" fill="rgba(46,229,157,.45)" />
-                            <circle cx="650" cy="140" r="12" fill="rgba(255,92,122,.35)" />
-                            <path d="M160 420 C 240 360, 320 360, 400 420" stroke="rgba(124,92,255,.35)"
-                                stroke-width="12" fill="none" stroke-linecap="round" />
-                            <path d="M500 420 C 580 360, 660 360, 740 420" stroke="rgba(50,199,255,.35)"
-                                stroke-width="12" fill="none" stroke-linecap="round" />
-                        </svg>
+                        <img src="https://uob-1328237036.cos.ap-singapore.myqcloud.com//file-uploader/images/13593640-c5cc-4a03-9e12-c763420798b6.png"
+                            style="
+                            max-width: 100%;
+                            max-height: 100%;
+                            width: auto;
+                            height: auto;
+                        ">
                     </div>
                 </div>
             </div>
@@ -938,6 +841,33 @@
     <div class="toast" id="toast"></div>
 
     <script>
+        const ACCESS_CODE = "RGMDSLP25";
+
+        const gate = document.getElementById("accessGate");
+        const input = document.getElementById("accessInput");
+        const btn = document.getElementById("accessBtn");
+        const error = document.getElementById("accessError");
+
+        // otomatis uppercase
+        input.addEventListener("input", () => {
+            input.value = input.value.toUpperCase();
+        });
+
+        function checkAccess() {
+            if (input.value.trim() === ACCESS_CODE) {
+                gate.style.display = "none";
+            } else {
+                error.style.display = "block";
+                input.value = "";
+                input.focus();
+            }
+        }
+
+        btn.addEventListener("click", checkAccess);
+
+        input.addEventListener("keydown", (e) => {
+            if (e.key === "Enter") checkAccess();
+        });
         const $ = (q, el = document) => el.querySelector(q);
         const $$ = (q, el = document) => Array.from(el.querySelectorAll(q));
 
@@ -1091,7 +1021,7 @@
         // --- Embedded images (from your PDF) ---
         // 1) ScratchJr UI screenshot (page 3 in the PDF file; embedded as base64)
         // 2) Paint Editor tools screenshot (page 4 in the PDF file; embedded as base64)
-        const PDF_IMG_SCRATCH_UI = "data:image/png;base64,{{PDF_IMG_SCRATCH_UI}}";
+        const PDF_IMG_SCRATCH_UI = "data:image/png;base64,{{https://uob-1328237036.cos.ap-singapore.myqcloud.com//file-uploader/images/13593640-c5cc-4a03-9e12-c763420798b6.png}}";
         const PDF_IMG_PAINT_EDITOR = "data:image/png;base64,{{PDF_IMG_PAINT_EDITOR}}";
 
         $("#imgScratchUI img").src = PDF_IMG_SCRATCH_UI;
