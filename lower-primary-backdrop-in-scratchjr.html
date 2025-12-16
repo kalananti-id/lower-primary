@@ -1,0 +1,1210 @@
+<!doctype html>
+<html lang="id">
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Sesi 16 — Backdrop & Cerita (ScratchJr)</title>
+
+    <style>
+        :root {
+            --bg1: #fff7fb;
+            --bg2: #f3fbff;
+            --bg3: #f7fff6;
+            --card: #ffffff;
+            --text: #1f2a44;
+            --muted: #56637c;
+            --accent: #7c5cff;
+            --accent2: #32c7ff;
+            --accent3: #2ee59d;
+            --border: rgba(31, 42, 68, .12);
+            --shadow: 0 18px 60px rgba(31, 42, 68, .12);
+            --shadow2: 0 10px 30px rgba(31, 42, 68, .10);
+            --r: 22px;
+            --r2: 16px;
+            --font: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Arial, "Noto Sans", sans-serif;
+        }
+
+        * {
+            box-sizing: border-box
+        }
+
+        body {
+            margin: 0;
+            font-family: var(--font);
+            color: var(--text);
+            background:
+                radial-gradient(900px 600px at 12% 12%, rgba(124, 92, 255, .14), transparent 60%),
+                radial-gradient(900px 600px at 88% 18%, rgba(50, 199, 255, .16), transparent 60%),
+                radial-gradient(900px 600px at 35% 92%, rgba(46, 229, 157, .12), transparent 60%),
+                linear-gradient(135deg, var(--bg1), var(--bg2), var(--bg3));
+            overflow: hidden;
+        }
+
+        /* Top bar */
+        .topbar {
+            position: fixed;
+            inset: 14px 14px auto 14px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 12px;
+            z-index: 50;
+        }
+
+        .brand {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 10px 14px;
+            border-radius: 999px;
+            background: rgba(255, 255, 255, .86);
+            border: 1px solid var(--border);
+            box-shadow: var(--shadow2);
+            backdrop-filter: blur(10px);
+            user-select: none;
+        }
+
+        .dot {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--accent), var(--accent2));
+            box-shadow: 0 0 0 7px rgba(124, 92, 255, .14);
+        }
+
+        .brand .t1 {
+            font-weight: 1000;
+            font-size: 14px;
+        }
+
+        .brand .t2 {
+            font-weight: 800;
+            font-size: 12px;
+            color: var(--muted);
+            margin-left: 6px;
+        }
+
+        .pill {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 10px 12px;
+            border-radius: 999px;
+            background: rgba(255, 255, 255, .86);
+            border: 1px solid var(--border);
+            box-shadow: var(--shadow2);
+            user-select: none;
+        }
+
+        .pill kbd {
+            font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+            font-size: 12px;
+            padding: 4px 7px;
+            border-radius: 10px;
+            background: rgba(31, 42, 68, .06);
+            border: 1px solid rgba(31, 42, 68, .10);
+        }
+
+        .progress {
+            position: fixed;
+            left: 14px;
+            right: 14px;
+            top: 66px;
+            height: 10px;
+            border-radius: 999px;
+            background: rgba(31, 42, 68, .06);
+            border: 1px solid rgba(31, 42, 68, .10);
+            overflow: hidden;
+            z-index: 40;
+        }
+
+        .progress>div {
+            height: 100%;
+            width: 0%;
+            background: linear-gradient(90deg, var(--accent), var(--accent2), var(--accent3));
+            border-radius: 999px;
+            transition: width .35s ease;
+        }
+
+        /* Deck: centered */
+        .deck {
+            position: fixed;
+            inset: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 96px 18px 82px;
+            /* top UI + bottom nav */
+        }
+
+        .slide {
+            width: min(1040px, 96vw);
+            height: min(680px, 78vh);
+            border-radius: var(--r);
+            background: rgba(255, 255, 255, .78);
+            border: 1px solid var(--border);
+            backdrop-filter: blur(10px);
+            box-shadow: var(--shadow);
+            position: absolute;
+            opacity: 0;
+            transform: translateY(10px) scale(.985);
+            transition: opacity .28s ease, transform .28s ease;
+            overflow: hidden;
+            display: none;
+        }
+
+        .slide.active {
+            display: block;
+            opacity: 1;
+            transform: translateY(0) scale(1);
+            position: relative;
+        }
+
+        .slide-content {
+            height: 100%;
+            overflow-y: auto;
+            padding: 28px;
+            padding-right: 14px;
+        }
+
+        .slide-content::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        .slide-content::-webkit-scrollbar-thumb {
+            background: rgba(124, 92, 255, .35);
+            border-radius: 999px;
+        }
+
+        .slide-content::-webkit-scrollbar-track {
+            background: rgba(31, 42, 68, .06);
+        }
+
+        .grid {
+            display: grid;
+            grid-template-columns: 1.05fr .95fr;
+            gap: 18px;
+            align-items: stretch;
+        }
+
+        .card {
+            background: var(--card);
+            border: 1px solid var(--border);
+            border-radius: var(--r2);
+            padding: 18px;
+            box-shadow: var(--shadow2);
+        }
+
+        h1 {
+            font-size: 44px;
+            line-height: 1.05;
+            margin: 0 0 10px;
+        }
+
+        h2 {
+            font-size: 28px;
+            margin: 0 0 8px;
+        }
+
+        p {
+            font-size: 18px;
+            color: var(--muted);
+            margin: 0 0 12px;
+            line-height: 1.55;
+        }
+
+        ul {
+            margin: 10px 0 0 20px;
+            padding: 0;
+        }
+
+        li {
+            margin: 6px 0;
+            color: var(--muted);
+            font-size: 18px;
+            line-height: 1.45;
+        }
+
+        .highlight {
+            background: linear-gradient(135deg, rgba(124, 92, 255, .16), rgba(50, 199, 255, .16));
+            border: 1px solid rgba(124, 92, 255, .18);
+            padding: 12px 14px;
+            border-radius: 16px;
+            margin: 12px 0;
+            font-size: 18px;
+            font-weight: 1000;
+            color: rgba(31, 42, 68, .92);
+        }
+
+        .tip {
+            background: rgba(46, 229, 157, .12);
+            border: 1px solid rgba(46, 229, 157, .28);
+            padding: 12px 14px;
+            border-radius: 16px;
+            margin-top: 12px;
+            font-weight: 900;
+            color: rgba(31, 42, 68, .78);
+        }
+
+        .example {
+            background: rgba(31, 42, 68, .03);
+            border: 1px solid rgba(31, 42, 68, .12);
+            padding: 12px 14px;
+            border-radius: 16px;
+            margin-top: 12px;
+            font-weight: 900;
+            color: rgba(31, 42, 68, .78);
+        }
+
+        .row {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+            align-items: center;
+        }
+
+        button {
+            font-size: 16px;
+            padding: 12px 16px;
+            border: none;
+            border-radius: 16px;
+            cursor: pointer;
+            font-weight: 1000;
+            box-shadow: var(--shadow2);
+            background: rgba(255, 255, 255, .92);
+            border: 1px solid var(--border);
+            color: rgba(31, 42, 68, .92);
+        }
+
+        button.primary {
+            background: linear-gradient(135deg, var(--accent), var(--accent2));
+            border: none;
+            color: #fff;
+            box-shadow: 0 12px 26px rgba(124, 92, 255, .18);
+        }
+
+        button:disabled {
+            opacity: .45;
+            cursor: not-allowed;
+        }
+
+        /* Stage preview for interactivity */
+        .stage {
+            border-radius: var(--r2);
+            border: 2px dashed rgba(31, 42, 68, .18);
+            background: #fff;
+            box-shadow: var(--shadow2);
+            position: relative;
+            overflow: hidden;
+            min-height: 420px;
+        }
+
+        .stageTop {
+            position: absolute;
+            left: 12px;
+            top: 12px;
+            z-index: 4;
+            padding: 8px 10px;
+            border-radius: 999px;
+            background: rgba(255, 255, 255, .90);
+            border: 1px solid var(--border);
+            font-weight: 1000;
+        }
+
+        .backdrop {
+            position: absolute;
+            inset: 0;
+            transition: opacity .25s ease;
+        }
+
+        .scene1 {
+            background:
+                radial-gradient(700px 240px at 40% 25%, rgba(50, 199, 255, .18), transparent 60%),
+                linear-gradient(180deg, #dff4ff 0%, #ffffff 55%, #e8ffe9 100%);
+        }
+
+        .scene2 {
+            background:
+                radial-gradient(700px 240px at 50% 30%, rgba(124, 92, 255, .16), transparent 60%),
+                linear-gradient(180deg, #fff1f8 0%, #ffffff 55%, #fff7d6 100%);
+        }
+
+        .sprite {
+            position: absolute;
+            left: 90px;
+            bottom: 88px;
+            width: 86px;
+            height: 86px;
+            border-radius: 22px;
+            background: linear-gradient(135deg, rgba(124, 92, 255, .18), rgba(50, 199, 255, .18));
+            border: 2px solid rgba(31, 42, 68, .12);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 40px;
+            box-shadow: 0 14px 26px rgba(31, 42, 68, .10);
+            z-index: 3;
+        }
+
+        .ground {
+            position: absolute;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            height: 86px;
+            background: linear-gradient(180deg, rgba(31, 42, 68, .02), rgba(31, 42, 68, .06));
+            border-top: 1px solid rgba(31, 42, 68, .10);
+            z-index: 2;
+        }
+
+        /* Checklist */
+        .checklist {
+            display: grid;
+            gap: 10px;
+            margin-top: 10px;
+        }
+
+        .check {
+            display: flex;
+            gap: 10px;
+            align-items: flex-start;
+            padding: 12px 12px;
+            border-radius: 16px;
+            background: rgba(31, 42, 68, .03);
+            border: 1px solid rgba(31, 42, 68, .12);
+            cursor: pointer;
+            user-select: none;
+        }
+
+        .check input {
+            margin-top: 4px;
+            transform: scale(1.2);
+        }
+
+        .check span {
+            color: var(--muted);
+            font-size: 18px;
+            line-height: 1.35;
+        }
+
+        .check.done {
+            border-color: rgba(46, 229, 157, .45);
+            background: rgba(46, 229, 157, .14);
+        }
+
+        /* Bottom nav */
+        .nav {
+            position: fixed;
+            inset: auto 14px 14px 14px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 12px;
+            z-index: 50;
+        }
+
+        .counter {
+            padding: 12px 14px;
+            border-radius: 16px;
+            background: rgba(255, 255, 255, .88);
+            border: 1px solid var(--border);
+            font-weight: 1100;
+            min-width: 140px;
+            text-align: center;
+            box-shadow: var(--shadow2);
+        }
+
+        /* Toast */
+        .toast {
+            position: fixed;
+            left: 50%;
+            bottom: 86px;
+            transform: translateX(-50%);
+            padding: 12px 14px;
+            border-radius: 999px;
+            background: rgba(255, 255, 255, .94);
+            border: 1px solid var(--border);
+            box-shadow: var(--shadow);
+            font-weight: 1000;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity .25s ease, transform .25s ease;
+            z-index: 60;
+            max-width: min(92vw, 900px);
+            text-align: center;
+        }
+
+        .toast.show {
+            opacity: 1;
+            transform: translateX(-50%) translateY(-2px);
+        }
+
+        @media (max-width: 920px) {
+            .grid {
+                grid-template-columns: 1fr;
+            }
+
+            .slide {
+                height: min(880px, 82vh);
+            }
+
+            .stage {
+                min-height: 360px;
+            }
+
+            h1 {
+                font-size: 38px;
+            }
+        }
+
+        .imgph {
+            position: relative;
+            border-radius: 16px;
+            overflow: hidden;
+            border: 2px dashed rgba(31, 42, 68, .18);
+            background: rgba(31, 42, 68, .03);
+            box-shadow: var(--shadow2);
+        }
+
+        .imgph img {
+            width: 100%;
+            height: auto;
+            display: block;
+        }
+
+        .imgph-label {
+            position: absolute;
+            left: 12px;
+            top: 12px;
+            padding: 8px 12px;
+            border-radius: 999px;
+            background: rgba(255, 255, 255, .92);
+            border: 1px solid var(--border);
+            font-weight: 1000;
+            color: rgba(31, 42, 68, .85);
+        }
+
+        .imgph-actions {
+            position: absolute;
+            right: 12px;
+            top: 12px;
+            display: flex;
+            gap: 8px;
+        }
+    </style>
+</head>
+
+<body>
+    <!-- Access Gate -->
+    <div id="accessGate" style="
+  position:fixed;
+  inset:0;
+  background:
+    radial-gradient(900px 600px at 20% 20%, rgba(124,92,255,.18), transparent 60%),
+    radial-gradient(900px 600px at 80% 30%, rgba(50,199,255,.20), transparent 60%),
+    linear-gradient(135deg, #fff7fb, #f3fbff, #f7fff6);
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  z-index:9999;
+">
+        <div style="
+    background:#fff;
+    padding:28px;
+    border-radius:22px;
+    box-shadow:0 18px 60px rgba(31,42,68,.18);
+    max-width:420px;
+    width:92%;
+    text-align:center;
+  ">
+            <h2 style="margin-top:0;">🔐 Kode Akses</h2>
+            <p style="color:#56637c;">
+                Masukkan kode untuk membuka materi.
+            </p>
+
+            <input id="accessInput" type="text" placeholder="Masukkan kode…" style="
+        width:100%;
+        padding:14px;
+        font-size:18px;
+        border-radius:14px;
+        border:1px solid rgba(31,42,68,.2);
+        margin:12px 0;
+        text-align:center;
+        font-weight:700;
+        letter-spacing:2px;
+      " />
+
+            <button class="primary" style="width:100%;" onclick="checkAccess()">
+                Buka Materi 🚀
+            </button>
+
+            <div id="accessMsg" style="
+      margin-top:12px;
+      font-weight:700;
+      color:#d32f2f;
+      min-height:20px;
+    "></div>
+        </div>
+    </div>
+
+    <script>
+  const ACCESS_CODE = "RGMDSLP25";
+
+  function checkAccess() {
+    const input = document.getElementById("accessInput");
+    const msg = document.getElementById("accessMsg");
+
+    if (!input) return;
+
+    if (input.value.trim().toUpperCase() === ACCESS_CODE) {
+      localStorage.setItem("lp_sesi16_access", "ok");
+      document.getElementById("accessGate").style.display = "none";
+      showToast("Akses diterima 🎉");
+    } else {
+      msg.textContent = "Kode salah. Coba lagi ya 🙂";
+      input.value = "";
+      input.focus();
+    }
+  }
+
+  // Enter key support
+  document.addEventListener("keydown", (e) => {
+    if (e.key === "Enter" && document.getElementById("accessGate")) {
+      checkAccess();
+    }
+  });
+
+  // Auto-unlock if already entered before
+  window.addEventListener("load", () => {
+    if (localStorage.getItem("lp_sesi16_access") === "ok") {
+      const gate = document.getElementById("accessGate");
+      if (gate) gate.style.display = "none";
+    }
+  });
+</script>
+
+
+
+    <div class="topbar">
+        <div class="brand">
+            <div class="dot"></div>
+            <div class="t1">Sesi 16</div>
+            <div class="t2">Backdrop & Cerita</div>
+        </div>
+        <div class="pill" title="Kontrol keyboard">
+            <span style="font-weight:1000;color:rgba(31,42,68,.9)">Keyboard:</span>
+            <kbd>←</kbd><kbd>→</kbd><kbd>Space</kbd><kbd>Home</kbd><kbd>End</kbd>
+        </div>
+    </div>
+
+    <div class="progress">
+        <div id="bar"></div>
+    </div>
+
+    <main class="deck">
+
+        <!-- Slide 1 -->
+        <section class="slide active">
+            <div class="slide-content">
+                <div class="grid">
+                    <div class="card">
+                        <h1>Backdrop & Cerita</h1>
+                        <p>
+                            Halo! 👋 Hari ini kita belajar tentang <b>Backdrop</b>.
+                            Backdrop itu seperti <b>tempat</b> di cerita kita.
+                        </p>
+                        <div class="highlight">Backdrop = latar tempat cerita</div>
+                        <p>
+                            Kalau tempatnya jelas, cerita jadi lebih mudah dipahami dan lebih seru 🎉
+                        </p>
+                        <div class="tip">
+                            Target hari ini:
+                            <br>✅ Gambar backdrop sendiri
+                            <br>✅ Punya 2 backdrop
+                            <br>✅ Pindah tempat (ganti backdrop)
+                        </div>
+                    </div>
+
+                    <div class="card">
+                        <h2 style="margin:0 0 8px;">Preview Pindah Tempat</h2>
+                        <p class="mini" style="margin:0 0 10px;">
+                            Contoh perubahan backdrop (placeholder).
+                        </p>
+
+                        <div class="imgph">
+                            <div class="imgph-label" id="bdLabel">Backdrop 1</div>
+
+                            <img id="previewBackdrop"
+                                src="https://uob-1328237036.cos.ap-singapore.myqcloud.com//file-uploader/images/2a217c54-0d24-4b44-a825-de550ec6990e.png"
+                                alt="Preview backdrop ScratchJr" />
+
+                            <div class="imgph-actions">
+                                <button class="primary" onclick="setBackdrop(1)">Backdrop 1</button>
+                                <button onclick="setBackdrop(2)">Backdrop 2</button>
+                            </div>
+                        </div>
+
+                        <div class="tip" style="margin-top:12px;">
+                            💡 Klik tombol untuk melihat cerita <b>pindah tempat</b>.
+                        </div>
+                    </div>
+
+                    <div class="tip" style="margin-top:12px;">
+                        💡 Tip: pakai gambar yang menunjukkan <b>2 backdrop berbeda</b> (contoh: Luar → Kelas).
+                    </div>
+                </div>
+
+            </div>
+            </div>
+        </section>
+
+        <script>
+            function setBackdrop(n) {
+                const img = document.getElementById("previewBackdrop");
+                const label = document.getElementById("bdLabel");
+
+                if (n === 1) {
+                    img.src = "https://uob-1328237036.cos.ap-singapore.myqcloud.com//file-uploader/images/2a217c54-0d24-4b44-a825-de550ec6990e.png";
+                    label.textContent = "Backdrop 1 (Luar)";
+                    showToast("Sekarang di Backdrop 1");
+                } else {
+                    img.src = "https://uob-1328237036.cos.ap-singapore.myqcloud.com//file-uploader/images/0a9879fa-f291-4d12-9192-f17c897124d5.png";
+                    label.textContent = "Backdrop 2 (Kelas)";
+                    showToast("Sekarang di Backdrop 2");
+                }
+            }
+        </script>
+
+
+        <!-- Slide 2 -->
+        <section class="slide">
+            <div class="slide-content">
+                <div class="card">
+                    <h2>Tujuan Belajar</h2>
+                    <p>Setelah belajar hari ini, kamu bisa:</p>
+                    <ul>
+                        <li>Menjelaskan fungsi backdrop (tempat cerita)</li>
+                        <li>Menggambar backdrop sendiri (sederhana)</li>
+                        <li>Punya <b>2 backdrop</b> di satu proyek</li>
+                        <li>Mengganti backdrop saat cerita berjalan</li>
+                    </ul>
+                    <div class="highlight">Hari ini kita bikin cerita: <b>tempatnya berubah</b>!</div>
+                    <div class="tip">
+                        Contoh cerita:
+                        <br>“Tadi di <b>luar</b>, sekarang di <b>kelas</b>.”
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Slide 3 -->
+        <section class="slide">
+            <div class="slide-content">
+                <div class="grid">
+                    <div class="card">
+                        <h2>Sprite vs Backdrop</h2>
+                        <p>Yuk bedakan!</p>
+                        <div class="highlight">
+                            <b>Sprite</b> = tokoh cerita (bergerak) 🐱<br>
+                            <b>Backdrop</b> = tempat cerita (diam) 🏡
+                        </div>
+                        <p>
+                            Sprite itu seperti “pemain”. Backdrop itu seperti “panggung”.
+                        </p>
+                        <div class="tip">
+                            Kalau backdrop berubah, berarti ceritanya pindah tempat.
+                        </div>
+                    </div>
+
+                    <div class="card" id="miniCheck">
+                        <h2>Mini Cek 👀</h2>
+                        <p>Pilih yang benar:</p>
+                        <div class="row">
+                            <button class="primary" data-quiz="Sprite" data-ans="benar">🐱 Sprite</button>
+                            <button class="primary" data-quiz="Backdrop" data-ans="salah">🌳 Backdrop</button>
+                        </div>
+                        <div class="example" id="miniCheckMsg" style="margin-top:12px;">
+                            Pertanyaan: “Yang bisa bergerak itu siapa?”
+                        </div>
+                    </div>
+
+                    <script>
+                        document.querySelectorAll('#miniCheck button').forEach(btn => {
+                            btn.addEventListener('click', () => {
+                                const msg = document.getElementById('miniCheckMsg');
+
+                                if (btn.dataset.ans === 'benar') {
+                                    msg.innerHTML = '✅ Benar! <b>Sprite</b> adalah yang bisa bergerak.';
+                                    showToast('Benar! Sprite bergerak 🐱');
+                                } else {
+                                    msg.innerHTML = '❌ Belum tepat. Yang bisa bergerak adalah <b>Sprite</b>.';
+                                    showToast('Coba lagi ya 🙂');
+                                }
+                            });
+                        });
+                    </script>
+
+
+                </div>
+            </div>
+        </section>
+
+        <!-- Slide 4 -->
+        <section class="slide">
+            <div class="slide-content">
+                <div class="card">
+                    <h2>Apa Itu Backdrop?</h2>
+                    <p>
+                        Backdrop adalah <b>gambar latar</b> di belakang sprite.
+                        Backdrop menunjukkan <b>di mana cerita terjadi</b>.
+                    </p>
+                    <div class="highlight">Backdrop membantu temanmu tahu: “ini tempatnya di mana?”</div>
+                    <p>Contoh backdrop yang mudah:</p>
+                    <ul>
+                        <li>🏠 Rumah</li>
+                        <li>🏫 Sekolah</li>
+                        <li>🌳 Taman</li>
+                        <li>🏖️ Pantai</li>
+                    </ul>
+                    <div class="tip">
+                        Tips: backdrop cukup sederhana, yang penting kelihatan tempatnya.
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Slide 5 -->
+        <section class="slide">
+            <div class="slide-content">
+                <div class="grid">
+                    <div class="card">
+                        <h2>Menggambar Backdrop Sendiri</h2>
+                        <p>
+                            Kamu bisa menggambar backdrop sendiri di ScratchJr.
+                            Tidak harus bagus, yang penting jelas 🙂.
+                        </p>
+                        <div class="highlight">
+                            Langkah mudah:
+                            <br><b>Pilih backdrop → tekan gambar ✏️ → mulai menggambar</b>
+                        </div>
+                        <p>Agar gampang, gambar 3 bagian ini:</p>
+                        <ul>
+                            <li>Langit</li>
+                            <li>Tanah</li>
+                            <li>Tambah 2 benda (contoh: matahari & pohon)</li>
+                        </ul>
+                        <div class="tip">
+                            Gambar besar-besar supaya terlihat jelas dari jauh.
+                        </div>
+                    </div>
+
+                    <div class="imgph">
+                        <div class="imgph-label">Contoh Backdrop Sederhana</div>
+
+                        <img src="https://uob-1328237036.cos.ap-singapore.myqcloud.com//file-uploader/images/9c0ef71c-b24c-4502-ba15-243ab29dcb0a.png"
+                            alt="Contoh backdrop ScratchJr" />
+
+                        <div class="example" style="margin-top:12px;">
+                            Contoh saja ya — di ScratchJr kamu bisa gambar versimu sendiri ✨
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </section>
+
+        <!-- Slide 6 -->
+        <section class="slide">
+            <div class="slide-content">
+                <div class="card">
+                    <h2>Punya Lebih dari Satu Backdrop</h2>
+                    <p>
+                        Dalam satu proyek, kamu boleh punya <b>lebih dari satu backdrop</b>.
+                        Ini membuat cerita seperti film 🎬
+                    </p>
+                    <div class="highlight">
+                        Backdrop 1 = tempat A<br>
+                        Backdrop 2 = tempat B
+                    </div>
+                    <p>Contoh pasangan tempat yang mudah:</p>
+                    <ul>
+                        <li>🏠 Rumah → 🌳 Taman</li>
+                        <li>🏫 Sekolah → 🛝 Lapangan</li>
+                        <li>🏖️ Pantai → 🌋 Gunung</li>
+                    </ul>
+                    <div class="tip">
+                        Tips: backdrop 2 harus beda jelas (warna/objek) supaya kelihatan pindah tempat.
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Slide 7 -->
+        <section class="slide">
+            <div class="slide-content">
+                <div class="grid">
+                    <div class="card">
+                        <h2>Mengganti Backdrop</h2>
+                        <p>
+                            Kita mengganti backdrop untuk menunjukkan:
+                        </p>
+                        <ul>
+                            <li>🚶 Berpindah tempat</li>
+                            <li>🎬 Ganti adegan</li>
+                        </ul>
+                        <div class="highlight">Ganti backdrop = cerita pindah tempat</div>
+                        <div class="tip">
+                            Setelah backdrop berubah, kamu bisa lanjutkan ceritanya di tempat baru.
+                        </div>
+                    </div>
+
+                    <div class="imgph">
+                        <div class="imgph-label" id="sceneLabel">Contoh Pindah Tempat</div>
+
+                        <img id="sceneImg"
+                            src="https://uob-1328237036.cos.ap-singapore.myqcloud.com//file-uploader/images/2a217c54-0d24-4b44-a825-de550ec6990e.png"
+                            alt="Contoh backdrop ScratchJr" />
+
+                        <div class="imgph-actions">
+                            <button class="primary" onclick="swapScene()">Pindah Tempat</button>
+                            <button onclick="resetScene()">Reset</button>
+                        </div>
+
+                        <div class="example" style="margin-top:12px;">
+                            Klik <b>Pindah Tempat</b> lalu ceritakan: “Sekarang aku di ____.”
+                        </div>
+                    </div>
+
+                    <script>
+                        let isSceneTwo = false;
+
+                        function swapScene() {
+                            const img = document.getElementById("sceneImg");
+                            const label = document.getElementById("sceneLabel");
+
+                            img.src = "https://uob-1328237036.cos.ap-singapore.myqcloud.com//file-uploader/images/0a9879fa-f291-4d12-9192-f17c897124d5.png";
+                            label.textContent = "Backdrop 2";
+                            isSceneTwo = true;
+
+                            if (typeof showToast === "function") {
+                                showToast("Pindah ke tempat baru ✨");
+                            }
+                        }
+
+                        function resetScene() {
+                            const img = document.getElementById("sceneImg");
+                            const label = document.getElementById("sceneLabel");
+
+                            img.src = "https://uob-1328237036.cos.ap-singapore.myqcloud.com//file-uploader/images/2a217c54-0d24-4b44-a825-de550ec6990e.png";
+                            label.textContent = "Backdrop 1";
+                            isSceneTwo = false;
+
+                            if (typeof showToast === "function") {
+                                showToast("Kembali ke tempat awal 🙂");
+                            }
+                        }
+                    </script>
+
+
+                </div>
+            </div>
+        </section>
+
+        <!-- Slide 8 -->
+        <section class="slide">
+            <div class="slide-content">
+                <div class="card">
+                    <h2>Backdrop & Alur Cerita</h2>
+                    <p>
+                        Kalau backdrop berubah, itu artinya ceritanya bergerak ke tempat baru.
+                        Ini disebut <b>alur cerita</b>.
+                    </p>
+                    <div class="highlight">Rumah → Jalan → Sekolah</div>
+
+                    <p>Latihan ceritanya (ucapkan):</p>
+                    <ul>
+                        <li>“Di rumah, aku ____.”</li>
+                        <li>“Di jalan, aku ____.”</li>
+                        <li>“Di sekolah, aku ____.”</li>
+                    </ul>
+
+                    <div class="tip">
+                        Cerita yang bagus itu jelas: tempatnya apa, lalu pindah ke mana.
+                    </div>
+                </div>
+            </div>
+        </section>
+
+
+
+        <!-- Slide 10 -->
+        <section class="slide">
+            <div class="slide-content">
+                <div class="card">
+                    <h2>Indikator Keberhasilan</h2>
+                    <p>Kamu sudah hebat jika:</p>
+                    <ul>
+                        <li>Bisa membedakan sprite dan backdrop</li>
+                        <li>Berhasil menggambar minimal 1 backdrop</li>
+                        <li>Punya minimal 2 backdrop dalam 1 proyek</li>
+                        <li>Bisa menjelaskan: “tadi di __, sekarang di __”</li>
+                    </ul>
+                    <div class="highlight">Kamu siap jadi pembuat cerita digital! 🌟</div>
+                    <div class="tip">
+                        Ingat: tidak harus sempurna. Yang penting kamu mencoba dan memperbaiki 🙂
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Slide 11 -->
+        <section class="slide">
+            <div class="slide-content">
+                <div class="grid">
+                    <div class="card">
+                        <h2>Tantangan Mini</h2>
+                        <div class="highlight">
+                            <ol style="margin:0; padding-left:18px;">
+                                <li>Buat 2 backdrop berbeda</li>
+                                <li>Ganti backdrop (pindah tempat)</li>
+                                <li>Ceritakan 1 kalimat: “Tadi di __, sekarang di __.”</li>
+                                <li>Tunjukkan ke guru</li>
+                            </ol>
+                        </div>
+                        <p>Selamat! Kamu hebat hari ini 🎉</p>
+
+                    </div>
+
+                    <div class="card">
+                        <h2>Refleksi</h2>
+                        <p>Centang minimal 2 ya ✨</p>
+                        <div class="checklist" id="reflectList">
+                            <label class="check"><input type="checkbox" /><span>Aku bisa menjelaskan backdrop itu
+                                    apa.</span></label>
+                            <label class="check"><input type="checkbox" /><span>Aku punya 2 backdrop
+                                    berbeda.</span></label>
+                            <label class="check"><input type="checkbox" /><span>Aku bisa pindah tempat (ganti
+                                    backdrop).</span></label>
+                            <label class="check"><input type="checkbox" /><span>Aku ingin menggambar backdrop yang lebih
+                                    keren lagi!</span></label>
+                        </div>
+
+                        <div class="row" style="margin-top:12px;">
+                            <button class="primary" id="finishReflect">Selesai ✅</button>
+                            <button id="resetReflect">Reset</button>
+                        </div>
+                        <div class="example" id="reflectMsg" style="margin-top:12px;">
+                            Target: centang minimal 2 ya 🙂
+                        </div>
+                    </div>
+
+                    <script>
+                        // Aktifkan klik di seluruh baris checklist
+                        document.querySelectorAll('#reflectList .check').forEach(item => {
+                            item.addEventListener('click', (e) => {
+                                const checkbox = item.querySelector('input[type="checkbox"]');
+
+                                // kalau klik langsung checkbox, biarkan default
+                                if (e.target.tagName.toLowerCase() === 'input') return;
+
+                                // toggle manual
+                                checkbox.checked = !checkbox.checked;
+                                item.classList.toggle('done', checkbox.checked);
+                            });
+                        });
+
+                        // Tombol Reset
+                        document.getElementById('resetReflect').addEventListener('click', () => {
+                            document.querySelectorAll('#reflectList .check').forEach(item => {
+                                const checkbox = item.querySelector('input[type="checkbox"]');
+                                checkbox.checked = false;
+                                item.classList.remove('done');
+                            });
+                            document.getElementById('reflectMsg').textContent = 'Target: centang minimal 2 ya 🙂';
+
+                            if (typeof showToast === 'function') {
+                                showToast('Refleksi di-reset 🙂');
+                            }
+                        });
+
+                        // Tombol Selesai
+                        document.getElementById('finishReflect').addEventListener('click', () => {
+                            const checked = document.querySelectorAll('#reflectList input[type="checkbox"]:checked').length;
+                            const msg = document.getElementById('reflectMsg');
+
+                            if (checked >= 2) {
+                                msg.textContent = `Mantap! Kamu mencentang ${checked} pilihan 🎉`;
+                                if (typeof showToast === 'function') {
+                                    showToast('Refleksi selesai ✅');
+                                }
+                            } else {
+                                msg.textContent = `Masih ${checked}. Ayo centang minimal 2 ya 🙂`;
+                                if (typeof showToast === 'function') {
+                                    showToast('Centang minimal 2 ya 🙂');
+                                }
+                            }
+                        });
+                    </script>
+
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <div class="nav">
+        <button id="prevBtn">⬅️ Sebelumnya</button>
+        <div class="counter" id="counter">1 / 11</div>
+        <button class="primary" id="nextBtn">➡️ Berikutnya</button>
+    </div>
+
+    <div class="toast" id="toast"></div>
+
+    <script>
+        /* ---------- Toast ---------- */
+        const toast = document.getElementById("toast");
+        let toastTimer = null;
+        function showToast(msg) {
+            toast.textContent = msg;
+            toast.classList.add("show");
+            clearTimeout(toastTimer);
+            toastTimer = setTimeout(() => toast.classList.remove("show"), 1500);
+        }
+
+        /* ---------- Slides ---------- */
+        const slides = Array.from(document.querySelectorAll(".slide"));
+        const counter = document.getElementById("counter");
+        const bar = document.getElementById("bar");
+        const prevBtn = document.getElementById("prevBtn");
+        const nextBtn = document.getElementById("nextBtn");
+        let index = 0;
+
+        function showSlide(i) {
+            index = Math.max(0, Math.min(i, slides.length - 1));
+            slides.forEach(s => s.classList.remove("active"));
+            slides[index].classList.add("active");
+
+            // reset scroll inside slide
+            const sc = slides[index].querySelector(".slide-content");
+            if (sc) sc.scrollTop = 0;
+
+            counter.textContent = `${index + 1} / ${slides.length}`;
+            bar.style.width = `${((index + 1) / slides.length) * 100}%`;
+
+            prevBtn.disabled = index === 0;
+            nextBtn.disabled = index === slides.length - 1;
+        }
+        function nextSlide() { showSlide(index + 1); }
+        function prevSlide() { showSlide(index - 1); }
+
+        prevBtn.addEventListener("click", prevSlide);
+        nextBtn.addEventListener("click", nextSlide);
+
+        // Keyboard controls
+        document.addEventListener("keydown", (e) => {
+            const tag = (e.target && e.target.tagName) ? e.target.tagName.toLowerCase() : "";
+            if (["input", "textarea", "select"].includes(tag)) return;
+
+            if (e.key === "ArrowRight" || e.key === " " || e.key === "PageDown") { e.preventDefault(); nextSlide(); }
+            if (e.key === "ArrowLeft" || e.key === "PageUp") { e.preventDefault(); prevSlide(); }
+            if (e.key === "Home") { e.preventDefault(); showSlide(0); }
+            if (e.key === "End") { e.preventDefault(); showSlide(slides.length - 1); }
+        });
+
+        /* ---------- Interaktif: Scene buttons (Slide 1) ---------- */
+        const bdA = document.getElementById("bdA");
+        const bdB = document.getElementById("bdB");
+        const btnScene1 = document.getElementById("btnScene1");
+        const btnScene2 = document.getElementById("btnScene2");
+
+        function setSceneAB(scene) {
+            if (scene === 1) {
+                bdA.style.opacity = "1"; bdB.style.opacity = "0";
+                btnScene1.classList.add("primary"); btnScene2.classList.remove("primary");
+                showToast("Sekarang di Scene 1 🌳");
+            } else {
+                bdA.style.opacity = "0"; bdB.style.opacity = "1";
+                btnScene2.classList.add("primary"); btnScene1.classList.remove("primary");
+                showToast("Sekarang di Scene 2 🏠");
+            }
+        }
+        btnScene1.addEventListener("click", () => setSceneAB(1));
+        btnScene2.addEventListener("click", () => setSceneAB(2));
+
+        /* ---------- Interaktif: Quiz kecil (Slide 3) ---------- */
+        document.querySelectorAll("[data-quiz]").forEach(btn => {
+            btn.addEventListener("click", () => {
+                if (btn.dataset.ans === "benar") showToast("Benar! Sprite yang bergerak ✅");
+                else showToast("Belum 🙂 Sprite yang bergerak ya!");
+            });
+        });
+
+        /* ---------- Interaktif: Swap (Slide 7) ---------- */
+        const bdC = document.getElementById("bdC");
+        const bdD = document.getElementById("bdD");
+        const swapBtn = document.getElementById("swapBtn");
+        const resetSwapBtn = document.getElementById("resetSwapBtn");
+        let swapped = false;
+
+        function setSceneCD(scene) {
+            if (scene === 1) { bdC.style.opacity = "1"; bdD.style.opacity = "0"; }
+            else { bdC.style.opacity = "0"; bdD.style.opacity = "1"; }
+        }
+        swapBtn.addEventListener("click", () => {
+            swapped = !swapped;
+            setSceneCD(swapped ? 2 : 1);
+            showToast(swapped ? "Pindah ke tempat 2 ✨" : "Balik ke tempat 1 ✨");
+        });
+        resetSwapBtn.addEventListener("click", () => {
+            swapped = false; setSceneCD(1);
+            showToast("Reset 🙂");
+        });
+
+        /* ---------- Interaktif: Story choice (Slide 9) ---------- */
+        const storyMsg = document.getElementById("storyMsg");
+        document.querySelectorAll("[data-story]").forEach(btn => {
+            btn.addEventListener("click", () => {
+                storyMsg.textContent = `Cerita kamu: ${btn.dataset.story} ✅`;
+                showToast("Keren! Itu perpindahan tempat.");
+            });
+        });
+
+        /* ---------- Interaktif: Refleksi (Slide 11) ---------- */
+        const reflectChecks = Array.from(document.querySelectorAll("#reflectList .check"));
+        const reflectMsg = document.getElementById("reflectMsg");
+        reflectChecks.forEach(c => {
+            c.addEventListener("click", (e) => {
+                const input = c.querySelector("input");
+                if (e.target.tagName.toLowerCase() !== "input") input.checked = !input.checked;
+                c.classList.toggle("done", input.checked);
+            });
+        });
+
+        document.getElementById("resetReflect").addEventListener("click", () => {
+            reflectChecks.forEach(c => {
+                c.querySelector("input").checked = false;
+                c.classList.remove("done");
+            });
+            reflectMsg.textContent = "Target: centang minimal 2 ya 🙂";
+            showToast("Refleksi di-reset.");
+        });
+
+        document.getElementById("finishReflect").addEventListener("click", () => {
+            const done = reflectChecks.filter(c => c.querySelector("input").checked).length;
+            if (done >= 2) {
+                reflectMsg.textContent = `Mantap! Kamu centang ${done} pilihan 🎉`;
+                showToast("Refleksi selesai ✅");
+            } else {
+                reflectMsg.textContent = `Masih ${done}. Ayo minimal 2 ya 🙂`;
+                showToast("Coba centang minimal 2 🙂");
+            }
+        });
+
+        // init
+        showSlide(0);
+    </script>
+
+</body>
+
+</html>
