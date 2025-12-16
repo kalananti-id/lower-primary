@@ -1,0 +1,851 @@
+<!DOCTYPE html>
+<html lang="id">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>ScratchJr Animasi Seru — Sesi 15</title>
+    <style>
+        :root {
+            --bg1: #fff7fb;
+            --bg2: #f3fbff;
+            --bg3: #f7fff6;
+
+            --card: #ffffff;
+            --text: #1f2a44;
+            --muted: #5a6680;
+
+            --accent: #7c5cff;
+            /* lavender */
+            --accent2: #32c7ff;
+            /* sky */
+            --accent3: #2ee59d;
+            /* mint */
+            --border: rgba(31, 42, 68, .12);
+
+            --shadow: 0 18px 60px rgba(31, 42, 68, .12);
+            --shadow2: 0 10px 30px rgba(31, 42, 68, .10);
+
+            --r: 22px;
+            --r2: 18px;
+
+            --navH: 92px;
+            /* ruang untuk tombol bawah */
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            font-family: 'Comic Sans MS', 'Arial Rounded MT Bold', system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+            color: var(--text);
+            background:
+                radial-gradient(900px 600px at 12% 12%, rgba(124, 92, 255, .14), transparent 60%),
+                radial-gradient(900px 600px at 88% 18%, rgba(50, 199, 255, .16), transparent 60%),
+                radial-gradient(900px 600px at 35% 92%, rgba(46, 229, 157, .12), transparent 60%),
+                linear-gradient(135deg, var(--bg1), var(--bg2), var(--bg3));
+            min-height: 100vh;
+            overflow: hidden;
+            /* halaman tidak scroll; scroll ada di card */
+        }
+
+        /* Slide container: CENTER & FULL SCREEN */
+        .slide {
+            display: none;
+            min-height: 100vh;
+            padding: 24px 18px calc(var(--navH) + 18px);
+            align-items: center;
+            justify-content: center;
+        }
+
+        .slide.active {
+            display: flex;
+        }
+
+        /* Card: isi bisa scroll kalau kepanjangan */
+        .card {
+            width: min(960px, 96vw);
+            max-height: calc(100vh - (var(--navH) + 56px));
+            overflow: auto;
+            background: rgba(255, 255, 255, .84);
+            border: 1px solid var(--border);
+            border-radius: var(--r);
+            padding: 26px 26px;
+            box-shadow: var(--shadow);
+            backdrop-filter: blur(10px);
+        }
+
+        /* scrollbar soft */
+        .card::-webkit-scrollbar {
+            width: 10px;
+        }
+
+        .card::-webkit-scrollbar-thumb {
+            background: rgba(124, 92, 255, .35);
+            border-radius: 999px;
+            border: 2px solid rgba(255, 255, 255, .65);
+        }
+
+        .card::-webkit-scrollbar-track {
+            background: rgba(31, 42, 68, .06);
+            border-radius: 999px;
+        }
+
+        h1 {
+            margin: 0 0 10px;
+            font-size: 42px;
+            line-height: 1.08;
+            color: #3b2b7a;
+        }
+
+        h2 {
+            margin: 0 0 10px;
+            font-size: 30px;
+            line-height: 1.15;
+            color: #3b2b7a;
+        }
+
+        p {
+            font-size: 18px;
+            color: var(--muted);
+            margin: 8px 0;
+            line-height: 1.5;
+        }
+
+        ul,
+        ol {
+            font-size: 18px;
+            color: var(--muted);
+            line-height: 1.5;
+        }
+
+        li {
+            margin: 6px 0;
+        }
+
+        .img-box {
+            text-align: center;
+            margin: 18px 0;
+        }
+
+        img {
+            max-width: 100%;
+            height: auto;
+            border-radius: 14px;
+            border: 1px solid rgba(31, 42, 68, .10);
+            background: #fff;
+        }
+
+        .highlight {
+            background: rgba(255, 209, 102, .35);
+            border: 1px solid rgba(255, 209, 102, .55);
+            padding: 14px 16px;
+            border-radius: 16px;
+            margin: 14px 0;
+            font-size: 18px;
+            color: rgba(31, 42, 68, .85);
+        }
+
+        .tip {
+            background: rgba(50, 199, 255, .16);
+            border: 1px solid rgba(50, 199, 255, .26);
+            padding: 12px 16px;
+            border-radius: 16px;
+            margin-top: 10px;
+            color: rgba(31, 42, 68, .80);
+            font-size: 16px;
+        }
+
+        /* Nav bar fixed bottom */
+        .nav {
+            position: fixed;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            height: var(--navH);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 14px;
+            padding: 14px 12px;
+            background: rgba(255, 255, 255, .72);
+            border-top: 1px solid rgba(31, 42, 68, .10);
+            backdrop-filter: blur(10px);
+            box-shadow: var(--shadow2);
+        }
+
+        button {
+            font-size: 18px;
+            padding: 12px 18px;
+            border: none;
+            border-radius: 999px;
+            cursor: pointer;
+            font-weight: 900;
+            color: #fff;
+            background: linear-gradient(135deg, var(--accent), var(--accent2));
+            box-shadow: 0 10px 22px rgba(124, 92, 255, .18);
+        }
+
+        button:hover {
+            filter: brightness(0.98);
+        }
+
+        button:active {
+            transform: translateY(1px);
+        }
+
+        button:disabled {
+            opacity: .45;
+            cursor: not-allowed;
+            box-shadow: none;
+        }
+
+        .counterPill {
+            min-width: 120px;
+            text-align: center;
+            padding: 10px 14px;
+            border-radius: 999px;
+            background: rgba(31, 42, 68, .05);
+            border: 1px solid rgba(31, 42, 68, .10);
+            color: rgba(31, 42, 68, .80);
+            font-weight: 1000;
+        }
+
+        @media (max-width: 520px) {
+            h1 {
+                font-size: 34px;
+            }
+
+            h2 {
+                font-size: 26px;
+            }
+
+            .card {
+                padding: 20px;
+            }
+
+            button {
+                font-size: 16px;
+                padding: 12px 14px;
+            }
+
+            .counterPill {
+                min-width: 92px;
+            }
+        }
+
+        /* ===== Access Gate (RGMDSLP25) ===== */
+        .gateOverlay {
+            position: fixed;
+            inset: 0;
+            z-index: 999;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 18px;
+            background:
+                radial-gradient(900px 600px at 20% 20%, rgba(124, 92, 255, .18), transparent 60%),
+                radial-gradient(900px 600px at 80% 30%, rgba(50, 199, 255, .18), transparent 60%),
+                radial-gradient(900px 600px at 45% 85%, rgba(46, 229, 157, .14), transparent 60%),
+                rgba(255, 255, 255, .35);
+            backdrop-filter: blur(8px);
+        }
+
+        .gateCard {
+            width: min(560px, 94vw);
+            border-radius: 22px;
+            background: rgba(255, 255, 255, .88);
+            border: 1px solid rgba(31, 42, 68, .12);
+            box-shadow: 0 18px 60px rgba(31, 42, 68, .18);
+            padding: 22px;
+            text-align: center;
+        }
+
+        .gateTitle {
+            font-size: 28px;
+            font-weight: 1000;
+            margin: 0 0 8px;
+        }
+
+        .gateDesc {
+            color: rgba(31, 42, 68, .70);
+            font-size: 16px;
+            margin: 0 0 14px;
+            line-height: 1.5;
+        }
+
+        .gateRow {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+
+        .gateInput {
+            width: min(340px, 92vw);
+            padding: 14px 14px;
+            border-radius: 16px;
+            border: 1px solid rgba(31, 42, 68, .18);
+            background: #fff;
+            font-size: 16px;
+            font-weight: 900;
+            letter-spacing: .6px;
+            text-transform: uppercase;
+            outline: none;
+        }
+
+        .gateInput:focus {
+            box-shadow: 0 0 0 6px rgba(124, 92, 255, .16);
+            border-color: rgba(124, 92, 255, .45);
+        }
+
+        .gateBtn {
+            border: none;
+            padding: 14px 16px;
+            border-radius: 16px;
+            cursor: pointer;
+            font-weight: 1000;
+            color: #fff;
+            background: linear-gradient(135deg, var(--accent), var(--accent2));
+            box-shadow: 0 12px 26px rgba(124, 92, 255, .18);
+        }
+
+        .gateHint {
+            margin-top: 12px;
+            font-size: 13px;
+            color: rgba(31, 42, 68, .65);
+        }
+
+        .shake {
+            animation: shake .35s linear;
+        }
+
+        @keyframes shake {
+            0% {
+                transform: translateX(0)
+            }
+
+            20% {
+                transform: translateX(-8px)
+            }
+
+            40% {
+                transform: translateX(8px)
+            }
+
+            60% {
+                transform: translateX(-6px)
+            }
+
+            80% {
+                transform: translateX(6px)
+            }
+
+            100% {
+                transform: translateX(0)
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+
+    <div class="gateOverlay" id="gate">
+        <div class="gateCard" id="gateCard">
+            <h2 class="gateTitle">Masukkan Kode Akses 🔐</h2>
+            <p class="gateDesc">Masukkan kode akses yang diberikan guru pengajar.</p>
+            <div class="gateRow">
+                <input class="gateInput" id="accessInput" placeholder="" autocomplete="off" />
+                <button class="gateBtn" id="accessBtn">Buka</button>
+            </div>
+            <div class="gateHint">Tips: tekan <b>Enter</b> untuk submit • Navigasi slide: <b>← →</b> atau <b>Space</b>
+            </div>
+        </div>
+    </div>
+
+    <div id="app" style="display:none;">
+        <!-- Slide 1 -->
+        <section class="slide active">
+            <div class="card">
+                <h1>Memprogram Sprite di ScratchJr</h1>
+                <p>Halo coder! 👋</p>
+                <p>Hari ini kita akan membuat <b>animasi yang lebih hidup</b> di ScratchJr.</p>
+                <div class="highlight">Sprite tidak hanya berjalan, tapi bisa <b>lompat</b> dan <b>berguling</b>!</div>
+            </div>
+        </section>
+
+        <!-- Slide 2 -->
+        <section class="slide">
+            <div class="card">
+                <h2>Ingat Pelajaran Sebelumnya</h2>
+                <p>Sebelumnya, kamu sudah bisa:</p>
+                <ul>
+                    <li>Menambah dan mengubah sprite</li>
+                    <li>Menyusun kode sederhana berurutan</li>
+                </ul>
+                <div class="highlight">Hari ini kita lanjut, kodenya lebih panjang dan seru 🎉</div>
+            </div>
+        </section>
+
+        <!-- Slide 3 -->
+        <section class="slide">
+            <div class="card">
+                <h2>Cara Memulai Animasi</h2>
+                <p>Semua animasi kita <b>dimulai dengan Green Flag</b>.</p>
+                <div class="img-box">
+                    <img alt="Start Block ScratchJr"
+                        src="https://uob-1328237036.cos.ap-singapore.myqcloud.com//file-uploader/images/9fafbec3-26d3-4914-9d7a-78e222e74a85.png">
+                </div>
+                <p>Blok ini memberi tahu sprite kapan harus mulai bergerak.</p>
+                <div class="highlight">Jika bendera hijau ditekan → animasi langsung berjalan!</div>
+            </div>
+        </section>
+
+        <!-- Slide 4 -->
+        <section class="slide">
+            <div class="card">
+                <h2>Gerakan Itu Berurutan</h2>
+
+                <p>
+                    Di ScratchJr, sprite <b>tidak bergerak sekaligus</b> ya.
+                    Sprite melakukan <b>satu perintah</b>, lalu lanjut ke perintah berikutnya.
+                </p>
+
+                <div class="highlight">
+                    Urutan blok = urutan gerakan sprite
+                </div>
+
+                <p>
+                    Artinya, sprite akan:
+                </p>
+
+                <ul>
+                    <li>🔹 Melakukan blok <b>pertama</b> dulu</li>
+                    <li>🔹 Setelah selesai, lanjut ke blok <b>kedua</b></li>
+                    <li>🔹 Terus berjalan sampai blok <b>terakhir</b></li>
+                </ul>
+
+                <div class="example">
+                    Contoh urutan:
+                    <br>
+                    <b>Jalan → Lompat → Berguling</b>
+                </div>
+
+                <div class="tip">
+                    💡 Kalau urutan blok ditukar, gerakannya juga ikut berubah.
+                    <br>
+                    Coba ubah urutannya dan lihat apa yang terjadi!
+                </div>
+            </div>
+        </section>
+
+
+        <!-- Slide 5 (Tambahan Penjelasan Nilai Lompat) -->
+        <section class="slide">
+            <div class="card">
+                <h2>Membuat Sprite Lompat</h2>
+
+                <p>
+                    Di ScratchJr, kita bisa membuat sprite <b>langsung melompat</b>
+                    dengan menggunakan <b>blok Lompat</b>.
+                    Angka pada blok Lompat menunjukkan
+                    <b>seberapa tinggi sprite melompat</b>.
+                </p>
+
+                <div class="img-box">
+                    <img alt="Start Block ScratchJr"
+                        src="https://uob-1328237036.cos.ap-singapore.myqcloud.com//file-uploader/images/785c8232-9629-49cb-810f-b78783a9f3d9.png">
+                </div>
+
+                <div class="highlight">
+                    Angka = tinggi lompat
+                </div>
+
+                <ul>
+                    <li>Angka kecil → lompat rendah</li>
+                    <li>Angka besar → lompat lebih tinggi</li>
+                </ul>
+
+                <div class="example">
+                    Contoh:
+                    <br>
+                    <b>Lompat 1</b> → lompat kecil
+                    <br>
+                    <b>Lompat 3</b> → lompat tinggi
+                </div>
+
+                <div class="tip">
+                    💡 Coba ubah angkanya dan lihat perbedaannya!
+                </div>
+            </div>
+        </section>
+
+
+        <!-- Slide 6 -->
+        <section class="slide">
+            <div class="card">
+                <h2>Membuat Sprite Berguling</h2>
+
+                <p>
+                    <b>Berguling</b> artinya sprite
+                    <b>bergerak sambil berputar</b>,
+                    seperti bola yang menggelinding.
+                </p>
+
+                <div class="highlight">
+                    Berguling = putar + jalan
+                </div>
+
+                <p>
+                    Untuk membuat sprite berguling,
+                    kita <b>menggabungkan dua blok</b>:
+                </p>
+
+                <ul>
+                    <li><b>Blok putar</b> → membuat sprite berputar</li>
+                    <li><b>Blok jalan</b> → membuat sprite bergerak</li>
+                </ul>
+
+                <div class="img-box">
+                    <img alt="Blok Putar"
+                        src="https://uob-1328237036.cos.ap-singapore.myqcloud.com//file-uploader/images/b82c4cf2-dfd2-462e-8d10-153791d7e2f2.png">
+                    <img alt="Blok Jalan"
+                        src="https://uob-1328237036.cos.ap-singapore.myqcloud.com//file-uploader/images/407bec5e-f84d-4318-9ad5-b7f71231b4e0.png">
+                </div>
+
+                <div class="example">
+                    Contoh urutan blok:
+                    <br>
+                    <b>Putar → Jalan → Putar → Jalan</b>
+                </div>
+
+                <div class="tip">
+                    💡 Jika hanya <b>putar</b> saja, sprite berputar di tempat.
+                    <br>
+                    Jika hanya <b>jalan</b> saja, sprite tidak terlihat berguling.
+                </div>
+            </div>
+        </section>
+
+
+        <!-- Slide 7 -->
+        <section class="slide">
+            <div class="card">
+                <h2>Gabungkan Gerakan</h2>
+
+                <p>
+                    Animasi yang seru tidak dibuat dari satu gerakan saja.
+                    Animasi dibuat dari <b>banyak gerakan yang disusun berurutan</b>.
+                </p>
+
+                <div class="highlight">
+                    Banyak gerakan → satu cerita
+                </div>
+
+                <p>
+                    Sekarang kita akan <b>menggabungkan semua yang sudah dipelajari</b>.
+                </p>
+
+                <ul>
+                    <li><b>Mulai</b> dengan Green Flag</li>
+                    <li><b>Lompat</b> 2 kali</li>
+                    <li><b>Berguling</b> ke kanan</li>
+                </ul>
+
+                <div class="example">
+                    Contoh urutan blok:
+                    <br>
+                    <b>Green Flag → Lompat → Lompat → Putar → Jalan</b>
+                </div>
+
+                <div class="tip">
+                    💡 Jika kamu menambah atau mengurangi blok,
+                    cerita animasinya juga ikut berubah.
+                </div>
+            </div>
+        </section>
+
+        <!-- Slide 8 -->
+        <section class="slide">
+            <div class="card">
+                <h2>👀 Berhenti Sebentar, Cek Kode</h2>
+
+                <p>
+                    Sebelum menekan <b>Green Flag</b>,
+                    ayo <b>berhenti sebentar</b> dan lihat kode kita.
+                </p>
+
+                <div class="highlight">
+                    Programmer yang baik selalu mengecek dulu
+                </div>
+
+                <p>
+                    Tanyakan ke diri kamu:
+                </p>
+
+                <ul>
+                    <li>🤔 Apakah sprite melakukan gerakan sesuai rencanaku?</li>
+                    <li>👀 Apakah urutan bloknya sudah rapi?</li>
+                    <li>🔢 Apakah nilai lompatnya sudah pas?</li>
+                    <li>➡️ Apakah sprite bergerak ke arah yang benar?</li>
+                </ul>
+
+                <div class="tip">
+                    💡 Kalau belum sesuai, tidak apa-apa.
+                    <br>
+                    Ubah satu blok saja, lalu coba lagi.
+                </div>
+            </div>
+        </section>
+
+        <!-- Slide 9: Kesimpulan -->
+        <section class="slide">
+            <div class="card">
+                <h2>✨ Kesimpulan Hari Ini</h2>
+
+                <p>
+                    Hari ini kamu belajar membuat sprite bergerak lebih seru dengan
+                    <b>motion baru</b>.
+                </p>
+
+                <div class="highlight">
+                    Aku bisa: Lompat 🤸 + Berguling 🔄
+                </div>
+
+                <ul>
+                    <li>🤸 <b>Lompat</b> pakai blok Jump (angka = tinggi lompat)</li>
+                    <li>🔄 <b>Berguling</b> = Putar lalu Jalan</li>
+                    <li>🧩 Animasi seru = beberapa gerakan yang <b>berurutan</b></li>
+                </ul>
+
+                <div class="tip">
+                    💡 Ingat: Kalau hasilnya belum sesuai, kita bisa <b>ubah urutan</b> atau <b>ubah angka</b>.
+                </div>
+
+                <div class="row" style="margin-top:12px; gap:10px; flex-wrap:wrap;">
+                    <button class="softbtn" onclick="showToast('Mantap! Urutan blok bikin animasi rapi 🙂')">
+                        Aku ingat urutan blok
+                    </button>
+                    <button class="softbtn" onclick="showToast('Betul! Angka di Jump mengubah tinggi lompat 🤸')">
+                        Aku paham angka Jump
+                    </button>
+                    <button class="softbtn" onclick="showToast('Keren! Putar + Jalan bikin berguling 🔄')">
+                        Aku bisa membuat berguling
+                    </button>
+                </div>
+            </div>
+        </section>
+
+        <!-- Slide 10: Refleksi -->
+        <section class="slide">
+            <div class="card">
+                <h2>Refleksi Singkat</h2>
+
+                <p>
+                    Sekarang pilih jawabanmu ya. Tidak ada yang salah 🙂
+                </p>
+
+                <div class="highlight">
+                    Aku belajar dengan cara mencoba!
+                </div>
+
+                <div class="checklist" id="reflectList">
+                    <label class="check">
+                        <input type="checkbox">
+                        <span>Bagian yang paling seru: <b>Lompat</b></span>
+                    </label>
+                    <br>
+                    <label class="check">
+                        <input type="checkbox">
+                        <span>Bagian yang paling seru: <b>Berguling</b></span>
+                    </label>
+                    <br>
+                    <label class="check">
+                        <input type="checkbox">
+                        <span>Aku sempat <b>salah urutan</b>, tapi aku bisa memperbaiki</span>
+                    </label>
+                    <br>
+                    <label class="check">
+                        <input type="checkbox">
+                        <span>Aku ingin coba lagi dengan <b>angka Jump</b> yang berbeda</span>
+                    </label>
+                </div>
+
+                <div class="tip" style="margin-top:10px;">
+                    Ceritakan ke teman/guru:
+                    <br>
+                    “Spriteku <b>____</b>, lalu <b>____</b>, lalu <b>____</b>.”
+                </div>
+
+                <div class="row" style="margin-top:12px; gap:10px; flex-wrap:wrap;">
+                    <button class="softbtn primary" onclick="finishReflection()">
+                        Selesai Refleksi ✅
+                    </button>
+                    <button class="softbtn" onclick="resetReflection()">
+                        Reset
+                    </button>
+                </div>
+
+                <div id="reflectMsg" class="mini" style="margin-top:10px;">
+                    Target: centang minimal 2 ya ✨
+                </div>
+            </div>
+        </section>
+
+        <script>
+            // Kalau file kamu sudah punya showToast(), fungsi ini akan langsung jalan.
+            // Kalau belum ada, ini fallback sederhana.
+            if (typeof showToast !== "function") {
+                window.showToast = (msg) => alert(msg);
+            }
+
+            function finishReflection() {
+                const list = document.querySelectorAll('#reflectList input[type="checkbox"]');
+                const done = Array.from(list).filter(x => x.checked).length;
+                const msg = document.getElementById('reflectMsg');
+                if (done >= 2) {
+                    msg.textContent = `Keren! Kamu mencentang ${done} pilihan 🎉`;
+                    showToast("Refleksi selesai. Good job!");
+                } else {
+                    msg.textContent = `Masih ${done}. Ayo centang minimal 2 ya 🙂`;
+                    showToast("Coba pilih minimal 2 ya 🙂");
+                }
+            }
+
+            function resetReflection() {
+                const list = document.querySelectorAll('#reflectList input[type="checkbox"]');
+                list.forEach(x => x.checked = false);
+                const msg = document.getElementById('reflectMsg');
+                msg.textContent = "Target: centang minimal 2 ya ✨";
+                showToast("Refleksi di-reset.");
+            }
+        </script>
+
+
+
+        <div class="nav">
+            <button id="prevBtn" onclick="prevSlide()">⬅️ Sebelumnya</button>
+            <div class="counterPill" id="counter">1 / 11</div>
+            <button id="nextBtn" onclick="nextSlide()">➡️ Berikutnya</button>
+        </div>
+
+
+        <script>
+            const ACCESS_CODE = "RGMDSLP25";
+
+            const app = document.getElementById("app");
+            const gate = document.getElementById("gate");
+            const gateCard = document.getElementById("gateCard");
+            const accessInput = document.getElementById("accessInput");
+            const accessBtn = document.getElementById("accessBtn");
+
+            function openApp() {
+                gate.style.display = "none";
+                app.style.display = "block";
+                // focus to body for keyboard navigation
+                setTimeout(() => { document.body.focus?.(); }, 0);
+            }
+
+            function deny() {
+                gateCard.classList.remove("shake");
+                void gateCard.offsetWidth;
+                gateCard.classList.add("shake");
+            }
+
+            function tryUnlock() {
+                const val = (accessInput.value || "").trim().toUpperCase();
+                if (val === ACCESS_CODE) {
+                    localStorage.setItem("kalananti_access_" + ACCESS_CODE, "ok");
+                    openApp();
+                    showSlide(index); // ensure counter correct after showing
+                } else {
+                    deny();
+                    accessInput.select();
+                }
+            }
+
+            // Gate init
+            const unlocked = localStorage.getItem("kalananti_access_" + ACCESS_CODE) === "ok";
+            if (unlocked) {
+                openApp();
+            } else {
+                gate.style.display = "flex";
+                app.style.display = "none";
+                setTimeout(() => accessInput.focus(), 0);
+            }
+
+            accessBtn.addEventListener("click", tryUnlock);
+            accessInput.addEventListener("keydown", (e) => {
+                if (e.key === "Enter") { e.preventDefault(); tryUnlock(); }
+            });
+
+            // ===== Slides logic =====
+            const slides = document.querySelectorAll('.slide');
+            let index = 0;
+
+            function showSlide(i) {
+                if (!slides.length) return;
+
+                // Clamp
+                if (i < 0) i = 0;
+                if (i > slides.length - 1) i = slides.length - 1;
+                index = i;
+
+                slides.forEach(s => s.classList.remove('active'));
+                slides[index].classList.add('active');
+
+                // update counter + disable buttons
+                const counter = document.getElementById('counter');
+                const prevBtn = document.getElementById('prevBtn');
+                const nextBtn = document.getElementById('nextBtn');
+                if (counter) counter.textContent = (index + 1) + " / " + slides.length;
+                if (prevBtn) prevBtn.disabled = (index === 0);
+                if (nextBtn) nextBtn.disabled = (index === slides.length - 1);
+
+                // scroll content back to top
+                const scroller = slides[index].querySelector('.slide-content') || slides[index].querySelector('.card') || slides[index];
+                if (scroller) scroller.scrollTop = 0;
+            }
+
+            function nextSlide() { showSlide(index + 1); }
+            function prevSlide() { showSlide(index - 1); }
+            function firstSlide() { showSlide(0); }
+            function lastSlide() { showSlide(slides.length - 1); }
+
+            // button nav (if present)
+            const prevBtn = document.getElementById('prevBtn');
+            const nextBtn = document.getElementById('nextBtn');
+            if (prevBtn) prevBtn.addEventListener('click', prevSlide);
+            if (nextBtn) nextBtn.addEventListener('click', nextSlide);
+
+            // keyboard nav (only when app visible)
+            document.addEventListener('keydown', (e) => {
+                // block if gate is visible
+                if (gate.style.display !== "none") return;
+
+                const tag = (e.target && e.target.tagName) ? e.target.tagName.toLowerCase() : "";
+                if (["input", "textarea", "select", "button"].includes(tag)) return;
+
+                if (e.key === "ArrowRight" || e.key === " " || e.key === "PageDown") {
+                    e.preventDefault(); nextSlide();
+                } else if (e.key === "ArrowLeft" || e.key === "PageUp") {
+                    e.preventDefault(); prevSlide();
+                } else if (e.key === "Home") {
+                    e.preventDefault(); firstSlide();
+                } else if (e.key === "End") {
+                    e.preventDefault(); lastSlide();
+                }
+            });
+
+            // Start at first slide
+            showSlide(index);
+        </script>
+
+
+    </div>
+</body>
+
+</html>
