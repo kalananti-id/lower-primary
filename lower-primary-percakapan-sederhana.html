@@ -1,0 +1,1317 @@
+<!doctype html>
+<html lang="id">
+
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Sesi 17 — 2 Sprite & Percakapan (ScratchJr)</title>
+
+  <style>
+    :root {
+      --bg1: #fff7fb;
+      --bg2: #f3fbff;
+      --bg3: #f7fff6;
+      --card: #ffffff;
+      --text: #1f2a44;
+      --muted: #56637c;
+      --accent: #7c5cff;
+      --accent2: #32c7ff;
+      --accent3: #2ee59d;
+      --border: rgba(31, 42, 68, .12);
+      --shadow: 0 18px 60px rgba(31, 42, 68, .12);
+      --shadow2: 0 10px 30px rgba(31, 42, 68, .10);
+      --r: 22px;
+      --r2: 16px;
+      --font: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Arial, "Noto Sans", sans-serif;
+    }
+
+    * {
+      box-sizing: border-box
+    }
+
+    body {
+      margin: 0;
+      font-family: var(--font);
+      color: var(--text);
+      background:
+        radial-gradient(900px 600px at 12% 12%, rgba(124, 92, 255, .14), transparent 60%),
+        radial-gradient(900px 600px at 88% 18%, rgba(50, 199, 255, .16), transparent 60%),
+        radial-gradient(900px 600px at 35% 92%, rgba(46, 229, 157, .12), transparent 60%),
+        linear-gradient(135deg, var(--bg1), var(--bg2), var(--bg3));
+      overflow: hidden;
+    }
+
+    /* Gate */
+    .gate {
+      position: fixed;
+      inset: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 18px;
+      background:
+        radial-gradient(900px 600px at 20% 25%, rgba(124, 92, 255, .18), transparent 60%),
+        radial-gradient(900px 600px at 80% 25%, rgba(50, 199, 255, .18), transparent 60%),
+        linear-gradient(135deg, rgba(255, 255, 255, .92), rgba(255, 255, 255, .86));
+      z-index: 999;
+    }
+
+    .gateCard {
+      width: min(560px, 92vw);
+      background: rgba(255, 255, 255, .94);
+      border: 1px solid var(--border);
+      border-radius: 24px;
+      box-shadow: var(--shadow);
+      padding: 22px;
+    }
+
+    .gateCard h2 {
+      margin: 0 0 6px;
+    }
+
+    .gateCard p {
+      margin: 0 0 12px;
+      color: var(--muted);
+      font-size: 16px;
+      line-height: 1.5;
+    }
+
+    .gateRow {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      align-items: center;
+    }
+
+    .gateInput {
+      flex: 1;
+      padding: 14px 14px;
+      border-radius: 16px;
+      border: 1px solid rgba(31, 42, 68, .16);
+      background: #fff;
+      font-size: 16px;
+      font-weight: 900;
+      letter-spacing: .8px;
+      text-transform: uppercase;
+      outline: none;
+    }
+
+    /* Top UI */
+    .topbar {
+      position: fixed;
+      inset: 14px 14px auto 14px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      z-index: 50;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 10px 14px;
+      border-radius: 999px;
+      background: rgba(255, 255, 255, .86);
+      border: 1px solid var(--border);
+      box-shadow: var(--shadow2);
+      backdrop-filter: blur(10px);
+      user-select: none;
+    }
+
+    .dot {
+      width: 12px;
+      height: 12px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, var(--accent), var(--accent2));
+      box-shadow: 0 0 0 7px rgba(124, 92, 255, .14);
+    }
+
+    .brand .t1 {
+      font-weight: 1000;
+      font-size: 14px;
+    }
+
+    .brand .t2 {
+      font-weight: 800;
+      font-size: 12px;
+      color: var(--muted);
+      margin-left: 6px;
+    }
+
+    .pill {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 10px 12px;
+      border-radius: 999px;
+      background: rgba(255, 255, 255, .86);
+      border: 1px solid var(--border);
+      box-shadow: var(--shadow2);
+      user-select: none;
+    }
+
+    .pill kbd {
+      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+      font-size: 12px;
+      padding: 4px 7px;
+      border-radius: 10px;
+      background: rgba(31, 42, 68, .06);
+      border: 1px solid rgba(31, 42, 68, .10);
+    }
+
+    .progress {
+      position: fixed;
+      left: 14px;
+      right: 14px;
+      top: 66px;
+      height: 10px;
+      border-radius: 999px;
+      background: rgba(31, 42, 68, .06);
+      border: 1px solid rgba(31, 42, 68, .10);
+      overflow: hidden;
+      z-index: 40;
+    }
+
+    .progress>div {
+      height: 100%;
+      width: 0%;
+      background: linear-gradient(90deg, var(--accent), var(--accent2), var(--accent3));
+      border-radius: 999px;
+      transition: width .35s ease;
+    }
+
+    /* Deck */
+    .deck {
+      position: fixed;
+      inset: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 96px 18px 82px;
+    }
+
+    .slide {
+      width: min(1120px, 96vw);
+      height: min(700px, 78vh);
+      border-radius: var(--r);
+      background: rgba(255, 255, 255, .78);
+      border: 1px solid var(--border);
+      backdrop-filter: blur(10px);
+      box-shadow: var(--shadow);
+      position: absolute;
+      opacity: 0;
+      transform: translateY(10px) scale(.985);
+      transition: opacity .28s ease, transform .28s ease;
+      overflow: hidden;
+      display: none;
+    }
+
+    .slide.active {
+      display: block;
+      opacity: 1;
+      transform: translateY(0) scale(1);
+      position: relative;
+    }
+
+    .slide-content {
+      height: 100%;
+      overflow-y: auto;
+      padding: 28px;
+      padding-right: 14px;
+    }
+
+    .slide-content::-webkit-scrollbar {
+      width: 8px;
+    }
+
+    .slide-content::-webkit-scrollbar-thumb {
+      background: rgba(124, 92, 255, .35);
+      border-radius: 999px;
+    }
+
+    .slide-content::-webkit-scrollbar-track {
+      background: rgba(31, 42, 68, .06);
+    }
+
+    .card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: var(--r2);
+      padding: 18px;
+      box-shadow: var(--shadow2);
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: 1.05fr .95fr;
+      gap: 18px;
+      align-items: stretch;
+    }
+
+    h1 {
+      font-size: 44px;
+      line-height: 1.05;
+      margin: 0 0 10px;
+    }
+
+    h2 {
+      font-size: 28px;
+      margin: 0 0 8px;
+    }
+
+    p {
+      font-size: 18px;
+      color: var(--muted);
+      margin: 0 0 12px;
+      line-height: 1.55;
+    }
+
+    ul {
+      margin: 10px 0 0 20px;
+      padding: 0;
+    }
+
+    li {
+      margin: 6px 0;
+      color: var(--muted);
+      font-size: 18px;
+      line-height: 1.45;
+    }
+
+    .mini {
+      font-size: 14px;
+      color: rgba(31, 42, 68, .70);
+      font-weight: 900;
+    }
+
+    .highlight {
+      background: linear-gradient(135deg, rgba(124, 92, 255, .16), rgba(50, 199, 255, .16));
+      border: 1px solid rgba(124, 92, 255, .18);
+      padding: 12px 14px;
+      border-radius: 16px;
+      font-weight: 1000;
+      margin: 10px 0 12px;
+      color: rgba(31, 42, 68, .92);
+    }
+
+    .tip {
+      background: rgba(46, 229, 157, .12);
+      border: 1px solid rgba(46, 229, 157, .28);
+      padding: 12px 14px;
+      border-radius: 16px;
+      font-weight: 900;
+      color: rgba(31, 42, 68, .78);
+      margin-top: 10px;
+    }
+
+    .row {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      align-items: center;
+    }
+
+    .btn {
+      border: none;
+      padding: 12px 14px;
+      border-radius: 16px;
+      background: rgba(255, 255, 255, .92);
+      border: 1px solid var(--border);
+      cursor: pointer;
+      font-weight: 1000;
+      box-shadow: var(--shadow2);
+      color: rgba(31, 42, 68, .92);
+    }
+
+    .btn.primary {
+      background: linear-gradient(135deg, var(--accent), var(--accent2));
+      border: none;
+      color: #fff;
+      box-shadow: 0 12px 26px rgba(124, 92, 255, .18);
+    }
+
+    .btn:disabled {
+      opacity: .45;
+      cursor: not-allowed;
+    }
+
+    /* Stage for 2 sprites */
+    .stage {
+      border-radius: var(--r2);
+      border: 2px dashed rgba(31, 42, 68, .18);
+      background: #fff;
+      box-shadow: var(--shadow2);
+      position: relative;
+      overflow: hidden;
+      min-height: 440px;
+    }
+
+    .stageTop {
+      position: absolute;
+      left: 12px;
+      top: 12px;
+      z-index: 6;
+      padding: 8px 10px;
+      border-radius: 999px;
+      background: rgba(255, 255, 255, .90);
+      border: 1px solid var(--border);
+      font-weight: 1000;
+    }
+
+    .backdrop {
+      position: absolute;
+      inset: 0;
+      background:
+        radial-gradient(800px 280px at 40% 25%, rgba(50, 199, 255, .18), transparent 60%),
+        linear-gradient(180deg, #dff4ff 0%, #ffffff 55%, #e8ffe9 100%);
+      opacity: .95;
+    }
+
+    .ground {
+      position: absolute;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      height: 86px;
+      background: linear-gradient(180deg, rgba(31, 42, 68, .02), rgba(31, 42, 68, .06));
+      border-top: 1px solid rgba(31, 42, 68, .10);
+      z-index: 2;
+    }
+
+    .sprite {
+      position: absolute;
+      width: 92px;
+      height: 92px;
+      border-radius: 24px;
+      border: 2px solid rgba(31, 42, 68, .12);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 44px;
+      box-shadow: 0 14px 26px rgba(31, 42, 68, .10);
+      z-index: 4;
+      user-select: none;
+      cursor: grab;
+      touch-action: none;
+    }
+
+    .sprite:active {
+      cursor: grabbing;
+    }
+
+    .sprite.a {
+      background: linear-gradient(135deg, rgba(124, 92, 255, .18), rgba(50, 199, 255, .18));
+    }
+
+    .sprite.b {
+      background: linear-gradient(135deg, rgba(46, 229, 157, .18), rgba(255, 209, 102, .18));
+    }
+
+    .bubble {
+      position: absolute;
+      max-width: 260px;
+      padding: 10px 12px;
+      border-radius: 16px;
+      background: rgba(255, 255, 255, .94);
+      border: 1px solid rgba(31, 42, 68, .12);
+      box-shadow: var(--shadow2);
+      font-weight: 1000;
+      color: rgba(31, 42, 68, .86);
+      z-index: 5;
+      opacity: 0;
+      transform: translateY(6px);
+      transition: opacity .22s ease, transform .22s ease;
+      pointer-events: none;
+    }
+
+    .bubble.show {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    .bubble small {
+      display: block;
+      font-weight: 900;
+      color: rgba(31, 42, 68, .60);
+      margin-top: 4px;
+    }
+
+    /* Inputs */
+    .field {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      padding: 12px 12px;
+      border-radius: 16px;
+      border: 1px solid rgba(31, 42, 68, .12);
+      background: rgba(31, 42, 68, .02);
+    }
+
+    .field label {
+      font-weight: 1000;
+      color: rgba(31, 42, 68, .82);
+    }
+
+    .field input {
+      padding: 12px 12px;
+      border-radius: 14px;
+      border: 1px solid rgba(31, 42, 68, .16);
+      outline: none;
+      font-size: 16px;
+      font-weight: 900;
+    }
+
+    /* Checklist */
+    .checklist {
+      display: grid;
+      gap: 10px;
+      margin-top: 10px;
+    }
+
+    .check {
+      display: flex;
+      gap: 10px;
+      align-items: flex-start;
+      padding: 12px 12px;
+      border-radius: 16px;
+      background: rgba(31, 42, 68, .03);
+      border: 1px solid rgba(31, 42, 68, .12);
+      cursor: pointer;
+      user-select: none;
+    }
+
+    .check input {
+      margin-top: 4px;
+      transform: scale(1.2);
+    }
+
+    .check span {
+      color: var(--muted);
+      font-size: 18px;
+      line-height: 1.35;
+    }
+
+    .check.done {
+      border-color: rgba(46, 229, 157, .45);
+      background: rgba(46, 229, 157, .14);
+    }
+
+    /* Bottom nav */
+    .nav {
+      position: fixed;
+      inset: auto 14px 14px 14px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      z-index: 50;
+    }
+
+    .counter {
+      padding: 12px 14px;
+      border-radius: 16px;
+      background: rgba(255, 255, 255, .88);
+      border: 1px solid var(--border);
+      font-weight: 1100;
+      min-width: 140px;
+      text-align: center;
+      box-shadow: var(--shadow2);
+    }
+
+    /* Toast */
+    .toast {
+      position: fixed;
+      left: 50%;
+      bottom: 86px;
+      transform: translateX(-50%);
+      padding: 12px 14px;
+      border-radius: 999px;
+      background: rgba(255, 255, 255, .94);
+      border: 1px solid var(--border);
+      box-shadow: var(--shadow);
+      font-weight: 1000;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity .25s ease, transform .25s ease;
+      z-index: 60;
+      max-width: min(92vw, 900px);
+      text-align: center;
+    }
+
+    .toast.show {
+      opacity: 1;
+      transform: translateX(-50%) translateY(-2px);
+    }
+
+    @media (max-width: 920px) {
+      .grid {
+        grid-template-columns: 1fr;
+      }
+
+      .slide {
+        height: min(980px, 82vh);
+      }
+
+      .stage {
+        min-height: 380px;
+      }
+
+      h1 {
+        font-size: 38px;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+  <!-- Access Gate -->
+  <section class="gate" id="gate">
+    <div class="gateCard">
+      <div class="row" style="justify-content:space-between; align-items:flex-start;">
+        <div>
+          <h2>Masukkan Kode Akses 🔐</h2>
+          <p>Gunakan kode dari guru untuk membuka materi Sesi 17.</p>
+        </div>
+        <div class="mini"
+          style="padding:10px 12px; border-radius:16px; background:rgba(31,42,68,.04); border:1px solid rgba(31,42,68,.10);">
+          Sesi 17
+        </div>
+      </div>
+
+      <div class="gateRow">
+        <input class="gateInput" id="codeInput" placeholder="KODE AKSES" autocomplete="off" />
+        <button class="btn primary" id="unlockBtn">Buka</button>
+        <button class="btn" id="hintBtn" type="button">Petunjuk</button>
+      </div>
+
+      <div class="tip" style="margin-top:12px;">
+        Tips: ketik huruf besar. Lalu tekan <b>Enter</b>.
+      </div>
+    </div>
+  </section>
+
+  <div class="topbar">
+    <div class="brand">
+      <div class="dot"></div>
+      <div class="t1">Sesi 17</div>
+      <div class="t2">2 Sprite & Percakapan</div>
+    </div>
+    <div class="pill">
+      <span style="font-weight:1000;color:rgba(31,42,68,.9)">Keyboard:</span>
+      <kbd>←</kbd><kbd>→</kbd><kbd>Space</kbd><kbd>Home</kbd><kbd>End</kbd>
+    </div>
+  </div>
+
+  <div class="progress">
+    <div id="bar"></div>
+  </div>
+
+  <main class="deck">
+
+    <!-- Slide 1 -->
+    <section class="slide active">
+      <div class="slide-content">
+        <div class="grid">
+          <div class="card">
+            <h1>Hari ini: 2 Sprite ngobrol 💬</h1>
+            <p>
+              Kita akan membuat <b>2 karakter</b> di ScratchJr.
+              Mereka akan <b>berbicara bergantian</b> seperti teman ngobrol.
+            </p>
+            <div class="highlight">Sprite A bicara → Sprite B balas</div>
+            <ul>
+              <li>Tambah sprite kedua</li>
+              <li>Atur posisi awal</li>
+              <li>Buat 2–3 kalimat pendek</li>
+            </ul>
+            <div class="tip">Tips: kalimat pendek saja ya (2–5 kata).</div>
+          </div>
+
+          <div class="card">
+            <h2>Contoh dialog (mudah)</h2>
+            <div class="highlight">“Halo!” → “Hai!” → “Main yuk!”</div>
+            <p class="mini">Nanti kamu buat versi kamu sendiri 🙂</p>
+            <div class="row" style="margin-top:12px;">
+              <button class="btn primary" data-toast="Dialog itu bicara bergantian 🙂">Aku paham!</button>
+              <button class="btn" data-toast="Setiap sprite punya kode sendiri.">Ingat!</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Slide 2 -->
+    <section class="slide">
+      <div class="slide-content">
+        <div class="card">
+          <h2>Tujuan Belajar 🎯</h2>
+          <p>Setelah sesi ini, kamu bisa:</p>
+          <ul>
+            <li>Menambah <b>sprite kedua</b></li>
+            <li>Mengatur posisi awal 2 sprite</li>
+            <li>Membuat percakapan sederhana (bergantian)</li>
+            <li>Menjelaskan: “Sprite A bicara dulu, lalu Sprite B”</li>
+          </ul>
+          <div class="highlight">Hari ini kita belajar “gantian bicara” 😊</div>
+          <div class="tip">Kalau urutan salah, dialognya jadi membingungkan.</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Slide 3 (Baru) -->
+    <section class="slide">
+      <div class="slide-content">
+        <div class="grid">
+          <div class="card">
+            <h2>Ngobrol di Dunia Nyata 🗣️</h2>
+            <p>
+              Kalau kita ngobrol, biasanya kita <b>bergantian</b>.
+              Tidak bicara bareng-bareng 😄
+            </p>
+            <div class="highlight">
+              Aktivitas 2 Menit: <b>Ngobrol Berpasangan</b>
+            </div>
+            <ul>
+              <li>1) Cari teman di sebelahmu.</li>
+              <li>2) Tentukan peran: <b>Orang A</b> dan <b>Orang B</b>.</li>
+              <li>3) Ngobrol 3 giliran: <b>A → B → A</b>.</li>
+            </ul>
+            <div class="tip">
+              Aturan penting: <b>bergantian bicara</b> (tidak bareng-bareng) 😊
+            </div>
+
+            <div class="row" style="margin-top:12px;">
+              <button class="btn primary" id="startTalkBtn" type="button">⏱️ Mulai 2 Menit</button>
+              <button class="btn" id="resetTalkBtn" type="button">Reset</button>
+            </div>
+
+            <div class="highlight" id="talkTimerBox" style="margin-top:12px;">
+              Timer: 02:00
+            </div>
+
+            <div class="tip" id="talkPrompt">
+              Contoh kalimat:
+              <br><b>A:</b> “Halo!” → <b>B:</b> “Hai!” → <b>A:</b> “Main yuk!”
+            </div>
+
+
+            <div class="highlight">
+              Orang A bicara → Orang B balas → Orang A bicara
+            </div>
+
+            <p>Contoh ngobrol singkat:</p>
+            <ul>
+              <li>A: “Halo!”</li>
+              <li>B: “Hai!”</li>
+              <li>A: “Namamu siapa?”</li>
+              <li>B: “Aku Bimo.”</li>
+            </ul>
+
+            <div class="tip">
+              Di ScratchJr juga sama: <b>Sprite A</b> bicara dulu, lalu <b>Sprite B</b> balas.
+            </div>
+          </div>
+
+          <div class="card">
+            <h2>Ubah jadi ScratchJr 🎮</h2>
+            <p>
+              Kita ubah ngobrol tadi jadi “kode” sederhana:
+            </p>
+
+            <div class="highlight">
+              Green Flag → A bicara → B bicara → A bicara
+            </div>
+
+            <p class="mini">Mini interaktif: susun urutan ngobrol yang benar</p>
+
+            <div class="row" style="margin-top:10px;">
+              <button class="btn primary" data-order="A">A bicara</button>
+              <button class="btn primary" data-order="A2">A bicara lagi</button>
+              <button class="btn primary" data-order="B">B balas</button>
+              <button class="btn" id="orderResetBtn" type="button">Reset</button>
+            </div>
+
+            <div class="highlight" id="orderBox" style="margin-top:12px;">
+              Urutan kamu: (belum ada)
+            </div>
+
+            <div class="tip" id="orderMsg">
+
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+
+    <!-- Slide 3 -->
+    <section class="slide">
+      <div class="slide-content">
+        <div class="grid">
+          <div class="card">
+            <h2>Ingat ya!</h2>
+            <p>
+              Setiap sprite punya <b>kode masing-masing</b>.
+              Jadi kamu perlu menaruh blok di sprite yang benar.
+            </p>
+            <div class="highlight">Klik sprite → baru pasang bloknya</div>
+            <p class="mini">Kalau salah sprite, yang bicara jadi salah 😅</p>
+            <div class="tip">Trik: cek dulu siapa yang sedang dipilih.</div>
+          </div>
+
+          <div class="card" id="miniCheck">
+            <h2>Mini Cek 👀</h2>
+            <p>Pilih yang benar:</p>
+            <div class="row">
+              <button class="btn primary" data-quiz="Sprite" data-ans="benar">🐱 Sprite</button>
+              <button class="btn primary" data-quiz="Backdrop" data-ans="salah">🌳 Backdrop</button>
+            </div>
+            <div class="highlight" style="margin-top:12px;">
+              Pertanyaan: “Yang bisa bergerak itu siapa?”
+            </div>
+            <div class="tip" id="miniCheckMsg">Klik salah satu jawaban 🙂</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Slide 4 -->
+    <section class="slide">
+      <div class="slide-content">
+        <div class="grid">
+          <div class="card">
+            <h2>Langkah 1: Tambah Sprite Kedua</h2>
+            <p>
+              Di ScratchJr, kamu bisa menambah karakter baru.
+              Pilih sprite yang kamu suka.
+            </p>
+            <div class="highlight">
+              Target: ada <b>2 sprite</b> di panggung
+            </div>
+            <ul>
+              <li>Pilih sprite A (karakter 1)</li>
+              <li>Tambah sprite B (karakter 2)</li>
+            </ul>
+            <div class="tip">
+              Pilih 2 karakter yang mudah dibedakan (misal: 🐱 dan 🐰).
+            </div>
+          </div>
+
+          <div class="card">
+            <h2>Contoh pasangan: Tic dan Toc</h2>
+            <img
+              src="https://uob-1328237036.cos.ap-singapore.myqcloud.com//file-uploader/images/77c03a39-a523-481d-a1a3-6fa97e2d0141.png"
+              alt="Contoh pasangan sprite" style="width:100%; border-radius:16px; box-shadow:var(--shadow2);" />
+            <p class="mini">Nanti kamu pakai 2 sprite di proyekmu.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Slide 5 -->
+    <section class="slide">
+      <div class="slide-content">
+        <div class="grid">
+          <div class="card">
+            <h2>Langkah 2: Atur Posisi Awal</h2>
+            <p>
+              Kalau 2 sprite bertumpuk, kita jadi susah melihat.
+              Maka, kita atur posisinya.
+            </p>
+            <div class="highlight">Pisahkan kiri dan kanan</div>
+            <ul>
+              <li>Sprite A di kiri</li>
+              <li>Sprite B di kanan</li>
+            </ul>
+          </div>
+
+          <div class="card">
+            <h2>Atur posisi kedua sprite agar tidak bertumpukan</h2>
+            <img
+              src="https://uob-1328237036.cos.ap-singapore.myqcloud.com//file-uploader/images/77c03a39-a523-481d-a1a3-6fa97e2d0141.png"
+              alt="Contoh pasangan sprite" style="width:100%; border-radius:16px; box-shadow:var(--shadow2);" />
+            <p class="mini">Pastikan 2 sprite berdiri berhadap-hadapan.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Slide 6 -->
+    <section class="slide">
+      <div class="slide-content">
+        <div class="grid">
+          <div class="card">
+            <h2>Langkah 3: Buat Dialog</h2>
+            <p>
+              Dialog itu percakapan.
+              Kita buat <b>bergantian</b>: A lalu B.
+            </p>
+            <div class="highlight">A bicara → B balas → A bicara</div>
+            <p class="mini">Isi kalimat pendek ya.</p>
+
+            <div class="field" style="margin-top:12px;">
+              <label>Kalimat Sprite A</label>
+              <input id="textA" maxlength="25" value="Halo!" />
+            </div>
+
+            <div class="field" style="margin-top:10px;">
+              <label>Kalimat Sprite B</label>
+              <input id="textB" maxlength="25" value="Hai!" />
+            </div>
+
+            <div class="row" style="margin-top:12px;">
+              <button class="btn primary" id="sayABtn">A bicara</button>
+              <button class="btn primary" id="sayBBtn">B bicara</button>
+            </div>
+
+            <div class="tip">
+              Setelah ini kita “Play” supaya dialognya bergantian otomatis.
+            </div>
+          </div>
+
+          <div class="card">
+            <h2>Contoh kalimat mudah</h2>
+            <ul>
+              <li>A: “Halo!”</li>
+              <li>B: “Hai!”</li>
+              <li>A: “Namaku ____.”</li>
+              <li>B: “Aku ____.”</li>
+              <li>A: “Main yuk!”</li>
+            </ul>
+            <div class="highlight">2–3 kalimat saja sudah bagus ✅</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Slide 7 -->
+    <section class="slide">
+      <div class="slide-content">
+        <div class="grid">
+          <div class="card">
+            <h2>Play Percakapan 🎬</h2>
+            <p>
+              Sekarang kita coba dialognya <b>bergantian</b>.
+              Ini seperti menonton cerita kecil.
+            </p>
+            <div class="highlight">A → B → A (bergantian)</div>
+            <div class="row" style="margin-top:12px;">
+              <button class="btn primary" id="playBtn">▶ Play</button>
+              <button class="btn" id="stopBtn">⏹ Stop</button>
+            </div>
+            <div class="tip" id="playMsg">Klik Play untuk mulai 🙂</div>
+          </div>
+
+          <div class="card">
+            <iframe width="420" height="315" src="https://www.youtube.com/embed/p7nSAs9BMXU" title="Toc and Tac" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+            <p class="mini">Contoh video: Tac dan Toc ngobrol.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Slide 8 -->
+    <section class="slide">
+      <div class="slide-content">
+        <div class="card">
+          <h2>Checklist ✅</h2>
+          <p>Centang kalau sudah ya.</p>
+
+          <div class="checklist" id="reflectList">
+            <label class="check"><input type="checkbox" /><span>Aku punya 2 sprite di satu proyek.</span></label>
+            <label class="check"><input type="checkbox" /><span>Aku mengatur posisi 2 sprite supaya tidak
+                bertabrakan.</span></label>
+            <label class="check"><input type="checkbox" /><span>Aku membuat Sprite A dan Sprite B
+                berbicara.</span></label>
+            <label class="check"><input type="checkbox" /><span>Dialognya bergantian (A lalu B).</span></label>
+          </div>
+
+          <div class="row" style="margin-top:12px;">
+            <button class="btn primary" id="finishReflect">Selesai ✅</button>
+            <button class="btn" id="resetReflect">Reset</button>
+          </div>
+
+          <div class="highlight" id="reflectMsg" style="margin-top:12px;">
+            Target: centang minimal 3 ya 🙂
+          </div>
+
+          <div class="tip" style="margin-top:10px;">
+            Refleksi: “Aku membuat dialog tentang ____.”
+          </div>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <div class="nav">
+    <button class="btn" id="prevBtn">⬅️ Sebelumnya</button>
+    <div class="counter" id="counter">1 / 8</div>
+    <button class="btn primary" id="nextBtn">➡️ Berikutnya</button>
+  </div>
+
+  <div class="toast" id="toast"></div>
+
+  <script>
+    /* ---------------- Toast ---------------- */
+    const toast = document.getElementById("toast");
+    let toastTimer = null;
+    function showToast(msg) {
+      toast.textContent = msg;
+      toast.classList.add("show");
+      clearTimeout(toastTimer);
+      toastTimer = setTimeout(() => toast.classList.remove("show"), 1600);
+    }
+    document.querySelectorAll("[data-toast]").forEach(el => {
+      el.addEventListener("click", () => showToast(el.dataset.toast));
+    });
+
+    /* ---------------- Access Gate ---------------- */
+    const ACCESS_CODE = "RGMDSLP25";
+    const gate = document.getElementById("gate");
+    const codeInput = document.getElementById("codeInput");
+    const unlockBtn = document.getElementById("unlockBtn");
+    const hintBtn = document.getElementById("hintBtn");
+
+    function unlock() {
+      const val = (codeInput.value || "").trim().toUpperCase();
+      if (val === ACCESS_CODE) {
+        localStorage.setItem("LP_S17_UNLOCKED", "1");
+        gate.style.display = "none";
+        showToast("Materi terbuka ✅");
+      } else {
+        showToast("Kode salah. Coba lagi 🙂");
+        codeInput.focus();
+        codeInput.select();
+      }
+    }
+    unlockBtn.addEventListener("click", unlock);
+    codeInput.addEventListener("keydown", (e) => { if (e.key === "Enter") unlock(); });
+    hintBtn.addEventListener("click", () => showToast("Petunjuk: kodenya diawali RGM... dan ada angka 25"));
+
+    if (localStorage.getItem("LP_S17_UNLOCKED") === "1") {
+      gate.style.display = "none";
+    } else {
+      setTimeout(() => codeInput.focus(), 250);
+    }
+
+    /* ---------------- Slides ---------------- */
+    const slides = Array.from(document.querySelectorAll(".slide"));
+    const bar = document.getElementById("bar");
+    const counter = document.getElementById("counter");
+    const prevBtn = document.getElementById("prevBtn");
+    const nextBtn = document.getElementById("nextBtn");
+    let idx = 0;
+
+    function render() {
+      slides.forEach((s, i) => s.classList.toggle("active", i === idx));
+      counter.textContent = `${idx + 1} / ${slides.length}`;
+      bar.style.width = `${((idx + 1) / slides.length) * 100}%`;
+
+      prevBtn.disabled = idx === 0;
+      nextBtn.disabled = idx === slides.length - 1;
+
+      const activeContent = document.querySelector(".slide.active .slide-content");
+      if (activeContent) activeContent.scrollTop = 0;
+    }
+    function next() { if (idx < slides.length - 1) { idx++; render(); } }
+    function prev() { if (idx > 0) { idx--; render(); } }
+    prevBtn.addEventListener("click", prev);
+    nextBtn.addEventListener("click", next);
+
+    document.addEventListener("keydown", (e) => {
+      if (gate.style.display !== "none") return;
+      const tag = (e.target && e.target.tagName) ? e.target.tagName.toLowerCase() : "";
+      if (["input", "textarea", "select"].includes(tag)) return;
+
+      if (e.key === "ArrowRight" || e.key === " " || e.key === "PageDown") { e.preventDefault(); next(); }
+      if (e.key === "ArrowLeft" || e.key === "PageUp") { e.preventDefault(); prev(); }
+      if (e.key === "Home") { e.preventDefault(); idx = 0; render(); }
+      if (e.key === "End") { e.preventDefault(); idx = slides.length - 1; render(); }
+    });
+
+    render();
+
+    /* ---------------- Real-life conversation ordering (Slide baru) ---------------- */
+    let order = [];
+
+    function renderOrder() {
+      const box = document.getElementById("orderBox");
+      const msg = document.getElementById("orderMsg");
+      if (!box || !msg) return;
+
+      const pretty = order.length ? order.map(x => (x === "A" ? "A" : x === "B" ? "B" : "A")).join(" → ") : "(belum ada)";
+      box.textContent = "Urutan kamu: " + pretty;
+
+      // valid if exactly A, B, A (3 steps)
+      if (order.length === 3) {
+        const ok = (order[0] === "A" && order[1] === "B" && order[2] === "A2");
+        if (ok) {
+          msg.innerHTML = "✅ Benar! Ini cocok: <b>A → B → A</b>";
+          showToast("Urutan ngobrol benar ✅");
+        } else {
+          msg.innerHTML = "❌ Coba lagi 🙂 Target: <b>A → B → A</b>";
+          showToast("Urutan belum pas 🙂");
+        }
+      } else {
+        msg.innerHTML = "";
+      }
+    }
+
+    document.querySelectorAll("[data-order]").forEach(btn => {
+      btn.addEventListener("click", () => {
+        if (order.length >= 3) {
+          showToast("Sudah 3 langkah. Klik Reset ya 🙂");
+          return;
+        }
+        order.push(btn.dataset.order);
+        renderOrder();
+      });
+    });
+
+    const orderResetBtn = document.getElementById("orderResetBtn");
+    if (orderResetBtn) {
+      orderResetBtn.addEventListener("click", () => {
+        order = [];
+        renderOrder();
+        showToast("Di-reset 🙂");
+      });
+    }
+
+    renderOrder();
+
+    /* ---------------- Real-life talk activity (2-minute timer) ---------------- */
+    let talkLeft = 120; // seconds
+    let talkInterval = null;
+
+    function fmtTime(sec) {
+      const m = String(Math.floor(sec / 60)).padStart(2, '0');
+      const s = String(sec % 60).padStart(2, '0');
+      return `${m}:${s}`;
+    }
+
+    function setTalkUI() {
+      const box = document.getElementById("talkTimerBox");
+      if (box) box.textContent = `Timer: ${fmtTime(talkLeft)}`;
+    }
+
+    function startTalkTimer() {
+      if (talkInterval) return;
+      showToast("Mulai ngobrol berpasangan! A → B → A 🙂");
+
+      talkInterval = setInterval(() => {
+        talkLeft--;
+        if (talkLeft < 0) talkLeft = 0;
+        setTalkUI();
+
+        if (talkLeft === 0) {
+          clearInterval(talkInterval);
+          talkInterval = null;
+          showToast("Waktu habis! Sekarang kita ubah ke ScratchJr 🎮");
+        }
+      }, 1000);
+    }
+
+    function resetTalkTimer() {
+      clearInterval(talkInterval);
+      talkInterval = null;
+      talkLeft = 120;
+      setTalkUI();
+      showToast("Timer di-reset 🙂");
+    }
+
+    const startTalkBtn = document.getElementById("startTalkBtn");
+    const resetTalkBtn = document.getElementById("resetTalkBtn");
+    if (startTalkBtn) startTalkBtn.addEventListener("click", startTalkTimer);
+    if (resetTalkBtn) resetTalkBtn.addEventListener("click", resetTalkTimer);
+
+    setTalkUI();
+
+
+    /* ---------------- Mini Check (Slide 3) ---------------- */
+    document.querySelectorAll('#miniCheck button[data-quiz]').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const msg = document.getElementById('miniCheckMsg');
+        if (btn.dataset.ans === 'benar') {
+          msg.textContent = '✅ Benar! Sprite yang bisa bergerak.';
+          showToast('Benar! Sprite bergerak 🐱');
+        } else {
+          msg.textContent = '❌ Belum. Yang bisa bergerak adalah Sprite.';
+          showToast('Coba lagi ya 🙂');
+        }
+      });
+    });
+
+    /* ---------------- Drag sprites (Slide 5) ---------------- */
+    function makeDraggable(spriteEl, stageEl) {
+      let dragging = false, startX = 0, startY = 0, origX = 0, origY = 0;
+
+      function pointerDown(e) {
+        dragging = true;
+        spriteEl.setPointerCapture(e.pointerId);
+        const rect = spriteEl.getBoundingClientRect();
+        startX = e.clientX; startY = e.clientY;
+        origX = rect.left; origY = rect.top;
+      }
+      function pointerMove(e) {
+        if (!dragging) return;
+        const sRect = stageEl.getBoundingClientRect();
+        const newLeft = origX + (e.clientX - startX) - sRect.left;
+        const newTop = origY + (e.clientY - startY) - sRect.top;
+
+        const maxLeft = sRect.width - spriteEl.offsetWidth;
+        const maxTop = sRect.height - spriteEl.offsetHeight - 86; // keep above ground
+        const clampedLeft = Math.max(10, Math.min(newLeft, maxLeft - 10));
+        const clampedTop = Math.max(60, Math.min(newTop, maxTop));
+
+        spriteEl.style.left = clampedLeft + "px";
+        spriteEl.style.top = clampedTop + "px";
+        spriteEl.style.bottom = "auto";
+      }
+      function pointerUp() {
+        dragging = false;
+      }
+
+      spriteEl.addEventListener("pointerdown", pointerDown);
+      spriteEl.addEventListener("pointermove", pointerMove);
+      spriteEl.addEventListener("pointerup", pointerUp);
+      spriteEl.addEventListener("pointercancel", pointerUp);
+    }
+
+    const stage = document.getElementById("stage");
+    const spriteA = document.getElementById("spriteA");
+    const spriteB = document.getElementById("spriteB");
+    makeDraggable(spriteA, stage);
+    makeDraggable(spriteB, stage);
+
+    document.getElementById("resetPosBtn").addEventListener("click", () => {
+      spriteA.style.left = "90px"; spriteA.style.top = ""; spriteA.style.bottom = "110px";
+      spriteB.style.left = "520px"; spriteB.style.top = ""; spriteB.style.bottom = "110px";
+      showToast("Posisi di-reset 🙂");
+    });
+
+    /* ---------------- Speech bubbles helpers ---------------- */
+    function showBubble(bubbleEl, spriteEl, text, who) {
+      bubbleEl.innerHTML = `${text}<small>${who}</small>`;
+      const sRect = spriteEl.getBoundingClientRect();
+      const parent = spriteEl.parentElement.getBoundingClientRect();
+
+      const x = (sRect.left - parent.left) + (sRect.width / 2) - 120;
+      const y = (sRect.top - parent.top) - 64;
+
+      bubbleEl.style.left = Math.max(12, Math.min(x, parent.width - 272)) + "px";
+      bubbleEl.style.top = Math.max(56, y) + "px";
+      bubbleEl.classList.add("show");
+    }
+    function hideBubble(bubbleEl) {
+      bubbleEl.classList.remove("show");
+    }
+
+    /* Slide 6 manual speak on stage 1 */
+    const textA = document.getElementById("textA");
+    const textB = document.getElementById("textB");
+    const bubbleA = document.getElementById("bubbleA");
+    const bubbleB = document.getElementById("bubbleB");
+
+    document.getElementById("sayABtn").addEventListener("click", () => {
+      hideBubble(bubbleB);
+      showBubble(bubbleA, spriteA, textA.value.trim() || "Halo!", "Sprite A");
+      showToast("Sprite A bicara 💬");
+      setTimeout(() => hideBubble(bubbleA), 1400);
+    });
+    document.getElementById("sayBBtn").addEventListener("click", () => {
+      hideBubble(bubbleA);
+      showBubble(bubbleB, spriteB, textB.value.trim() || "Hai!", "Sprite B");
+      showToast("Sprite B bicara 💬");
+      setTimeout(() => hideBubble(bubbleB), 1400);
+    });
+
+    /* Slide 7 play sequence on stage2 */
+    const stage2 = document.getElementById("stage2");
+    const spriteA2 = document.getElementById("spriteA2");
+    const spriteB2 = document.getElementById("spriteB2");
+    const bubbleA2 = document.getElementById("bubbleA2");
+    const bubbleB2 = document.getElementById("bubbleB2");
+    const playMsg = document.getElementById("playMsg");
+    let playTimer = null;
+
+    function stopPlay() {
+      clearTimeout(playTimer);
+      playTimer = null;
+      hideBubble(bubbleA2); hideBubble(bubbleB2);
+      playMsg.textContent = "Dihentikan 🙂";
+    }
+
+    document.getElementById("playBtn").addEventListener("click", () => {
+      stopPlay();
+      playMsg.textContent = "Main... (A → B → A)";
+      const a = textA.value.trim() || "Halo!";
+      const b = textB.value.trim() || "Hai!";
+      const a2 = "Main yuk!";
+
+      // Step A
+      showBubble(bubbleA2, spriteA2, a, "Sprite A");
+      playTimer = setTimeout(() => {
+        hideBubble(bubbleA2);
+        // Step B
+        showBubble(bubbleB2, spriteB2, b, "Sprite B");
+        playTimer = setTimeout(() => {
+          hideBubble(bubbleB2);
+          // Step A again
+          showBubble(bubbleA2, spriteA2, a2, "Sprite A");
+          playTimer = setTimeout(() => {
+            hideBubble(bubbleA2);
+            playMsg.textContent = "Selesai ✅ Coba ubah kalimatnya!";
+            showToast("Percakapan selesai 🎉");
+          }, 1400);
+        }, 1400);
+      }, 1400);
+    });
+
+    document.getElementById("stopBtn").addEventListener("click", () => {
+      stopPlay();
+      showToast("Stop.");
+    });
+
+    /* ---------------- Checklist (Slide 8) ---------------- */
+    const reflectChecks = Array.from(document.querySelectorAll("#reflectList .check"));
+    const reflectMsg = document.getElementById("reflectMsg");
+
+    reflectChecks.forEach(item => {
+      item.addEventListener("click", (e) => {
+        const cb = item.querySelector("input[type='checkbox']");
+        if (e.target.tagName.toLowerCase() !== "input") {
+          cb.checked = !cb.checked;
+        }
+        item.classList.toggle("done", cb.checked);
+      });
+    });
+
+    document.getElementById("resetReflect").addEventListener("click", () => {
+      reflectChecks.forEach(item => {
+        const cb = item.querySelector("input[type='checkbox']");
+        cb.checked = false;
+        item.classList.remove("done");
+      });
+      reflectMsg.textContent = "Target: centang minimal 3 ya 🙂";
+      showToast("Checklist di-reset.");
+    });
+
+    document.getElementById("finishReflect").addEventListener("click", () => {
+      const checked = reflectChecks.filter(i => i.querySelector("input").checked).length;
+      if (checked >= 3) {
+        reflectMsg.textContent = `Mantap! Kamu centang ${checked}/4 🎉`;
+        showToast("Sesi 17 selesai ✅");
+      } else {
+        reflectMsg.textContent = `Masih ${checked}/4. Ayo minimal 3 ya 🙂`;
+        showToast("Centang minimal 3 ya 🙂");
+      }
+    });
+  </script>
+
+</body>
+
+</html>
