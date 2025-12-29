@@ -1,0 +1,1465 @@
+<!doctype html>
+<html lang="id">
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Sesi 18 — Parallelism (ScratchJr)</title>
+    <style>
+        :root {
+            --bg1: #fff7fb;
+            --bg2: #f3fbff;
+            --bg3: #f7fff6;
+            --card: #ffffff;
+            --text: #1f2a44;
+            --muted: #56637c;
+            --accent: #7c5cff;
+            --accent2: #32c7ff;
+            --accent3: #2ee59d;
+            --warm: #ffd166;
+            --border: rgba(31, 42, 68, .12);
+            --shadow: 0 18px 60px rgba(31, 42, 68, .12);
+            --shadow2: 0 10px 30px rgba(31, 42, 68, .10);
+            --r: 22px;
+            --r2: 16px;
+            --font: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Arial, "Noto Sans", sans-serif;
+        }
+
+        * {
+            box-sizing: border-box
+        }
+
+        body {
+            margin: 0;
+            font-family: var(--font);
+            color: var(--text);
+            background:
+                radial-gradient(900px 600px at 12% 12%, rgba(124, 92, 255, .14), transparent 60%),
+                radial-gradient(900px 600px at 88% 18%, rgba(50, 199, 255, .16), transparent 60%),
+                radial-gradient(900px 600px at 35% 92%, rgba(46, 229, 157, .12), transparent 60%),
+                linear-gradient(135deg, var(--bg1), var(--bg2), var(--bg3));
+            overflow: hidden;
+        }
+
+        /* Access Gate */
+        .gate {
+            position: fixed;
+            inset: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 18px;
+            background:
+                radial-gradient(900px 600px at 20% 25%, rgba(124, 92, 255, .18), transparent 60%),
+                radial-gradient(900px 600px at 80% 25%, rgba(50, 199, 255, .18), transparent 60%),
+                linear-gradient(135deg, rgba(255, 255, 255, .92), rgba(255, 255, 255, .86));
+            z-index: 999;
+        }
+
+        .gateCard {
+            width: min(560px, 92vw);
+            background: rgba(255, 255, 255, .94);
+            border: 1px solid var(--border);
+            border-radius: 24px;
+            box-shadow: var(--shadow);
+            padding: 22px;
+        }
+
+        .gateCard h2 {
+            margin: 0 0 6px;
+        }
+
+        .gateCard p {
+            margin: 0 0 12px;
+            color: var(--muted);
+            font-size: 16px;
+            line-height: 1.5;
+        }
+
+        .gateRow {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+            align-items: center;
+        }
+
+        .gateInput {
+            flex: 1;
+            padding: 14px 14px;
+            border-radius: 16px;
+            border: 1px solid rgba(31, 42, 68, .16);
+            background: #fff;
+            font-size: 16px;
+            font-weight: 900;
+            letter-spacing: .8px;
+            text-transform: uppercase;
+            outline: none;
+        }
+
+        /* Top UI */
+        .topbar {
+            position: fixed;
+            inset: 14px 14px auto 14px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 12px;
+            z-index: 50;
+        }
+
+        .brand {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 10px 14px;
+            border-radius: 999px;
+            background: rgba(255, 255, 255, .86);
+            border: 1px solid var(--border);
+            box-shadow: var(--shadow2);
+            backdrop-filter: blur(10px);
+            user-select: none;
+        }
+
+        .dot {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--accent), var(--accent2));
+            box-shadow: 0 0 0 7px rgba(124, 92, 255, .14);
+        }
+
+        .brand .t1 {
+            font-weight: 1000;
+            font-size: 14px;
+        }
+
+        .brand .t2 {
+            font-weight: 800;
+            font-size: 12px;
+            color: var(--muted);
+            margin-left: 6px;
+        }
+
+        .pill {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 10px 12px;
+            border-radius: 999px;
+            background: rgba(255, 255, 255, .86);
+            border: 1px solid var(--border);
+            box-shadow: var(--shadow2);
+            user-select: none;
+        }
+
+        .pill kbd {
+            font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+            font-size: 12px;
+            padding: 4px 7px;
+            border-radius: 10px;
+            background: rgba(31, 42, 68, .06);
+            border: 1px solid rgba(31, 42, 68, .10);
+        }
+
+        .progress {
+            position: fixed;
+            left: 14px;
+            right: 14px;
+            top: 66px;
+            height: 10px;
+            border-radius: 999px;
+            background: rgba(31, 42, 68, .06);
+            border: 1px solid rgba(31, 42, 68, .10);
+            overflow: hidden;
+            z-index: 40;
+        }
+
+        .progress>div {
+            height: 100%;
+            width: 0%;
+            background: linear-gradient(90deg, var(--accent), var(--accent2), var(--accent3));
+            border-radius: 999px;
+            transition: width .35s ease;
+        }
+
+        /* Deck */
+        .deck {
+            position: fixed;
+            inset: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 96px 18px 82px;
+        }
+
+        .slide {
+            width: min(1120px, 96vw);
+            height: min(700px, 78vh);
+            border-radius: var(--r);
+            background: rgba(255, 255, 255, .78);
+            border: 1px solid var(--border);
+            backdrop-filter: blur(10px);
+            box-shadow: var(--shadow);
+            position: absolute;
+            opacity: 0;
+            transform: translateY(10px) scale(.985);
+            transition: opacity .28s ease, transform .28s ease;
+            overflow: hidden;
+            display: none;
+        }
+
+        .slide.active {
+            display: block;
+            opacity: 1;
+            transform: translateY(0) scale(1);
+            position: relative;
+        }
+
+        .slide-content {
+            height: 100%;
+            overflow-y: auto;
+            padding: 28px;
+            padding-right: 14px;
+        }
+
+        .slide-content::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        .slide-content::-webkit-scrollbar-thumb {
+            background: rgba(124, 92, 255, .35);
+            border-radius: 999px;
+        }
+
+        .slide-content::-webkit-scrollbar-track {
+            background: rgba(31, 42, 68, .06);
+        }
+
+        .card {
+            background: var(--card);
+            border: 1px solid var(--border);
+            border-radius: var(--r2);
+            padding: 18px;
+            box-shadow: var(--shadow2);
+        }
+
+        .grid {
+            display: grid;
+            grid-template-columns: 1.05fr .95fr;
+            gap: 18px;
+            align-items: stretch;
+        }
+
+        h1 {
+            font-size: 44px;
+            line-height: 1.05;
+            margin: 0 0 10px;
+        }
+
+        h2 {
+            font-size: 28px;
+            margin: 0 0 8px;
+        }
+
+        p {
+            font-size: 18px;
+            color: var(--muted);
+            margin: 0 0 12px;
+            line-height: 1.55;
+        }
+
+        ul {
+            margin: 10px 0 0 20px;
+            padding: 0;
+        }
+
+        li {
+            margin: 6px 0;
+            color: var(--muted);
+            font-size: 18px;
+            line-height: 1.45;
+        }
+
+        .mini {
+            font-size: 14px;
+            color: rgba(31, 42, 68, .70);
+            font-weight: 900;
+        }
+
+        .highlight {
+            background: linear-gradient(135deg, rgba(124, 92, 255, .16), rgba(50, 199, 255, .16));
+            border: 1px solid rgba(124, 92, 255, .18);
+            padding: 12px 14px;
+            border-radius: 16px;
+            font-weight: 1000;
+            margin: 10px 0 12px;
+            color: rgba(31, 42, 68, .92);
+        }
+
+        .tip {
+            background: rgba(46, 229, 157, .12);
+            border: 1px solid rgba(46, 229, 157, .28);
+            padding: 12px 14px;
+            border-radius: 16px;
+            font-weight: 900;
+            color: rgba(31, 42, 68, .78);
+            margin-top: 10px;
+        }
+
+        .warn {
+            background: rgba(255, 209, 102, .18);
+            border: 1px solid rgba(255, 209, 102, .40);
+            padding: 12px 14px;
+            border-radius: 16px;
+            font-weight: 900;
+            color: rgba(31, 42, 68, .80);
+            margin-top: 10px;
+        }
+
+        .row {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+            align-items: center;
+        }
+
+        .btn {
+            border: none;
+            padding: 12px 14px;
+            border-radius: 16px;
+            background: rgba(255, 255, 255, .92);
+            border: 1px solid var(--border);
+            cursor: pointer;
+            font-weight: 1000;
+            box-shadow: var(--shadow2);
+            color: rgba(31, 42, 68, .92);
+        }
+
+        .btn.primary {
+            background: linear-gradient(135deg, var(--accent), var(--accent2));
+            border: none;
+            color: #fff;
+            box-shadow: 0 12px 26px rgba(124, 92, 255, .18);
+        }
+
+        .btn.good {
+            background: linear-gradient(135deg, var(--accent3), rgba(50, 199, 255, .92));
+            border: none;
+            color: #fff;
+        }
+
+        .btn:disabled {
+            opacity: .45;
+            cursor: not-allowed;
+        }
+
+        /* Placeholder image blocks */
+        .imgph {
+            border-radius: 16px;
+            border: 2px dashed rgba(31, 42, 68, .22);
+            background: rgba(31, 42, 68, .02);
+            padding: 14px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .imgph .label {
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            padding: 6px 10px;
+            border-radius: 999px;
+            background: rgba(255, 255, 255, .92);
+            border: 1px solid rgba(31, 42, 68, .10);
+            font-weight: 1000;
+            font-size: 12px;
+            color: rgba(31, 42, 68, .78);
+        }
+
+        .imgph .hint {
+            margin-top: 14px;
+            color: rgba(31, 42, 68, .70);
+            font-weight: 900;
+            font-size: 14px;
+            line-height: 1.35;
+        }
+
+        .imgph .box {
+            height: 260px;
+            border-radius: 14px;
+            background:
+                radial-gradient(600px 180px at 30% 30%, rgba(124, 92, 255, .12), transparent 60%),
+                radial-gradient(600px 180px at 70% 35%, rgba(50, 199, 255, .14), transparent 60%),
+                linear-gradient(135deg, rgba(255, 255, 255, .75), rgba(255, 255, 255, .55));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 1100;
+            color: rgba(31, 42, 68, .65);
+            text-align: center;
+            padding: 14px;
+        }
+
+        .imgph img {
+            width: 100%;
+            height: auto;
+            display: block;
+            border-radius: 14px;
+        }
+
+        /* Stage */
+        .stage {
+            border-radius: var(--r2);
+            border: 2px dashed rgba(31, 42, 68, .18);
+            background: #fff;
+            box-shadow: var(--shadow2);
+            position: relative;
+            overflow: hidden;
+            min-height: 460px;
+        }
+
+        .stageTop {
+            position: absolute;
+            left: 12px;
+            top: 12px;
+            z-index: 6;
+            padding: 8px 10px;
+            border-radius: 999px;
+            background: rgba(255, 255, 255, .90);
+            border: 1px solid var(--border);
+            font-weight: 1000;
+        }
+
+        .backdrop {
+            position: absolute;
+            inset: 0;
+            background:
+                radial-gradient(800px 260px at 55% 22%, rgba(50, 199, 255, .18), transparent 60%),
+                radial-gradient(600px 260px at 20% 40%, rgba(124, 92, 255, .14), transparent 60%),
+                linear-gradient(180deg, #dff4ff 0%, #ffffff 55%, #e8ffe9 100%);
+            opacity: .98;
+        }
+
+        .ground {
+            position: absolute;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            height: 96px;
+            background: linear-gradient(180deg, rgba(31, 42, 68, .02), rgba(31, 42, 68, .06));
+            border-top: 1px solid rgba(31, 42, 68, .10);
+            z-index: 2;
+        }
+
+        .sprite {
+            position: absolute;
+            width: 96px;
+            height: 96px;
+            border-radius: 24px;
+            border: 2px solid rgba(31, 42, 68, .12);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 46px;
+            box-shadow: 0 14px 26px rgba(31, 42, 68, .10);
+            z-index: 4;
+            user-select: none;
+            cursor: grab;
+            touch-action: none;
+            background: linear-gradient(135deg, rgba(255, 209, 102, .18), rgba(46, 229, 157, .14));
+        }
+
+        .sprite:active {
+            cursor: grabbing;
+        }
+
+        .bubble {
+            position: absolute;
+            max-width: 280px;
+            padding: 10px 12px;
+            border-radius: 16px;
+            background: rgba(255, 255, 255, .94);
+            border: 1px solid rgba(31, 42, 68, .12);
+            box-shadow: var(--shadow2);
+            font-weight: 1000;
+            color: rgba(31, 42, 68, .86);
+            z-index: 5;
+            opacity: 0;
+            transform: translateY(6px);
+            transition: opacity .22s ease, transform .22s ease;
+            pointer-events: none;
+        }
+
+        .bubble.show {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* Controls */
+        .controlGrid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 10px;
+            margin-top: 10px;
+        }
+
+        .toggle {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 12px;
+            padding: 12px 12px;
+            border-radius: 16px;
+            background: rgba(31, 42, 68, .03);
+            border: 1px solid rgba(31, 42, 68, .12);
+        }
+
+        .toggle b {
+            font-weight: 1000;
+        }
+
+        .switch {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-weight: 900;
+            color: rgba(31, 42, 68, .75);
+        }
+
+        .switch input {
+            transform: scale(1.25);
+        }
+
+        .sliderRow {
+            padding: 12px 12px;
+            border-radius: 16px;
+            background: rgba(31, 42, 68, .03);
+            border: 1px solid rgba(31, 42, 68, .12);
+        }
+
+        input[type="range"] {
+            width: 100%;
+        }
+
+        .valPill {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            padding: 6px 10px;
+            border-radius: 999px;
+            background: rgba(255, 255, 255, .9);
+            border: 1px solid rgba(31, 42, 68, .10);
+            font-weight: 1000;
+            min-width: 64px;
+        }
+
+        /* Checklist */
+        .checklist {
+            display: grid;
+            gap: 10px;
+            margin-top: 10px;
+        }
+
+        .check {
+            display: flex;
+            gap: 10px;
+            align-items: flex-start;
+            padding: 12px 12px;
+            border-radius: 16px;
+            background: rgba(31, 42, 68, .03);
+            border: 1px solid rgba(31, 42, 68, .12);
+            cursor: pointer;
+            user-select: none;
+        }
+
+        .check input {
+            margin-top: 4px;
+            transform: scale(1.2);
+        }
+
+        .check span {
+            color: var(--muted);
+            font-size: 18px;
+            line-height: 1.35;
+        }
+
+        .check.done {
+            border-color: rgba(46, 229, 157, .45);
+            background: rgba(46, 229, 157, .14);
+        }
+
+        /* Bottom nav */
+        .nav {
+            position: fixed;
+            inset: auto 14px 14px 14px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 12px;
+            z-index: 50;
+        }
+
+        .counter {
+            padding: 12px 14px;
+            border-radius: 16px;
+            background: rgba(255, 255, 255, .88);
+            border: 1px solid var(--border);
+            font-weight: 1100;
+            min-width: 140px;
+            text-align: center;
+            box-shadow: var(--shadow2);
+        }
+
+        /* Toast */
+        .toast {
+            position: fixed;
+            left: 50%;
+            bottom: 86px;
+            transform: translateX(-50%);
+            padding: 12px 14px;
+            border-radius: 999px;
+            background: rgba(255, 255, 255, .94);
+            border: 1px solid var(--border);
+            box-shadow: var(--shadow);
+            font-weight: 1000;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity .25s ease, transform .25s ease;
+            z-index: 60;
+            max-width: min(92vw, 900px);
+            text-align: center;
+        }
+
+        .toast.show {
+            opacity: 1;
+            transform: translateX(-50%) translateY(-2px);
+        }
+
+        @media (max-width: 920px) {
+            .grid {
+                grid-template-columns: 1fr;
+            }
+
+            .slide {
+                height: min(980px, 82vh);
+            }
+
+            .stage {
+                min-height: 420px;
+            }
+
+            h1 {
+                font-size: 38px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- Access Gate -->
+    <section class="gate" id="gate">
+        <div class="gateCard">
+            <div class="row" style="justify-content:space-between; align-items:flex-start;">
+                <div>
+                    <h2>Masukkan Kode Akses 🔐</h2>
+                    <p>Gunakan kode dari guru untuk membuka materi Sesi 18.</p>
+                </div>
+                <div class="mini"
+                    style="padding:10px 12px; border-radius:16px; background:rgba(31,42,68,.04); border:1px solid rgba(31,42,68,.10);">
+                    Sesi 18
+                </div>
+            </div>
+
+            <div class="gateRow">
+                <input class="gateInput" id="codeInput" placeholder="KODE AKSES" autocomplete="off" />
+                <button class="btn primary" id="unlockBtn">Buka</button>
+                <button class="btn" id="hintBtn" type="button">Petunjuk</button>
+            </div>
+
+            <div class="tip" style="margin-top:12px;">
+                Tips: ketik huruf besar. Lalu tekan <b>Enter</b>.
+            </div>
+        </div>
+    </section>
+
+    <div class="topbar">
+        <div class="brand">
+            <div class="dot"></div>
+            <div class="t1">Sesi 18</div>
+            <div class="t2">Parallelism (Aksi Barengan)</div>
+        </div>
+        <div class="pill">
+            <span style="font-weight:1000;color:rgba(31,42,68,.9)">Keyboard:</span>
+            <kbd>←</kbd><kbd>→</kbd><kbd>Space</kbd><kbd>Home</kbd><kbd>End</kbd>
+        </div>
+    </div>
+
+    <div class="progress">
+        <div id="bar"></div>
+    </div>
+
+    <main class="deck">
+
+        <!-- Slide 1 -->
+        <section class="slide active">
+            <div class="slide-content">
+                <div class="grid">
+                    <div class="card">
+                        <h1>Hari ini: Aksi Barengan! </h1>
+                        <p>
+                            Di ScratchJr, satu sprite bisa punya <b>2 skrip</b>.
+                            Kalau dua skrip mulai dengan <b>Green Flag yang sama</b>, keduanya bisa jalan
+                            <b>bersamaan</b>!
+                        </p>
+                        <div class="highlight">2 skrip + Green Flag = jalan bareng</div>
+                        <ul>
+                            <li>Skrip 1: <b>lompat</b> (naik–turun)</li>
+                            <li>Skrip 2: <b>jalan</b> (ke kanan)</li>
+                        </ul>
+                        <div class="tip">Target: sprite <b>hopping</b> (lompat sambil jalan) 🐸</div>
+                    </div>
+
+                    <div class="card">
+                        <h2>Preview</h2>
+                        <div class="imgph">
+                            <div class="label">Kodok Melompat</div>
+                            <div class="box">
+                                <iframe width="420" height="315"
+                                    src="https://www.youtube.com/embed/6SDs7HP38Ug?autoplay=1&loop=1&mute=1">
+                                </iframe>
+                            </div>
+                        </div>
+                        <div class="warn">Ingat: “barengan” itu <b>bersamaan</b>, bukan “gantian”.</div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Slide 2 -->
+        <section class="slide">
+            <div class="slide-content">
+                <div class="card">
+                    <h2>Tujuan Belajar 🎯</h2>
+                    <p>Setelah sesi ini, kamu bisa:</p>
+                    <ul>
+                        <li>Membuat <b>2 skrip</b> pada 1 sprite</li>
+                        <li>Memakai <b>Green Flag</b> di dua skrip</li>
+                        <li>Melihat 2 aksi jalan <b>barengan</b></li>
+                        <li>Mengatur <b>tinggi lompat</b> (angka)</li>
+                    </ul>
+                    <div class="highlight">Kita bikin sprite hopping (lompat sambil jalan) ✅</div>
+                    <div class="tip">Kalau lompatnya terlalu tinggi, kecilkan angka tinggi lompat ya.</div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Slide 3 -->
+        <section class="slide">
+            <div class="slide-content">
+                <div class="grid">
+                    <div class="card">
+                        <h2>Aksi Barengan di Dunia Nyata</h2>
+                        <p>Kita juga bisa melakukan 2 hal sekaligus.</p>
+                        <div class="highlight">Contoh: jalan di tempat sambil melambaikan tangan 👋</div>
+                        <ul>
+                            <li>1) Berdiri.</li>
+                            <li>2) Jalan di tempat pelan-pelan.</li>
+                            <li>3) Sambil itu… lambaikan tangan!</li>
+                        </ul>
+                        <div class="tip">Itu namanya <b>aksi barengan</b>.</div>
+
+                        <div class="row" style="margin-top:12px;">
+                            <button class="btn primary" id="startRealBtn" type="button">⏱️ Coba 30 detik</button>
+                            <button class="btn" id="resetRealBtn" type="button">Reset</button>
+                        </div>
+                        <div class="highlight" id="realTimer" style="margin-top:12px;">Timer: 00:30</div>
+                        <div class="warn">Nanti di ScratchJr: <b>lompat</b> + <b>jalan</b> = barengan juga!</div>
+                    </div>
+
+                    <div class="card" id="miniCheck">
+                        <h2>Mini Cek 👀</h2>
+                        <p>Pilih yang benar:</p>
+                        <div class="row">
+                            <button class="btn primary" data-ans="benar">2 skrip jalan bareng</button>
+                            <button class="btn primary" data-ans="salah">2 skrip jalan gantian</button>
+                        </div>
+                        <div class="highlight" style="margin-top:12px;">Pertanyaan: “Parallelism itu apa?”</div>
+                        <div class="tip" id="miniMsg">Klik salah satu 🙂</div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Slide 4 (Interactive demo) -->
+        <section class="slide">
+            <div class="slide-content">
+                <div class="grid">
+                    <div class="card">
+                        <h2>Demo Interaktif: Hopping 🐸</h2>
+                        <p>
+                            Coba lihat bedanya:
+                            <b>lompat saja</b>, <b>jalan saja</b>, atau <b>barengan</b>.
+                        </p>
+
+                        <div class="controlGrid">
+                            <div class="toggle">
+                                <div>
+                                    <b>Skrip 1 (Lompat)</b>
+                                    <div class="mini">Green Flag → Jump</div>
+                                </div>
+                                <div class="switch">
+                                    <span>OFF</span>
+                                    <input type="checkbox" id="jumpOn" checked />
+                                    <span>ON</span>
+                                </div>
+                            </div>
+
+                            <div class="toggle">
+                                <div>
+                                    <b>Skrip 2 (Jalan)</b>
+                                    <div class="mini">Green Flag → Move Right</div>
+                                </div>
+                                <div class="switch">
+                                    <span>OFF</span>
+                                    <input type="checkbox" id="moveOn" checked />
+                                    <span>ON</span>
+                                </div>
+                            </div>
+
+                            <div class="sliderRow">
+                                <div class="row" style="justify-content:space-between;">
+                                    <b>Tinggi Lompat</b>
+                                    <span class="valPill" id="jumpVal">3</span>
+                                </div>
+                                <input id="jumpHeight" type="range" min="1" max="8" value="3" />
+                                <div class="mini">Angka lebih besar = lompat lebih tinggi.</div>
+                            </div>
+
+                            <div class="row" style="margin-top:6px;">
+                                <button class="btn primary" id="playBtn">▶ Mulai (Green Flag)</button>
+                                <button class="btn" id="stopBtn">⏹ Stop</button>
+                                <button class="btn" id="resetBtn">Reset posisi</button>
+                            </div>
+
+                            <div class="highlight" id="statusBox">Siap! Aktifkan 2 skrip lalu tekan Mulai 🙂</div>
+                        </div>
+
+                        <div class="tip">Tantangan: Matikan salah satu skrip, lalu bandingkan!</div>
+                    </div>
+
+                    <div class="stage" id="stage">
+                        <div class="stageTop">Panggung (lihat hasilnya)</div>
+                        <div class="backdrop"></div>
+                        <div class="ground"></div>
+
+                        <div class="sprite" id="sprite" style="left:80px; bottom:120px;">🐸</div>
+                        <div class="bubble" id="bubble"></div>
+
+                        <div class="warn" style="position:absolute; left:12px; right:12px; bottom:12px; z-index:7;">
+                            Tip: kalau “lompatnya terlalu tinggi”, kecilkan angka tinggi lompat.
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Slide 5 -->
+        <section class="slide">
+            <div class="slide-content">
+                <div class="grid">
+                    <div class="card">
+                        <h2>Bandingkan 🔍</h2>
+                        <p>Coba tiga percobaan ini:</p>
+                        <ul>
+                            <li><b>Hanya Lompat ON</b> → sprite lompat di tempat</li>
+                            <li><b>Hanya Jalan ON</b> → sprite jalan tanpa lompat</li>
+                            <li><b>Keduanya ON</b> → sprite hopping (lompat sambil jalan)</li>
+                        </ul>
+                        <div class="highlight">Parallelism = 2 aksi terlihat barengan ✅</div>
+                        <div class="tip">Kalau sudah bisa, coba ubah tinggi lompat dan lihat bedanya.</div>
+                    </div>
+
+                    <div class="card">
+                        <h2>Kalimat laporan (mudah)</h2>
+                        <div class="highlight" id="reportHint">
+                            “Saat dua skrip ON, spritenya ____ sambil ____.”
+                        </div>
+                        <div class="row">
+                            <button class="btn primary" data-fill="lompat">Isi: lompat</button>
+                            <button class="btn primary" data-fill="jalan">Isi: jalan</button>
+                            <button class="btn" id="clearReport">Reset kalimat</button>
+                        </div>
+                        <div class="tip" id="reportOut">Klik tombol kata untuk mengisi 🙂</div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+
+        <!-- Slide 6 -->
+        <section class="slide">
+            <div class="slide-content">
+                <div class="grid">
+                    <div class="card">
+                        <h2>Konsepnya Begini 🧩</h2>
+                        <p>
+                            Kamu membuat <b>2 skrip</b> untuk 1 sprite.
+                            Keduanya dimulai dari event yang sama: <b>Green Flag</b>.
+                        </p>
+                        <div class="highlight">
+                            Skrip A: Green Flag → Lompat<br>
+                            Skrip B: Green Flag → Jalan
+                        </div>
+                        <div class="tip">Karena event-nya sama, mereka mulai <b>bersamaan</b>.</div>
+                    </div>
+
+                    <div class="card">
+                        <h2>Contoh bentuk “2 skrip”</h2>
+                        <div class="imgph">
+
+                            <div class="box">
+                                <img src="https://uob-1328237036.cos.ap-singapore.myqcloud.com//file-uploader/images/9af877cf-41a6-48d5-aae7-676ab09eaee6.png"
+                                    alt="Contoh 2 skrip di ScratchJr">
+                            </div>
+
+                        </div>
+                        <div class="warn">Pastikan ada <b>2 Green Flag</b>, satu di tiap skrip.</div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Slide 7 -->
+        <section class="slide">
+            <div class="slide-content">
+                <div class="grid">
+                    <div class="card">
+                        <h2>Langkah 1: Pilih 1 Sprite 🐸</h2>
+                        <p>Hari ini kita pakai 1 sprite dulu, biar fokus.</p>
+                        <div class="highlight">Target: 1 sprite di panggung</div>
+                        <ul>
+                            <li>Pilih karakter yang kamu suka</li>
+                            <li>Letakkan di kiri (biar bisa jalan jauh)</li>
+                        </ul>
+                        <div class="tip">Nanti kita buat dua skrip di sprite ini.</div>
+                    </div>
+
+                    <div class="card">
+                        <h2>Sprite di Layar</h2>
+                        <div class="imgph">
+                            <div class="box">
+                                <img src="https://uob-1328237036.cos.ap-singapore.myqcloud.com//file-uploader/images/ed38c02a-c01e-412f-a06c-8bb8cfa200a2.png"
+                                    alt="Contoh sprite di panggung ScratchJr">
+                            </div>
+                            <div class="hint">Tambahkan sprite dan letakkan di posisi yang diinginkan.</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Slide 8 -->
+        <section class="slide">
+            <div class="slide-content">
+                <div class="grid">
+                    <div class="card">
+                        <h2>Langkah 2: Buat Skrip Lompat 🟣</h2>
+                        <p>
+                            Skrip pertama adalah <b>lompat</b>.
+                            Lompat itu naik lalu turun.
+                        </p>
+                        <div class="highlight">Green Flag → Lompat (pakai angka)</div>
+                        <ul>
+                            <li>Pasang <b>Green Flag</b></li>
+                            <li>Tambahkan blok <b>Jump</b></li>
+                            <li>Angka = <b>tinggi lompat</b></li>
+                        </ul>
+                        <div class="warn">Kalau lompat terlalu tinggi, kecilkan angkanya.</div>
+                    </div>
+
+                    <div class="card">
+                        <h2>Screenshot blok “Jump”</h2>
+                        <div class="imgph">
+                            <div class="box">
+                                <img src="https://uob-1328237036.cos.ap-singapore.myqcloud.com//file-uploader/images/a3c53b50-755e-4df3-bfad-8d0431e2df01.png"
+                                    alt="Contoh blok Jump di ScratchJr">
+                            </div>
+                            <div class="hint"> Susun kode: <b>Green Flag + Jump</b></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Slide 9 -->
+        <section class="slide">
+            <div class="slide-content">
+                <div class="grid">
+                    <div class="card">
+                        <h2>Langkah 3: Buat Skrip Jalan 🔵</h2>
+                        <p>Skrip kedua adalah <b>jalan ke kanan</b>.</p>
+                        <div class="highlight">Green Flag → Move Right</div>
+                        <ul>
+                            <li>Buat skrip baru (pisah dari skrip lompat)</li>
+                            <li>Pasang <b>Green Flag</b> lagi</li>
+                            <li>Tambahkan <b>Move Right</b></li>
+                        </ul>
+                        <div class="tip">Kuncinya: <b>dua Green Flag</b>, supaya start bareng.</div>
+                    </div>
+
+                    <div class="card">
+                        <h2>Screenshot skrip jalan</h2>
+                        <div class="imgph">
+                            <div class="box">
+                                <img src="https://uob-1328237036.cos.ap-singapore.myqcloud.com//file-uploader/images/bb53ccc3-6459-4ada-ba67-dc4cc5c7a67a.png"
+                                    alt="Contoh blok Move Right di ScratchJr">
+                            </div>
+                            <div class="hint">Atur jumlah langkah kanan yang ingin dijalankan.</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Slide 10 -->
+        <section class="slide">
+            <div class="slide-content">
+                <div class="grid">
+                    <div class="card">
+                        <h2>Langkah 4: Tekan Green Flag! 🟢</h2>
+                        <p>
+                            Sekarang dua skrip akan jalan <b>barengan</b>:
+                            sprite <b>lompat sambil jalan</b>.
+                        </p>
+                        <div class="highlight">Hopping = lompat + jalan (bersamaan)</div>
+                        <div class="warn">Kalau cuma lompat / cuma jalan, berarti ada skrip yang belum dibuat.</div>
+                        <div class="tip">Ayo kita coba pakai demo di kanan.</div>
+                    </div>
+
+                    <div class="card">
+                        <h2>Preview hasil</h2>
+                        <div class="imgph">
+                            <iframe width="420" height="315"
+                                src="https://www.youtube.com/embed/6SDs7HP38Ug?autoplay=1&loop=1&mute=1">
+                            </iframe>
+                            <div class="hint">Perhatikan animasinya. Kodok melompat dan berjalan bersamaan.</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        
+        <!-- Slide 11 -->
+        <section class="slide">
+            <div class="slide-content">
+                <div class="grid">
+                    <div class="card">
+                        <h2>Kesalahan yang Sering Terjadi 😅</h2>
+                        <ul>
+                            <li><b>Green Flag cuma 1</b> (skrip satunya lupa)</li>
+                            <li>Skrip lompat dan jalan <b>disambung jadi 1</b> (jadinya gantian)</li>
+                            <li>Angka lompat <b>terlalu besar</b> (meloncat tinggi banget)</li>
+                            <li>Sprite mulai di tengah (cepat mentok)</li>
+                        </ul>
+                        <div class="warn">Jika bingung: cek dulu “ada 2 skrip?” dan “ada 2 Green Flag?”</div>
+                    </div>
+
+                    <div class="card">
+                        <h2>Checklist cepat (2 detik)</h2>
+                        <div class="highlight">✅ Ada 2 skrip terpisah</div>
+                        <div class="highlight">✅ Setiap skrip punya Green Flag</div>
+                        <div class="highlight">✅ Lompat + Jalan terlihat barengan</div>
+                        <div class="tip">Kalau belum, perbaiki satu-satu ya 🙂</div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Slide 12 -->
+        <section class="slide">
+            <div class="slide-content">
+                <div class="card">
+                    <h2>Refleksi ✅</h2>
+                    <p>Centang kalau sudah ya.</p>
+
+                    <div class="checklist" id="reflectList">
+                        <label class="check"><input type="checkbox" /><span>Aku membuat <b>2 skrip</b> untuk 1
+                                sprite.</span></label>
+                        <label class="check"><input type="checkbox" /><span>Di kedua skrip ada <b>Green
+                                    Flag</b>.</span></label>
+                        <label class="check"><input type="checkbox" /><span>Sprite bisa <b>lompat sambil jalan</b>
+                                (barengan).</span></label>
+                        <label class="check"><input type="checkbox" /><span>Aku mencoba mengubah <b>tinggi
+                                    lompat</b>.</span></label>
+                    </div>
+
+                    <div class="row" style="margin-top:12px;">
+                        <button class="btn good" id="finishReflect">Selesai ✅</button>
+                        <button class="btn" id="resetReflect">Reset</button>
+                    </div>
+
+                    <div class="highlight" id="reflectMsg" style="margin-top:12px;">
+                        Target: centang minimal 3 ya 🙂
+                    </div>
+
+                    <div class="tip" style="margin-top:10px;">
+                        Isi kalimat: “Parallelism membuat 2 aksi berjalan <b>____</b>.”
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Slide 13 -->
+        <section class="slide">
+            <div class="slide-content">
+                <div class="grid">
+                    <div class="card">
+                        <h2>Kesimpulan 🌟</h2>
+                        <ul>
+                            <li>Satu sprite bisa punya <b>lebih dari 1 skrip</b>.</li>
+                            <li>Kalau event-nya sama (Green Flag), skrip bisa mulai <b>barengan</b>.</li>
+                            <li>Hasilnya: sprite bisa melakukan <b>2 aksi sekaligus</b>.</li>
+                        </ul>
+                        <div class="highlight">Parallelism = kode jalan bareng ✅</div>
+                        <div class="tip">Kamu sudah siap bikin animasi yang lebih hidup!</div>
+                    </div>
+
+                    <div class="card">
+                        <h2>Membuat Kodok Melompat</h2>
+                        <div class="imgph">
+                            <div class="box">
+                                <iframe width="420" height="315"
+                                    src="https://www.youtube.com/embed/LR3_Js1cc4A?autoplay=1&loop=1&mute=1">
+                                </iframe>
+                            </div>
+                        </div>
+                        <div class="row" style="margin-top:12px;">
+                            <button class="btn primary" data-toast="Keren! Kamu sudah paham parallelism 🎉">Aku
+                                bisa!</button>
+                            <button class="btn" data-toast="2 skrip + Green Flag sama = barengan ✅">Aku ingat</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <div class="nav">
+        <button class="btn" id="prevBtn">⬅️ Sebelumnya</button>
+        <div class="counter" id="counter">1 / 14</div>
+        <button class="btn primary" id="nextBtn">➡️ Berikutnya</button>
+    </div>
+
+    <div class="toast" id="toast"></div>
+
+    <script>
+        /* ---------------- Toast ---------------- */
+        const toast = document.getElementById("toast");
+        let toastTimer = null;
+        function showToast(msg) {
+            toast.textContent = msg;
+            toast.classList.add("show");
+            clearTimeout(toastTimer);
+            toastTimer = setTimeout(() => toast.classList.remove("show"), 1600);
+        }
+        document.querySelectorAll("[data-toast]").forEach(el => {
+            el.addEventListener("click", () => showToast(el.dataset.toast));
+        });
+
+        /* ---------------- Access Gate ---------------- */
+        const ACCESS_CODE = "RGMDSLP25";
+        const gate = document.getElementById("gate");
+        const codeInput = document.getElementById("codeInput");
+        const unlockBtn = document.getElementById("unlockBtn");
+        const hintBtn = document.getElementById("hintBtn");
+
+        function unlock() {
+            const val = (codeInput.value || "").trim().toUpperCase();
+            if (val === ACCESS_CODE) {
+                localStorage.setItem("LP_S18_UNLOCKED", "1");
+                gate.style.display = "none";
+                showToast("Materi terbuka ✅");
+            } else {
+                showToast("Kode salah. Coba lagi 🙂");
+                codeInput.focus();
+                codeInput.select();
+            }
+        }
+        unlockBtn.addEventListener("click", unlock);
+        codeInput.addEventListener("keydown", (e) => { if (e.key === "Enter") unlock(); });
+        hintBtn.addEventListener("click", () => showToast("Petunjuk: kodenya diawali RGM... dan ada angka 25"));
+
+        if (localStorage.getItem("LP_S18_UNLOCKED") === "1") {
+            gate.style.display = "none";
+        } else {
+            setTimeout(() => codeInput.focus(), 250);
+        }
+
+        /* ---------------- Slides ---------------- */
+        const slides = Array.from(document.querySelectorAll(".slide"));
+        const bar = document.getElementById("bar");
+        const counter = document.getElementById("counter");
+        const prevBtn = document.getElementById("prevBtn");
+        const nextBtn = document.getElementById("nextBtn");
+        let idx = 0;
+
+        function render() {
+            slides.forEach((s, i) => s.classList.toggle("active", i === idx));
+            counter.textContent = `${idx + 1} / ${slides.length}`;
+            bar.style.width = `${((idx + 1) / slides.length) * 100}%`;
+
+            prevBtn.disabled = idx === 0;
+            nextBtn.disabled = idx === slides.length - 1;
+
+            const activeContent = document.querySelector(".slide.active .slide-content");
+            if (activeContent) activeContent.scrollTop = 0;
+        }
+        function next() { if (idx < slides.length - 1) { idx++; render(); } }
+        function prev() { if (idx > 0) { idx--; render(); } }
+        prevBtn.addEventListener("click", prev);
+        nextBtn.addEventListener("click", next);
+
+        document.addEventListener("keydown", (e) => {
+            if (gate.style.display !== "none") return;
+            const tag = (e.target && e.target.tagName) ? e.target.tagName.toLowerCase() : "";
+            if (["input", "textarea", "select"].includes(tag)) return;
+
+            if (e.key === "ArrowRight" || e.key === " " || e.key === "PageDown") { e.preventDefault(); next(); }
+            if (e.key === "ArrowLeft" || e.key === "PageUp") { e.preventDefault(); prev(); }
+            if (e.key === "Home") { e.preventDefault(); idx = 0; render(); }
+            if (e.key === "End") { e.preventDefault(); idx = slides.length - 1; render(); }
+        });
+
+        render();
+
+        /* ---------------- Real-life timer (30s) ---------------- */
+        let realLeft = 30;
+        let realInterval = null;
+        const realTimer = document.getElementById("realTimer");
+        const startRealBtn = document.getElementById("startRealBtn");
+        const resetRealBtn = document.getElementById("resetRealBtn");
+
+        function fmtTime(sec) {
+            const m = String(Math.floor(sec / 60)).padStart(2, '0');
+            const s = String(sec % 60).padStart(2, '0');
+            return `${m}:${s}`;
+        }
+        function setRealUI() { if (realTimer) realTimer.textContent = `Timer: ${fmtTime(realLeft)}`; }
+        function startReal() {
+            if (realInterval) return;
+            showToast("Mulai! Jalan sambil melambaikan tangan 👋");
+            realInterval = setInterval(() => {
+                realLeft--;
+                if (realLeft < 0) realLeft = 0;
+                setRealUI();
+                if (realLeft === 0) {
+                    clearInterval(realInterval);
+                    realInterval = null;
+                    showToast("Selesai! Itu aksi barengan 🙂");
+                }
+            }, 1000);
+        }
+        function resetReal() {
+            clearInterval(realInterval);
+            realInterval = null;
+            realLeft = 30;
+            setRealUI();
+            showToast("Timer di-reset 🙂");
+        }
+        if (startRealBtn) startRealBtn.addEventListener("click", startReal);
+        if (resetRealBtn) resetRealBtn.addEventListener("click", resetReal);
+        setRealUI();
+
+        /* ---------------- Mini Check ---------------- */
+        document.querySelectorAll('#miniCheck button[data-ans]').forEach(btn => {
+            btn.addEventListener('click', () => {
+                const miniMsg = document.getElementById('miniMsg');
+                if (btn.dataset.ans === 'benar') {
+                    miniMsg.textContent = '✅ Benar! Parallelism itu jalan bareng.';
+                    showToast('Benar ✅');
+                } else {
+                    miniMsg.textContent = '❌ Belum. Parallelism itu bersamaan (bareng).';
+                    showToast('Coba lagi 🙂');
+                }
+            });
+        });
+
+        /* ---------------- Hopping Demo ---------------- */
+        const stage = document.getElementById("stage");
+        const sprite = document.getElementById("sprite");
+        const bubble = document.getElementById("bubble");
+        const jumpOn = document.getElementById("jumpOn");
+        const moveOn = document.getElementById("moveOn");
+        const jumpHeight = document.getElementById("jumpHeight");
+        const jumpVal = document.getElementById("jumpVal");
+        const playBtn = document.getElementById("playBtn");
+        const stopBtn = document.getElementById("stopBtn");
+        const resetBtn = document.getElementById("resetBtn");
+        const statusBox = document.getElementById("statusBox");
+
+        let play = false;
+        let rafId = null;
+
+        let x = 80;
+        let baseBottom = 120;
+        let speed = 1.7;
+        let hopPhase = 0;
+
+        function showBubble(text) {
+            bubble.textContent = text;
+            const sRect = sprite.getBoundingClientRect();
+            const parent = stage.getBoundingClientRect();
+            const xPos = (sRect.left - parent.left) + (sRect.width / 2) - 120;
+            const yPos = (sRect.top - parent.top) - 60;
+            bubble.style.left = Math.max(12, Math.min(xPos, parent.width - 292)) + "px";
+            bubble.style.top = Math.max(56, yPos) + "px";
+            bubble.classList.add("show");
+            setTimeout(() => bubble.classList.remove("show"), 1100);
+        }
+
+        function updateJumpVal() { jumpVal.textContent = String(jumpHeight.value); }
+        updateJumpVal();
+        jumpHeight.addEventListener("input", updateJumpVal);
+
+        function resetPos() {
+            x = 80;
+            hopPhase = 0;
+            sprite.style.left = x + "px";
+            sprite.style.bottom = baseBottom + "px";
+            showToast("Posisi di-reset 🙂");
+        }
+        resetBtn.addEventListener("click", resetPos);
+
+        function step() {
+            if (!play) return;
+
+            if (moveOn.checked) {
+                x += speed;
+                const maxX = stage.clientWidth - sprite.offsetWidth - 12;
+                if (x > maxX) { x = maxX; }
+                sprite.style.left = x + "px";
+            }
+
+            if (jumpOn.checked) {
+                const h = Number(jumpHeight.value);
+                const amp = 8 + h * 8;
+                hopPhase += 0.18;
+                const y = Math.abs(Math.sin(hopPhase)) * amp;
+                sprite.style.bottom = (baseBottom + y) + "px";
+            } else {
+                sprite.style.bottom = baseBottom + "px";
+            }
+
+            const mode =
+                (jumpOn.checked && moveOn.checked) ? "Hopping (lompat sambil jalan) ✅" :
+                    (jumpOn.checked && !moveOn.checked) ? "Lompat saja 🟣" :
+                        (!jumpOn.checked && moveOn.checked) ? "Jalan saja 🔵" :
+                            "Tidak ada aksi (dua skrip OFF)";
+
+            statusBox.textContent = `Mode: ${mode}`;
+            rafId = requestAnimationFrame(step);
+        }
+
+        function start() {
+            if (play) return;
+            if (!jumpOn.checked && !moveOn.checked) {
+                showToast("Nyalakan minimal 1 skrip dulu 🙂");
+                return;
+            }
+            play = true;
+            showToast("Mulai! (Green Flag) ▶");
+            showBubble("Green Flag! ✅");
+            step();
+        }
+
+        function stop() {
+            play = false;
+            if (rafId) cancelAnimationFrame(rafId);
+            rafId = null;
+            showToast("Stop.");
+        }
+
+        playBtn.addEventListener("click", start);
+        stopBtn.addEventListener("click", stop);
+
+        function safetyCheck() {
+            if (play && !jumpOn.checked && !moveOn.checked) {
+                stop();
+                statusBox.textContent = "Mode: Tidak ada aksi (dua skrip OFF)";
+            }
+        }
+        jumpOn.addEventListener("change", safetyCheck);
+        moveOn.addEventListener("change", safetyCheck);
+
+        /* ---------------- Report fill (Slide 10) ---------------- */
+        const reportHint = document.getElementById("reportHint");
+        const reportOut = document.getElementById("reportOut");
+        let reportText = ["____", "____"];
+
+        function renderReport() {
+            reportHint.innerHTML = `“Saat dua skrip ON, spritenya <b>${reportText[0]}</b> sambil <b>${reportText[1]}</b>.”`;
+            if (reportText[0] !== "____" && reportText[1] !== "____") {
+                reportOut.textContent = "✅ Mantap! Kalimatnya sudah lengkap.";
+            } else {
+                reportOut.textContent = "Isi 2 kata: (lompat) dan (jalan).";
+            }
+        }
+        document.querySelectorAll("[data-fill]").forEach(btn => {
+            btn.addEventListener("click", () => {
+                const w = btn.dataset.fill;
+                if (reportText[0] === "____") reportText[0] = w;
+                else if (reportText[1] === "____") reportText[1] = w;
+                else { reportText = [w, "____"]; }
+                renderReport();
+                showToast(`Isi: ${w}`);
+            });
+        });
+        document.getElementById("clearReport").addEventListener("click", () => {
+            reportText = ["____", "____"];
+            renderReport();
+            showToast("Kalimat di-reset 🙂");
+        });
+        renderReport();
+
+        /* ---------------- Checklist (Slide 13) ---------------- */
+        const reflectChecks = Array.from(document.querySelectorAll("#reflectList .check"));
+        const reflectMsg = document.getElementById("reflectMsg");
+
+        reflectChecks.forEach(item => {
+            item.addEventListener("click", (e) => {
+                const cb = item.querySelector("input[type='checkbox']");
+                if (e.target.tagName.toLowerCase() !== "input") {
+                    cb.checked = !cb.checked;
+                }
+                item.classList.toggle("done", cb.checked);
+            });
+        });
+
+        document.getElementById("resetReflect").addEventListener("click", () => {
+            reflectChecks.forEach(item => {
+                const cb = item.querySelector("input[type='checkbox']");
+                cb.checked = false;
+                item.classList.remove("done");
+            });
+            reflectMsg.textContent = "Target: centang minimal 3 ya 🙂";
+            showToast("Checklist di-reset.");
+        });
+
+        document.getElementById("finishReflect").addEventListener("click", () => {
+            const checked = reflectChecks.filter(i => i.querySelector("input").checked).length;
+            if (checked >= 3) {
+                reflectMsg.textContent = `Mantap! Kamu centang ${checked}/4 🎉`;
+                showToast("Sesi 18 selesai ✅");
+            } else {
+                reflectMsg.textContent = `Masih ${checked}/4. Ayo minimal 3 ya 🙂`;
+                showToast("Centang minimal 3 ya 🙂");
+            }
+        });
+    </script>
+
+</body>
+
+</html>
