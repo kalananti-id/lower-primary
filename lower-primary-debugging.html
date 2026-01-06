@@ -1,0 +1,1421 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1.0" />
+  <title>Sesi 20 — Debugging Animasi (ScratchJr)</title>
+  <style>
+    :root{
+      --bg1:#E9F7FF;
+      --bg2:#FFF4D6;
+      --bg3:#FFE6F1;
+
+      --ink:#1F2A44;
+      --muted:#5B6B8A;
+
+      --card:#ffffffee;
+      --shadow: 0 18px 50px rgba(31,42,68,.14);
+
+      --primary:#7C5CFF;
+      --primary2:#24C2FF;
+      --good:#2EE59D;
+      --warn:#FFD166;
+      --bad:#FF6B6B;
+
+      --stroke: rgba(31,42,68,.12);
+      --stroke2: rgba(124,92,255,.24);
+
+      --radius: 24px;
+    }
+
+    *{box-sizing:border-box}
+    body{
+      margin:0;
+      font-family: ui-rounded, "Comic Sans MS","Arial Rounded MT Bold",system-ui,-apple-system,Segoe UI,Roboto,Arial;
+      color:var(--ink);
+      background:
+        radial-gradient(1200px 600px at 20% 10%, var(--bg1), transparent 60%),
+        radial-gradient(1000px 700px at 80% 15%, var(--bg2), transparent 55%),
+        radial-gradient(1200px 800px at 40% 90%, var(--bg3), transparent 60%),
+        linear-gradient(135deg, #ffffff, #f8fbff);
+      min-height:100vh;
+      overflow:hidden;
+    }
+
+    /* ====== LAYOUT SLIDE CENTERED ====== */
+    .deck{
+      position:relative;
+      height:100vh;
+      width:100vw;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      padding:18px;
+    }
+    .slide{
+      display:none;
+      width:min(1100px, 96vw);
+      height:min(640px, 92vh);
+      border-radius: calc(var(--radius) + 6px);
+      padding:14px;
+      background: linear-gradient(135deg, rgba(255,255,255,.75), rgba(255,255,255,.45));
+      border:1px solid rgba(31,42,68,.10);
+      box-shadow: var(--shadow);
+    }
+    .slide.active{display:block}
+    .slide-content{
+      height:100%;
+      width:100%;
+      display:flex;
+      flex-direction:column;
+      gap:12px;
+    }
+
+    /* slide scroller inside (fix overflow) */
+    .scroller{
+      flex:1;
+      overflow:auto;
+      padding:4px 2px 8px;
+    }
+    .scroller::-webkit-scrollbar{width:10px}
+    .scroller::-webkit-scrollbar-thumb{background:rgba(31,42,68,.18); border-radius:999px}
+    .scroller::-webkit-scrollbar-track{background:transparent}
+
+    .topbar{
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:10px;
+      padding:4px 6px;
+    }
+    .badge{
+      display:inline-flex;
+      align-items:center;
+      gap:8px;
+      padding:8px 12px;
+      border-radius:999px;
+      background:rgba(124,92,255,.12);
+      border:1px solid rgba(124,92,255,.22);
+      font-weight:800;
+      font-size:14px;
+      white-space:nowrap;
+    }
+    .kbd{
+      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", monospace;
+      font-size:12px;
+      padding:2px 8px;
+      border-radius:10px;
+      border:1px solid rgba(31,42,68,.16);
+      background:rgba(255,255,255,.85);
+      color:var(--muted);
+    }
+
+    .card{
+      background:var(--card);
+      border:1px solid var(--stroke);
+      border-radius: var(--radius);
+      padding:18px;
+      box-shadow: 0 10px 26px rgba(31,42,68,.10);
+    }
+    h1{margin:0 0 6px; font-size:34px; line-height:1.1}
+    h2{margin:0 0 8px; font-size:28px; line-height:1.15}
+    h3{margin:0 0 6px; font-size:18px}
+    p{margin:6px 0; font-size:18px; color:var(--ink)}
+    .mini{font-size:14px; color:var(--muted)}
+    ul{margin:8px 0 0; padding-left:22px; font-size:18px}
+    li{margin:6px 0}
+
+    .grid{
+      display:grid;
+      grid-template-columns: 1.1fr .9fr;
+      gap:12px;
+    }
+    @media (max-width: 940px){
+      .slide{height:min(760px, 92vh)}
+      .grid{grid-template-columns:1fr}
+    }
+
+    .highlight{
+      margin-top:10px;
+      padding:12px 14px;
+      border-radius:18px;
+      background:rgba(255,209,102,.20);
+      border:1px solid rgba(255,209,102,.55);
+      font-weight:800;
+    }
+    .tip{
+      margin-top:10px;
+      padding:12px 14px;
+      border-radius:18px;
+      background:rgba(36,194,255,.12);
+      border:1px solid rgba(36,194,255,.32);
+    }
+    .warn{
+      margin-top:10px;
+      padding:12px 14px;
+      border-radius:18px;
+      background:rgba(255,107,107,.10);
+      border:1px solid rgba(255,107,107,.28);
+    }
+
+    .row{display:flex; gap:10px; flex-wrap:wrap; align-items:center}
+    .btn{
+      border:none;
+      cursor:pointer;
+      padding:12px 16px;
+      border-radius:999px;
+      font-weight:900;
+      font-size:16px;
+      background:rgba(31,42,68,.08);
+      color:var(--ink);
+      border:1px solid rgba(31,42,68,.10);
+      box-shadow: 0 8px 18px rgba(31,42,68,.10);
+      transition: transform .08s ease, filter .15s ease;
+    }
+    .btn:active{transform:scale(.98)}
+    .btn.primary{background:linear-gradient(135deg, var(--primary), #9B8CFF); color:white; border:none}
+    .btn.good{background:linear-gradient(135deg, var(--good), #B9F9DB); color:#0B2B1F; border:none}
+    .btn.warn{background:linear-gradient(135deg, var(--warn), #FFE7A8); color:#5A3B00; border:none}
+    .btn.bad{background:linear-gradient(135deg, var(--bad), #FFC1C1); color:#5A0B0B; border:none}
+    .btn.small{padding:9px 12px; font-size:14px}
+
+    /* ===== NAV ===== */
+    .nav{
+      position:fixed;
+      left:12px; right:12px; bottom:12px;
+      display:flex;
+      justify-content:center;
+      gap:10px;
+      pointer-events:none;
+    }
+    .nav .btn{pointer-events:auto}
+    .progress{
+      position:fixed;
+      left:12px; top:12px;
+      display:flex;
+      align-items:center;
+      gap:10px;
+      z-index:20;
+    }
+
+    /* ===== GATE ===== */
+    .gateWrap{
+      position:fixed;
+      inset:0;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      background:
+        radial-gradient(1200px 800px at 20% 20%, rgba(233,247,255,.95), transparent 60%),
+        radial-gradient(1000px 700px at 80% 25%, rgba(255,244,214,.95), transparent 55%),
+        radial-gradient(1200px 800px at 40% 90%, rgba(255,230,241,.95), transparent 60%),
+        linear-gradient(135deg, rgba(255,255,255,.95), rgba(248,251,255,.95));
+      z-index:9999;
+    }
+    .gate{
+      width:min(760px, 94vw);
+      border-radius:30px;
+      padding:22px;
+      background:rgba(255,255,255,.92);
+      border:1px solid rgba(31,42,68,.10);
+      box-shadow: var(--shadow);
+    }
+    .gate .codeBox{
+      display:flex;
+      gap:10px;
+      align-items:center;
+      flex-wrap:wrap;
+      margin-top:10px;
+    }
+    input[type="password"], input[type="text"]{
+      padding:12px 14px;
+      border-radius:18px;
+      border:1px solid rgba(31,42,68,.18);
+      background:rgba(255,255,255,.95);
+      font-size:16px;
+      font-weight:800;
+      outline:none;
+      min-width:260px;
+    }
+    input[type="range"]{width:100%}
+
+    /* ===== INTERACTIVES ===== */
+    .checklist{
+      display:grid;
+      gap:8px;
+      margin-top:10px;
+    }
+    .check{
+      display:flex;
+      gap:10px;
+      align-items:flex-start;
+      padding:10px 12px;
+      border-radius:18px;
+      border:1px solid rgba(31,42,68,.12);
+      background:rgba(255,255,255,.80);
+    }
+    .check input{transform:scale(1.2); margin-top:3px}
+    .pill{
+      display:inline-flex;
+      align-items:center;
+      gap:8px;
+      padding:8px 12px;
+      border-radius:999px;
+      background:rgba(31,42,68,.06);
+      border:1px solid rgba(31,42,68,.10);
+      font-weight:900;
+      font-size:14px;
+    }
+    .valPill{
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+      padding:6px 10px;
+      border-radius:999px;
+      background:rgba(124,92,255,.12);
+      border:1px solid rgba(124,92,255,.25);
+      font-weight:1000;
+      min-width:36px;
+    }
+    .chips{
+      display:flex;
+      flex-wrap:wrap;
+      gap:10px;
+      margin-top:10px;
+    }
+    .chip{
+      padding:10px 12px;
+      border-radius:999px;
+      border:2px dashed rgba(31,42,68,.18);
+      background:rgba(255,255,255,.9);
+      font-weight:900;
+      cursor:pointer;
+      user-select:none;
+    }
+    .chip.on{
+      border-style:solid;
+      border-color:rgba(124,92,255,.35);
+      background:rgba(124,92,255,.12);
+    }
+
+    .stage{
+      position:relative;
+      height:340px;
+      border-radius:24px;
+      border:1px solid rgba(31,42,68,.12);
+      background:linear-gradient(180deg, rgba(233,247,255,.9), rgba(255,255,255,.9));
+      overflow:hidden;
+    }
+    .stageTop{
+      position:absolute; left:12px; top:12px;
+      z-index:5;
+      padding:6px 10px;
+      border-radius:999px;
+      background:rgba(255,255,255,.85);
+      border:1px solid rgba(31,42,68,.12);
+      font-weight:900;
+      font-size:14px;
+    }
+    .ground{
+      position:absolute;
+      left:0; right:0; bottom:0;
+      height:62px;
+      background:linear-gradient(180deg, rgba(255,209,102,.40), rgba(255,209,102,.20));
+      border-top:1px solid rgba(31,42,68,.10);
+    }
+    .sprite{
+      position:absolute;
+      left:60px;
+      bottom:76px;
+      font-size:54px;
+      transition: transform .25s ease;
+      z-index:3;
+      filter: drop-shadow(0 8px 14px rgba(31,42,68,.18));
+    }
+    .bubble{
+      position:absolute;
+      left:20px;
+      top:82px;
+      padding:10px 12px;
+      border-radius:18px;
+      background:rgba(255,255,255,.92);
+      border:1px solid rgba(31,42,68,.12);
+      box-shadow: 0 10px 20px rgba(31,42,68,.10);
+      font-weight:900;
+      max-width: 80%;
+      display:none;
+      z-index:4;
+    }
+    .bubble:after{
+      content:"";
+      position:absolute;
+      left:24px;
+      bottom:-10px;
+      width:18px; height:18px;
+      background:rgba(255,255,255,.92);
+      border-left:1px solid rgba(31,42,68,.12);
+      border-bottom:1px solid rgba(31,42,68,.12);
+      transform:rotate(45deg);
+    }
+
+    /* reorder / order builder */
+    .orderWrap{
+      margin-top:10px;
+      display:grid;
+      gap:10px;
+    }
+    .orderRow{
+      display:flex;
+      flex-wrap:wrap;
+      gap:10px;
+      align-items:center;
+    }
+    .slotBox{
+      flex:1;
+      min-height:56px;
+      padding:10px;
+      border-radius:18px;
+      border:2px dashed rgba(31,42,68,.16);
+      background:rgba(255,255,255,.86);
+      display:flex;
+      gap:10px;
+      flex-wrap:wrap;
+      align-items:center;
+    }
+    .block{
+      padding:10px 12px;
+      border-radius:16px;
+      border:1px solid rgba(31,42,68,.14);
+      background:rgba(255,255,255,.95);
+      font-weight:900;
+      cursor:grab;
+      user-select:none;
+    }
+    .block:active{cursor:grabbing}
+    .ghost{opacity:.55}
+
+    /* toast */
+    .toast{
+      position:fixed;
+      left:50%;
+      transform:translateX(-50%);
+      bottom:72px;
+      background:rgba(31,42,68,.92);
+      color:white;
+      padding:10px 14px;
+      border-radius:999px;
+      font-weight:900;
+      box-shadow: 0 14px 30px rgba(31,42,68,.22);
+      display:none;
+      z-index:999;
+    }
+  </style>
+</head>
+
+<body>
+
+  <!-- ACCESS GATE -->
+  <div class="gateWrap" id="gateWrap" aria-modal="true" role="dialog">
+    <div class="gate">
+      <div class="row" style="justify-content:space-between; gap:12px;">
+        <div>
+          <div class="badge">🔒 Kode Akses</div>
+          <h2 style="margin-top:10px;">Masukkan kode untuk mulai</h2>
+          <p class="mini">Hint: sama seperti sesi sebelumnya 🙂</p>
+        </div>
+        <div class="badge">Sesi 20 — Debugging</div>
+      </div>
+
+      <div class="codeBox">
+        <input id="accessInput" type="password" placeholder="Ketik kode di sini..." autocomplete="off" />
+        <button class="btn primary" id="unlockBtn" type="button">Buka ✅</button>
+        <button class="btn" id="showBtn" type="button">Tampilkan 👀</button>
+      </div>
+
+      <div class="highlight" id="gateMsg" style="margin-top:12px;">
+        Kode diperlukan agar materi aman dan rapi.
+      </div>
+
+      <div class="tip" style="margin-top:12px;">
+        Kontrol keyboard nanti:
+        <span class="kbd">←</span> <span class="kbd">→</span> / <span class="kbd">Space</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- TOP UI -->
+  <div class="progress">
+    <div class="badge" id="slideCounter">Slide 1 / 12</div>
+    <div class="badge">⌨️ <span class="kbd">←</span> <span class="kbd">→</span> <span class="kbd">Space</span></div>
+  </div>
+
+  <div class="toast" id="toast"></div>
+
+  <div class="deck" id="deck">
+
+    <!-- Slide 1 -->
+    <section class="slide active">
+      <div class="slide-content">
+        <div class="topbar">
+          <div class="badge">🐞 Sesi 20</div>
+          <div class="badge">Debugging Animasi</div>
+        </div>
+
+        <div class="card scroller">
+          <h1>Hari ini: Jadi “Detektif Animasi” 🕵️‍♀️🕵️‍♂️</h1>
+          <p>Kadang animasi kita… <b>tidak jalan</b> seperti yang kita mau.</p>
+          <div class="highlight">Tenang 🙂 Itu normal. Kita akan belajar <b>debug</b> = memperbaiki.</div>
+
+          <div class="tip">
+            Aturan kelas hari ini:
+            <ul>
+              <li><b>Jangan panik</b> 😄</li>
+              <li><b>Coba lagi</b> setelah perbaiki</li>
+              <li><b>Tanya</b> kalau buntu</li>
+            </ul>
+          </div>
+
+          <div class="row" style="margin-top:12px;">
+            <button class="btn primary" data-next type="button">Mulai ▶</button>
+            <span class="mini">Ayo kita cek bug yang sering terjadi!</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Slide 2 -->
+    <section class="slide">
+      <div class="slide-content">
+        <div class="topbar">
+          <div class="badge">🎯 Tujuan</div>
+          <div class="badge">Sesi 20</div>
+        </div>
+
+        <div class="grid scroller">
+          <div class="card">
+            <h2>Tujuan Belajar</h2>
+            <p>Setelah belajar, kamu bisa:</p>
+            <ul>
+              <li>Menjelaskan arti <b>bug</b> (masalah)</li>
+              <li>Menjelaskan arti <b>debug</b> (memperbaiki)</li>
+              <li>Mengecek animasi dari <b>awal sampai akhir</b></li>
+              <li>Memperbaiki masalah sederhana</li>
+            </ul>
+            <div class="highlight">Target: Animasi jadi <b>lebih rapi</b> dan <b>lebih jelas</b> ✅</div>
+          </div>
+
+          <div class="card">
+            <h2>Bug itu seperti…</h2>
+            <p class="mini">Pilih yang paling cocok:</p>
+            <div class="chips" id="bugAnalogies">
+              <div class="chip" data-ans="benar">👟 Sepatu terbalik</div>
+              <div class="chip" data-ans="benar">📖 Cerita putus di tengah</div>
+              <div class="chip" data-ans="benar">🧩 Potongan puzzle salah tempat</div>
+              <div class="chip" data-ans="salah">🍦 Es krim enak</div>
+            </div>
+            <div class="highlight" id="bugAnalogyMsg">Klik chip ya 🙂</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Slide 3 -->
+    <section class="slide">
+      <div class="slide-content">
+        <div class="topbar">
+          <div class="badge">🧠 4 Langkah Debug</div>
+          <div class="badge">Mudah!</div>
+        </div>
+
+        <div class="grid scroller">
+          <div class="card">
+            <h2>Langkah Debug “C-E-K-L”</h2>
+            <div class="highlight">
+              <b>C</b> = Coba jalankan (Green Flag) ▶<br>
+              <b>E</b> = Eh… ada yang aneh? 👀<br>
+              <b>K</b> = Kecilkan masalah (cek 1 hal) 🔍<br>
+              <b>L</b> = Lakukan perbaikan ✨
+            </div>
+            <div class="tip">
+              Cara cek 1 hal:
+              <ul>
+                <li>Cek Green Flag ada?</li>
+                <li>Cek urutan blok?</li>
+                <li>Cek ending?</li>
+              </ul>
+            </div>
+          </div>
+
+          <div class="card">
+            <h2>Mini Cek 👀</h2>
+            <p>Pilih yang benar:</p>
+            <div class="row">
+              <button class="btn primary" data-mini="benar" type="button">Debug itu memperbaiki</button>
+              <button class="btn primary" data-mini="salah" type="button">Debug itu menyerah</button>
+            </div>
+            <div class="highlight" id="miniMsg">Klik salah satu 🙂</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Slide 4 -->
+    <section class="slide">
+      <div class="slide-content">
+        <div class="topbar">
+          <div class="badge">✅ Checklist</div>
+          <div class="badge">Detektif Animasi</div>
+        </div>
+
+        <div class="grid scroller">
+          <div class="card">
+            <h2>Checklist Debug Anak</h2>
+            <p>Centang sambil kamu cek animasi kamu nanti.</p>
+
+            <div class="checklist" id="dbgList">
+              <label class="check"><input type="checkbox"><span><b>Aku tekan Green Flag</b> (mulai)</span></label>
+              <label class="check"><input type="checkbox"><span><b>Sprite bergerak</b> (tidak diam terus)</span></label>
+              <label class="check"><input type="checkbox"><span><b>Ceritaku urut</b> (awal–tengah–akhir)</span></label>
+              <label class="check"><input type="checkbox"><span><b>Ada ending</b> (Selesai/Dadah/Stop)</span></label>
+              <label class="check"><input type="checkbox"><span><b>Aku coba lagi</b> setelah diperbaiki</span></label>
+            </div>
+
+            <div class="row" style="margin-top:12px;">
+              <button class="btn primary" id="checkAll" type="button">Centang Semua ✅</button>
+              <button class="btn" id="resetChecks" type="button">Reset</button>
+            </div>
+            <div class="highlight" id="chkMsg" style="margin-top:12px;">Target: centang minimal 3 ya 🙂</div>
+          </div>
+
+          <div class="card">
+            <h2>Skor Detektif 🕵️</h2>
+            <p class="mini">Semakin banyak centang, semakin siap proyek besar!</p>
+            <div class="highlight" id="scoreBox">Skor: 0 / 5</div>
+            <div class="tip">Nanti di proyek (Sesi 21–24), checklist ini yang bantu kamu mandiri.</div>
+            <div class="row" style="margin-top:10px;">
+              <button class="btn good" data-next type="button">Lanjut latihan 🎮</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Slide 5 -->
+    <section class="slide">
+      <div class="slide-content">
+        <div class="topbar">
+          <div class="badge">🔎 Spot the Bug</div>
+          <div class="badge">Pilih masalahnya</div>
+        </div>
+
+        <div class="grid scroller">
+          <div class="card">
+            <h2>Temukan Bug-nya!</h2>
+            <p>Pilih masalah yang paling mungkin.</p>
+
+            <div class="highlight">
+              Cerita: Sprite harus <b>mulai</b> lalu bergerak. Tapi… spritenya diam.
+            </div>
+
+            <div class="chips" id="spotBug1">
+              <div class="chip" data-correct="1">Tidak ada Green Flag di awal</div>
+              <div class="chip" data-correct="0">Warna backdrop kurang cerah</div>
+              <div class="chip" data-correct="0">Sprite lucu sekali</div>
+              <div class="chip" data-correct="0">Sprite punya topi</div>
+            </div>
+
+            <div class="tip" id="spotMsg1">Klik satu jawaban 🙂</div>
+          </div>
+
+          <div class="card">
+            <h2>Solusi cepat</h2>
+            <div class="highlight">
+              Kalau sprite diam, cek dulu:
+              <ul>
+                <li>Apakah ada <b>Green Flag</b>?</li>
+                <li>Apakah blok menempel rapi?</li>
+                <li>Apakah kamu tekan Green Flag?</li>
+              </ul>
+            </div>
+            <div class="row" style="margin-top:10px;">
+              <button class="btn primary" data-next type="button">Latihan berikutnya ➜</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Slide 6 -->
+    <section class="slide">
+      <div class="slide-content">
+        <div class="topbar">
+          <div class="badge">🧩 Urutan Blok</div>
+          <div class="badge">Perbaiki cerita</div>
+        </div>
+
+        <div class="grid scroller">
+          <div class="card">
+            <h2>Perbaiki Urutan Cerita</h2>
+            <p>Susun jadi: <b>Awal → Tengah → Akhir</b>.</p>
+
+            <div class="orderWrap">
+              <div class="mini"><b>Tarik blok</b> ke kotak “Urutan Kode”. (Atau klik untuk pindah.)</div>
+
+              <div class="orderRow">
+                <div class="pill">Blok tersedia</div>
+                <div class="slotBox" id="poolBox" aria-label="Blok tersedia">
+                  <div class="block" draggable="true" data-id="gf">🟢 Green Flag</div>
+                  <div class="block" draggable="true" data-id="say1">💬 Say “Aku di taman”</div>
+                  <div class="block" draggable="true" data-id="jump">⬆️ Jump</div>
+                  <div class="block" draggable="true" data-id="sayEnd">💬 Say “Selesai!”</div>
+                  <div class="block" draggable="true" data-id="stop">⛔ Stop</div>
+                </div>
+              </div>
+
+              <div class="orderRow">
+                <div class="pill">Urutan Kode</div>
+                <div class="slotBox" id="orderBox" aria-label="Urutan kode"></div>
+              </div>
+
+              <div class="row" style="margin-top:8px;">
+                <button class="btn primary" id="checkOrderBtn" type="button">Cek Urutan ✅</button>
+                <button class="btn" id="resetOrderBtn" type="button">Reset</button>
+              </div>
+
+              <div class="highlight" id="orderMsg">Target: mulai dengan Green Flag, akhiri dengan Stop 🙂</div>
+            </div>
+          </div>
+
+          <div class="card">
+            <h2>Kenapa urutan penting?</h2>
+            <div class="tip">
+              Kalau ending ada di tengah, penonton bingung 😵<br>
+              Jadi… ending harus di <b>akhir</b>.
+            </div>
+
+            <div class="warn">
+              Tips: Kalau susah, ingat:
+              <ul>
+                <li>Green Flag itu <b>start</b></li>
+                <li>Stop itu <b>finish</b></li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Slide 7 -->
+    <section class="slide">
+      <div class="slide-content">
+        <div class="topbar">
+          <div class="badge">⏱️ Terlalu Cepat?</div>
+          <div class="badge">Atur kecepatannya</div>
+        </div>
+
+        <div class="grid scroller">
+          <div class="card">
+            <h2>Animasi Terlalu Cepat 😵</h2>
+            <p>
+              Kadang sprite bergerak cepat sekali. Kita bisa memberi “jeda” agar lebih jelas.
+            </p>
+
+            <div class="highlight">
+              Trik mudah: tambahkan <b>Wait</b> (jeda) sebelum/ sesudah gerakan.
+            </div>
+
+            <div class="row" style="margin-top:10px; justify-content:space-between;">
+              <b>Jeda (simulasi)</b>
+              <span class="valPill" id="waitVal">2</span>
+            </div>
+            <input id="waitRange" type="range" min="0" max="5" value="2" />
+
+            <div class="row" style="margin-top:10px;">
+              <button class="btn primary" id="playWaitDemo" type="button">▶ Coba (Simulasi)</button>
+              <button class="btn" id="resetWaitDemo" type="button">Reset</button>
+            </div>
+
+            <div class="tip" id="waitMsg">
+              Angka lebih besar = gerak lebih pelan (lebih mudah dilihat).
+            </div>
+          </div>
+
+          <div class="card">
+            <h2>Panggung Simulasi</h2>
+            <div class="stage" id="stageWait">
+              <div class="stageTop">Simulasi “Wait”</div>
+              <div class="bubble" id="bubbleWait">Aku jalan pelan…</div>
+              <div class="sprite" id="spriteWait">🐻</div>
+              <div class="ground"></div>
+            </div>
+            <div class="warn" style="margin-top:10px;">
+              Nanti di ScratchJr, kamu bisa pakai blok <b>Wait</b> supaya animasi tidak “ngebut”.
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Slide 8 -->
+    <section class="slide">
+      <div class="slide-content">
+        <div class="topbar">
+          <div class="badge">🧠 Bug Umum</div>
+          <div class="badge">Pilih solusinya</div>
+        </div>
+
+        <div class="grid scroller">
+          <div class="card">
+            <h2>Pasangkan Bug ↔ Solusi</h2>
+            <p>Klik bug, lalu klik solusinya.</p>
+
+            <div class="highlight" id="matchHint">Target: cocokkan minimal 3 ya 🙂</div>
+
+            <div class="grid" style="grid-template-columns:1fr 1fr;">
+              <div class="card" style="padding:14px;">
+                <h3>🐞 Bug</h3>
+                <div class="chips" id="bugList">
+                  <div class="chip" data-key="start">Sprite tidak bergerak</div>
+                  <div class="chip" data-key="order">Ending ada di tengah</div>
+                  <div class="chip" data-key="fast">Animasi terlalu cepat</div>
+                  <div class="chip" data-key="end">Tidak ada ending</div>
+                </div>
+              </div>
+
+              <div class="card" style="padding:14px;">
+                <h3>🧰 Solusi</h3>
+                <div class="chips" id="fixList">
+                  <div class="chip" data-key="order">Susun ulang urutan blok</div>
+                  <div class="chip" data-key="end">Tambahkan “Selesai/Dadah” + Stop</div>
+                  <div class="chip" data-key="start">Tambah Green Flag / cek menempel</div>
+                  <div class="chip" data-key="fast">Tambahkan Wait (jeda)</div>
+                </div>
+              </div>
+            </div>
+
+            <div class="row" style="margin-top:10px;">
+              <button class="btn primary" id="resetMatch" type="button">Reset</button>
+            </div>
+          </div>
+
+          <div class="card">
+            <h2>Hasil</h2>
+            <div class="highlight" id="matchResult">Belum ada pasangan.</div>
+            <div class="tip">
+              Ingat: Debugging itu <b>mencari 1 masalah</b>, lalu <b>memperbaiki</b>, lalu <b>coba lagi</b>.
+            </div>
+            <div class="row" style="margin-top:10px;">
+              <button class="btn good" data-next type="button">Siap praktik! 🎒</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Slide 9 -->
+    <section class="slide">
+      <div class="slide-content">
+        <div class="topbar">
+          <div class="badge">🧪 Praktik</div>
+          <div class="badge">Debug proyekmu</div>
+        </div>
+
+        <div class="grid scroller">
+          <div class="card">
+            <h2>Waktu Debug Proyekmu ✨</h2>
+            <p>Ikuti langkah ini:</p>
+            <div class="highlight">
+              1) Tekan Green Flag ▶<br>
+              2) Lihat sampai akhir 👀<br>
+              3) Temukan 1 bug 🐞<br>
+              4) Perbaiki 🔧<br>
+              5) Coba lagi ✅
+            </div>
+
+            <div class="tip">
+              Kalau bingung, pilih salah satu bug umum:
+              <ul>
+                <li>Sprite diam</li>
+                <li>Urutan aneh</li>
+                <li>Terlalu cepat</li>
+                <li>Ending kurang jelas</li>
+              </ul>
+            </div>
+          </div>
+
+          <div class="card">
+            <h2>Laporan singkat (mudah)</h2>
+            <div class="highlight" id="reportBox">
+              “Bugku: ____ . Aku memperbaiki dengan ____ .”
+            </div>
+
+            <div class="row" style="margin-top:10px;">
+              <button class="btn primary small" data-fillbug="Sprite diam" type="button">Isi bug: Sprite diam</button>
+              <button class="btn primary small" data-fillbug="Urutan salah" type="button">Isi bug: Urutan salah</button>
+              <button class="btn primary small" data-fillbug="Terlalu cepat" type="button">Isi bug: Terlalu cepat</button>
+              <button class="btn primary small" data-fillbug="Ending kurang jelas" type="button">Isi bug: Ending kurang</button>
+            </div>
+
+            <div class="row" style="margin-top:10px;">
+              <button class="btn good small" data-fillfix="Tambah Green Flag" type="button">Fix: Green Flag</button>
+              <button class="btn good small" data-fillfix="Susun ulang blok" type="button">Fix: Urutkan</button>
+              <button class="btn good small" data-fillfix="Tambah Wait" type="button">Fix: Wait</button>
+              <button class="btn good small" data-fillfix="Tambah Selesai + Stop" type="button">Fix: Ending</button>
+              <button class="btn" id="clearReport" type="button">Reset</button>
+            </div>
+
+            <div class="tip" id="reportOut" style="margin-top:10px;">
+              Klik tombol untuk mengisi 🙂 Setelah itu, ceritakan ke guru/teman.
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Slide 10 -->
+    <section class="slide">
+      <div class="slide-content">
+        <div class="topbar">
+          <div class="badge">🚀 Siap Proyek</div>
+          <div class="badge">Sesi 21–24</div>
+        </div>
+
+        <div class="grid scroller">
+          <div class="card">
+            <h2>Kamu siap membuat animasi sendiri! 🎬</h2>
+            <p>Mulai sesi depan, kamu akan membuat animasi versimu sendiri.</p>
+            <div class="highlight">
+              Sesi 21–24 = Proyek Animasi Mandiri<br>
+              (rencana → buat → perbaiki → selesai)
+            </div>
+            <div class="tip">
+              Skill paling penting dari sesi ini:
+              <ul>
+                <li><b>Berani mencoba lagi</b></li>
+                <li><b>Cek satu-satu</b></li>
+                <li><b>Perbaiki pelan-pelan</b></li>
+              </ul>
+            </div>
+          </div>
+
+          <div class="card">
+            <h2>Mini Cek 👀</h2>
+            <p>Kalau animasi bermasalah, langkah pertama adalah…</p>
+            <div class="row">
+              <button class="btn primary" data-first="salah" type="button">Langsung hapus proyek</button>
+              <button class="btn primary" data-first="benar" type="button">Jalankan dulu & lihat bug</button>
+            </div>
+            <div class="highlight" id="firstMsg">Klik jawaban 🙂</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Slide 11 -->
+    <section class="slide">
+      <div class="slide-content">
+        <div class="topbar">
+          <div class="badge">🧠 Refleksi</div>
+          <div class="badge">Aku bisa!</div>
+        </div>
+
+        <div class="grid scroller">
+          <div class="card">
+            <h2>Refleksi</h2>
+            <p>Centang minimal 2 ya ✨</p>
+
+            <div class="checklist" id="reflectList">
+              <label class="check"><input type="checkbox"><span>Aku paham bug itu masalah yang bisa diperbaiki.</span></label>
+              <label class="check"><input type="checkbox"><span>Aku bisa cek animasi dari awal sampai akhir.</span></label>
+              <label class="check"><input type="checkbox"><span>Aku bisa memperbaiki minimal 1 bug.</span></label>
+              <label class="check"><input type="checkbox"><span>Aku berani mencoba lagi kalau salah.</span></label>
+            </div>
+
+            <div class="row" style="margin-top:12px;">
+              <button class="btn primary" id="finishReflect" type="button">Selesai ✅</button>
+              <button class="btn" id="resetReflect" type="button">Reset</button>
+            </div>
+
+            <div class="highlight" id="reflectMsg" style="margin-top:12px;">
+              Target: centang minimal 2 ya 🙂
+            </div>
+          </div>
+
+          <div class="card">
+            <h2>Kata-kata detektif 🕵️</h2>
+            <div class="tip">
+              Ucapkan bareng-bareng:
+              <div class="highlight" style="margin-top:10px;">
+                “Aku tidak menyerah. Aku cek. Aku perbaiki. Aku coba lagi!” 🚀
+              </div>
+            </div>
+            <div class="row" style="margin-top:10px;">
+              <button class="btn good" data-next type="button">Penutup ➜</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Slide 12 -->
+    <section class="slide">
+      <div class="slide-content">
+        <div class="topbar">
+          <div class="badge">🎉 Penutup</div>
+          <div class="badge">Good job!</div>
+        </div>
+
+        <div class="card scroller">
+          <h2>Hebat! Kamu sudah belajar Debugging 🎉</h2>
+          <p>Hari ini kamu belajar:</p>
+          <div class="highlight">
+            ✅ Bug itu normal<br>
+            ✅ Debug = perbaiki<br>
+            ✅ Coba lagi setelah perbaiki
+          </div>
+
+          <div class="tip">
+            Sesi berikutnya: kita mulai <b>Proyek Animasi Mandiri</b> (Sesi 21).
+            Kamu akan membuat animasi versimu sendiri dari awal sampai akhir.
+          </div>
+
+          <div class="row" style="margin-top:12px;">
+            <button class="btn primary" id="restartBtn" type="button">Ulang dari awal 🔁</button>
+            <button class="btn good" id="celebrateBtn" type="button">Tepuk semangat 👏</button>
+          </div>
+
+          <div class="warn" style="margin-top:12px;">
+            Ingat: kalau ada masalah, kamu sekarang tahu caranya: <b>C-E-K-L</b> 🙂
+          </div>
+        </div>
+      </div>
+    </section>
+
+  </div>
+
+  <div class="nav">
+    <button class="btn" id="prevBtn" type="button">⬅️ Sebelumnya</button>
+    <button class="btn primary" id="nextBtn" type="button">➡️ Berikutnya</button>
+  </div>
+
+  <script>
+    /* ========= Helpers ========= */
+    const toastEl = document.getElementById('toast');
+    function showToast(msg){
+      toastEl.textContent = msg;
+      toastEl.style.display = 'block';
+      clearTimeout(showToast._t);
+      showToast._t = setTimeout(()=> toastEl.style.display='none', 1400);
+    }
+    // tiny beep without files
+    let audioCtx;
+    function beep(ok=true){
+      try{
+        audioCtx = audioCtx || new (window.AudioContext || window.webkitAudioContext)();
+        const o = audioCtx.createOscillator();
+        const g = audioCtx.createGain();
+        o.type = "sine";
+        o.frequency.value = ok ? 760 : 240;
+        g.gain.value = 0.12;
+        o.connect(g); g.connect(audioCtx.destination);
+        o.start();
+        setTimeout(()=>o.stop(), ok?110:160);
+      }catch(e){}
+    }
+
+    /* ========= Access Gate ========= */
+    const gateWrap = document.getElementById('gateWrap');
+    const accessInput = document.getElementById('accessInput');
+    const unlockBtn = document.getElementById('unlockBtn');
+    const showBtn = document.getElementById('showBtn');
+    const gateMsg = document.getElementById('gateMsg');
+    const ACCESS_CODE = "RGMDSLP25";
+
+    function unlock(){
+      const val = (accessInput.value || "").trim().toUpperCase();
+      if(val === ACCESS_CODE){
+        gateWrap.style.display = 'none';
+        showToast("Berhasil! Selamat belajar 🙂");
+        beep(true);
+        // focus deck
+        document.getElementById('nextBtn').focus();
+      } else {
+        gateMsg.innerHTML = "Kode belum tepat 😅 Coba lagi ya.";
+        beep(false);
+      }
+    }
+    unlockBtn.addEventListener('click', unlock);
+    accessInput.addEventListener('keydown', (e)=>{ if(e.key==='Enter') unlock(); });
+    showBtn.addEventListener('click', ()=>{
+      if(accessInput.type === 'password'){ accessInput.type='text'; showBtn.textContent='Sembunyikan 🙈'; }
+      else{ accessInput.type='password'; showBtn.textContent='Tampilkan 👀'; }
+    });
+
+    /* ========= Slide Nav ========= */
+    const slides = Array.from(document.querySelectorAll('.slide'));
+    let idx = 0;
+    const counter = document.getElementById('slideCounter');
+    const nextBtn = document.getElementById('nextBtn');
+    const prevBtn = document.getElementById('prevBtn');
+
+    function showSlide(i){
+      idx = Math.max(0, Math.min(slides.length-1, i));
+      slides.forEach(s=>s.classList.remove('active'));
+      slides[idx].classList.add('active');
+
+      counter.textContent = `Slide ${idx+1} / ${slides.length}`;
+      prevBtn.disabled = idx===0;
+      nextBtn.disabled = idx===slides.length-1;
+
+      // reset scroll position in this slide
+      const sc = slides[idx].querySelector('.scroller');
+      if(sc) sc.scrollTop = 0;
+    }
+    function next(){ if(idx < slides.length-1) showSlide(idx+1); }
+    function prev(){ if(idx > 0) showSlide(idx-1); }
+
+    nextBtn.addEventListener('click', next);
+    prevBtn.addEventListener('click', prev);
+
+    document.querySelectorAll('[data-next]').forEach(b=> b.addEventListener('click', next));
+
+    // Keyboard controls
+    document.addEventListener('keydown', (e)=>{
+      // do not hijack typing
+      const tag = (e.target && e.target.tagName) ? e.target.tagName.toLowerCase() : "";
+      if(tag === 'input' || tag === 'textarea') return;
+
+      if(e.key === 'ArrowRight' || e.key === 'PageDown' || e.key === ' '){
+        e.preventDefault(); next();
+      }
+      if(e.key === 'ArrowLeft' || e.key === 'PageUp'){
+        e.preventDefault(); prev();
+      }
+      if(e.key.toLowerCase() === 'home'){
+        showSlide(0);
+      }
+      if(e.key.toLowerCase() === 'end'){
+        showSlide(slides.length-1);
+      }
+    });
+
+    /* ========= Slide 2: Bug analogies ========= */
+    const bugAnalogies = document.getElementById('bugAnalogies');
+    const bugAnalogyMsg = document.getElementById('bugAnalogyMsg');
+    if(bugAnalogies){
+      bugAnalogies.querySelectorAll('.chip').forEach(ch=>{
+        ch.addEventListener('click', ()=>{
+          const ok = ch.dataset.ans === 'benar';
+          ch.classList.add('on');
+          bugAnalogyMsg.innerHTML = ok ? "✅ Betul! Itu contoh “ada yang salah”." : "😅 Itu bukan bug. Bug itu masalah.";
+          beep(ok);
+        });
+      });
+    }
+
+    /* ========= Slide 3: mini check ========= */
+    document.querySelectorAll('[data-mini]').forEach(btn=>{
+      btn.addEventListener('click', ()=>{
+        const ok = btn.dataset.mini === 'benar';
+        const msg = document.getElementById('miniMsg');
+        msg.innerHTML = ok ? "✅ Benar! Debug = memperbaiki." : "😅 Salah. Debug bukan menyerah.";
+        beep(ok);
+      });
+    });
+
+    /* ========= Slide 4: checklist scoring ========= */
+    const dbgList = document.getElementById('dbgList');
+    const scoreBox = document.getElementById('scoreBox');
+    const chkMsg = document.getElementById('chkMsg');
+    function updateScore(){
+      if(!dbgList) return;
+      const checks = Array.from(dbgList.querySelectorAll('input[type="checkbox"]'));
+      const score = checks.filter(c=>c.checked).length;
+      scoreBox.textContent = `Skor: ${score} / ${checks.length}`;
+      chkMsg.innerHTML = score >= 3 ? "✅ Mantap! Kamu siap debugging." : "Target: centang minimal 3 ya 🙂";
+    }
+    if(dbgList){
+      dbgList.addEventListener('change', updateScore);
+      document.getElementById('checkAll').addEventListener('click', ()=>{
+        dbgList.querySelectorAll('input').forEach(i=>i.checked=true);
+        updateScore(); beep(true); showToast("Semua dicentang!");
+      });
+      document.getElementById('resetChecks').addEventListener('click', ()=>{
+        dbgList.querySelectorAll('input').forEach(i=>i.checked=false);
+        updateScore(); beep(true); showToast("Reset!");
+      });
+      updateScore();
+    }
+
+    /* ========= Slide 5: Spot the bug ========= */
+    const spotBug1 = document.getElementById('spotBug1');
+    const spotMsg1 = document.getElementById('spotMsg1');
+    if(spotBug1){
+      spotBug1.querySelectorAll('.chip').forEach(ch=>{
+        ch.addEventListener('click', ()=>{
+          const ok = ch.dataset.correct === '1';
+          spotMsg1.innerHTML = ok ? "✅ Betul! Kalau tidak ada Green Flag, sprite bisa diam." : "😅 Bukan itu. Coba pikir: kenapa sprite diam?";
+          beep(ok);
+        });
+      });
+    }
+
+    /* ========= Slide 6: Drag & drop order builder ========= */
+    const poolBox = document.getElementById('poolBox');
+    const orderBox = document.getElementById('orderBox');
+    const orderMsg = document.getElementById('orderMsg');
+
+    function enableDnD(container){
+      if(!container) return;
+      container.querySelectorAll('.block').forEach(block=>{
+        block.addEventListener('dragstart', (e)=>{
+          e.dataTransfer.setData('text/plain', block.dataset.id);
+          setTimeout(()=>block.classList.add('ghost'), 0);
+        });
+        block.addEventListener('dragend', ()=>{
+          block.classList.remove('ghost');
+        });
+
+        // click-to-move fallback
+        block.addEventListener('click', ()=>{
+          const parent = block.parentElement;
+          if(parent === poolBox) orderBox.appendChild(block);
+          else poolBox.appendChild(block);
+          beep(true);
+        });
+      });
+    }
+    function allowDrop(zone){
+      if(!zone) return;
+      zone.addEventListener('dragover', (e)=>{ e.preventDefault(); });
+      zone.addEventListener('drop', (e)=>{
+        e.preventDefault();
+        const id = e.dataTransfer.getData('text/plain');
+        const el = document.querySelector(`.block[data-id="${id}"]`);
+        if(el) zone.appendChild(el);
+        beep(true);
+      });
+    }
+
+    if(poolBox && orderBox){
+      enableDnD(poolBox);
+      enableDnD(orderBox);
+      allowDrop(poolBox);
+      allowDrop(orderBox);
+
+      document.getElementById('checkOrderBtn').addEventListener('click', ()=>{
+        const ids = Array.from(orderBox.querySelectorAll('.block')).map(b=>b.dataset.id);
+        // ideal: gf first and stop last, sayEnd near end
+        const ok = ids[0]==='gf' && ids[ids.length-1]==='stop' && ids.includes('sayEnd');
+        orderMsg.innerHTML = ok
+          ? "✅ Bagus! Mulai Green Flag, akhiri Stop, dan ada ending."
+          : "😅 Belum pas. Pastikan: Green Flag di awal dan Stop di akhir.";
+        beep(ok);
+      });
+
+      document.getElementById('resetOrderBtn').addEventListener('click', ()=>{
+        // move all back to pool
+        Array.from(orderBox.querySelectorAll('.block')).forEach(b=>poolBox.appendChild(b));
+        orderMsg.innerHTML = "Target: mulai dengan Green Flag, akhiri dengan Stop 🙂";
+        beep(true);
+        showToast("Reset urutan!");
+      });
+    }
+
+    /* ========= Slide 7: Wait demo ========= */
+    const waitRange = document.getElementById('waitRange');
+    const waitVal = document.getElementById('waitVal');
+    const playWaitDemo = document.getElementById('playWaitDemo');
+    const resetWaitDemo = document.getElementById('resetWaitDemo');
+    const spriteWait = document.getElementById('spriteWait');
+    const bubbleWait = document.getElementById('bubbleWait');
+    const waitMsg = document.getElementById('waitMsg');
+
+    let waitPlaying = false;
+    function setWaitVal(){
+      if(!waitRange) return;
+      waitVal.textContent = waitRange.value;
+      waitMsg.textContent = `Angka lebih besar = gerak lebih pelan. Sekarang jeda: ${waitRange.value}`;
+    }
+    if(waitRange){ waitRange.addEventListener('input', setWaitVal); setWaitVal(); }
+
+    function sleep(ms){ return new Promise(r=>setTimeout(r, ms)); }
+
+    async function runWaitDemo(){
+      if(waitPlaying) return;
+      waitPlaying = true;
+      const w = Number(waitRange.value);
+      bubbleWait.style.display = 'block';
+      bubbleWait.textContent = "Aku jalan…";
+      spriteWait.style.transform = "translateX(0px)";
+      await sleep(300);
+
+      for(let i=0;i<6;i++){
+        spriteWait.style.transform = `translateX(${(i+1)*70}px)`;
+        bubbleWait.textContent = w===0 ? "Cepat!" : "Pelan…";
+        await sleep(260 + w*280);
+      }
+      bubbleWait.textContent = "Selesai!";
+      beep(true);
+      await sleep(550);
+      bubbleWait.style.display = 'none';
+      waitPlaying = false;
+    }
+    if(playWaitDemo) playWaitDemo.addEventListener('click', runWaitDemo);
+    if(resetWaitDemo) resetWaitDemo.addEventListener('click', ()=>{
+      waitPlaying = false;
+      spriteWait.style.transform = "translateX(0px)";
+      bubbleWait.style.display = 'none';
+      beep(true);
+    });
+
+    /* ========= Slide 8: Match bug-fix ========= */
+    const bugList = document.getElementById('bugList');
+    const fixList = document.getElementById('fixList');
+    const matchResult = document.getElementById('matchResult');
+    const matchHint = document.getElementById('matchHint');
+    let pickBug = null;
+    let matched = 0;
+
+    function clearMatchUI(){
+      pickBug = null;
+      matched = 0;
+      if(!bugList || !fixList) return;
+      bugList.querySelectorAll('.chip').forEach(c=>c.classList.remove('on'));
+      fixList.querySelectorAll('.chip').forEach(c=>c.classList.remove('on'));
+      matchResult.textContent = "Belum ada pasangan.";
+      matchHint.textContent = "Target: cocokkan minimal 3 ya 🙂";
+    }
+
+    function markDone(ch){
+      ch.style.opacity = ".55";
+      ch.style.pointerEvents = "none";
+    }
+
+    if(bugList && fixList){
+      bugList.querySelectorAll('.chip').forEach(ch=>{
+        ch.addEventListener('click', ()=>{
+          if(ch.style.pointerEvents === "none") return;
+          bugList.querySelectorAll('.chip').forEach(c=>c.classList.remove('on'));
+          ch.classList.add('on');
+          pickBug = ch.dataset.key;
+          matchHint.innerHTML = `Bug dipilih: <b>${ch.textContent}</b> → sekarang pilih solusinya`;
+          beep(true);
+        });
+      });
+
+      fixList.querySelectorAll('.chip').forEach(ch=>{
+        ch.addEventListener('click', ()=>{
+          if(ch.style.pointerEvents === "none") return;
+          if(!pickBug){
+            matchHint.textContent = "Pilih bug dulu ya 🙂";
+            beep(false);
+            return;
+          }
+          const ok = ch.dataset.key === pickBug;
+          if(ok){
+            matched++;
+            matchResult.innerHTML = `✅ Cocok! (${matched} cocok)`;
+            matchHint.innerHTML = matched>=3 ? "⭐⭐⭐ Mantap! Kamu siap debugging proyek." : "Bagus! Lanjut pasangan berikutnya 🙂";
+            // disable matched pair
+            const bugChip = bugList.querySelector(`.chip[data-key="${pickBug}"]`);
+            markDone(bugChip);
+            markDone(ch);
+            bugChip.classList.remove('on');
+            ch.classList.remove('on');
+            pickBug = null;
+            beep(true);
+          } else {
+            matchResult.innerHTML = "😅 Belum cocok. Coba lagi ya.";
+            beep(false);
+          }
+        });
+      });
+
+      document.getElementById('resetMatch').addEventListener('click', ()=>{
+        // reset disabled state
+        bugList.querySelectorAll('.chip').forEach(c=>{c.style.opacity=""; c.style.pointerEvents="";});
+        fixList.querySelectorAll('.chip').forEach(c=>{c.style.opacity=""; c.style.pointerEvents="";});
+        clearMatchUI();
+        beep(true);
+      });
+
+      clearMatchUI();
+    }
+
+    /* ========= Slide 9: Report builder ========= */
+    const reportBox = document.getElementById('reportBox');
+    const reportOut = document.getElementById('reportOut');
+    let repBug = "____";
+    let repFix = "____";
+
+    function renderReport(){
+      reportBox.innerHTML = `“Bugku: <b>${repBug}</b>. Aku memperbaiki dengan <b>${repFix}</b>.”`;
+    }
+    document.querySelectorAll('[data-fillbug]').forEach(btn=>{
+      btn.addEventListener('click', ()=>{
+        repBug = btn.dataset.fillbug;
+        renderReport();
+        reportOut.textContent = "Bagus. Sekarang pilih cara memperbaikinya 🙂";
+        beep(true);
+      });
+    });
+    document.querySelectorAll('[data-fillfix]').forEach(btn=>{
+      btn.addEventListener('click', ()=>{
+        repFix = btn.dataset.fillfix;
+        renderReport();
+        reportOut.textContent = "Mantap! Sekarang ceritakan kalimat ini ke guru/teman.";
+        beep(true);
+      });
+    });
+    document.getElementById('clearReport').addEventListener('click', ()=>{
+      repBug="____"; repFix="____";
+      renderReport();
+      reportOut.textContent = "Reset. Isi lagi 🙂";
+      beep(true);
+    });
+    renderReport();
+
+    /* ========= Slide 10: mini check ========= */
+    document.querySelectorAll('[data-first]').forEach(btn=>{
+      btn.addEventListener('click', ()=>{
+        const ok = btn.dataset.first === 'benar';
+        document.getElementById('firstMsg').innerHTML =
+          ok ? "✅ Benar! Jalankan dulu & lihat bug." : "😅 Jangan hapus dulu. Coba cek dan perbaiki.";
+        beep(ok);
+      });
+    });
+
+    /* ========= Slide 11: reflection ========= */
+    const reflectList = document.getElementById('reflectList');
+    const reflectMsg = document.getElementById('reflectMsg');
+    function reflectCount(){
+      const c = Array.from(reflectList.querySelectorAll('input')).filter(i=>i.checked).length;
+      reflectMsg.textContent = c>=2 ? "✅ Mantap! Kamu sudah siap proyek." : "Target: centang minimal 2 ya 🙂";
+    }
+    if(reflectList){
+      reflectList.addEventListener('change', reflectCount);
+      document.getElementById('finishReflect').addEventListener('click', ()=>{
+        const c = Array.from(reflectList.querySelectorAll('input')).filter(i=>i.checked).length;
+        if(c>=2){ showToast("Berhasil! 🎉"); beep(true); }
+        else { showToast("Centang 2 dulu ya 🙂"); beep(false); }
+      });
+      document.getElementById('resetReflect').addEventListener('click', ()=>{
+        reflectList.querySelectorAll('input').forEach(i=>i.checked=false);
+        reflectCount(); beep(true);
+      });
+      reflectCount();
+    }
+
+    /* ========= Slide 12: end actions ========= */
+    document.getElementById('restartBtn').addEventListener('click', ()=>{ showSlide(0); showToast("Ulang dari awal!"); beep(true); });
+    document.getElementById('celebrateBtn').addEventListener('click', ()=>{
+      showToast("👏👏👏 Hebat!");
+      beep(true);
+    });
+
+    /* ========= Init ========= */
+    showSlide(0);
+  </script>
+</body>
+</html>
