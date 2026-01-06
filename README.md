@@ -1,2 +1,2 @@
-# lower-primary-unit-1
-Slides for Unit 1
+# lower-primary
+Slides for Semester 1 & 2
