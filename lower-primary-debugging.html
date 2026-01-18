@@ -1,1421 +1,887 @@
 <!DOCTYPE html>
 <html lang="id">
+
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1.0" />
-  <title>Sesi 20 — Debugging Animasi (ScratchJr)</title>
-  <style>
-    :root{
-      --bg1:#E9F7FF;
-      --bg2:#FFF4D6;
-      --bg3:#FFE6F1;
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sesi 20: Detektif Coding ScratchJr</title>
+    <style>
+        :root {
+            --primary: #7C5CFF;
+            --secondary: #2EE59D;
+            --accent: #24C2FF;
+            --bg: #F0F4F8;
+            --text: #1F2A44;
+            --card: #ffffff;
+            --bad: #FF6B6B;
+        }
 
-      --ink:#1F2A44;
-      --muted:#5B6B8A;
+        body {
+            font-family: 'Arial Rounded MT Bold', 'Helvetica', sans-serif;
+            background-color: var(--bg);
+            color: var(--text);
+            margin: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            overflow: auto;
+        }
 
-      --card:#ffffffee;
-      --shadow: 0 18px 50px rgba(31,42,68,.14);
+        .slide-container {
+            width: 900px;
+            height: 600px;
+            background: var(--card);
+            border-radius: 30px;
+            box-shadow: 0 20px 50px rgba(31, 42, 68, 0.15);
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
 
-      --primary:#7C5CFF;
-      --primary2:#24C2FF;
-      --good:#2EE59D;
-      --warn:#FFD166;
-      --bad:#FF6B6B;
+        /* Navigasi Footer agar tidak menimpa konten */
+        .footer {
+            height: 80px;
+            padding: 0 40px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: #f9f9f9;
+            border-top: 1px solid #eee;
+            z-index: 10;
+        }
 
-      --stroke: rgba(31,42,68,.12);
-      --stroke2: rgba(124,92,255,.24);
+        .slide {
+            display: none;
+            flex: 1;
+            /* Mengambil sisa ruang yang ada */
+            padding: 40px;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+            overflow-y: auto;
+            /* Antisipasi jika konten panjang di layar kecil */
+            overscroll-behavior: contain;
+        }
 
-      --radius: 24px;
-    }
+        .slide.active {
+            display: flex;
+            animation: fadeIn 0.4s ease-out;
+        }
 
-    *{box-sizing:border-box}
-    body{
-      margin:0;
-      font-family: ui-rounded, "Comic Sans MS","Arial Rounded MT Bold",system-ui,-apple-system,Segoe UI,Roboto,Arial;
-      color:var(--ink);
-      background:
-        radial-gradient(1200px 600px at 20% 10%, var(--bg1), transparent 60%),
-        radial-gradient(1000px 700px at 80% 15%, var(--bg2), transparent 55%),
-        radial-gradient(1200px 800px at 40% 90%, var(--bg3), transparent 60%),
-        linear-gradient(135deg, #ffffff, #f8fbff);
-      min-height:100vh;
-      overflow:hidden;
-    }
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
 
-    /* ====== LAYOUT SLIDE CENTERED ====== */
-    .deck{
-      position:relative;
-      height:100vh;
-      width:100vw;
-      display:flex;
-      align-items:center;
-      justify-content:center;
-      padding:18px;
-    }
-    .slide{
-      display:none;
-      width:min(1100px, 96vw);
-      height:min(640px, 92vh);
-      border-radius: calc(var(--radius) + 6px);
-      padding:14px;
-      background: linear-gradient(135deg, rgba(255,255,255,.75), rgba(255,255,255,.45));
-      border:1px solid rgba(31,42,68,.10);
-      box-shadow: var(--shadow);
-    }
-    .slide.active{display:block}
-    .slide-content{
-      height:100%;
-      width:100%;
-      display:flex;
-      flex-direction:column;
-      gap:12px;
-    }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
 
-    /* slide scroller inside (fix overflow) */
-    .scroller{
-      flex:1;
-      overflow:auto;
-      padding:4px 2px 8px;
-    }
-    .scroller::-webkit-scrollbar{width:10px}
-    .scroller::-webkit-scrollbar-thumb{background:rgba(31,42,68,.18); border-radius:999px}
-    .scroller::-webkit-scrollbar-track{background:transparent}
+        /* Elemen UI */
+        h1 {
+            color: var(--primary);
+            font-size: 32px;
+            margin: 0 0 15px 0;
+        }
 
-    .topbar{
-      display:flex;
-      align-items:center;
-      justify-content:space-between;
-      gap:10px;
-      padding:4px 6px;
-    }
-    .badge{
-      display:inline-flex;
-      align-items:center;
-      gap:8px;
-      padding:8px 12px;
-      border-radius:999px;
-      background:rgba(124,92,255,.12);
-      border:1px solid rgba(124,92,255,.22);
-      font-weight:800;
-      font-size:14px;
-      white-space:nowrap;
-    }
-    .kbd{
-      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", monospace;
-      font-size:12px;
-      padding:2px 8px;
-      border-radius:10px;
-      border:1px solid rgba(31,42,68,.16);
-      background:rgba(255,255,255,.85);
-      color:var(--muted);
-    }
+        p {
+            font-size: 20px;
+            line-height: 1.5;
+            margin: 0 0 20px 0;
+        }
 
-    .card{
-      background:var(--card);
-      border:1px solid var(--stroke);
-      border-radius: var(--radius);
-      padding:18px;
-      box-shadow: 0 10px 26px rgba(31,42,68,.10);
-    }
-    h1{margin:0 0 6px; font-size:34px; line-height:1.1}
-    h2{margin:0 0 8px; font-size:28px; line-height:1.15}
-    h3{margin:0 0 6px; font-size:18px}
-    p{margin:6px 0; font-size:18px; color:var(--ink)}
-    .mini{font-size:14px; color:var(--muted)}
-    ul{margin:8px 0 0; padding-left:22px; font-size:18px}
-    li{margin:6px 0}
+        .badge {
+            background: rgba(124, 92, 255, 0.1);
+            color: var(--primary);
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-size: 14px;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
 
-    .grid{
-      display:grid;
-      grid-template-columns: 1.1fr .9fr;
-      gap:12px;
-    }
-    @media (max-width: 940px){
-      .slide{height:min(760px, 92vh)}
-      .grid{grid-template-columns:1fr}
-    }
+        .grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            width: 100%;
+            margin-top: 10px;
+        }
 
-    .highlight{
-      margin-top:10px;
-      padding:12px 14px;
-      border-radius:18px;
-      background:rgba(255,209,102,.20);
-      border:1px solid rgba(255,209,102,.55);
-      font-weight:800;
-    }
-    .tip{
-      margin-top:10px;
-      padding:12px 14px;
-      border-radius:18px;
-      background:rgba(36,194,255,.12);
-      border:1px solid rgba(36,194,255,.32);
-    }
-    .warn{
-      margin-top:10px;
-      padding:12px 14px;
-      border-radius:18px;
-      background:rgba(255,107,107,.10);
-      border:1px solid rgba(255,107,107,.28);
-    }
+        .card-mini {
+            padding: 20px;
+            border-radius: 20px;
+            border: 2px solid #eee;
+            background: #fff;
+        }
 
-    .row{display:flex; gap:10px; flex-wrap:wrap; align-items:center}
-    .btn{
-      border:none;
-      cursor:pointer;
-      padding:12px 16px;
-      border-radius:999px;
-      font-weight:900;
-      font-size:16px;
-      background:rgba(31,42,68,.08);
-      color:var(--ink);
-      border:1px solid rgba(31,42,68,.10);
-      box-shadow: 0 8px 18px rgba(31,42,68,.10);
-      transition: transform .08s ease, filter .15s ease;
-    }
-    .btn:active{transform:scale(.98)}
-    .btn.primary{background:linear-gradient(135deg, var(--primary), #9B8CFF); color:white; border:none}
-    .btn.good{background:linear-gradient(135deg, var(--good), #B9F9DB); color:#0B2B1F; border:none}
-    .btn.warn{background:linear-gradient(135deg, var(--warn), #FFE7A8); color:#5A3B00; border:none}
-    .btn.bad{background:linear-gradient(135deg, var(--bad), #FFC1C1); color:#5A0B0B; border:none}
-    .btn.small{padding:9px 12px; font-size:14px}
+        .step-card {
+            background: #FFF9C4;
+            padding: 20px;
+            border-radius: 20px;
+            border-left: 8px solid var(--primary);
+            width: 95%;
+            text-align: left;
+            margin-top: 10px;
+        }
 
-    /* ===== NAV ===== */
-    .nav{
-      position:fixed;
-      left:12px; right:12px; bottom:12px;
-      display:flex;
-      justify-content:center;
-      gap:10px;
-      pointer-events:none;
-    }
-    .nav .btn{pointer-events:auto}
-    .progress{
-      position:fixed;
-      left:12px; top:12px;
-      display:flex;
-      align-items:center;
-      gap:10px;
-      z-index:20;
-    }
+        .btn-nav {
+            background: var(--primary);
+            color: white;
+            border: none;
+            padding: 12px 25px;
+            border-radius: 15px;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: 0.2s;
+        }
 
-    /* ===== GATE ===== */
-    .gateWrap{
-      position:fixed;
-      inset:0;
-      display:flex;
-      align-items:center;
-      justify-content:center;
-      background:
-        radial-gradient(1200px 800px at 20% 20%, rgba(233,247,255,.95), transparent 60%),
-        radial-gradient(1000px 700px at 80% 25%, rgba(255,244,214,.95), transparent 55%),
-        radial-gradient(1200px 800px at 40% 90%, rgba(255,230,241,.95), transparent 60%),
-        linear-gradient(135deg, rgba(255,255,255,.95), rgba(248,251,255,.95));
-      z-index:9999;
-    }
-    .gate{
-      width:min(760px, 94vw);
-      border-radius:30px;
-      padding:22px;
-      background:rgba(255,255,255,.92);
-      border:1px solid rgba(31,42,68,.10);
-      box-shadow: var(--shadow);
-    }
-    .gate .codeBox{
-      display:flex;
-      gap:10px;
-      align-items:center;
-      flex-wrap:wrap;
-      margin-top:10px;
-    }
-    input[type="password"], input[type="text"]{
-      padding:12px 14px;
-      border-radius:18px;
-      border:1px solid rgba(31,42,68,.18);
-      background:rgba(255,255,255,.95);
-      font-size:16px;
-      font-weight:800;
-      outline:none;
-      min-width:260px;
-    }
-    input[type="range"]{width:100%}
+        .btn-nav:hover {
+            transform: scale(1.05);
+        }
 
-    /* ===== INTERACTIVES ===== */
-    .checklist{
-      display:grid;
-      gap:8px;
-      margin-top:10px;
-    }
-    .check{
-      display:flex;
-      gap:10px;
-      align-items:flex-start;
-      padding:10px 12px;
-      border-radius:18px;
-      border:1px solid rgba(31,42,68,.12);
-      background:rgba(255,255,255,.80);
-    }
-    .check input{transform:scale(1.2); margin-top:3px}
-    .pill{
-      display:inline-flex;
-      align-items:center;
-      gap:8px;
-      padding:8px 12px;
-      border-radius:999px;
-      background:rgba(31,42,68,.06);
-      border:1px solid rgba(31,42,68,.10);
-      font-weight:900;
-      font-size:14px;
-    }
-    .valPill{
-      display:inline-flex;
-      align-items:center;
-      justify-content:center;
-      padding:6px 10px;
-      border-radius:999px;
-      background:rgba(124,92,255,.12);
-      border:1px solid rgba(124,92,255,.25);
-      font-weight:1000;
-      min-width:36px;
-    }
-    .chips{
-      display:flex;
-      flex-wrap:wrap;
-      gap:10px;
-      margin-top:10px;
-    }
-    .chip{
-      padding:10px 12px;
-      border-radius:999px;
-      border:2px dashed rgba(31,42,68,.18);
-      background:rgba(255,255,255,.9);
-      font-weight:900;
-      cursor:pointer;
-      user-select:none;
-    }
-    .chip.on{
-      border-style:solid;
-      border-color:rgba(124,92,255,.35);
-      background:rgba(124,92,255,.12);
-    }
+        .btn-nav:disabled {
+            background: #ccc;
+            cursor: not-allowed;
+        }
 
-    .stage{
-      position:relative;
-      height:340px;
-      border-radius:24px;
-      border:1px solid rgba(31,42,68,.12);
-      background:linear-gradient(180deg, rgba(233,247,255,.9), rgba(255,255,255,.9));
-      overflow:hidden;
-    }
-    .stageTop{
-      position:absolute; left:12px; top:12px;
-      z-index:5;
-      padding:6px 10px;
-      border-radius:999px;
-      background:rgba(255,255,255,.85);
-      border:1px solid rgba(31,42,68,.12);
-      font-weight:900;
-      font-size:14px;
-    }
-    .ground{
-      position:absolute;
-      left:0; right:0; bottom:0;
-      height:62px;
-      background:linear-gradient(180deg, rgba(255,209,102,.40), rgba(255,209,102,.20));
-      border-top:1px solid rgba(31,42,68,.10);
-    }
-    .sprite{
-      position:absolute;
-      left:60px;
-      bottom:76px;
-      font-size:54px;
-      transition: transform .25s ease;
-      z-index:3;
-      filter: drop-shadow(0 8px 14px rgba(31,42,68,.18));
-    }
-    .bubble{
-      position:absolute;
-      left:20px;
-      top:82px;
-      padding:10px 12px;
-      border-radius:18px;
-      background:rgba(255,255,255,.92);
-      border:1px solid rgba(31,42,68,.12);
-      box-shadow: 0 10px 20px rgba(31,42,68,.10);
-      font-weight:900;
-      max-width: 80%;
-      display:none;
-      z-index:4;
-    }
-    .bubble:after{
-      content:"";
-      position:absolute;
-      left:24px;
-      bottom:-10px;
-      width:18px; height:18px;
-      background:rgba(255,255,255,.92);
-      border-left:1px solid rgba(31,42,68,.12);
-      border-bottom:1px solid rgba(31,42,68,.12);
-      transform:rotate(45deg);
-    }
+        .block-sim {
+            display: flex;
+            gap: 10px;
+            background: #eee;
+            padding: 15px;
+            border-radius: 15px;
+            margin: 15px 0;
+        }
 
-    /* reorder / order builder */
-    .orderWrap{
-      margin-top:10px;
-      display:grid;
-      gap:10px;
-    }
-    .orderRow{
-      display:flex;
-      flex-wrap:wrap;
-      gap:10px;
-      align-items:center;
-    }
-    .slotBox{
-      flex:1;
-      min-height:56px;
-      padding:10px;
-      border-radius:18px;
-      border:2px dashed rgba(31,42,68,.16);
-      background:rgba(255,255,255,.86);
-      display:flex;
-      gap:10px;
-      flex-wrap:wrap;
-      align-items:center;
-    }
-    .block{
-      padding:10px 12px;
-      border-radius:16px;
-      border:1px solid rgba(31,42,68,.14);
-      background:rgba(255,255,255,.95);
-      font-weight:900;
-      cursor:grab;
-      user-select:none;
-    }
-    .block:active{cursor:grabbing}
-    .ghost{opacity:.55}
+        .block {
+            width: 50px;
+            height: 60px;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            color: white;
+            font-weight: bold;
+        }
 
-    /* toast */
-    .toast{
-      position:fixed;
-      left:50%;
-      transform:translateX(-50%);
-      bottom:72px;
-      background:rgba(31,42,68,.92);
-      color:white;
-      padding:10px 14px;
-      border-radius:999px;
-      font-weight:900;
-      box-shadow: 0 14px 30px rgba(31,42,68,.22);
-      display:none;
-      z-index:999;
-    }
-  </style>
+        .yellow {
+            background: #FFD600;
+            color: black;
+        }
+
+        .blue {
+            background: #2196F3;
+        }
+
+        /* Overlay menutupi seluruh layar */
+        #loginOverlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(255, 255, 255, 0.8);
+            /* Warna putih transparan */
+            backdrop-filter: blur(10px);
+            /* Efek Blur di belakang pop-up */
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 9999;
+            /* Pastikan di atas segalanya */
+        }
+
+        /* Kotak Pop-up */
+        .login-card {
+            background: white;
+            padding: 40px;
+            border-radius: 30px;
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.2);
+            text-align: center;
+            width: 400px;
+        }
+
+        .login-input {
+            padding: 15px;
+            font-size: 24px;
+            border-radius: 15px;
+            border: 3px solid var(--primary);
+            text-align: center;
+            width: 80%;
+            margin: 20px 0;
+            text-transform: uppercase;
+            /* Otomatis terlihat huruf besar */
+        }
+    </style>
 </head>
 
 <body>
+    <div id="loginOverlay">
+        <div class="login-card">
+            <div class="badge">Keamanan Detektif</div>
+            <h1>Masukkan Kode Akses 🔐</h1>
+            <p>Gunakan kode rahasia untuk membuka misi hari ini!</p>
 
-  <!-- ACCESS GATE -->
-  <div class="gateWrap" id="gateWrap" aria-modal="true" role="dialog">
-    <div class="gate">
-      <div class="row" style="justify-content:space-between; gap:12px;">
-        <div>
-          <div class="badge">🔒 Kode Akses</div>
-          <h2 style="margin-top:10px;">Masukkan kode untuk mulai</h2>
-          <p class="mini">Hint: sama seperti sesi sebelumnya 🙂</p>
+            <input type="text" id="passCode" class="login-input" placeholder="KODE" maxlength="10"
+                oninput="this.value = this.value.toUpperCase()">
+
+            <button class="btn-nav" style="width: 100%; padding: 15px;" onclick="checkCode()">BUKA MISI 🚀</button>
+            <p id="errorMsg" style="color: var(--bad); margin-top: 15px; display: none; font-weight: bold;">Kode Salah!
+                Coba cek lagi ya.</p>
         </div>
-        <div class="badge">Sesi 20 — Debugging</div>
-      </div>
-
-      <div class="codeBox">
-        <input id="accessInput" type="password" placeholder="Ketik kode di sini..." autocomplete="off" />
-        <button class="btn primary" id="unlockBtn" type="button">Buka ✅</button>
-        <button class="btn" id="showBtn" type="button">Tampilkan 👀</button>
-      </div>
-
-      <div class="highlight" id="gateMsg" style="margin-top:12px;">
-        Kode diperlukan agar materi aman dan rapi.
-      </div>
-
-      <div class="tip" style="margin-top:12px;">
-        Kontrol keyboard nanti:
-        <span class="kbd">←</span> <span class="kbd">→</span> / <span class="kbd">Space</span>
-      </div>
     </div>
-  </div>
 
-  <!-- TOP UI -->
-  <div class="progress">
-    <div class="badge" id="slideCounter">Slide 1 / 12</div>
-    <div class="badge">⌨️ <span class="kbd">←</span> <span class="kbd">→</span> <span class="kbd">Space</span></div>
-  </div>
-
-  <div class="toast" id="toast"></div>
-
-  <div class="deck" id="deck">
-
-    <!-- Slide 1 -->
-    <section class="slide active">
-      <div class="slide-content">
-        <div class="topbar">
-          <div class="badge">🐞 Sesi 20</div>
-          <div class="badge">Debugging Animasi</div>
+    <div class="slide-container">
+        <div class="slide active">
+            <div class="badge">Sesi 20</div>
+            <h1>🕵️ Misi Detektif Coding</h1>
+            <p>Mari belajar cara menemukan dan memperbaiki "Bug" di ScratchJr agar animasimu sempurna!</p>
+            <img src="https://api.dicebear.com/7.x/bottts/svg?seed=detektif" width="120">
         </div>
 
-        <div class="card scroller">
-          <h1>Hari ini: Jadi “Detektif Animasi” 🕵️‍♀️🕵️‍♂️</h1>
-          <p>Kadang animasi kita… <b>tidak jalan</b> seperti yang kita mau.</p>
-          <div class="highlight">Tenang 🙂 Itu normal. Kita akan belajar <b>debug</b> = memperbaiki.</div>
-
-          <div class="tip">
-            Aturan kelas hari ini:
-            <ul>
-              <li><b>Jangan panik</b> 😄</li>
-              <li><b>Coba lagi</b> setelah perbaiki</li>
-              <li><b>Tanya</b> kalau buntu</li>
-            </ul>
-          </div>
-
-          <div class="row" style="margin-top:12px;">
-            <button class="btn primary" data-next type="button">Mulai ▶</button>
-            <span class="mini">Ayo kita cek bug yang sering terjadi!</span>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <!-- Slide 2 -->
-    <section class="slide">
-      <div class="slide-content">
-        <div class="topbar">
-          <div class="badge">🎯 Tujuan</div>
-          <div class="badge">Sesi 20</div>
-        </div>
-
-        <div class="grid scroller">
-          <div class="card">
-            <h2>Tujuan Belajar</h2>
-            <p>Setelah belajar, kamu bisa:</p>
-            <ul>
-              <li>Menjelaskan arti <b>bug</b> (masalah)</li>
-              <li>Menjelaskan arti <b>debug</b> (memperbaiki)</li>
-              <li>Mengecek animasi dari <b>awal sampai akhir</b></li>
-              <li>Memperbaiki masalah sederhana</li>
-            </ul>
-            <div class="highlight">Target: Animasi jadi <b>lebih rapi</b> dan <b>lebih jelas</b> ✅</div>
-          </div>
-
-          <div class="card">
-            <h2>Bug itu seperti…</h2>
-            <p class="mini">Pilih yang paling cocok:</p>
-            <div class="chips" id="bugAnalogies">
-              <div class="chip" data-ans="benar">👟 Sepatu terbalik</div>
-              <div class="chip" data-ans="benar">📖 Cerita putus di tengah</div>
-              <div class="chip" data-ans="benar">🧩 Potongan puzzle salah tempat</div>
-              <div class="chip" data-ans="salah">🍦 Es krim enak</div>
-            </div>
-            <div class="highlight" id="bugAnalogyMsg">Klik chip ya 🙂</div>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <!-- Slide 3 -->
-    <section class="slide">
-      <div class="slide-content">
-        <div class="topbar">
-          <div class="badge">🧠 4 Langkah Debug</div>
-          <div class="badge">Mudah!</div>
-        </div>
-
-        <div class="grid scroller">
-          <div class="card">
-            <h2>Langkah Debug “C-E-K-L”</h2>
-            <div class="highlight">
-              <b>C</b> = Coba jalankan (Green Flag) ▶<br>
-              <b>E</b> = Eh… ada yang aneh? 👀<br>
-              <b>K</b> = Kecilkan masalah (cek 1 hal) 🔍<br>
-              <b>L</b> = Lakukan perbaikan ✨
-            </div>
-            <div class="tip">
-              Cara cek 1 hal:
-              <ul>
-                <li>Cek Green Flag ada?</li>
-                <li>Cek urutan blok?</li>
-                <li>Cek ending?</li>
-              </ul>
-            </div>
-          </div>
-
-          <div class="card">
-            <h2>Mini Cek 👀</h2>
-            <p>Pilih yang benar:</p>
-            <div class="row">
-              <button class="btn primary" data-mini="benar" type="button">Debug itu memperbaiki</button>
-              <button class="btn primary" data-mini="salah" type="button">Debug itu menyerah</button>
-            </div>
-            <div class="highlight" id="miniMsg">Klik salah satu 🙂</div>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <!-- Slide 4 -->
-    <section class="slide">
-      <div class="slide-content">
-        <div class="topbar">
-          <div class="badge">✅ Checklist</div>
-          <div class="badge">Detektif Animasi</div>
-        </div>
-
-        <div class="grid scroller">
-          <div class="card">
-            <h2>Checklist Debug Anak</h2>
-            <p>Centang sambil kamu cek animasi kamu nanti.</p>
-
-            <div class="checklist" id="dbgList">
-              <label class="check"><input type="checkbox"><span><b>Aku tekan Green Flag</b> (mulai)</span></label>
-              <label class="check"><input type="checkbox"><span><b>Sprite bergerak</b> (tidak diam terus)</span></label>
-              <label class="check"><input type="checkbox"><span><b>Ceritaku urut</b> (awal–tengah–akhir)</span></label>
-              <label class="check"><input type="checkbox"><span><b>Ada ending</b> (Selesai/Dadah/Stop)</span></label>
-              <label class="check"><input type="checkbox"><span><b>Aku coba lagi</b> setelah diperbaiki</span></label>
-            </div>
-
-            <div class="row" style="margin-top:12px;">
-              <button class="btn primary" id="checkAll" type="button">Centang Semua ✅</button>
-              <button class="btn" id="resetChecks" type="button">Reset</button>
-            </div>
-            <div class="highlight" id="chkMsg" style="margin-top:12px;">Target: centang minimal 3 ya 🙂</div>
-          </div>
-
-          <div class="card">
-            <h2>Skor Detektif 🕵️</h2>
-            <p class="mini">Semakin banyak centang, semakin siap proyek besar!</p>
-            <div class="highlight" id="scoreBox">Skor: 0 / 5</div>
-            <div class="tip">Nanti di proyek (Sesi 21–24), checklist ini yang bantu kamu mandiri.</div>
-            <div class="row" style="margin-top:10px;">
-              <button class="btn good" data-next type="button">Lanjut latihan 🎮</button>
-            </div>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <!-- Slide 5 -->
-    <section class="slide">
-      <div class="slide-content">
-        <div class="topbar">
-          <div class="badge">🔎 Spot the Bug</div>
-          <div class="badge">Pilih masalahnya</div>
-        </div>
-
-        <div class="grid scroller">
-          <div class="card">
-            <h2>Temukan Bug-nya!</h2>
-            <p>Pilih masalah yang paling mungkin.</p>
-
-            <div class="highlight">
-              Cerita: Sprite harus <b>mulai</b> lalu bergerak. Tapi… spritenya diam.
-            </div>
-
-            <div class="chips" id="spotBug1">
-              <div class="chip" data-correct="1">Tidak ada Green Flag di awal</div>
-              <div class="chip" data-correct="0">Warna backdrop kurang cerah</div>
-              <div class="chip" data-correct="0">Sprite lucu sekali</div>
-              <div class="chip" data-correct="0">Sprite punya topi</div>
-            </div>
-
-            <div class="tip" id="spotMsg1">Klik satu jawaban 🙂</div>
-          </div>
-
-          <div class="card">
-            <h2>Solusi cepat</h2>
-            <div class="highlight">
-              Kalau sprite diam, cek dulu:
-              <ul>
-                <li>Apakah ada <b>Green Flag</b>?</li>
-                <li>Apakah blok menempel rapi?</li>
-                <li>Apakah kamu tekan Green Flag?</li>
-              </ul>
-            </div>
-            <div class="row" style="margin-top:10px;">
-              <button class="btn primary" data-next type="button">Latihan berikutnya ➜</button>
-            </div>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <!-- Slide 6 -->
-    <section class="slide">
-      <div class="slide-content">
-        <div class="topbar">
-          <div class="badge">🧩 Urutan Blok</div>
-          <div class="badge">Perbaiki cerita</div>
-        </div>
-
-        <div class="grid scroller">
-          <div class="card">
-            <h2>Perbaiki Urutan Cerita</h2>
-            <p>Susun jadi: <b>Awal → Tengah → Akhir</b>.</p>
-
-            <div class="orderWrap">
-              <div class="mini"><b>Tarik blok</b> ke kotak “Urutan Kode”. (Atau klik untuk pindah.)</div>
-
-              <div class="orderRow">
-                <div class="pill">Blok tersedia</div>
-                <div class="slotBox" id="poolBox" aria-label="Blok tersedia">
-                  <div class="block" draggable="true" data-id="gf">🟢 Green Flag</div>
-                  <div class="block" draggable="true" data-id="say1">💬 Say “Aku di taman”</div>
-                  <div class="block" draggable="true" data-id="jump">⬆️ Jump</div>
-                  <div class="block" draggable="true" data-id="sayEnd">💬 Say “Selesai!”</div>
-                  <div class="block" draggable="true" data-id="stop">⛔ Stop</div>
+        <div class="slide">
+            <div class="badge">Pengertian</div>
+            <h1>1. Apa itu Bug? 🐞</h1>
+            <p><b>Bug</b> adalah kesalahan yang bikin kodingmu bingung.</p>
+            <div class="grid">
+                <div class="card-mini" style="border-color: var(--secondary);">
+                    <h3 style="color: var(--secondary);">Maunya Kita:</h3>
+                    <p>Karakter melompat tinggi!</p>
+                    <span style="font-size: 40px;">🦘</span>
                 </div>
-              </div>
-
-              <div class="orderRow">
-                <div class="pill">Urutan Kode</div>
-                <div class="slotBox" id="orderBox" aria-label="Urutan kode"></div>
-              </div>
-
-              <div class="row" style="margin-top:8px;">
-                <button class="btn primary" id="checkOrderBtn" type="button">Cek Urutan ✅</button>
-                <button class="btn" id="resetOrderBtn" type="button">Reset</button>
-              </div>
-
-              <div class="highlight" id="orderMsg">Target: mulai dengan Green Flag, akhiri dengan Stop 🙂</div>
-            </div>
-          </div>
-
-          <div class="card">
-            <h2>Kenapa urutan penting?</h2>
-            <div class="tip">
-              Kalau ending ada di tengah, penonton bingung 😵<br>
-              Jadi… ending harus di <b>akhir</b>.
-            </div>
-
-            <div class="warn">
-              Tips: Kalau susah, ingat:
-              <ul>
-                <li>Green Flag itu <b>start</b></li>
-                <li>Stop itu <b>finish</b></li>
-              </ul>
-            </div>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <!-- Slide 7 -->
-    <section class="slide">
-      <div class="slide-content">
-        <div class="topbar">
-          <div class="badge">⏱️ Terlalu Cepat?</div>
-          <div class="badge">Atur kecepatannya</div>
-        </div>
-
-        <div class="grid scroller">
-          <div class="card">
-            <h2>Animasi Terlalu Cepat 😵</h2>
-            <p>
-              Kadang sprite bergerak cepat sekali. Kita bisa memberi “jeda” agar lebih jelas.
-            </p>
-
-            <div class="highlight">
-              Trik mudah: tambahkan <b>Wait</b> (jeda) sebelum/ sesudah gerakan.
-            </div>
-
-            <div class="row" style="margin-top:10px; justify-content:space-between;">
-              <b>Jeda (simulasi)</b>
-              <span class="valPill" id="waitVal">2</span>
-            </div>
-            <input id="waitRange" type="range" min="0" max="5" value="2" />
-
-            <div class="row" style="margin-top:10px;">
-              <button class="btn primary" id="playWaitDemo" type="button">▶ Coba (Simulasi)</button>
-              <button class="btn" id="resetWaitDemo" type="button">Reset</button>
-            </div>
-
-            <div class="tip" id="waitMsg">
-              Angka lebih besar = gerak lebih pelan (lebih mudah dilihat).
-            </div>
-          </div>
-
-          <div class="card">
-            <h2>Panggung Simulasi</h2>
-            <div class="stage" id="stageWait">
-              <div class="stageTop">Simulasi “Wait”</div>
-              <div class="bubble" id="bubbleWait">Aku jalan pelan…</div>
-              <div class="sprite" id="spriteWait">🐻</div>
-              <div class="ground"></div>
-            </div>
-            <div class="warn" style="margin-top:10px;">
-              Nanti di ScratchJr, kamu bisa pakai blok <b>Wait</b> supaya animasi tidak “ngebut”.
-            </div>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <!-- Slide 8 -->
-    <section class="slide">
-      <div class="slide-content">
-        <div class="topbar">
-          <div class="badge">🧠 Bug Umum</div>
-          <div class="badge">Pilih solusinya</div>
-        </div>
-
-        <div class="grid scroller">
-          <div class="card">
-            <h2>Pasangkan Bug ↔ Solusi</h2>
-            <p>Klik bug, lalu klik solusinya.</p>
-
-            <div class="highlight" id="matchHint">Target: cocokkan minimal 3 ya 🙂</div>
-
-            <div class="grid" style="grid-template-columns:1fr 1fr;">
-              <div class="card" style="padding:14px;">
-                <h3>🐞 Bug</h3>
-                <div class="chips" id="bugList">
-                  <div class="chip" data-key="start">Sprite tidak bergerak</div>
-                  <div class="chip" data-key="order">Ending ada di tengah</div>
-                  <div class="chip" data-key="fast">Animasi terlalu cepat</div>
-                  <div class="chip" data-key="end">Tidak ada ending</div>
+                <div class="card-mini" style="border-color: var(--bad);">
+                    <h3 style="color: var(--bad);">Kejadiannya:</h3>
+                    <p>Karakter hilang / macet!</p>
+                    <span style="font-size: 40px;">💨❓</span>
                 </div>
-              </div>
+            </div>
+        </div>
 
-              <div class="card" style="padding:14px;">
-                <h3>🧰 Solusi</h3>
-                <div class="chips" id="fixList">
-                  <div class="chip" data-key="order">Susun ulang urutan blok</div>
-                  <div class="chip" data-key="end">Tambahkan “Selesai/Dadah” + Stop</div>
-                  <div class="chip" data-key="start">Tambah Green Flag / cek menempel</div>
-                  <div class="chip" data-key="fast">Tambahkan Wait (jeda)</div>
+        <div class="slide">
+            <div class="badge">Analisis Detektif</div>
+            <h1>2. Kenapa Bug Bisa Ada? 🧐</h1>
+            <p>Komputer hanya melakukan apa yang kita susun. Bug muncul jika:</p>
+
+            <div class="grid">
+                <div class="card-mini" style="text-align: left; background: #FFF3E0;">
+                    <b style="color: #E65100;">🔄 Urutan Terbalik</b>
+                    <p style="font-size: 14px; margin: 5px 0;">Memakai sepatu dulu baru kaos kaki. (Blok terbalik
+                        urutannya).</p>
                 </div>
-              </div>
+
+                <div class="card-mini" style="text-align: left; background: #E1F5FE;">
+                    <b style="color: #0277BD;">🧩 Ada yang Lupa</b>
+                    <p style="font-size: 14px; margin: 5px 0;">Lupa pasang blok "Mulai" (Bendera Hijau). Karakter jadi
+                        mogok!</p>
+                </div>
+
+                <div class="card-mini" style="text-align: left; background: #F3E5F5; grid-column: span 2;">
+                    <b style="color: #7B1FA2;">🔢 Angkanya "Ajaib"</b>
+                    <p style="font-size: 14px; margin: 5px 0;">Tulis angka 50 padahal cuma mau jalan sedikit. Karakter
+                        jadi lari kabur!</p>
+                </div>
             </div>
 
-            <div class="row" style="margin-top:10px;">
-              <button class="btn primary" id="resetMatch" type="button">Reset</button>
+            <div class="step-card"
+                style="margin-top: 20px; text-align: center; border-left: none; border-bottom: 5px solid var(--primary);">
+                "Jangan sedih ya, <b>Programmer Hebat</b> pun sering bikin Bug. Itulah cara mereka belajar jadi lebih
+                pintar!"
             </div>
-          </div>
-
-          <div class="card">
-            <h2>Hasil</h2>
-            <div class="highlight" id="matchResult">Belum ada pasangan.</div>
-            <div class="tip">
-              Ingat: Debugging itu <b>mencari 1 masalah</b>, lalu <b>memperbaiki</b>, lalu <b>coba lagi</b>.
-            </div>
-            <div class="row" style="margin-top:10px;">
-              <button class="btn good" data-next type="button">Siap praktik! 🎒</button>
-            </div>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <!-- Slide 9 -->
-    <section class="slide">
-      <div class="slide-content">
-        <div class="topbar">
-          <div class="badge">🧪 Praktik</div>
-          <div class="badge">Debug proyekmu</div>
         </div>
 
-        <div class="grid scroller">
-          <div class="card">
-            <h2>Waktu Debug Proyekmu ✨</h2>
-            <p>Ikuti langkah ini:</p>
-            <div class="highlight">
-              1) Tekan Green Flag ▶<br>
-              2) Lihat sampai akhir 👀<br>
-              3) Temukan 1 bug 🐞<br>
-              4) Perbaiki 🔧<br>
-              5) Coba lagi ✅
+        <div class="slide">
+            <div class="badge">Aksi Detektif</div>
+            <h1>3. Apa itu Debugging? 🛠️</h1>
+            <p><b>Debugging</b> adalah cara kita "mengobati" koding yang sedang sakit supaya sehat kembali.</p>
+
+            <div class="grid" style="margin-top: 10px;">
+                <div class="card-mini" style="background: #F1F8E9; border-color: #8BC34A;">
+                    <span style="font-size: 30px;">🔍</span>
+                    <p style="font-size: 16px; font-weight: bold; margin: 5px 0;">1. CARI</p>
+                    <p style="font-size: 13px;">Temukan di mana si Bug bersembunyi.</p>
+                </div>
+
+                <div class="card-mini" style="background: #E3F2FD; border-color: #2196F3;">
+                    <span style="font-size: 30px;">🤔</span>
+                    <p style="font-size: 16px; font-weight: bold; margin: 5px 0;">2. PIKIR</p>
+                    <p style="font-size: 13px;">Blok mana yang harus diganti?</p>
+                </div>
+
+                <div class="card-mini" style="background: #FFF3E0; border-color: #FF9800; grid-column: span 2;">
+                    <span style="font-size: 30px;">✅</span>
+                    <p style="font-size: 16px; font-weight: bold; margin: 5px 0;">3. PERBAIKI</p>
+                    <p style="font-size: 13px;">Ganti bloknya dan... HORE! Animasimu jalan lagi!</p>
+                </div>
             </div>
 
-            <div class="tip">
-              Kalau bingung, pilih salah satu bug umum:
-              <ul>
-                <li>Sprite diam</li>
-                <li>Urutan aneh</li>
-                <li>Terlalu cepat</li>
-                <li>Ending kurang jelas</li>
-              </ul>
+            <div class="step-card" style="margin-top: 15px; background: #E1F5FE; border-left: 8px solid var(--accent);">
+                <p style="font-size: 16px; margin: 0;">
+                    <b>Ingat Mantra Detektif:</b><br>
+                    "Jangan kesal saat ada Bug, tetap tenang dan teliti kodenya satu per satu!" 🕵️✨
+                </p>
             </div>
-          </div>
-
-          <div class="card">
-            <h2>Laporan singkat (mudah)</h2>
-            <div class="highlight" id="reportBox">
-              “Bugku: ____ . Aku memperbaiki dengan ____ .”
-            </div>
-
-            <div class="row" style="margin-top:10px;">
-              <button class="btn primary small" data-fillbug="Sprite diam" type="button">Isi bug: Sprite diam</button>
-              <button class="btn primary small" data-fillbug="Urutan salah" type="button">Isi bug: Urutan salah</button>
-              <button class="btn primary small" data-fillbug="Terlalu cepat" type="button">Isi bug: Terlalu cepat</button>
-              <button class="btn primary small" data-fillbug="Ending kurang jelas" type="button">Isi bug: Ending kurang</button>
-            </div>
-
-            <div class="row" style="margin-top:10px;">
-              <button class="btn good small" data-fillfix="Tambah Green Flag" type="button">Fix: Green Flag</button>
-              <button class="btn good small" data-fillfix="Susun ulang blok" type="button">Fix: Urutkan</button>
-              <button class="btn good small" data-fillfix="Tambah Wait" type="button">Fix: Wait</button>
-              <button class="btn good small" data-fillfix="Tambah Selesai + Stop" type="button">Fix: Ending</button>
-              <button class="btn" id="clearReport" type="button">Reset</button>
-            </div>
-
-            <div class="tip" id="reportOut" style="margin-top:10px;">
-              Klik tombol untuk mengisi 🙂 Setelah itu, ceritakan ke guru/teman.
-            </div>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <!-- Slide 10 -->
-    <section class="slide">
-      <div class="slide-content">
-        <div class="topbar">
-          <div class="badge">🚀 Siap Proyek</div>
-          <div class="badge">Sesi 21–24</div>
         </div>
 
-        <div class="grid scroller">
-          <div class="card">
-            <h2>Kamu siap membuat animasi sendiri! 🎬</h2>
-            <p>Mulai sesi depan, kamu akan membuat animasi versimu sendiri.</p>
-            <div class="highlight">
-              Sesi 21–24 = Proyek Animasi Mandiri<br>
-              (rencana → buat → perbaiki → selesai)
-            </div>
-            <div class="tip">
-              Skill paling penting dari sesi ini:
-              <ul>
-                <li><b>Berani mencoba lagi</b></li>
-                <li><b>Cek satu-satu</b></li>
-                <li><b>Perbaiki pelan-pelan</b></li>
-              </ul>
-            </div>
-          </div>
-
-          <div class="card">
-            <h2>Mini Cek 👀</h2>
-            <p>Kalau animasi bermasalah, langkah pertama adalah…</p>
-            <div class="row">
-              <button class="btn primary" data-first="salah" type="button">Langsung hapus proyek</button>
-              <button class="btn primary" data-first="benar" type="button">Jalankan dulu & lihat bug</button>
-            </div>
-            <div class="highlight" id="firstMsg">Klik jawaban 🙂</div>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <!-- Slide 11 -->
-    <section class="slide">
-      <div class="slide-content">
-        <div class="topbar">
-          <div class="badge">🧠 Refleksi</div>
-          <div class="badge">Aku bisa!</div>
-        </div>
-
-        <div class="grid scroller">
-          <div class="card">
-            <h2>Refleksi</h2>
-            <p>Centang minimal 2 ya ✨</p>
-
-            <div class="checklist" id="reflectList">
-              <label class="check"><input type="checkbox"><span>Aku paham bug itu masalah yang bisa diperbaiki.</span></label>
-              <label class="check"><input type="checkbox"><span>Aku bisa cek animasi dari awal sampai akhir.</span></label>
-              <label class="check"><input type="checkbox"><span>Aku bisa memperbaiki minimal 1 bug.</span></label>
-              <label class="check"><input type="checkbox"><span>Aku berani mencoba lagi kalau salah.</span></label>
+        <div class="slide">
+            <div class="slide-header">
+                <div class="badge">🧠 4 Langkah Debug</div>
+                <h1>Langkah Debug "C-E-K-L"</h1>
             </div>
 
-            <div class="row" style="margin-top:12px;">
-              <button class="btn primary" id="finishReflect" type="button">Selesai ✅</button>
-              <button class="btn" id="resetReflect" type="button">Reset</button>
-            </div>
+            <div class="slide-body">
+                <div class="grid">
+                    <div class="card-mini"
+                        style="border-left: 8px solid var(--primary); background: #fbfaff; text-align: left;">
+                        <h2 style="font-size: 20px; color: var(--primary); margin-top: 0; text-align: left;">Mantra
+                            Detektif:</h2>
 
-            <div class="highlight" id="reflectMsg" style="margin-top:12px;">
-              Target: centang minimal 2 ya 🙂
-            </div>
-          </div>
+                        <div
+                            style="background: rgba(255, 209, 102, 0.2); padding: 15px; border-radius: 15px; border: 1px solid rgba(255, 209, 102, 0.5); font-size: 18px; line-height: 1.6; text-align: left;">
+                            <b style="color: #E65100;">C</b> = Coba jalankan (Green Flag) ▶<br>
+                            <b style="color: #E65100;">E</b> = Eh… ada yang aneh? 👀<br>
+                            <b style="color: #E65100;">K</b> = Kecilkan masalah (cek 1 hal) 🔍<br>
+                            <b style="color: #E65100;">L</b> = Lakukan perbaikan ✨
+                        </div>
 
-          <div class="card">
-            <h2>Kata-kata detektif 🕵️</h2>
-            <div class="tip">
-              Ucapkan bareng-bareng:
-              <div class="highlight" style="margin-top:10px;">
-                “Aku tidak menyerah. Aku cek. Aku perbaiki. Aku coba lagi!” 🚀
-              </div>
-            </div>
-            <div class="row" style="margin-top:10px;">
-              <button class="btn good" data-next type="button">Penutup ➜</button>
-            </div>
-          </div>
-        </div>
-      </div>
-    </section>
 
-    <!-- Slide 12 -->
-    <section class="slide">
-      <div class="slide-content">
-        <div class="topbar">
-          <div class="badge">🎉 Penutup</div>
-          <div class="badge">Good job!</div>
+
+                        <div style="margin-top: 15px; font-size: 15px; color: var(--muted); text-align: left;">
+                            <b>Cara cek 1 hal:</b>
+                            <ul style="margin: 5px 0; padding-left: 20px;">
+                                <li>Cek Green Flag ada?</li>
+                                <li>Cek urutan blok?</li>
+                                <li>Cek ending?</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <div class="card-mini"
+                        style="text-align: center; display: flex; flex-direction: column; justify-content: center;">
+                        <h2 style="font-size: 20px; margin-top: 0;">Mini Cek 👀</h2>
+                        <p style="font-size: 16px;">Pilih jawaban yang benar:</p>
+
+                        <div style="display: flex; flex-direction: column; gap: 10px; margin: 15px 0;">
+                            <button class="btn-nav" style="background: var(--secondary); font-size: 14px;"
+                                onclick="checkMini(true)">
+                                Debug itu memperbaiki
+                            </button>
+                            <button class="btn-nav" style="background: var(--bad); font-size: 14px;"
+                                onclick="checkMini(false)">
+                                Debug itu menyerah
+                            </button>
+                        </div>
+
+                        <div id="miniMsg"
+                            style="padding: 10px; border-radius: 10px; background: #eee; font-weight: bold; font-size: 14px;">
+                            Klik salah satu 🙂
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
 
-        <div class="card scroller">
-          <h2>Hebat! Kamu sudah belajar Debugging 🎉</h2>
-          <p>Hari ini kamu belajar:</p>
-          <div class="highlight">
-            ✅ Bug itu normal<br>
-            ✅ Debug = perbaiki<br>
-            ✅ Coba lagi setelah perbaiki
-          </div>
+        <div class="slide">
+            <div class="slide-header">
+                <div class="badge">Langkah 1: C (Coba & Cek)</div>
+                <h1>Langkah 1: Cek Blok Mulai 🏁</h1>
+            </div>
 
-          <div class="tip">
-            Sesi berikutnya: kita mulai <b>Proyek Animasi Mandiri</b> (Sesi 21).
-            Kamu akan membuat animasi versimu sendiri dari awal sampai akhir.
-          </div>
+            <div class="slide-body">
+                <p style="text-align: center;">Karaktermu diam saja seperti patung saat Bendera Hijau diklik? <br>Mari
+                    kita periksa "Kunci Kontaknya"!</p>
 
-          <div class="row" style="margin-top:12px;">
-            <button class="btn primary" id="restartBtn" type="button">Ulang dari awal 🔁</button>
-            <button class="btn good" id="celebrateBtn" type="button">Tepuk semangat 👏</button>
-          </div>
+                <div class="grid">
+                    <div class="card-mini" style="border-color: var(--bad); background: #FFF5F5;">
+                        <b style="color: var(--bad);">❌ Masalah: Mogok</b>
+                        <p style="font-size: 14px;">Koding ini tidak akan jalan karena tidak ada perintah "Mulai".</p>
 
-          <div class="warn" style="margin-top:12px;">
-            Ingat: kalau ada masalah, kamu sekarang tahu caranya: <b>C-E-K-L</b> 🙂
-          </div>
+                        <div
+                            style="width: 100%; height: 120px; background: #eee; border: 2px dashed #ccc; border-radius: 10px; display: flex; align-items: center; justify-content: center; margin: 10px 0; color: #999; font-size: 12px;">
+                            <img src="https://uob-1328237036.cos.ap-singapore.myqcloud.com//file-uploader/images/85f3d95d-17fc-476f-a3d3-fa593afc0ab2.png"
+                                width="50%">
+                        </div>
+                    </div>
+
+                    <div class="card-mini" style="border-color: var(--secondary); background: #F6FFF8;">
+                        <b style="color: var(--secondary);">✅ Solusi: Pasang Kunci</b>
+                        <p style="font-size: 14px;">Tambahkan blok <b>Bendera Hijau</b> di paling kiri kodingmu.</p>
+
+                        <div
+                            style="width: 100%; height: 120px; background: #e8f5e9; border: 2px dashed #a5d6a7; border-radius: 10px; display: flex; align-items: center; justify-content: center; margin: 10px 0; color: #666; font-size: 12px;">
+                            <img src="https://uob-1328237036.cos.ap-singapore.myqcloud.com//file-uploader/images/705a6f7c-51e4-4981-ba6f-b36f22d07047.png"
+                                width="75%">
+                        </div>
+                    </div>
+                </div>
+
+                <div class="step-card" style="background: #E3F2FD; border-left-color: var(--accent); margin-top: 20px;">
+                    <b>🔍 Tugas Detektif:</b>
+                    <p style="font-size: 15px; margin: 5px 0;">Lihat kodingmu sekarang. Apakah blok <em>Event</em> sudah
+                        terpasang? Jika belum, itulah si Bug yang bikin karaktermu mogok!</p>
+                </div>
+            </div>
         </div>
-      </div>
-    </section>
 
-  </div>
+        <div class="slide">
+            <div class="slide-header">
+                <div class="badge">Langkah 2: E (Eh... Ada yang Aneh?)</div>
+                <h1>Langkah 2: Cek Urutan Blok 🔄</h1>
+            </div>
 
-  <div class="nav">
-    <button class="btn" id="prevBtn" type="button">⬅️ Sebelumnya</button>
-    <button class="btn primary" id="nextBtn" type="button">➡️ Berikutnya</button>
-  </div>
+            <div class="slide-body">
+                <p style="text-align: center;">Komputer membaca koding dari <b>Kiri ke Kanan</b>.<br>Kalau urutannya
+                    tertukar, ceritanya jadi berantakan!</p>
 
-  <script>
-    /* ========= Helpers ========= */
-    const toastEl = document.getElementById('toast');
-    function showToast(msg){
-      toastEl.textContent = msg;
-      toastEl.style.display = 'block';
-      clearTimeout(showToast._t);
-      showToast._t = setTimeout(()=> toastEl.style.display='none', 1400);
-    }
-    // tiny beep without files
-    let audioCtx;
-    function beep(ok=true){
-      try{
-        audioCtx = audioCtx || new (window.AudioContext || window.webkitAudioContext)();
-        const o = audioCtx.createOscillator();
-        const g = audioCtx.createGain();
-        o.type = "sine";
-        o.frequency.value = ok ? 760 : 240;
-        g.gain.value = 0.12;
-        o.connect(g); g.connect(audioCtx.destination);
-        o.start();
-        setTimeout(()=>o.stop(), ok?110:160);
-      }catch(e){}
-    }
+                <div class="grid">
+                    <div class="card-mini" style="border-color: var(--bad); background: #FFF5F5;">
+                        <b style="color: var(--bad);">❌ Masalah: Terbalik</b>
+                        <p style="font-size: 14px;">Karakter menghilang dulu, baru bicara "Aku pergi.". Jadi tidak
+                            kelihatan!
+                        </p>
 
-    /* ========= Access Gate ========= */
-    const gateWrap = document.getElementById('gateWrap');
-    const accessInput = document.getElementById('accessInput');
-    const unlockBtn = document.getElementById('unlockBtn');
-    const showBtn = document.getElementById('showBtn');
-    const gateMsg = document.getElementById('gateMsg');
-    const ACCESS_CODE = "RGMDSLP25";
+                        <div
+                            style="width: 100%; height: 120px; background: #eee; border: 2px dashed #ccc; border-radius: 10px; display: flex; align-items: center; justify-content: center; margin: 10px 0; color: #999; font-size: 12px; text-align: center; padding: 5px;">
+                            <img src="https://uob-1328237036.cos.ap-singapore.myqcloud.com//file-uploader/images/8ce290ab-b0fd-4326-beb5-b27dcf8d06d3.png"
+                                width="75%">
+                        </div>
+                    </div>
 
-    function unlock(){
-      const val = (accessInput.value || "").trim().toUpperCase();
-      if(val === ACCESS_CODE){
-        gateWrap.style.display = 'none';
-        showToast("Berhasil! Selamat belajar 🙂");
-        beep(true);
-        // focus deck
-        document.getElementById('nextBtn').focus();
-      } else {
-        gateMsg.innerHTML = "Kode belum tepat 😅 Coba lagi ya.";
-        beep(false);
-      }
-    }
-    unlockBtn.addEventListener('click', unlock);
-    accessInput.addEventListener('keydown', (e)=>{ if(e.key==='Enter') unlock(); });
-    showBtn.addEventListener('click', ()=>{
-      if(accessInput.type === 'password'){ accessInput.type='text'; showBtn.textContent='Sembunyikan 🙈'; }
-      else{ accessInput.type='password'; showBtn.textContent='Tampilkan 👀'; }
-    });
+                    <div class="card-mini" style="border-color: var(--secondary); background: #F6FFF8;">
+                        <b style="color: var(--secondary);">✅ Solusi: Urutan Benar</b>
+                        <p style="font-size: 14px;">Bicara "Aku pergi." dulu sampai selesai, baru kemudian menghilang.
+                        </p>
 
-    /* ========= Slide Nav ========= */
-    const slides = Array.from(document.querySelectorAll('.slide'));
-    let idx = 0;
-    const counter = document.getElementById('slideCounter');
-    const nextBtn = document.getElementById('nextBtn');
-    const prevBtn = document.getElementById('prevBtn');
+                        <div
+                            style="width: 100%; height: 120px; background: #e8f5e9; border: 2px dashed #a5d6a7; border-radius: 10px; display: flex; align-items: center; justify-content: center; margin: 10px 0; color: #666; font-size: 12px; text-align: center; padding: 5px;">
+                            <img src="https://uob-1328237036.cos.ap-singapore.myqcloud.com//file-uploader/images/92e73b43-95eb-4bfc-a22f-324f9d2b89e6.png"
+                                width="75%">
+                        </div>
+                    </div>
+                </div>
 
-    function showSlide(i){
-      idx = Math.max(0, Math.min(slides.length-1, i));
-      slides.forEach(s=>s.classList.remove('active'));
-      slides[idx].classList.add('active');
 
-      counter.textContent = `Slide ${idx+1} / ${slides.length}`;
-      prevBtn.disabled = idx===0;
-      nextBtn.disabled = idx===slides.length-1;
 
-      // reset scroll position in this slide
-      const sc = slides[idx].querySelector('.scroller');
-      if(sc) sc.scrollTop = 0;
-    }
-    function next(){ if(idx < slides.length-1) showSlide(idx+1); }
-    function prev(){ if(idx > 0) showSlide(idx-1); }
+                <div class="step-card" style="background: #FFF9C4; border-left-color: var(--warn); margin-top: 20px;">
+                    <b>🔍 Tips Detektif:</b>
+                    <p style="font-size: 15px; margin: 5px 0;">Gunakan jarimu untuk menunjuk blok satu per satu dari
+                        kiri ke kanan. Baca kodingnya seperti membaca buku cerita. Apakah sudah masuk akal?</p>
+                </div>
 
-    nextBtn.addEventListener('click', next);
-    prevBtn.addEventListener('click', prev);
+                <p
+                    style="font-style: italic; font-size: 14px; text-align: center; color: var(--muted); margin-top: 10px;">
+                    "Jangan malas membongkar pasang blok sampai urutannya pas!"
+                </p>
+            </div>
+        </div>
 
-    document.querySelectorAll('[data-next]').forEach(b=> b.addEventListener('click', next));
+        <div class="slide">
+            <div class="slide-header">
+                <div class="badge">Langkah 3: K (Kecilkan Masalah)</div>
+                <h1>Langkah 3: Cek Angka & Jarak 🔢</h1>
+            </div>
 
-    // Keyboard controls
-    document.addEventListener('keydown', (e)=>{
-      // do not hijack typing
-      const tag = (e.target && e.target.tagName) ? e.target.tagName.toLowerCase() : "";
-      if(tag === 'input' || tag === 'textarea') return;
+            <div class="slide-body">
+                <p style="text-align: center;">Karaktermu jalan terlalu jauh sampai muncul di sisi satunya? <br>Atau
+                    lompatnya kurang tinggi? Cek angka di bawah blokmu!</p>
 
-      if(e.key === 'ArrowRight' || e.key === 'PageDown' || e.key === ' '){
-        e.preventDefault(); next();
-      }
-      if(e.key === 'ArrowLeft' || e.key === 'PageUp'){
-        e.preventDefault(); prev();
-      }
-      if(e.key.toLowerCase() === 'home'){
-        showSlide(0);
-      }
-      if(e.key.toLowerCase() === 'end'){
-        showSlide(slides.length-1);
-      }
-    });
+                <div class="grid">
+                    <div class="card-mini" style="border-color: var(--bad); background: #FFF5F5;">
+                        <b style="color: var(--bad);">❌ Masalah: Angka Besar</b>
+                        <p style="font-size: 14px;">Angka terlalu besar bikin karakter lari ke sisi satunya atau
+                            menabrak teman.</p>
 
-    /* ========= Slide 2: Bug analogies ========= */
-    const bugAnalogies = document.getElementById('bugAnalogies');
-    const bugAnalogyMsg = document.getElementById('bugAnalogyMsg');
-    if(bugAnalogies){
-      bugAnalogies.querySelectorAll('.chip').forEach(ch=>{
-        ch.addEventListener('click', ()=>{
-          const ok = ch.dataset.ans === 'benar';
-          ch.classList.add('on');
-          bugAnalogyMsg.innerHTML = ok ? "✅ Betul! Itu contoh “ada yang salah”." : "😅 Itu bukan bug. Bug itu masalah.";
-          beep(ok);
-        });
-      });
-    }
+                        <div
+                            style="width: 100%; height: 120px; background: #eee; border: 2px dashed #ccc; border-radius: 10px; display: flex; align-items: center; justify-content: center; margin: 10px 0; color: #999; font-size: 12px; text-align: center; padding: 5px;">
+                            <img src="https://uob-1328237036.cos.ap-singapore.myqcloud.com//file-uploader/images/85065c2d-1e68-46a6-a23d-d2e1abd2a329.png"
+                                width="50%">
+                        </div>
+                    </div>
 
-    /* ========= Slide 3: mini check ========= */
-    document.querySelectorAll('[data-mini]').forEach(btn=>{
-      btn.addEventListener('click', ()=>{
-        const ok = btn.dataset.mini === 'benar';
-        const msg = document.getElementById('miniMsg');
-        msg.innerHTML = ok ? "✅ Benar! Debug = memperbaiki." : "😅 Salah. Debug bukan menyerah.";
-        beep(ok);
-      });
-    });
+                    <div class="card-mini" style="border-color: var(--secondary); background: #F6FFF8;">
+                        <b style="color: var(--secondary);">✅ Solusi: Angka Pas</b>
+                        <p style="font-size: 14px;">Ganti angkanya sedikit demi sedikit sampai jaraknya pas di tempat
+                            yang kamu mau.</p>
 
-    /* ========= Slide 4: checklist scoring ========= */
-    const dbgList = document.getElementById('dbgList');
-    const scoreBox = document.getElementById('scoreBox');
-    const chkMsg = document.getElementById('chkMsg');
-    function updateScore(){
-      if(!dbgList) return;
-      const checks = Array.from(dbgList.querySelectorAll('input[type="checkbox"]'));
-      const score = checks.filter(c=>c.checked).length;
-      scoreBox.textContent = `Skor: ${score} / ${checks.length}`;
-      chkMsg.innerHTML = score >= 3 ? "✅ Mantap! Kamu siap debugging." : "Target: centang minimal 3 ya 🙂";
-    }
-    if(dbgList){
-      dbgList.addEventListener('change', updateScore);
-      document.getElementById('checkAll').addEventListener('click', ()=>{
-        dbgList.querySelectorAll('input').forEach(i=>i.checked=true);
-        updateScore(); beep(true); showToast("Semua dicentang!");
-      });
-      document.getElementById('resetChecks').addEventListener('click', ()=>{
-        dbgList.querySelectorAll('input').forEach(i=>i.checked=false);
-        updateScore(); beep(true); showToast("Reset!");
-      });
-      updateScore();
-    }
+                        <div
+                            style="width: 100%; height: 120px; background: #e8f5e9; border: 2px dashed #a5d6a7; border-radius: 10px; display: flex; align-items: center; justify-content: center; margin: 10px 0; color: #666; font-size: 12px; text-align: center; padding: 5px;">
+                            <img src="https://uob-1328237036.cos.ap-singapore.myqcloud.com//file-uploader/images/fbdb3037-5477-4b1c-9002-014b2f9e5c1b.png"
+                                width="50%">
+                        </div>
+                    </div>
+                </div>
 
-    /* ========= Slide 5: Spot the bug ========= */
-    const spotBug1 = document.getElementById('spotBug1');
-    const spotMsg1 = document.getElementById('spotMsg1');
-    if(spotBug1){
-      spotBug1.querySelectorAll('.chip').forEach(ch=>{
-        ch.addEventListener('click', ()=>{
-          const ok = ch.dataset.correct === '1';
-          spotMsg1.innerHTML = ok ? "✅ Betul! Kalau tidak ada Green Flag, sprite bisa diam." : "😅 Bukan itu. Coba pikir: kenapa sprite diam?";
-          beep(ok);
-        });
-      });
-    }
 
-    /* ========= Slide 6: Drag & drop order builder ========= */
-    const poolBox = document.getElementById('poolBox');
-    const orderBox = document.getElementById('orderBox');
-    const orderMsg = document.getElementById('orderMsg');
 
-    function enableDnD(container){
-      if(!container) return;
-      container.querySelectorAll('.block').forEach(block=>{
-        block.addEventListener('dragstart', (e)=>{
-          e.dataTransfer.setData('text/plain', block.dataset.id);
-          setTimeout(()=>block.classList.add('ghost'), 0);
-        });
-        block.addEventListener('dragend', ()=>{
-          block.classList.remove('ghost');
-        });
+                <div class="step-card"
+                    style="background: #E0F2F1; border-left-color: var(--secondary); margin-top: 20px;">
+                    <b>🔍 Cara "Mengecilkan" Masalah:</b>
+                    <p style="font-size: 15px; margin: 5px 0;">Jangan langsung tulis angka besar. Coba ganti ke angka 1
+                        dulu, lalu lihat hasilnya. Kalau kurang, tambah lagi jadi 2, 3, dan seterusnya sampai pas!</p>
+                </div>
 
-        // click-to-move fallback
-        block.addEventListener('click', ()=>{
-          const parent = block.parentElement;
-          if(parent === poolBox) orderBox.appendChild(block);
-          else poolBox.appendChild(block);
-          beep(true);
-        });
-      });
-    }
-    function allowDrop(zone){
-      if(!zone) return;
-      zone.addEventListener('dragover', (e)=>{ e.preventDefault(); });
-      zone.addEventListener('drop', (e)=>{
-        e.preventDefault();
-        const id = e.dataTransfer.getData('text/plain');
-        const el = document.querySelector(`.block[data-id="${id}"]`);
-        if(el) zone.appendChild(el);
-        beep(true);
-      });
-    }
+                <p
+                    style="font-style: italic; font-size: 14px; text-align: center; color: var(--muted); margin-top: 10px;">
+                    "Detektif yang sabar pasti bisa menemukan angka yang paling tepat!"
+                </p>
+            </div>
+        </div>
 
-    if(poolBox && orderBox){
-      enableDnD(poolBox);
-      enableDnD(orderBox);
-      allowDrop(poolBox);
-      allowDrop(orderBox);
+        <div class="slide">
+            <div class="slide-header">
+                <div class="badge">Langkah 4: L (Lakukan Perbaikan)</div>
+                <h1>Langkah 4: Beri Jeda (Wait) ⏳</h1>
+            </div>
 
-      document.getElementById('checkOrderBtn').addEventListener('click', ()=>{
-        const ids = Array.from(orderBox.querySelectorAll('.block')).map(b=>b.dataset.id);
-        // ideal: gf first and stop last, sayEnd near end
-        const ok = ids[0]==='gf' && ids[ids.length-1]==='stop' && ids.includes('sayEnd');
-        orderMsg.innerHTML = ok
-          ? "✅ Bagus! Mulai Green Flag, akhiri Stop, dan ada ending."
-          : "😅 Belum pas. Pastikan: Green Flag di awal dan Stop di akhir.";
-        beep(ok);
-      });
+            <div class="slide-body">
+                <p style="text-align: center;">Animasi terasa terlalu cepat atau karakter bicara bersamaan?<br>Gunakan
+                    blok <b>Jam Pasir</b> agar gerakan lebih rapi!</p>
 
-      document.getElementById('resetOrderBtn').addEventListener('click', ()=>{
-        // move all back to pool
-        Array.from(orderBox.querySelectorAll('.block')).forEach(b=>poolBox.appendChild(b));
-        orderMsg.innerHTML = "Target: mulai dengan Green Flag, akhiri dengan Stop 🙂";
-        beep(true);
-        showToast("Reset urutan!");
-      });
-    }
+                <div class="grid">
+                    <div class="card-mini" style="border-color: var(--bad); background: #FFF5F5;">
+                        <b style="color: var(--bad);">❌ Masalah: Terlalu Cepat</b>
+                        <p style="font-size: 14px;">Dua karakter bicara di waktu yang sama, jadi tidak terdengar jelas!
+                        </p>
 
-    /* ========= Slide 7: Wait demo ========= */
-    const waitRange = document.getElementById('waitRange');
-    const waitVal = document.getElementById('waitVal');
-    const playWaitDemo = document.getElementById('playWaitDemo');
-    const resetWaitDemo = document.getElementById('resetWaitDemo');
-    const spriteWait = document.getElementById('spriteWait');
-    const bubbleWait = document.getElementById('bubbleWait');
-    const waitMsg = document.getElementById('waitMsg');
+                        <div
+                            style="width: 100%; height: 120px; background: #eee; border: 2px dashed #ccc; border-radius: 10px; display: flex; align-items: center; justify-content: center; margin: 10px 0; color: #999; font-size: 12px; text-align: center; padding: 5px;">
+                            <img src="https://uob-1328237036.cos.ap-singapore.myqcloud.com//file-uploader/images/aff21322-fe93-4c49-b400-286984b74a5f.png"
+                                width="75%">
+                        </div>
+                    </div>
 
-    let waitPlaying = false;
-    function setWaitVal(){
-      if(!waitRange) return;
-      waitVal.textContent = waitRange.value;
-      waitMsg.textContent = `Angka lebih besar = gerak lebih pelan. Sekarang jeda: ${waitRange.value}`;
-    }
-    if(waitRange){ waitRange.addEventListener('input', setWaitVal); setWaitVal(); }
+                    <div class="card-mini" style="border-color: var(--secondary); background: #F6FFF8;">
+                        <b style="color: var(--secondary);">✅ Solusi: Bergantian</b>
+                        <p style="font-size: 14px;">Berikan blok <b>Wait</b> pada karakter kedua agar dia menunggu
+                            temannya selesai bicara.</p>
 
-    function sleep(ms){ return new Promise(r=>setTimeout(r, ms)); }
+                        <div
+                            style="width: 100%; height: 120px; background: #e8f5e9; border: 2px dashed #a5d6a7; border-radius: 10px; display: flex; align-items: center; justify-content: center; margin: 10px 0; color: #666; font-size: 12px; text-align: center; padding: 5px;">
+                            <img src="https://uob-1328237036.cos.ap-singapore.myqcloud.com//file-uploader/images/9a380b78-eec3-4a34-abb0-5ac9bbc61de8.png"
+                                width="90%">
+                        </div>
+                    </div>
+                </div>
 
-    async function runWaitDemo(){
-      if(waitPlaying) return;
-      waitPlaying = true;
-      const w = Number(waitRange.value);
-      bubbleWait.style.display = 'block';
-      bubbleWait.textContent = "Aku jalan…";
-      spriteWait.style.transform = "translateX(0px)";
-      await sleep(300);
 
-      for(let i=0;i<6;i++){
-        spriteWait.style.transform = `translateX(${(i+1)*70}px)`;
-        bubbleWait.textContent = w===0 ? "Cepat!" : "Pelan…";
-        await sleep(260 + w*280);
-      }
-      bubbleWait.textContent = "Selesai!";
-      beep(true);
-      await sleep(550);
-      bubbleWait.style.display = 'none';
-      waitPlaying = false;
-    }
-    if(playWaitDemo) playWaitDemo.addEventListener('click', runWaitDemo);
-    if(resetWaitDemo) resetWaitDemo.addEventListener('click', ()=>{
-      waitPlaying = false;
-      spriteWait.style.transform = "translateX(0px)";
-      bubbleWait.style.display = 'none';
-      beep(true);
-    });
 
-    /* ========= Slide 8: Match bug-fix ========= */
-    const bugList = document.getElementById('bugList');
-    const fixList = document.getElementById('fixList');
-    const matchResult = document.getElementById('matchResult');
-    const matchHint = document.getElementById('matchHint');
-    let pickBug = null;
-    let matched = 0;
+                <div class="step-card" style="background: #FFF3E0; border-left-color: #FF9800; margin-top: 20px;">
+                    <b>🔍 Rahasia Perbaikan (L):</b>
+                    <p style="font-size: 15px; margin: 5px 0;">Blok <b>Wait 20</b> itu artinya menunggu selama 2 detik.
+                        Kalau kodingmu berantakan karena terlalu cepat, selipkan blok oranye ini di tengah-tengah!</p>
+                </div>
 
-    function clearMatchUI(){
-      pickBug = null;
-      matched = 0;
-      if(!bugList || !fixList) return;
-      bugList.querySelectorAll('.chip').forEach(c=>c.classList.remove('on'));
-      fixList.querySelectorAll('.chip').forEach(c=>c.classList.remove('on'));
-      matchResult.textContent = "Belum ada pasangan.";
-      matchHint.textContent = "Target: cocokkan minimal 3 ya 🙂";
-    }
+                <p
+                    style="font-style: italic; font-size: 14px; text-align: center; color: var(--muted); margin-top: 10px;">
+                    "Detektif yang hebat tahu kapan harus bertindak dan kapan harus menunggu!"
+                </p>
+            </div>
+        </div>
 
-    function markDone(ch){
-      ch.style.opacity = ".55";
-      ch.style.pointerEvents = "none";
-    }
+        <div class="slide">
+            <div class="slide-header">
+                <div class="badge">Kasus #1: Karakter Mogok</div>
+                <h1>Kenapa Sprite Diam Saja? 🐱</h1>
+            </div>
+            <div class="slide-body">
+                <div class="grid">
+                    <div class="card-mini">
+                        <p><b>Laporan Kejadian:</b><br>"Aku sudah klik Bendera Hijau, tapi Sprite-nya tidak mau jalan
+                            sama sekali!"</p>
+                        <div
+                            style="width: 100%; height: 140px; background: #eee; border: 2px dashed #ccc; border-radius: 10px; display: flex; align-items: center; justify-content: center; margin: 10px 0; color: #999; text-align: center; padding: 10px;">
+                            <img src="https://uob-1328237036.cos.ap-singapore.myqcloud.com//file-uploader/images/c19a74d3-f92b-4ddf-bbd8-db2e044fc691.png"
+                                width="60%">
+                        </div>
+                    </div>
+                    <div class="card-mini" style="text-align: center;">
+                        <h3>Pecahkan Teka-Teki! 🔍</h3>
+                        <p>Gunakan langkah <b>"C" (Cek Mulai)</b>. Apa yang kurang?</p>
+                        <div style="display: flex; flex-direction: column; gap: 8px;">
+                            <button class="btn-nav" style="background: var(--bad);" onclick="case1(false)">Ganti
+                                Angka</button>
+                            <button class="btn-nav" style="background: var(--secondary);" onclick="case1(true)">Pasang
+                                Bendera Hijau</button>
+                        </div>
+                        <div id="msg1"
+                            style="margin-top: 15px; font-weight: bold; padding: 10px; border-radius: 10px; background: #eee; font-size: 14px;">
+                            Pilih jawaban di atas...</div>
+                    </div>
+                </div>
 
-    if(bugList && fixList){
-      bugList.querySelectorAll('.chip').forEach(ch=>{
-        ch.addEventListener('click', ()=>{
-          if(ch.style.pointerEvents === "none") return;
-          bugList.querySelectorAll('.chip').forEach(c=>c.classList.remove('on'));
-          ch.classList.add('on');
-          pickBug = ch.dataset.key;
-          matchHint.innerHTML = `Bug dipilih: <b>${ch.textContent}</b> → sekarang pilih solusinya`;
-          beep(true);
-        });
-      });
+                <div class="step-card" style="background: #FFFDE7; border-left-color: var(--primary);">
+                    <b>🛠️ Ayo Buktikan di ScratchJr:</b>
+                    <p style="font-size: 15px; margin: 5px 0;">Buka projectmu, susun blok seperti gambar di atas, lalu
+                        coba perbaiki kodenya. Apakah Sprite-nya sekarang mau jalan? ✨</p>
+                </div>
+            </div>
+        </div>
 
-      fixList.querySelectorAll('.chip').forEach(ch=>{
-        ch.addEventListener('click', ()=>{
-          if(ch.style.pointerEvents === "none") return;
-          if(!pickBug){
-            matchHint.textContent = "Pilih bug dulu ya 🙂";
-            beep(false);
-            return;
-          }
-          const ok = ch.dataset.key === pickBug;
-          if(ok){
-            matched++;
-            matchResult.innerHTML = `✅ Cocok! (${matched} cocok)`;
-            matchHint.innerHTML = matched>=3 ? "⭐⭐⭐ Mantap! Kamu siap debugging proyek." : "Bagus! Lanjut pasangan berikutnya 🙂";
-            // disable matched pair
-            const bugChip = bugList.querySelector(`.chip[data-key="${pickBug}"]`);
-            markDone(bugChip);
-            markDone(ch);
-            bugChip.classList.remove('on');
-            ch.classList.remove('on');
-            pickBug = null;
-            beep(true);
-          } else {
-            matchResult.innerHTML = "😅 Belum cocok. Coba lagi ya.";
-            beep(false);
-          }
-        });
-      });
+        <div class="slide">
+            <div class="slide-header">
+                <div class="badge">Kasus #2: Balapan Bicara</div>
+                <h1>Kenapa Suaranya Tabrakan? 🗣️🗣️</h1>
+            </div>
+            <div class="slide-body">
+                <div class="grid">
+                    <div class="card-mini">
+                        <p><b>Laporan Kejadian:</b><br>"Tic dan Toc bicara bersamaan. Percakapannya jadi tidak jelas!"
+                        </p>
+                        <div
+                            style="width: 90%; height: 300px; background: #eee; border: 2px dashed #ccc; border-radius: 10px; display: flex; align-items: center; justify-content: center; margin: 10px 0; color: #999; text-align: center; padding: 10px;">
+                            <img src="https://uob-1328237036.cos.ap-singapore.myqcloud.com//file-uploader/images/65311e98-deff-488c-984a-f538203c53aa.png"
+                                width="95%">
+                        </div>
+                    </div>
+                    <div class="card-mini" style="text-align: center;">
+                        <h3>Pecahkan Teka-Teki! 🔍</h3>
+                        <p>Gunakan langkah <b>"L" (Lakukan Jeda)</b>. Apa solusinya?</p>
+                        <div style="display: flex; flex-direction: column; gap: 8px;">
+                            <button class="btn-nav" style="background: var(--secondary);" onclick="case2(true)">Pakai
+                                Blok Wait (Jam Pasir)</button>
+                            <button class="btn-nav" style="background: var(--bad);" onclick="case2(false)">Hapus
+                                Karakternya</button>
+                        </div>
+                        <div id="msg2"
+                            style="margin-top: 15px; font-weight: bold; padding: 10px; border-radius: 10px; background: #eee; font-size: 14px;">
+                            Pilih jawaban di atas...</div>
+                    </div>
+                </div>
 
-      document.getElementById('resetMatch').addEventListener('click', ()=>{
-        // reset disabled state
-        bugList.querySelectorAll('.chip').forEach(c=>{c.style.opacity=""; c.style.pointerEvents="";});
-        fixList.querySelectorAll('.chip').forEach(c=>{c.style.opacity=""; c.style.pointerEvents="";});
-        clearMatchUI();
-        beep(true);
-      });
+                <div class="step-card" style="background: #E3F2FD; border-left-color: var(--accent);">
+                    <b>🛠️ Ayo Buktikan di ScratchJr:</b>
+                    <p style="font-size: 15px; margin: 5px 0;">Buka projectmu, susun blok seperti gambar di atas, lalu
+                        coba perbaiki kodenya. Apakah percakapan sekarang jelas?</p>
+                </div>
+            </div>
+        </div>
 
-      clearMatchUI();
-    }
+        <div class="slide">
+            <div class="slide-header">
+                <div class="badge">Kasus #3: Karakter "Teleportasi"</div>
+                <h1>Ke Mana Larinya Kelinci? 🦌💨</h1>
+            </div>
+            <div class="slide-body">
+                <div class="grid">
+                    <div class="card-mini">
+                        <p><b>Laporan Kejadian:</b><br>"Aku mau Kelinci berhenti di tengah panggung, tapi dia malah
+                            tembus ke samping dan muncul lagi dari sisi satunya!"</p>
+                        <div
+                            style="width: 100%; height: 140px; background: #eee; border: 2px dashed #ccc; border-radius: 10px; display: flex; align-items: center; justify-content: center; margin: 10px 0; color: #999; text-align: center; padding: 10px; font-size: 13px;">
+                            <img src="https://uob-1328237036.cos.ap-singapore.myqcloud.com//file-uploader/images/9361668a-1769-4824-9768-8bb781432307.png"
+                                width="65%">
+                        </div>
+                    </div>
+                    <div class="card-mini" style="text-align: center;">
+                        <h3>Pecahkan Teka-Teki! 🔍</h3>
+                        <p>Gunakan langkah <b>"K" (Kecilkan Angka)</b>. Kenapa Kelinci bisa "tembus" layar?</p>
+                        <div style="display: flex; flex-direction: column; gap: 8px;">
+                            <button class="btn-nav" style="background: var(--bad);" onclick="case3(false)">Kelinci
+                                sedang sulap</button>
+                            <button class="btn-nav" style="background: var(--secondary);" onclick="case3(true)">Angkanya
+                                terlalu besar</button>
+                        </div>
+                        <div id="msg3"
+                            style="margin-top: 15px; font-weight: bold; padding: 10px; border-radius: 10px; background: #eee; font-size: 14px;">
+                            Pilih jawaban di atas...</div>
+                    </div>
+                </div>
 
-    /* ========= Slide 9: Report builder ========= */
-    const reportBox = document.getElementById('reportBox');
-    const reportOut = document.getElementById('reportOut');
-    let repBug = "____";
-    let repFix = "____";
+                <div class="step-card" style="background: #E8F5E9; border-left-color: var(--secondary);">
+                    <b>🛠️ Ayo Buktikan di ScratchJr:</b>
+                    <p style="font-size: 15px; margin: 5px 0;">Letakkan Kelinci di sebelah kiri panggung. Lalu pasang
+                        blok jalan dengan angka <b>25</b>. Lihat bagaimana Kelinci berputar melewati layar! Sekarang,
+                        perbaiki kodenya agar Kelinci berhenti tepat di tengah panggung.</p>
+                </div>
+            </div>
+        </div>
 
-    function renderReport(){
-      reportBox.innerHTML = `“Bugku: <b>${repBug}</b>. Aku memperbaiki dengan <b>${repFix}</b>.”`;
-    }
-    document.querySelectorAll('[data-fillbug]').forEach(btn=>{
-      btn.addEventListener('click', ()=>{
-        repBug = btn.dataset.fillbug;
-        renderReport();
-        reportOut.textContent = "Bagus. Sekarang pilih cara memperbaikinya 🙂";
-        beep(true);
-      });
-    });
-    document.querySelectorAll('[data-fillfix]').forEach(btn=>{
-      btn.addEventListener('click', ()=>{
-        repFix = btn.dataset.fillfix;
-        renderReport();
-        reportOut.textContent = "Mantap! Sekarang ceritakan kalimat ini ke guru/teman.";
-        beep(true);
-      });
-    });
-    document.getElementById('clearReport').addEventListener('click', ()=>{
-      repBug="____"; repFix="____";
-      renderReport();
-      reportOut.textContent = "Reset. Isi lagi 🙂";
-      beep(true);
-    });
-    renderReport();
+        <div class="slide">
+            <div class="slide-header">
+                <div class="badge">Misi Terakhir</div>
+                <h1>Waktunya Beraksi! 🕵️‍♀️</h1>
+            </div>
 
-    /* ========= Slide 10: mini check ========= */
-    document.querySelectorAll('[data-first]').forEach(btn=>{
-      btn.addEventListener('click', ()=>{
-        const ok = btn.dataset.first === 'benar';
-        document.getElementById('firstMsg').innerHTML =
-          ok ? "✅ Benar! Jalankan dulu & lihat bug." : "😅 Jangan hapus dulu. Coba cek dan perbaiki.";
-        beep(ok);
-      });
-    });
+            <div class="slide-body">
+                <p style="text-align: center; font-size: 18px;">Gunakan semua ilmumu untuk menyelamatkan animasi!</p>
 
-    /* ========= Slide 11: reflection ========= */
-    const reflectList = document.getElementById('reflectList');
-    const reflectMsg = document.getElementById('reflectMsg');
-    function reflectCount(){
-      const c = Array.from(reflectList.querySelectorAll('input')).filter(i=>i.checked).length;
-      reflectMsg.textContent = c>=2 ? "✅ Mantap! Kamu sudah siap proyek." : "Target: centang minimal 2 ya 🙂";
-    }
-    if(reflectList){
-      reflectList.addEventListener('change', reflectCount);
-      document.getElementById('finishReflect').addEventListener('click', ()=>{
-        const c = Array.from(reflectList.querySelectorAll('input')).filter(i=>i.checked).length;
-        if(c>=2){ showToast("Berhasil! 🎉"); beep(true); }
-        else { showToast("Centang 2 dulu ya 🙂"); beep(false); }
-      });
-      document.getElementById('resetReflect').addEventListener('click', ()=>{
-        reflectList.querySelectorAll('input').forEach(i=>i.checked=false);
-        reflectCount(); beep(true);
-      });
-      reflectCount();
-    }
+                <div class="step-card"
+                    style="background: #ffffff; border: 2px solid var(--primary); border-left: 10px solid var(--primary);">
+                    <div style="display: flex; align-items: flex-start; gap: 15px; margin-bottom: 15px;">
+                        <span style="font-size: 25px;">📱</span>
+                        <div>
+                            <b style="color: var(--primary);">1. Buka ScratchJr</b>
+                            <p style="margin: 5px 0; font-size: 14px;">Pilih project yang ingin kamu sempurnakan hari
+                                ini.</p>
+                        </div>
+                    </div>
 
-    /* ========= Slide 12: end actions ========= */
-    document.getElementById('restartBtn').addEventListener('click', ()=>{ showSlide(0); showToast("Ulang dari awal!"); beep(true); });
-    document.getElementById('celebrateBtn').addEventListener('click', ()=>{
-      showToast("👏👏👏 Hebat!");
-      beep(true);
-    });
+                    <div style="display: flex; align-items: flex-start; gap: 15px; margin-bottom: 15px;">
+                        <span style="font-size: 25px;">🔎</span>
+                        <div>
+                            <b style="color: var(--primary);">2. Temukan Masalah</b>
+                            <p style="margin: 5px 0; font-size: 14px;">Cari karakter yang gerakannya aneh, terlalu
+                                cepat, atau diam saja.</p>
+                        </div>
+                    </div>
 
-    /* ========= Init ========= */
-    showSlide(0);
-  </script>
+                    <div style="display: flex; align-items: flex-start; gap: 15px;">
+                        <span style="font-size: 25px;">🛠️</span>
+                        <div>
+                            <b style="color: var(--primary);">3. Pakai Mantra C-E-K-L</b>
+                            <p style="margin: 5px 0; font-size: 14px;">Cek blok mulai, urutan, angka, dan tambahkan jeda
+                                jika perlu!</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div
+                    style="width: 100%; height: 320px; background: #F0F4F8; border: 2px dashed #7C5CFF; border-radius: 15px; display: flex; align-items: center; justify-content: center; margin-top: 15px; color: var(--primary); font-size: 14px; font-weight: bold; text-align: center; padding: 10px;">
+                    <img src="https://uob-1328237036.cos.ap-singapore.myqcloud.com//file-uploader/images/e87b8cde-81db-4ce9-8509-a69485bd8ca5.png"
+                        width="45%" style="margin-right: 15px;">
+                </div>
+
+                <h2 style="color: var(--secondary); text-align: center; margin-top: 20px;">Selamat Beraksi, Detektif
+                    Hebat! 🚀</h2>
+            </div>
+        </div>
+
+        <div class="slide">
+            <div class="slide-header">
+                <div class="badge">Pesan Penting</div>
+                <h1>Jangan Takut Salah! 💪</h1>
+            </div>
+            <div class="slide-body" style="text-align: center;">
+                <p style="font-size: 18px;">Tahukah kamu? Programmer paling hebat di dunia pun sering membuat <b>Bug</b>
+                    setiap hari!</p>
+
+                <div class="step-card" style="background: #FFF9C4; border-left: 8px solid #FF9800; margin-top: 20px;">
+                    <p style="font-size: 20px; margin: 0;">
+                        Yang penting adalah kamu:<br>
+                        <b>Sabar</b> & <b>Mau Mencoba</b>
+                    </p>
+                </div>
+
+                <div style="font-size: 80px; margin-top: 20px;">✨🔎</div>
+
+                <p style="font-style: italic; color: var(--muted); margin-top: 20px;">
+                    "Kesalahan adalah cara otak kita menjadi lebih pintar!"
+                </p>
+            </div>
+        </div>
+
+        <div class="slide">
+            <div class="slide-header">
+                <div class="badge">Misi Selesai</div>
+                <h1>Selamat, Detektif Hebat! 🏆</h1>
+            </div>
+            <div class="slide-body" style="text-align: center;">
+                <p style="font-size: 18px;">Kamu sudah menyelesaikan pelatihan Detektif Coding hari ini.</p>
+
+                <div
+                    style="width: 250px; height: 180px; background: #E8F5E9; border: 3px solid var(--secondary); border-radius: 20px; margin: 20px auto; display: flex; align-items: center; justify-content: center; font-size: 80px; box-shadow: 0 10px 20px rgba(0,0,0,0.1);">
+                    🏅
+                </div>
+
+                <p>Sekarang kamu sudah siap memperbaiki Bug apa pun di dunia ScratchJr!</p>
+
+                <div style="margin-top: 30px;">
+                    <button class="btn-nav" style="background: var(--primary); padding: 15px 30px; font-size: 16px;"
+                        onclick="location.reload()">
+                        Mulai Belajar Lagi 🔁
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <div class="footer">
+            <button class="btn-nav" id="prevBtn" onclick="moveSlide(-1)">Kembali</button>
+            <span id="pageInd">Halaman 1 / 12</span>
+            <button class="btn-nav" id="nextBtn" onclick="moveSlide(1)">Lanjut</button>
+        </div>
+    </div>
+
+    <script>
+        let currentSlide = 0;
+        const slides = document.querySelectorAll('.slide');
+        const pageInd = document.getElementById('pageInd');
+        const footer = document.querySelector('.footer');
+        const correctCode = "RGMDSLP25";
+
+        function checkCode() {
+            const input = document.getElementById('passCode').value;
+            const overlay = document.getElementById('loginOverlay');
+            const error = document.getElementById('errorMsg');
+
+            if (input === correctCode) {
+                // Hilangkan pop-up
+                overlay.style.display = "none";
+                // Izinkan scroll body jika sebelumnya dimatikan
+                document.body.style.overflow = "auto";
+            } else {
+                error.style.display = "block";
+                document.getElementById('passCode').style.borderColor = "var(--bad)";
+            }
+        }
+
+        function moveSlide(step) {
+            slides[currentSlide].classList.remove('active');
+            currentSlide += step;
+
+            if (currentSlide < 0) currentSlide = 0;
+            if (currentSlide >= slides.length) currentSlide = slides.length - 1;
+
+            slides[currentSlide].classList.add('active');
+            updateFooter();
+        }
+
+        function updateFooter() {
+            pageInd.innerText = `Halaman ${currentSlide + 1} / ${slides.length}`;
+            prevBtn.disabled = currentSlide === 0;
+            nextBtn.disabled = currentSlide === slides.length - 1;
+        }
+
+        function checkMini(isCorrect) {
+            const msg = document.getElementById('miniMsg');
+            if (isCorrect) {
+                msg.innerText = "✅ Hebat! Kamu Detektif Sejati!";
+                msg.style.background = "#E8F5E9";
+                msg.style.color = "#2E7D32";
+            } else {
+                msg.innerText = "❌ Oh no! Detektif tidak menyerah.";
+                msg.style.background = "#FFEBEE";
+                msg.style.color = "#C62828";
+            }
+        }
+
+        function case1(correct) {
+            const m = document.getElementById('msg1');
+            m.innerText = correct ? "✅ BETUL! Tanpa kunci (Bendera Hijau), mesin tidak nyala!" : "❌ Ups! Angka sudah benar, tapi dia tidak tahu kapan harus mulai.";
+            m.style.background = correct ? "#E8F5E9" : "#FFEBEE";
+        }
+
+        function case2(correct) {
+            const m = document.getElementById('msg2');
+            m.innerText = correct ? "✅ CERDAS! Jam pasir membuat karakter antre saat bicara." : "❌ Jangan dihapus, kasihan karakternya jadi bisu!";
+            m.style.background = correct ? "#E8F5E9" : "#FFEBEE";
+        }
+
+        function case3(correct) {
+            const m = document.getElementById('msg3');
+            m.innerText = correct ? "✅ HEBAT! Angka kecil membuat jaraknya jadi pas." : "❌ Kalau ditambah lompat, dia malah kabur sambil lompat!";
+            m.style.background = correct ? "#E8F5E9" : "#FFEBEE";
+        }
+
+        updateFooter();
+    </script>
+
 </body>
+
 </html>
