@@ -1,0 +1,1655 @@
+<!doctype html>
+<html lang="id">
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>Sesi 19 — Ending Animasi (ScratchJr)</title>
+    <style>
+        :root {
+            --bg1: #fff7fb;
+            --bg2: #f3fbff;
+            --bg3: #f7fff6;
+            --card: #ffffff;
+            --text: #1f2a44;
+            --muted: #5a6680;
+            --accent: #7c5cff;
+            --accent2: #32c7ff;
+            --accent3: #2ee59d;
+            --warm: #ffd166;
+            --border: rgba(31, 42, 68, .12);
+            --shadow: 0 18px 60px rgba(31, 42, 68, .12);
+            --shadow2: 0 10px 30px rgba(31, 42, 68, .10);
+            --r: 22px;
+            --r2: 16px;
+            --font: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Arial, "Noto Sans", sans-serif;
+        }
+
+        * {
+            box-sizing: border-box
+        }
+
+        body {
+            margin: 0;
+            font-family: var(--font);
+            color: var(--text);
+            background:
+                radial-gradient(900px 600px at 12% 12%, rgba(124, 92, 255, .14), transparent 60%),
+                radial-gradient(900px 600px at 88% 18%, rgba(50, 199, 255, .16), transparent 60%),
+                radial-gradient(900px 600px at 35% 92%, rgba(46, 229, 157, .12), transparent 60%),
+                linear-gradient(135deg, var(--bg1), var(--bg2), var(--bg3));
+            overflow: hidden;
+        }
+
+        /* Access Gate */
+        .gate {
+            position: fixed;
+            inset: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 18px;
+            background:
+                radial-gradient(900px 600px at 20% 25%, rgba(124, 92, 255, .18), transparent 60%),
+                radial-gradient(900px 600px at 80% 25%, rgba(50, 199, 255, .18), transparent 60%),
+                linear-gradient(135deg, rgba(255, 255, 255, .92), rgba(255, 255, 255, .86));
+            z-index: 999;
+        }
+
+        .gateCard {
+            width: min(560px, 92vw);
+            background: rgba(255, 255, 255, .94);
+            border: 1px solid var(--border);
+            border-radius: 24px;
+            box-shadow: var(--shadow);
+            padding: 22px;
+        }
+
+        .gateCard h2 {
+            margin: 0 0 6px;
+        }
+
+        .gateCard p {
+            margin: 0 0 12px;
+            color: var(--muted);
+            font-size: 16px;
+            line-height: 1.5;
+        }
+
+        .gateRow {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+            align-items: center;
+        }
+
+        .gateInput {
+            flex: 1;
+            padding: 14px 14px;
+            border-radius: 16px;
+            border: 1px solid rgba(31, 42, 68, .16);
+            background: #fff;
+            font-size: 16px;
+            font-weight: 900;
+            letter-spacing: .8px;
+            text-transform: uppercase;
+            outline: none;
+        }
+
+        /* Top UI */
+        .topbar {
+            position: fixed;
+            inset: 14px 14px auto 14px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 12px;
+            z-index: 50;
+        }
+
+        .brand {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 10px 14px;
+            border-radius: 999px;
+            background: rgba(255, 255, 255, .86);
+            border: 1px solid var(--border);
+            box-shadow: var(--shadow2);
+            backdrop-filter: blur(10px);
+            user-select: none;
+        }
+
+        .dot {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--accent), var(--accent2));
+            box-shadow: 0 0 0 7px rgba(124, 92, 255, .14);
+        }
+
+        .brand .t1 {
+            font-weight: 1000;
+            font-size: 14px;
+        }
+
+        .brand .t2 {
+            font-weight: 800;
+            font-size: 12px;
+            color: var(--muted);
+            margin-left: 6px;
+        }
+
+        .pill {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 10px 12px;
+            border-radius: 999px;
+            background: rgba(255, 255, 255, .86);
+            border: 1px solid var(--border);
+            box-shadow: var(--shadow2);
+            user-select: none;
+        }
+
+        .pill kbd {
+            font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+            font-size: 12px;
+            padding: 4px 7px;
+            border-radius: 10px;
+            background: rgba(31, 42, 68, .06);
+            border: 1px solid rgba(31, 42, 68, .10);
+        }
+
+        .progress {
+            position: fixed;
+            left: 14px;
+            right: 14px;
+            top: 66px;
+            height: 10px;
+            border-radius: 999px;
+            background: rgba(31, 42, 68, .06);
+            border: 1px solid rgba(31, 42, 68, .10);
+            overflow: hidden;
+            z-index: 40;
+        }
+
+        .progress>div {
+            height: 100%;
+            width: 0%;
+            background: linear-gradient(90deg, var(--accent), var(--accent2), var(--accent3));
+            border-radius: 999px;
+            transition: width .35s ease;
+        }
+
+        /* Deck */
+        .deck {
+            position: fixed;
+            inset: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 96px 18px 82px;
+        }
+
+        .slide {
+            width: min(1120px, 96vw);
+            height: min(700px, 78vh);
+            border-radius: var(--r);
+            background: rgba(255, 255, 255, .78);
+            border: 1px solid var(--border);
+            backdrop-filter: blur(10px);
+            box-shadow: var(--shadow);
+            position: absolute;
+            opacity: 0;
+            transform: translateY(10px) scale(.985);
+            transition: opacity .28s ease, transform .28s ease;
+            overflow: hidden;
+            display: none;
+        }
+
+        .slide.active {
+            display: block;
+            opacity: 1;
+            transform: translateY(0) scale(1);
+            position: relative;
+        }
+
+        .slide-content {
+            height: 100%;
+            overflow-y: auto;
+            padding: 28px;
+            padding-right: 14px;
+        }
+
+        .slide-content::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        .slide-content::-webkit-scrollbar-thumb {
+            background: rgba(124, 92, 255, .35);
+            border-radius: 999px;
+        }
+
+        .slide-content::-webkit-scrollbar-track {
+            background: rgba(31, 42, 68, .06);
+        }
+
+        .card {
+            background: var(--card);
+            border: 1px solid var(--border);
+            border-radius: var(--r2);
+            padding: 18px;
+            box-shadow: var(--shadow2);
+        }
+
+        .grid {
+            display: grid;
+            grid-template-columns: 1.05fr .95fr;
+            gap: 18px;
+            align-items: stretch;
+        }
+
+        h1 {
+            font-size: 44px;
+            line-height: 1.05;
+            margin: 0 0 10px;
+        }
+
+        h2 {
+            font-size: 28px;
+            margin: 0 0 8px;
+        }
+
+        p {
+            font-size: 18px;
+            color: var(--muted);
+            margin: 0 0 12px;
+            line-height: 1.55;
+        }
+
+        ul {
+            margin: 10px 0 0 20px;
+            padding: 0;
+        }
+
+        li {
+            margin: 6px 0;
+            color: var(--muted);
+            font-size: 18px;
+            line-height: 1.45;
+        }
+
+        .mini {
+            font-size: 14px;
+            color: rgba(31, 42, 68, .70);
+            font-weight: 900;
+        }
+
+        .highlight {
+            background: linear-gradient(135deg, rgba(124, 92, 255, .16), rgba(50, 199, 255, .16));
+            border: 1px solid rgba(124, 92, 255, .18);
+            padding: 12px 14px;
+            border-radius: 16px;
+            font-weight: 1000;
+            margin: 10px 0 12px;
+            color: rgba(31, 42, 68, .92);
+        }
+
+        .tip {
+            background: rgba(46, 229, 157, .12);
+            border: 1px solid rgba(46, 229, 157, .28);
+            padding: 12px 14px;
+            border-radius: 16px;
+            font-weight: 900;
+            color: rgba(31, 42, 68, .78);
+            margin-top: 10px;
+        }
+
+        .warn {
+            background: rgba(255, 209, 102, .18);
+            border: 1px solid rgba(255, 209, 102, .40);
+            padding: 12px 14px;
+            border-radius: 16px;
+            font-weight: 900;
+            color: rgba(31, 42, 68, .80);
+            margin-top: 10px;
+        }
+
+        .bad {
+            background: rgba(255, 107, 107, .12);
+            border: 1px solid rgba(255, 107, 107, .35);
+            padding: 12px 14px;
+            border-radius: 16px;
+            font-weight: 1000;
+            color: rgba(31, 42, 68, .86);
+            margin-top: 10px;
+        }
+
+        .row {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+            align-items: center;
+        }
+
+        .btn {
+            border: none;
+            padding: 12px 14px;
+            border-radius: 16px;
+            background: rgba(255, 255, 255, .92);
+            border: 1px solid var(--border);
+            cursor: pointer;
+            font-weight: 1000;
+            box-shadow: var(--shadow2);
+            color: rgba(31, 42, 68, .92);
+        }
+
+        .btn.primary {
+            background: linear-gradient(135deg, var(--accent), var(--accent2));
+            border: none;
+            color: #fff;
+            box-shadow: 0 12px 26px rgba(124, 92, 255, .18);
+        }
+
+        .btn.good {
+            background: linear-gradient(135deg, var(--accent3), rgba(50, 199, 255, .92));
+            border: none;
+            color: #fff;
+        }
+
+        .btn.danger {
+            background: linear-gradient(135deg, #ff6b6b, #ff9f6e);
+            border: none;
+            color: #fff;
+        }
+
+        .btn:disabled {
+            opacity: .45;
+            cursor: not-allowed;
+        }
+
+        /*  images */
+        .imgph {
+            border-radius: 16px;
+            border: 2px dashed rgba(31, 42, 68, .22);
+            background: rgba(31, 42, 68, .02);
+            padding: 14px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .imgph .label {
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            padding: 6px 10px;
+            border-radius: 999px;
+            background: rgba(255, 255, 255, .92);
+            border: 1px solid rgba(31, 42, 68, .10);
+            font-weight: 1000;
+            font-size: 12px;
+            color: rgba(31, 42, 68, .78);
+        }
+
+        .imgph .box {
+            height: 260px;
+            border-radius: 14px;
+            background:
+                radial-gradient(600px 180px at 30% 30%, rgba(124, 92, 255, .12), transparent 60%),
+                radial-gradient(600px 180px at 70% 35%, rgba(50, 199, 255, .14), transparent 60%),
+                linear-gradient(135deg, rgba(255, 255, 255, .75), rgba(255, 255, 255, .55));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 1100;
+            color: rgba(31, 42, 68, .65);
+            text-align: center;
+            padding: 14px;
+        }
+
+        .imgph img {
+            width: 100%;
+            height: auto;
+            display: block;
+            border-radius: 14px;
+        }
+
+        .imgph .hint {
+            margin-top: 14px;
+            color: rgba(31, 42, 68, .70);
+            font-weight: 900;
+            font-size: 14px;
+            line-height: 1.35;
+        }
+
+        /* Story builder */
+        .chips {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-top: 10px;
+        }
+
+        .chip {
+            padding: 10px 12px;
+            border-radius: 999px;
+            background: rgba(31, 42, 68, .03);
+            border: 1px solid rgba(31, 42, 68, .12);
+            cursor: pointer;
+            font-weight: 1000;
+            user-select: none;
+        }
+
+        .chip:hover {
+            border-color: rgba(124, 92, 255, .35);
+        }
+
+        .slots {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 10px;
+            margin-top: 10px;
+        }
+
+        .slot {
+            padding: 12px 12px;
+            border-radius: 16px;
+            background: #fff;
+            border: 2px dashed rgba(31, 42, 68, .20);
+            min-height: 54px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 10px;
+        }
+
+        .slot b {
+            font-size: 16px;
+        }
+
+        .slot .txt {
+            color: rgba(31, 42, 68, .72);
+            font-weight: 1000;
+        }
+
+        .slot .xbtn {
+            border: none;
+            border-radius: 12px;
+            padding: 8px 10px;
+            background: rgba(31, 42, 68, .06);
+            border: 1px solid rgba(31, 42, 68, .10);
+            cursor: pointer;
+            font-weight: 1000;
+        }
+
+        /* Simple stage demo */
+        .stage {
+            border-radius: var(--r2);
+            border: 2px dashed rgba(31, 42, 68, .18);
+            background: #fff;
+            box-shadow: var(--shadow2);
+            position: relative;
+            overflow: hidden;
+            min-height: 460px;
+        }
+
+        .stageTop {
+            position: absolute;
+            left: 12px;
+            top: 12px;
+            z-index: 6;
+            padding: 8px 10px;
+            border-radius: 999px;
+            background: rgba(255, 255, 255, .90);
+            border: 1px solid var(--border);
+            font-weight: 1000;
+        }
+
+        .backdrop {
+            position: absolute;
+            inset: 0;
+            background:
+                radial-gradient(800px 260px at 55% 22%, rgba(50, 199, 255, .18), transparent 60%),
+                radial-gradient(600px 260px at 20% 40%, rgba(124, 92, 255, .14), transparent 60%),
+                linear-gradient(180deg, #dff4ff 0%, #ffffff 55%, #e8ffe9 100%);
+            opacity: .98;
+        }
+
+        .ground {
+            position: absolute;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            height: 96px;
+            background: linear-gradient(180deg, rgba(31, 42, 68, .02), rgba(31, 42, 68, .06));
+            border-top: 1px solid rgba(31, 42, 68, .10);
+            z-index: 2;
+        }
+
+        .sprite {
+            position: absolute;
+            width: 96px;
+            height: 96px;
+            border-radius: 24px;
+            border: 2px solid rgba(31, 42, 68, .12);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 46px;
+            box-shadow: 0 14px 26px rgba(31, 42, 68, .10);
+            z-index: 4;
+            user-select: none;
+            background: linear-gradient(135deg, rgba(255, 209, 102, .18), rgba(46, 229, 157, .14));
+        }
+
+        .bubble {
+            position: absolute;
+            max-width: 320px;
+            padding: 10px 12px;
+            border-radius: 16px;
+            background: rgba(255, 255, 255, .94);
+            border: 1px solid rgba(31, 42, 68, .12);
+            box-shadow: var(--shadow2);
+            font-weight: 1000;
+            color: rgba(31, 42, 68, .86);
+            z-index: 5;
+            opacity: 0;
+            transform: translateY(6px);
+            transition: opacity .22s ease, transform .22s ease;
+            pointer-events: none;
+        }
+
+        .bubble.show {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .bigEnd {
+            position: absolute;
+            inset: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: rgba(255, 255, 255, .90);
+            z-index: 9;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity .25s ease;
+            text-align: center;
+            padding: 18px;
+        }
+
+        .bigEnd.show {
+            opacity: 1;
+            pointer-events: auto;
+        }
+
+        .bigEnd .endCard {
+            background: #fff;
+            border-radius: 22px;
+            border: 1px solid rgba(31, 42, 68, .12);
+            box-shadow: var(--shadow);
+            padding: 18px;
+            width: min(520px, 92%);
+        }
+
+        .bigEnd h3 {
+            margin: 0 0 6px;
+            font-size: 28px;
+        }
+
+        .bigEnd p {
+            margin: 0;
+            font-size: 18px;
+            color: var(--muted);
+        }
+
+        /* Good vs Bad cards */
+        .compare {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+            margin-top: 10px;
+        }
+
+        .goodBox {
+            padding: 14px;
+            border-radius: 16px;
+            background: rgba(46, 229, 157, .12);
+            border: 1px solid rgba(46, 229, 157, .28);
+            font-weight: 900;
+            color: rgba(31, 42, 68, .82);
+        }
+
+        .badBox {
+            padding: 14px;
+            border-radius: 16px;
+            background: rgba(255, 107, 107, .12);
+            border: 1px solid rgba(255, 107, 107, .30);
+            font-weight: 900;
+            color: rgba(31, 42, 68, .82);
+        }
+
+        .tag {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 8px 10px;
+            border-radius: 999px;
+            background: rgba(255, 255, 255, .92);
+            border: 1px solid rgba(31, 42, 68, .10);
+            font-weight: 1000;
+            margin-bottom: 8px;
+        }
+
+        /* Checklist */
+        .checklist {
+            display: grid;
+            gap: 10px;
+            margin-top: 10px;
+        }
+
+        .check {
+            display: flex;
+            gap: 10px;
+            align-items: flex-start;
+            padding: 12px 12px;
+            border-radius: 16px;
+            background: rgba(31, 42, 68, .03);
+            border: 1px solid rgba(31, 42, 68, .12);
+            cursor: pointer;
+            user-select: none;
+        }
+
+        .check input {
+            margin-top: 4px;
+            transform: scale(1.2);
+        }
+
+        .check span {
+            color: var(--muted);
+            font-size: 18px;
+            line-height: 1.35;
+        }
+
+        .check.done {
+            border-color: rgba(46, 229, 157, .45);
+            background: rgba(46, 229, 157, .14);
+        }
+
+        /* Bottom nav */
+        .nav {
+            position: fixed;
+            inset: auto 14px 14px 14px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 12px;
+            z-index: 50;
+        }
+
+        .counter {
+            padding: 12px 14px;
+            border-radius: 16px;
+            background: rgba(255, 255, 255, .88);
+            border: 1px solid var(--border);
+            font-weight: 1100;
+            min-width: 140px;
+            text-align: center;
+            box-shadow: var(--shadow2);
+        }
+
+        /* Toast */
+        .toast {
+            position: fixed;
+            left: 50%;
+            bottom: 86px;
+            transform: translateX(-50%);
+            padding: 12px 14px;
+            border-radius: 999px;
+            background: rgba(255, 255, 255, .94);
+            border: 1px solid var(--border);
+            box-shadow: var(--shadow);
+            font-weight: 1000;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity .25s ease, transform .25s ease;
+            z-index: 60;
+            max-width: min(92vw, 900px);
+            text-align: center;
+        }
+
+        .toast.show {
+            opacity: 1;
+            transform: translateX(-50%) translateY(-2px);
+        }
+
+        @media (max-width: 920px) {
+            .grid {
+                grid-template-columns: 1fr;
+            }
+
+            .compare {
+                grid-template-columns: 1fr;
+            }
+
+            .slide {
+                height: min(980px, 82vh);
+            }
+
+            .stage {
+                min-height: 420px;
+            }
+
+            h1 {
+                font-size: 38px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- Access Gate -->
+    <section class="gate" id="gate">
+        <div class="gateCard">
+            <div class="row" style="justify-content:space-between; align-items:flex-start;">
+                <div>
+                    <h2>Masukkan Kode Akses 🔐</h2>
+                    <p>Gunakan kode dari guru untuk membuka materi Sesi 19.</p>
+                </div>
+                <div class="mini"
+                    style="padding:10px 12px; border-radius:16px; background:rgba(31,42,68,.04); border:1px solid rgba(31,42,68,.10);">
+                    Sesi 19
+                </div>
+            </div>
+
+            <div class="gateRow">
+                <input class="gateInput" id="codeInput" ="KODE AKSES" autocomplete="off" />
+                <button class="btn primary" id="unlockBtn">Buka</button>
+                <button class="btn" id="hintBtn" type="button">Petunjuk</button>
+            </div>
+
+            <div class="tip" style="margin-top:12px;">
+                Tips: ketik huruf besar. Lalu tekan <b>Enter</b>.
+            </div>
+        </div>
+    </section>
+
+    <div class="topbar">
+        <div class="brand">
+            <div class="dot"></div>
+            <div class="t1">Sesi 19</div>
+            <div class="t2">Ending Animasi (Akhir Cerita)</div>
+        </div>
+        <div class="pill">
+            <span style="font-weight:1000;color:rgba(31,42,68,.9)">Keyboard:</span>
+            <kbd>←</kbd><kbd>→</kbd><kbd>Space</kbd><kbd>Home</kbd><kbd>End</kbd>
+        </div>
+    </div>
+
+    <div class="progress">
+        <div id="bar"></div>
+    </div>
+
+    <main class="deck">
+
+        <!-- Slide 1 -->
+        <section class="slide active">
+            <div class="slide-content">
+                <div class="grid">
+                    <div class="card">
+                        <h1>Hari ini: Bikin Ending! 🎬✨</h1>
+                        <p>
+                            Animasi yang seru itu bukan cuma bergerak…<br>
+                            tapi juga punya <b>akhir cerita</b> yang jelas.
+                        </p>
+                        <div class="highlight">Ending = tanda cerita sudah selesai ✅</div>
+                        <ul>
+                            <li>Penonton jadi paham “Oh, selesai!”</li>
+                            <li>Cerita terasa rapi</li>
+                            <li>Animasi tidak berhenti mendadak</li>
+                        </ul>
+                        <div class="tip">Target: animasimu punya awal–tengah–akhir.</div>
+                    </div>
+
+                    <div class="card">
+                        <h2>Preview</h2>
+                        <div class="imgph">
+                            <div class="box">
+                                <img src="https://uob-1328237036.cos.ap-singapore.myqcloud.com//file-uploader/images/5d8af768-25e7-494c-94c1-21d1001cec8d.png" alt="Preview animasi dengan ending yang jelas">
+                            </div>
+                        </div>
+                        <div class="warn">Ending bukan “berhenti begitu saja” ya 🙂</div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Slide 2 -->
+        <section class="slide">
+            <div class="slide-content">
+                <div class="card">
+                    <h2>Tujuan Belajar 🎯</h2>
+                    <p>Setelah sesi ini, kamu bisa:</p>
+                    <ul>
+                        <li>Mengerti apa itu <b>ending</b></li>
+                        <li>Menyusun cerita: <b>awal – tengah – akhir</b></li>
+                        <li>Memilih contoh ending yang baik</li>
+                        <li>Membuat ending dengan blok sederhana di ScratchJr</li>
+                    </ul>
+                    <div class="highlight">Kita latihan dulu dengan simulasi, baru ke ScratchJr.</div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Slide 3 : Awal–Tengah–Akhir dengan 3 gambar kecil -->
+        <section class="slide">
+            <div class="slide-content">
+                <div class="card">
+                    <h2>Struktur Cerita di ScratchJr 📚</h2>
+                    <p>
+                        Di ScratchJr, cerita dibuat dari <b>blok-blok kode</b> yang tersusun berurutan.
+                        Kita bagi jadi 3 bagian supaya ceritanya <b>jelas</b> dan <b>tidak putus</b>.
+                    </p>
+
+                    <div class="highlight">
+                        <b>Awal</b> = mulai cerita (kenalan tokoh + tempat)<br>
+                        <b>Tengah</b> = aksi utama (gerak / lompat / bicara / ganti backdrop)<br>
+                        <b>Akhir</b> = penutup (ending: “selesai!”, pose terakhir, atau stop rapi)
+                    </div>
+
+                    <div class="tip">
+                        Trik mudah: bayangkan kamu bikin <b>film mini</b>.
+                        Kalau film berhenti mendadak, penonton bingung 😵
+                    </div>
+
+                    <div class="warn" style="margin-top:12px;">
+                        Di ScratchJr, biasanya kita pakai <b>Green Flag</b> untuk mulai.
+                        Lalu blok terakhirnya adalah <b>ending</b>.
+                    </div>
+
+                    <div><br></div>
+
+                    <div class="grid" style="grid-template-columns:1fr 1fr 1fr;">
+                        <!-- AWAL -->
+                        <div class="card">
+                            <h3>🟢 Awal</h3>
+                            <p class="mini">Mulai cerita</p>
+                            <div class="imgph">
+                                <div class="label">AWAL</div>
+                                <div class="box">
+                                    <img src="https://uob-1328237036.cos.ap-singapore.myqcloud.com//file-uploader/images/bde00870-5c82-4d01-8aef-40d6e04fca89.png" alt="Contoh blok awal di ScratchJr">
+                                </div>
+                            </div>
+                            <div class="tip">
+                                Biasanya dimulai dengan <b>Green Flag</b>.
+                            </div>
+                        </div>
+
+                        <!-- TENGAH -->
+                        <div class="card">
+                            <h3>🟡 Tengah</h3>
+                            <p class="mini">Aksi utama</p>
+                            <div class="imgph">
+                                <div class="label">TENGAH</div>
+                                <div class="box">
+                                    <img src="https://uob-1328237036.cos.ap-singapore.myqcloud.com//file-uploader/images/4b507443-9d83-4308-8ceb-91028775ac94.png" alt="Contoh blok tengah di ScratchJr">
+                                </div>
+                            </div>
+                            <div class="tip">
+                                Bagian paling seru 🎉
+                            </div>
+                        </div>
+
+                        <!-- AKHIR -->
+                        <div class="card">
+                            <h3>🔴 Akhir</h3>
+                            <p class="mini">Penutup cerita</p>
+                            <div class="imgph">
+                                <div class="label">AKHIR</div>
+                                <div class="box">
+                                    <img src="https://uob-1328237036.cos.ap-singapore.myqcloud.com//file-uploader/images/9fe2d5ac-7f18-485d-8e2f-70da8436d3ed.png" alt="Contoh blok akhir di ScratchJr">
+                                </div>
+                            </div>
+                            <div class="tip">
+                                Ada tanda cerita <b>selesai</b>.
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="warn" style="margin-top:14px;">
+                        Kalau bagian <b>Akhir</b> tidak ada, cerita terasa putus 😵
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Slide 4 (Interactive: story builder) -->
+        <section class="slide">
+            <div class="slide-content">
+                <div class="grid">
+                    <div class="card">
+                        <h2>Latihan: Susun Cerita 3 Bagian 🧩</h2>
+                        <p>Klik kalimat, lalu masukkan ke Awal / Tengah / Akhir.</p>
+
+                        <div class="highlight" id="storyHint">Target: Isi semua bagian ya 🙂</div>
+
+                        <div class="slots">
+                            <div class="slot" data-slot="awal">
+                                <b>Awal</b>
+                                <div class="txt" id="slotAwal">____</div>
+                                <button class="xbtn" data-clear="awal">Hapus</button>
+                            </div>
+                            <div class="slot" data-slot="tengah">
+                                <b>Tengah</b>
+                                <div class="txt" id="slotTengah">____</div>
+                                <button class="xbtn" data-clear="tengah">Hapus</button>
+                            </div>
+                            <div class="slot" data-slot="akhir">
+                                <b>Akhir</b>
+                                <div class="txt" id="slotAkhir">____</div>
+                                <button class="xbtn" data-clear="akhir">Hapus</button>
+                            </div>
+                        </div>
+
+                        <div class="tip" style="margin-top:12px;">
+                            Setelah isi semua, klik <b>Cek Ceritaku</b>.
+                        </div>
+
+                        <div class="row" style="margin-top:10px;">
+                            <button class="btn primary" id="checkStoryBtn">Cek Ceritaku ✅</button>
+                            <button class="btn" id="resetStoryBtn">Reset</button>
+                        </div>
+                    </div>
+
+                    <div class="card">
+                        <h2>Pilih kalimat</h2>
+                        <div class="chips" id="chips">
+                            <div class="chip" data-text="Aku di rumah.">Aku di rumah.</div>
+                            <div class="chip" data-text="Aku di taman.">Aku di taman.</div>
+                            <div class="chip" data-text="Aku bertemu teman.">Aku bertemu teman.</div>
+                            <div class="chip" data-text="Aku lompat 2 kali!">Aku lompat 2 kali!</div>
+                            <div class="chip" data-text="Aku lari ke kanan.">Aku lari ke kanan.</div>
+                            <div class="chip" data-text="Aku senang sekali!">Aku senang sekali!</div>
+                            <div class="chip" data-text="Aku sampai tujuan.">Aku sampai tujuan.</div>
+                            <div class="chip" data-text="Dadah! Sampai jumpa!">Dadah! Sampai jumpa!</div>
+                            <div class="chip" data-text="Selesai!">Selesai!</div>
+                        </div>
+
+                        <div class="warn">
+                            Cara isi:
+                            <br>1) Klik kalimat
+                            <br>2) Pilih mau taruh di <b>Awal / Tengah / Akhir</b>
+                        </div>
+
+                        <div class="row" style="margin-top:10px;">
+                            <button class="btn good" id="setToAwal">Taruh ke Awal</button>
+                            <button class="btn good" id="setToTengah">Taruh ke Tengah</button>
+                            <button class="btn good" id="setToAkhir">Taruh ke Akhir</button>
+                        </div>
+
+                        <div class="highlight" id="pickedText" style="margin-top:12px;">Kalimat dipilih: ____</div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Slide 5 -->
+        <section class="slide">
+            <div class="slide-content">
+                <div class="grid">
+                    <div class="card">
+                        <h2>Apa itu Ending? 🏁</h2>
+                        <p>Ending itu bagian terakhir yang membuat cerita terasa selesai.</p>
+                        <div class="highlight">Ending yang baik punya “tanda selesai”.</div>
+                        <ul>
+                            <li>Tokoh sampai tujuan</li>
+                            <li>Ada ucapan penutup</li>
+                            <li>Ada pose terakhir</li>
+                            <li>Animasi berhenti dengan rapi</li>
+                        </ul>
+                        <div class="tip">Ending itu seperti bilang: “Terima kasih, selesai!” 🙂</div>
+                    </div>
+
+                    <div class="card">
+                        <h2>Gambar blok ending</h2>
+                        <div class="imgph">
+                            <div class="box">
+                                <img src="https://uob-1328237036.cos.ap-singapore.myqcloud.com//file-uploader/images/62b99edc-7e98-44ad-8c11-c7e9baceed22.png" alt="Contoh blok akhir di ScratchJr" width="30px">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Slide 6 (Good vs Bad endings) -->
+        <section class="slide">
+            <div class="slide-content">
+                <div class="card">
+                    <h2>Contoh Ending: Baik ✅ vs Kurang Baik ❌</h2>
+                    <p>Perhatikan bedanya ya.</p>
+
+                    <div class="compare">
+                        <div class="goodBox">
+                            <div class="tag">✅ Ending Baik</div>
+                            <ul style="margin:8px 0 0 18px;">
+                                <li>Sprite sampai tujuan</li>
+                                <li>Sprite bilang: “Selesai!”</li>
+                                <li>Diam / stop dengan rapi</li>
+                            </ul>
+                            <div class="highlight" style="margin-top:10px;">
+                                Tanda selesai jelas 👍
+                            </div>
+                        </div>
+
+                        <div class="badBox">
+                            <div class="tag">❌ Kurang Baik</div>
+                            <ul style="margin:8px 0 0 18px;">
+                                <li>Tiba-tiba berhenti</li>
+                                <li>Tidak ada pesan akhir</li>
+                                <li>Penonton bingung</li>
+                            </ul>
+                            <div class="bad" style="margin-top:10px;">
+                                “Lho? kok putus?” 😵
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="tip">Ingat: ending yang baik membuat penonton tidak bingung.</div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Slide 7 (Interactive: choose good/bad) -->
+        <section class="slide">
+            <div class="slide-content">
+                <div class="grid">
+                    <div class="card">
+                        <h2>Mini Quiz 👀 (Ending Mana yang Baik?)</h2>
+                        <p>Pilih jawaban yang benar.</p>
+
+                        <div class="highlight" id="endQ">
+                            Cerita: Sprite lompat, lalu… <b>tiba-tiba berhenti</b>.
+                            <br>Ini ending yang…
+                        </div>
+
+                        <div class="row" style="margin-top:12px;">
+                            <button class="btn primary" id="ansGood">Baik ✅</button>
+                            <button class="btn danger" id="ansBad">Kurang baik ❌</button>
+                            <button class="btn" id="ansNext">Soal berikutnya</button>
+                        </div>
+
+                        <div class="tip" id="endAnsMsg" style="margin-top:12px;">Klik jawaban ya 🙂</div>
+                    </div>
+
+                    <div class="card">
+                        <h2>Kenapa?</h2>
+                        <div class="warn">
+                            Ending baik biasanya ada:
+                            <ul style="margin:8px 0 0 18px;">
+                                <li><b>tanda selesai</b> (misal: “Selesai!”)</li>
+                                <li><b>tujuan tercapai</b> (misal sampai rumah)</li>
+                                <li><b>stop rapi</b> (tidak mendadak)</li>
+                            </ul>
+                        </div>
+                        <div class="imgph" style="margin-top:12px;">
+                            <div class="box"><img src="https://uob-1328237036.cos.ap-singapore.myqcloud.com//file-uploader/images/652a1ea5-6b6d-4b22-b70e-7ac5224911fe.png" alt="Contoh blok akhir di ScratchJr"></div>
+                            
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Slide 8 -->
+        <section class="slide">
+            <div class="slide-content">
+                <div class="grid">
+                    <div class="card">
+                        <h2>3 Cara Ending yang Mudah ✅</h2>
+                        <div class="highlight">Pilih salah satu untuk animasimu:</div>
+                        <ul>
+                            <li><b>Ending 1:</b> “Selesai!” (Say) + Stop</li>
+                            <li><b>Ending 2:</b> Sampai tujuan + Pose terakhir</li>
+                            <li><b>Ending 3:</b> Bye bye! + Jeda (Wait) + Stop</li>
+                        </ul>
+                        <div class="tip">Ending boleh sederhana, yang penting jelas 🙂</div>
+                    </div>
+
+                    <div class="card">
+                        <h2>Template ending</h2>
+                        <div class="imgph">
+                            <div class="box">
+                                <img src="https://uob-1328237036.cos.ap-singapore.myqcloud.com//file-uploader/images/4b15ec32-6492-4fca-b05b-91e52ef40d19.png" alt="Contoh blok akhir di ScratchJr">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        
+
+        <!-- Slide 10 -->
+        <section class="slide">
+            <div class="slide-content">
+                <div class="grid">
+                    <div class="card">
+                        <h2>Checklist Ending yang Baik ✅</h2>
+                        <p>Sebelum selesai, cek dulu:</p>
+                        <div class="checklist" id="endChecklist">
+                            <label class="check"><input type="checkbox" /><span>Endingku punya <b>tanda
+                                        selesai</b>.</span></label>
+                            <label class="check"><input type="checkbox" /><span>Endingku tidak mendadak
+                                    putus.</span></label>
+                            <label class="check"><input type="checkbox" /><span>Penonton bisa paham ceritaku
+                                    selesai.</span></label>
+                            <label class="check"><input type="checkbox" /><span>Aku suka endingku 🙂</span></label>
+                        </div>
+                        <div class="row" style="margin-top:12px;">
+                            <button class="btn good" id="checkDone">Cek ✅</button>
+                            <button class="btn" id="checkReset">Reset</button>
+                        </div>
+                        <div class="highlight" id="checkMsg" style="margin-top:12px;">Target: centang minimal 3 ya 🙂
+                        </div>
+                    </div>
+
+                    <div class="card">
+                        <h2>Kalimat laporan (mudah)</h2>
+                        <div class="highlight" id="reportHint">
+                            “Endingku adalah ____ karena ____.”
+                        </div>
+                        <div class="row">
+                            <button class="btn primary" data-fill="Say &quot;Selesai!&quot;">Say “Selesai!”</button>
+                            <button class="btn primary" data-fill="Pose terakhir">Pose terakhir</button>
+                            <button class="btn primary" data-fill="Bye + Hilang">Bye + Hilang</button>
+                            <button class="btn" id="clearReport">Reset</button>
+                        </div>
+                        <div class="row" style="margin-top:10px;">
+                            <button class="btn good" data-reason="supaya jelas selesai">supaya jelas selesai</button>
+                            <button class="btn good" data-reason="biar ceritanya rapi">biar ceritanya rapi</button>
+                            <button class="btn good" data-reason="biar penonton tidak bingung">biar penonton tidak
+                                bingung</button>
+                            <button class="btn" id="clearReason">Reset alasan</button>
+                        </div>
+                        <div class="tip" id="reportOut" style="margin-top:12px;">Klik pilihan ending + alasan 🙂</div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Slide 11 -->
+        <section class="slide">
+            <div class="slide-content">
+                <div class="grid">
+                    <div class="card">
+                        <h2>Siap ke ScratchJr! 🚀</h2>
+                        <p>Langkah sederhana membuat ending di ScratchJr:</p>
+                        <div class="highlight">
+                            1) Susun cerita (Awal–Tengah–Akhir)<br>
+                            2) Pilih ending (Say / Pose / Stop)<br>
+                            3) Tambahkan blok ending di bagian terakhir
+                        </div>
+                        <div class="warn">Ingat: ending ada di bagian paling akhir ya.</div>
+                        <div class="tip">Kalau waktunya sempit, ending paling gampang: <b>Say “Selesai!” + Stop</b>.
+                        </div>
+                    </div>
+
+                    <div class="card">
+                        <h2> Menyusun kode ending di ScratchJr</h2>
+                        <div class="imgph">
+                            <div class="box">
+                                <img src="https://uob-1328237036.cos.ap-singapore.myqcloud.com//file-uploader/images/4b15ec32-6492-4fca-b05b-91e52ef40d19.png" alt="Langkah membuat ending di ScratchJr">
+                            </div>
+                            
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Slide 12 -->
+        <section class="slide">
+            <div class="slide-content">
+                <div class="card">
+                    <h2>Refleksi 🌟</h2>
+                    <p>Jawab cepat ya:</p>
+
+                    <div class="highlight" id="reflectQ">
+                        Ending itu penting karena ____.
+                    </div>
+
+                    <div class="row" style="margin-top:12px;">
+                        <button class="btn primary" data-ref="biar penonton paham ceritanya selesai">Biar paham
+                            selesai</button>
+                        <button class="btn primary" data-ref="biar cerita rapi">Biar rapi</button>
+                        <button class="btn primary" data-ref="biar tidak bingung">Biar tidak bingung</button>
+                        <button class="btn" id="refReset">Reset</button>
+                    </div>
+
+                    <div class="tip" id="reflectOut" style="margin-top:12px;">Klik salah satu 🙂</div>
+
+                    <div class="warn" style="margin-top:12px;">
+                        Besok/lanjut: kita bisa bikin animasi mini project yang lengkap 🎬
+                    </div>
+
+                    <div class="row" style="margin-top:12px;">
+                        <button class="btn good" data-toast="Hebat! Ending membuat cerita terasa selesai 🎉">Aku paham
+                            ✅</button>
+                        <button class="btn" data-toast="Ingat: Awal–Tengah–Akhir ya 🙂">Aku ingat 🙂</button>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <div class="nav">
+        <button class="btn" id="prevBtn">⬅️ Sebelumnya</button>
+        <div class="counter" id="counter">1 / 12</div>
+        <button class="btn primary" id="nextBtn">➡️ Berikutnya</button>
+    </div>
+
+    <div class="toast" id="toast"></div>
+
+    <script>
+        /* ---------------- Toast ---------------- */
+        const toast = document.getElementById("toast");
+        let toastTimer = null;
+        function showToast(msg) {
+            toast.textContent = msg;
+            toast.classList.add("show");
+            clearTimeout(toastTimer);
+            toastTimer = setTimeout(() => toast.classList.remove("show"), 1600);
+        }
+        document.querySelectorAll("[data-toast]").forEach(el => {
+            el.addEventListener("click", () => showToast(el.dataset.toast));
+        });
+
+        /* ---------------- Access Gate ---------------- */
+        const ACCESS_CODE = "RGMDSLP25";
+        const gate = document.getElementById("gate");
+        const codeInput = document.getElementById("codeInput");
+        const unlockBtn = document.getElementById("unlockBtn");
+        const hintBtn = document.getElementById("hintBtn");
+
+        function unlock() {
+            const val = (codeInput.value || "").trim().toUpperCase();
+            if (val === ACCESS_CODE) {
+                localStorage.setItem("LP_S19_UNLOCKED", "1");
+                gate.style.display = "none";
+                showToast("Materi terbuka ✅");
+            } else {
+                showToast("Kode salah. Coba lagi 🙂");
+                codeInput.focus();
+                codeInput.select();
+            }
+        }
+        unlockBtn.addEventListener("click", unlock);
+        codeInput.addEventListener("keydown", (e) => { if (e.key === "Enter") unlock(); });
+        hintBtn.addEventListener("click", () => showToast("Petunjuk: kodenya diawali RGM... dan ada angka 25"));
+
+        if (localStorage.getItem("LP_S19_UNLOCKED") === "1") {
+            gate.style.display = "none";
+        } else {
+            setTimeout(() => codeInput.focus(), 250);
+        }
+
+        /* ---------------- Slides ---------------- */
+        const slides = Array.from(document.querySelectorAll(".slide"));
+        const bar = document.getElementById("bar");
+        const counter = document.getElementById("counter");
+        const prevBtn = document.getElementById("prevBtn");
+        const nextBtn = document.getElementById("nextBtn");
+        let idx = 0;
+
+        function render() {
+            slides.forEach((s, i) => s.classList.toggle("active", i === idx));
+            counter.textContent = `${idx + 1} / ${slides.length}`;
+            bar.style.width = `${((idx + 1) / slides.length) * 100}%`;
+            prevBtn.disabled = idx === 0;
+            nextBtn.disabled = idx === slides.length - 1;
+
+            const activeContent = document.querySelector(".slide.active .slide-content");
+            if (activeContent) activeContent.scrollTop = 0;
+        }
+        function next() { if (idx < slides.length - 1) { idx++; render(); } }
+        function prev() { if (idx > 0) { idx--; render(); } }
+        prevBtn.addEventListener("click", prev);
+        nextBtn.addEventListener("click", next);
+
+        document.addEventListener("keydown", (e) => {
+            if (gate.style.display !== "none") return;
+            const tag = (e.target && e.target.tagName) ? e.target.tagName.toLowerCase() : "";
+            if (["input", "textarea", "select"].includes(tag)) return;
+
+            if (e.key === "ArrowRight" || e.key === " " || e.key === "PageDown") { e.preventDefault(); next(); }
+            if (e.key === "ArrowLeft" || e.key === "PageUp") { e.preventDefault(); prev(); }
+            if (e.key === "Home") { e.preventDefault(); idx = 0; render(); }
+            if (e.key === "End") { e.preventDefault(); idx = slides.length - 1; render(); }
+        });
+
+        render();
+
+        /* ---------------- Slide 4: Story Builder ---------------- */
+        const pickedText = document.getElementById("pickedText");
+        const storyHint = document.getElementById("storyHint");
+        const slotAwal = document.getElementById("slotAwal");
+        const slotTengah = document.getElementById("slotTengah");
+        const slotAkhir = document.getElementById("slotAkhir");
+
+        let selected = "";
+        let story = { awal: "", tengah: "", akhir: "" };
+
+        function setPicked(t) {
+            selected = t;
+            if (pickedText) pickedText.innerHTML = `Kalimat dipilih: <b>${t}</b>`;
+        }
+        document.querySelectorAll(".chip[data-text]").forEach(ch => {
+            ch.addEventListener("click", () => setPicked(ch.dataset.text));
+        });
+
+        function putTo(part) {
+            if (!selected) {
+                showToast("Pilih kalimat dulu 🙂");
+                return;
+            }
+            story[part] = selected;
+            updateSlots();
+            showToast(`Masuk ke ${part.toUpperCase()} ✅`);
+        }
+        function updateSlots() {
+            slotAwal.textContent = story.awal || "____";
+            slotTengah.textContent = story.tengah || "____";
+            slotAkhir.textContent = story.akhir || "____";
+        }
+
+        const setToAwal = document.getElementById("setToAwal");
+        const setToTengah = document.getElementById("setToTengah");
+        const setToAkhir = document.getElementById("setToAkhir");
+        if (setToAwal) setToAwal.addEventListener("click", () => putTo("awal"));
+        if (setToTengah) setToTengah.addEventListener("click", () => putTo("tengah"));
+        if (setToAkhir) setToAkhir.addEventListener("click", () => putTo("akhir"));
+
+        document.querySelectorAll("[data-clear]").forEach(btn => {
+            btn.addEventListener("click", () => {
+                const part = btn.dataset.clear;
+                story[part] = "";
+                updateSlots();
+                showToast("Dihapus 🙂");
+            });
+        });
+
+        document.getElementById("resetStoryBtn").addEventListener("click", () => {
+            story = { awal: "", tengah: "", akhir: "" };
+            selected = "";
+            updateSlots();
+            if (pickedText) pickedText.textContent = "Kalimat dipilih: ____";
+            if (storyHint) storyHint.textContent = "Target: Isi semua bagian ya 🙂";
+            showToast("Reset ✅");
+        });
+
+        document.getElementById("checkStoryBtn").addEventListener("click", () => {
+            const ok = story.awal && story.tengah && story.akhir;
+            if (ok) {
+                storyHint.innerHTML = `✅ Cerita lengkap!<br><b>Awal</b>: ${story.awal}<br><b>Tengah</b>: ${story.tengah}<br><b>Akhir</b>: ${story.akhir}`;
+                showToast("Mantap! Ceritamu lengkap 🎉");
+            } else {
+                storyHint.textContent = "Masih ada yang kosong. Isi Awal–Tengah–Akhir ya 🙂";
+                showToast("Belum lengkap 🙂");
+            }
+        });
+
+        updateSlots();
+
+        /* ---------------- Slide 7: Good/Bad ending quiz ---------------- */
+        const endQ = document.getElementById("endQ");
+        const endAnsMsg = document.getElementById("endAnsMsg");
+        const ansGood = document.getElementById("ansGood");
+        const ansBad = document.getElementById("ansBad");
+        const ansNext = document.getElementById("ansNext");
+
+        const endQuestions = [
+            { q: 'Cerita: Sprite jalan, lalu <b>bilang “Dadah!”</b> dan berhenti rapi.', good: true, why: "✅ Ada tanda selesai (ucapan penutup) dan stop rapi." },
+            { q: 'Cerita: Sprite lompat, lalu… <b>tiba-tiba berhenti</b>.', good: false, why: "❌ Mendadak putus, penonton bingung." },
+            { q: 'Cerita: Sprite sampai rumah, lalu <b>pose senyum</b> dan berhenti.', good: true, why: "✅ Tujuan tercapai, ada pose terakhir yang jelas." },
+            { q: 'Cerita: Sprite bergerak terus, <b>tidak pernah selesai</b>.', good: false, why: "❌ Tidak ada ending. Cerita terasa belum berakhir." }
+        ];
+        let eqi = 1; // kita start dengan soal yang “mendadak berhenti” sesuai teks awal
+
+        function showEndQ(i) {
+            const item = endQuestions[i];
+            endQ.innerHTML = item.q + "<br>Ini ending yang…";
+            endAnsMsg.textContent = "Klik jawaban ya 🙂";
+        }
+        function answer(isGood) {
+            const item = endQuestions[eqi];
+            const correct = (isGood === item.good);
+            endAnsMsg.innerHTML = correct ? item.why : "Belum 🙂 Coba pikir: ada tanda selesai tidak?";
+            showToast(correct ? "Benar ✅" : "Coba lagi 🙂");
+        }
+        if (ansGood) ansGood.addEventListener("click", () => answer(true));
+        if (ansBad) ansBad.addEventListener("click", () => answer(false));
+        if (ansNext) ansNext.addEventListener("click", () => {
+            eqi = (eqi + 1) % endQuestions.length;
+            showEndQ(eqi);
+        });
+        showEndQ(eqi);
+
+        /* ---------------- Slide 9: Ending simulation ---------------- */
+        const stage = document.getElementById("stage");
+        const sprite = document.getElementById("sprite");
+        const bubble = document.getElementById("bubble");
+        const endScreen = document.getElementById("endScreen");
+        const endTitle = document.getElementById("endTitle");
+        const endSub = document.getElementById("endSub");
+        const closeEnd = document.getElementById("closeEnd");
+        const playStory = document.getElementById("playStory");
+        const resetStage = document.getElementById("resetStage");
+        const simMsg = document.getElementById("simMsg");
+
+        let chosenEnd = ""; // say | pose | fade
+        let playing = false;
+        let x = 80;
+        let baseBottom = 120;
+
+        function showBubble(text) {
+            bubble.textContent = text;
+            const sRect = sprite.getBoundingClientRect();
+            const parent = stage.getBoundingClientRect();
+            const xPos = (sRect.left - parent.left) + (sRect.width / 2) - 140;
+            const yPos = (sRect.top - parent.top) - 60;
+            bubble.style.left = Math.max(12, Math.min(xPos, parent.width - 332)) + "px";
+            bubble.style.top = Math.max(56, yPos) + "px";
+            bubble.classList.add("show");
+            setTimeout(() => bubble.classList.remove("show"), 1100);
+        }
+
+        document.querySelectorAll("[data-end]").forEach(btn => {
+            btn.addEventListener("click", () => {
+                chosenEnd = btn.dataset.end;
+                if (simMsg) {
+                    const label = chosenEnd === "say" ? 'Say “Selesai!”' : chosenEnd === "pose" ? "Pose terakhir" : "Bye + Hilang";
+                    simMsg.innerHTML = `✅ Kamu pilih: <b>${label}</b>. Sekarang klik <b>Mainkan Cerita</b>.`;
+                }
+                showToast("Ending dipilih ✅");
+            });
+        });
+
+        function resetSim() {
+            playing = false;
+            x = 80;
+            sprite.style.left = x + "px";
+            sprite.style.bottom = baseBottom + "px";
+            sprite.style.opacity = "1";
+            sprite.textContent = "🦊";
+            endScreen.classList.remove("show");
+            if (simMsg && chosenEnd === "") simMsg.textContent = "Pilih salah satu ending dulu ya 🙂";
+        }
+
+        function wait(ms) { return new Promise(res => setTimeout(res, ms)); }
+
+        async function playSim() {
+            if (playing) return;
+            if (!chosenEnd) {
+                showToast("Pilih ending dulu 🙂");
+                return;
+            }
+            playing = true;
+            endScreen.classList.remove("show");
+
+            // Awal
+            showBubble("Halo! Aku mulai cerita 🙂");
+            await wait(900);
+
+            // Tengah: jalan + lompat kecil
+            for (let i = 0; i < 6; i++) {
+                x += 45;
+                sprite.style.left = x + "px";
+                // lompat kecil
+                sprite.style.bottom = (baseBottom + 40) + "px";
+                await wait(160);
+                sprite.style.bottom = baseBottom + "px";
+                await wait(160);
+            }
+            showBubble("Aku sudah sampai! 🎯");
+            await wait(850);
+
+            // Akhir (Ending)
+            if (chosenEnd === "say") {
+                showBubble("Selesai! Dadah! 👋");
+                await wait(900);
+                endTitle.textContent = "Selesai! 🎉";
+                endSub.textContent = "Ending: Say “Selesai!”";
+                endScreen.classList.add("show");
+            } else if (chosenEnd === "pose") {
+                sprite.textContent = "😄";
+                showBubble("Pose terakhir!");
+                await wait(850);
+                endTitle.textContent = "Tamat! 🌟";
+                endSub.textContent = "Ending: Pose terakhir";
+                endScreen.classList.add("show");
+            } else { // fade
+                showBubble("Dadah!");
+                await wait(700);
+                sprite.style.opacity = "0";
+                await wait(350);
+                endTitle.textContent = "Tamat! 👋";
+                endSub.textContent = "Ending: Bye + Hilang";
+                endScreen.classList.add("show");
+            }
+
+            playing = false;
+        }
+
+        playStory.addEventListener("click", playSim);
+        resetStage.addEventListener("click", () => {
+            resetSim();
+            showToast("Reset 🙂");
+        });
+        closeEnd.addEventListener("click", () => {
+            endScreen.classList.remove("show");
+        });
+
+        resetSim();
+
+        /* ---------------- Slide 10: Checklist ---------------- */
+        const endChecklist = Array.from(document.querySelectorAll("#endChecklist .check"));
+        const checkMsg = document.getElementById("checkMsg");
+        const checkDone = document.getElementById("checkDone");
+        const checkReset = document.getElementById("checkReset");
+
+        endChecklist.forEach(item => {
+            item.addEventListener("click", (e) => {
+                const cb = item.querySelector("input[type='checkbox']");
+                if (e.target.tagName.toLowerCase() !== "input") {
+                    cb.checked = !cb.checked;
+                }
+                item.classList.toggle("done", cb.checked);
+            });
+        });
+
+        checkReset.addEventListener("click", () => {
+            endChecklist.forEach(item => {
+                const cb = item.querySelector("input");
+                cb.checked = false;
+                item.classList.remove("done");
+            });
+            checkMsg.textContent = "Target: centang minimal 3 ya 🙂";
+            showToast("Checklist di-reset.");
+        });
+
+        checkDone.addEventListener("click", () => {
+            const checked = endChecklist.filter(i => i.querySelector("input").checked).length;
+            if (checked >= 3) {
+                checkMsg.textContent = `Mantap! Kamu centang ${checked}/4 ✅`;
+                showToast("Siap ke ScratchJr! 🚀");
+            } else {
+                checkMsg.textContent = `Masih ${checked}/4. Ayo minimal 3 🙂`;
+                showToast("Tambah centang ya 🙂");
+            }
+        });
+
+        /* ---------------- Slide 10: Report builder ---------------- */
+        const reportHint = document.getElementById("reportHint");
+        const reportOut = document.getElementById("reportOut");
+        let chosenEndingText = "";
+        let chosenReasonText = "";
+
+        function renderReport() {
+            const a = chosenEndingText || "____";
+            const b = chosenReasonText || "____";
+            reportHint.innerHTML = `“Endingku adalah <b>${a}</b> karena <b>${b}</b>.”`;
+            if (chosenEndingText && chosenReasonText) {
+                reportOut.textContent = "✅ Kalimatmu sudah lengkap!";
+            } else {
+                reportOut.textContent = "Klik pilihan ending + alasan 🙂";
+            }
+        }
+        document.querySelectorAll("[data-fill]").forEach(btn => {
+            btn.addEventListener("click", () => {
+                chosenEndingText = btn.dataset.fill;
+                renderReport();
+                showToast("Ending dipilih ✅");
+            });
+        });
+        document.querySelectorAll("[data-reason]").forEach(btn => {
+            btn.addEventListener("click", () => {
+                chosenReasonText = btn.dataset.reason;
+                renderReport();
+                showToast("Alasan dipilih ✅");
+            });
+        });
+
+        document.getElementById("clearReport").addEventListener("click", () => {
+            chosenEndingText = "";
+            renderReport();
+            showToast("Reset ending 🙂");
+        });
+        document.getElementById("clearReason").addEventListener("click", () => {
+            chosenReasonText = "";
+            renderReport();
+            showToast("Reset alasan 🙂");
+        });
+        renderReport();
+
+        /* ---------------- Slide 12: Reflection ---------------- */
+        const reflectOut = document.getElementById("reflectOut");
+        document.querySelectorAll("[data-ref]").forEach(btn => {
+            btn.addEventListener("click", () => {
+                reflectOut.innerHTML = `✅ Ending penting karena <b>${btn.dataset.ref}</b>.`;
+                showToast("Bagus ✅");
+            });
+        });
+        document.getElementById("refReset").addEventListener("click", () => {
+            reflectOut.textContent = "Klik salah satu 🙂";
+            showToast("Reset 🙂");
+        });
+    </script>
+
+</body>
+
+</html>
