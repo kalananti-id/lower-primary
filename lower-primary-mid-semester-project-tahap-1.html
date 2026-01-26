@@ -1,0 +1,1668 @@
+<!DOCTYPE html>
+<html lang="id">
+
+<head>
+    <meta charset="UTF-8" />
+    <title>Sesi Proyek Mandiri (LP) – Tahap 1 ScratchJr: Rencana Cerita</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <style>
+        :root {
+            /* Palette: Mint + Sky (Lower Primary friendly) */
+            --bg: #ecfeff;
+            /* cyan-50 */
+            --bg-soft: #f0fdfa;
+            /* teal-50 */
+            --accent: #14b8a6;
+            /* teal-500 */
+            --accent-soft: rgba(20, 184, 166, 0.12);
+            --accent-strong: #6366f1;
+            /* indigo-500 (pop) */
+            --text-main: #0f172a;
+            /* slate-900 */
+            --text-soft: #475569;
+            /* slate-600 */
+            --card: #ffffff;
+            --danger: #ef4444;
+            --success: #16a34a;
+            --radius-xl: 24px;
+            --shadow-soft: 0 18px 45px rgba(20, 184, 166, 0.22);
+            --transition-fast: 0.2s ease-out;
+            --transition-med: 0.35s ease-out;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+            background: radial-gradient(circle at top, #cffafe 0, #ecfeff 45%, #f0fdfa 100%);
+            color: var(--text-main);
+            min-height: 100vh;
+            display: flex;
+            align-items: stretch;
+            justify-content: center;
+            padding: 16px;
+        }
+
+        .deck {
+            position: relative;
+            width: 100%;
+            max-width: 1120px;
+            background: linear-gradient(135deg, #f8fafc, #ecfeff 40%, #f0fdfa 100%);
+            border-radius: 32px;
+            padding: 20px 20px 18px;
+            box-shadow: var(--shadow-soft);
+            overflow: hidden;
+            border: 1px solid rgba(20, 184, 166, 0.35);
+        }
+
+        /* Floating shapes */
+        .floating-shape {
+            position: absolute;
+            border-radius: 999px;
+            filter: blur(28px);
+            opacity: 0.45;
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        .floating-shape.a {
+            width: 260px;
+            height: 260px;
+            background: #67e8f9;
+            /* cyan-300 */
+            top: -80px;
+            right: -60px;
+            animation: float1 14s infinite alternate ease-in-out;
+        }
+
+        .floating-shape.b {
+            width: 220px;
+            height: 220px;
+            background: #a7f3d0;
+            /* emerald-200 */
+            bottom: -70px;
+            left: -40px;
+            animation: float2 18s infinite alternate ease-in-out;
+        }
+
+        .floating-shape.c {
+            width: 180px;
+            height: 180px;
+            background: rgba(99, 102, 241, 0.35);
+            /* indigo pop */
+            top: 40px;
+            left: -60px;
+            animation: float3 16s infinite alternate ease-in-out;
+        }
+
+        @keyframes float1 {
+            0% {
+                transform: translate3d(0, 0, 0);
+            }
+
+            100% {
+                transform: translate3d(-40px, 35px, 0);
+            }
+        }
+
+        @keyframes float2 {
+            0% {
+                transform: translate3d(0, 0, 0);
+            }
+
+            100% {
+                transform: translate3d(50px, -25px, 0);
+            }
+        }
+
+        @keyframes float3 {
+            0% {
+                transform: translate3d(0, 0, 0);
+            }
+
+            100% {
+                transform: translate3d(35px, 20px, 0);
+            }
+        }
+
+        header.deck-header {
+            position: relative;
+            z-index: 1;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 16px;
+            padding: 4px 4px 10px;
+            border-bottom: 1px solid rgba(20, 184, 166, 0.35);
+            gap: 12px;
+        }
+
+        .title-block {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+        }
+
+        .title-pill {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            background: rgba(255, 255, 255, 0.9);
+            border-radius: 999px;
+            padding: 4px 10px;
+            font-size: 11px;
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            color: var(--text-soft);
+            border: 1px solid rgba(20, 184, 166, 0.35);
+        }
+
+        .title-pill-dot {
+            width: 7px;
+            height: 7px;
+            border-radius: 999px;
+            background: #22c55e;
+            box-shadow: 0 0 16px rgba(34, 197, 94, 0.55);
+        }
+
+        .main-title {
+            font-size: 20px;
+            font-weight: 800;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            color: #0f172a;
+        }
+
+        .main-title span.badge {
+            font-size: 11px;
+            text-transform: uppercase;
+            padding: 3px 8px;
+            border-radius: 999px;
+            border: 1px solid rgba(99, 102, 241, 0.45);
+            color: #3730a3;
+            background: rgba(99, 102, 241, 0.12);
+        }
+
+        .subtitle {
+            font-size: 13px;
+            color: var(--text-soft);
+        }
+
+        .meta {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-end;
+            gap: 4px;
+            font-size: 11px;
+            color: var(--text-soft);
+        }
+
+        .meta-row {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .pill {
+            border-radius: 999px;
+            padding: 4px 8px;
+            background: rgba(255, 255, 255, 0.85);
+            border: 1px solid rgba(20, 184, 166, 0.35);
+        }
+
+        .progress-bar {
+            position: relative;
+            height: 4px;
+            border-radius: 999px;
+            background: rgba(20, 184, 166, 0.16);
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            position: absolute;
+            inset: 0;
+            width: 0%;
+            background: linear-gradient(90deg, #14b8a6, #6366f1);
+            transition: width var(--transition-med);
+        }
+
+        .content {
+            position: relative;
+            z-index: 1;
+            margin-top: 14px;
+            display: flex;
+            gap: 14px;
+            min-height: 440px;
+        }
+
+        .sidebar {
+            width: 240px;
+            background: radial-gradient(circle at top left, rgba(255, 255, 255, 0.9), rgba(236, 254, 255, 0.9));
+            border-radius: var(--radius-xl);
+            padding: 14px 12px;
+            border: 1px solid rgba(20, 184, 166, 0.35);
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .sidebar-section-title {
+            font-size: 12px;
+            text-transform: uppercase;
+            letter-spacing: 0.12em;
+            color: var(--text-soft);
+        }
+
+        .slide-indicator {
+            font-size: 26px;
+            font-weight: 900;
+            color: var(--accent);
+            display: flex;
+            align-items: baseline;
+            gap: 3px;
+        }
+
+        .slide-indicator small {
+            font-size: 11px;
+            text-transform: uppercase;
+            color: var(--text-soft);
+        }
+
+        .sidebar-main {
+            font-size: 14px;
+            font-weight: 800;
+            color: #0f172a;
+        }
+
+        .sidebar-text {
+            font-size: 12px;
+            color: var(--text-soft);
+            line-height: 1.5;
+        }
+
+        .sidebar-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 4px;
+            margin-top: 4px;
+        }
+
+        .sidebar-tag {
+            font-size: 10px;
+            padding: 3px 7px;
+            border-radius: 999px;
+            border: 1px solid rgba(20, 184, 166, 0.35);
+            color: var(--text-soft);
+            background: rgba(255, 255, 255, 0.8);
+        }
+
+        .sidebar-hint {
+            margin-top: auto;
+            font-size: 11px;
+            color: var(--text-soft);
+            border-top: 1px dashed rgba(20, 184, 166, 0.35);
+            padding-top: 6px;
+        }
+
+        .sidebar-hint span {
+            color: var(--accent-strong);
+            font-weight: 700;
+        }
+
+        .slides-wrapper {
+            flex: 1;
+            background: radial-gradient(circle at top, rgba(255, 255, 255, 0.55), rgba(236, 254, 255, 0.75) 55%, rgba(240, 253, 250, 0.85));
+            border-radius: var(--radius-xl);
+            border: 1px solid rgba(20, 184, 166, 0.28);
+            padding: 16px 18px 14px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .slide {
+            display: none;
+            opacity: 0;
+            transform: translateX(10px) translateY(4px);
+            transition: opacity var(--transition-med), transform var(--transition-med);
+            position: absolute;
+            inset: 16px 18px 56px 18px;
+            overflow-y: auto;
+            padding-right: 6px;
+        }
+
+        .slide.active {
+            display: block;
+            opacity: 1;
+            transform: translateX(0) translateY(0);
+        }
+
+        .slide h2 {
+            font-size: 20px;
+            margin-bottom: 8px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            color: #0f172a;
+        }
+
+        .slide h2 .emoji {
+            font-size: 22px;
+        }
+
+        .subtitle-slide {
+            font-size: 13px;
+            color: var(--text-soft);
+            margin-bottom: 14px;
+            line-height: 1.6;
+        }
+
+        .pill-row {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 6px;
+            margin-bottom: 12px;
+        }
+
+        .pill-chip {
+            font-size: 11px;
+            padding: 4px 9px;
+            border-radius: 999px;
+            background: rgba(255, 255, 255, 0.86);
+            border: 1px solid rgba(20, 184, 166, 0.35);
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+            color: var(--text-soft);
+        }
+
+        .pill-chip span.dot {
+            width: 6px;
+            height: 6px;
+            border-radius: 999px;
+            background: var(--accent);
+        }
+
+        .slide section {
+            margin-bottom: 14px;
+        }
+
+        .slide section h3 {
+            font-size: 15px;
+            margin-bottom: 6px;
+            color: #0f172a;
+        }
+
+        .slide p {
+            font-size: 13px;
+            color: var(--text-soft);
+            line-height: 1.6;
+        }
+
+        .list {
+            margin-top: 4px;
+            padding-left: 18px;
+            font-size: 13px;
+            color: var(--text-soft);
+        }
+
+        .list li {
+            margin-bottom: 4px;
+        }
+
+        .card {
+            border-radius: 16px;
+            border: 1px solid rgba(20, 184, 166, 0.35);
+            padding: 10px 12px;
+            background: var(--card);
+            margin-top: 4px;
+            box-shadow: 0 8px 18px rgba(20, 184, 166, 0.12);
+        }
+
+        .two-cols {
+            display: grid;
+            grid-template-columns: minmax(0, 1.2fr) minmax(0, 1fr);
+            gap: 10px;
+        }
+
+        .badge-soft {
+            display: inline-flex;
+            font-size: 11px;
+            padding: 3px 7px;
+            border-radius: 999px;
+            background: rgba(20, 184, 166, 0.10);
+            color: #0f766e;
+            border: 1px solid rgba(20, 184, 166, 0.35);
+            font-weight: 700;
+        }
+
+        .checklist {
+            list-style: none;
+            margin-top: 6px;
+        }
+
+        .checklist li {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 6px;
+            font-size: 13px;
+            color: var(--text-soft);
+        }
+
+        .checklist input[type="checkbox"] {
+            width: 16px;
+            height: 16px;
+            border-radius: 4px;
+            border: 1px solid rgba(20, 184, 166, 0.45);
+            background: transparent;
+            accent-color: var(--accent);
+        }
+
+        /* Simple form styles */
+        .form-grid {
+            display: grid;
+            gap: 10px;
+        }
+
+        .field label {
+            display: block;
+            font-size: 12px;
+            color: var(--text-soft);
+            margin-bottom: 4px;
+            font-weight: 700;
+        }
+
+        .field input[type="text"],
+        .field textarea {
+            width: 100%;
+            border: 1px solid rgba(20, 184, 166, 0.35);
+            border-radius: 12px;
+            padding: 10px 10px;
+            font-size: 13px;
+            outline: none;
+            background: rgba(255, 255, 255, 0.9);
+            color: var(--text-main);
+            transition: border-color var(--transition-fast), box-shadow var(--transition-fast);
+        }
+
+        .field textarea {
+            min-height: 88px;
+            resize: vertical;
+        }
+
+        .field input[type="text"]:focus,
+        .field textarea:focus {
+            border-color: rgba(99, 102, 241, 0.55);
+            box-shadow: 0 0 0 4px rgba(99, 102, 241, 0.10);
+        }
+
+        .choice-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 8px;
+            margin-top: 4px;
+        }
+
+        .choice {
+            border: 1px solid rgba(20, 184, 166, 0.35);
+            background: rgba(255, 255, 255, 0.85);
+            border-radius: 999px;
+            padding: 8px 10px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            transition: transform 0.08s ease-out, border-color var(--transition-fast), background var(--transition-fast);
+            font-size: 12px;
+            color: var(--text-soft);
+            user-select: none;
+        }
+
+        .choice:hover {
+            transform: translateY(-1px);
+            border-color: rgba(20, 184, 166, 0.65);
+        }
+
+        .choice input {
+            accent-color: var(--accent);
+        }
+
+        .choice.selected {
+            border-color: rgba(99, 102, 241, 0.6);
+            background: rgba(99, 102, 241, 0.10);
+            color: #1f2a6d;
+            font-weight: 700;
+        }
+
+        .btn-row {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-top: 10px;
+        }
+
+        .btn {
+            border-radius: 999px;
+            border: 1px solid rgba(20, 184, 166, 0.45);
+            background: rgba(255, 255, 255, 0.92);
+            padding: 6px 12px;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 12px;
+            color: var(--text-main);
+            cursor: pointer;
+            transition: background var(--transition-fast), transform 0.1s ease-out, box-shadow 0.1s ease-out, border-color 0.1s ease-out;
+            font-weight: 700;
+        }
+
+        .btn span.icon {
+            font-size: 14px;
+        }
+
+        .btn.primary {
+            border-color: rgba(99, 102, 241, 0.6);
+            background: linear-gradient(135deg, rgba(99, 102, 241, 0.25), rgba(20, 184, 166, 0.25));
+            color: #0f172a;
+            box-shadow: 0 12px 22px rgba(99, 102, 241, 0.12);
+        }
+
+        .btn:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 12px 24px rgba(20, 184, 166, 0.18);
+        }
+
+        .footer-nav {
+            position: absolute;
+            inset-inline: 18px;
+            bottom: 14px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            z-index: 2;
+            gap: 10px;
+        }
+
+        .slide-dots {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            font-size: 10px;
+            color: var(--text-soft);
+        }
+
+        .slide-dot {
+            width: 7px;
+            height: 7px;
+            border-radius: 999px;
+            border: 1px solid rgba(20, 184, 166, 0.45);
+            cursor: pointer;
+            opacity: 0.6;
+            transition: background var(--transition-fast), opacity var(--transition-fast), transform 0.1s ease-out, border-color var(--transition-fast);
+            background: rgba(255, 255, 255, 0.85);
+        }
+
+        .slide-dot.active {
+            background: var(--accent-strong);
+            border-color: var(--accent-strong);
+            opacity: 1;
+            transform: scale(1.2);
+        }
+
+        .slide-counter-text {
+            font-size: 11px;
+            color: var(--text-soft);
+        }
+
+        /* Quiz */
+        .quiz-wrapper {
+            display: grid;
+            grid-template-columns: minmax(0, 1.2fr) minmax(0, 1fr);
+            gap: 12px;
+        }
+
+        .quiz-question {
+            margin-bottom: 8px;
+            padding-bottom: 6px;
+            border-bottom: 1px dashed rgba(20, 184, 166, 0.35);
+        }
+
+        .quiz-question:last-child {
+            border-bottom: none;
+        }
+
+        .quiz-question-title {
+            font-size: 13px;
+            margin-bottom: 6px;
+            color: #0f172a;
+            font-weight: 800;
+        }
+
+        .quiz-options {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+
+        .quiz-option {
+            font-size: 12px;
+            padding: 7px 10px;
+            border-radius: 999px;
+            border: 1px solid rgba(20, 184, 166, 0.45);
+            cursor: pointer;
+            background: rgba(255, 255, 255, 0.9);
+            transition: background var(--transition-fast), border-color var(--transition-fast), transform 0.08s ease-out;
+            color: var(--text-soft);
+            user-select: none;
+        }
+
+        .quiz-option:hover {
+            transform: translateY(-1px);
+            border-color: rgba(99, 102, 241, 0.55);
+            background: rgba(99, 102, 241, 0.08);
+        }
+
+        .quiz-option.correct {
+            border-color: rgba(22, 163, 74, 0.95);
+            background: rgba(187, 247, 208, 0.9);
+            color: #166534;
+            font-weight: 800;
+        }
+
+        .quiz-option.wrong {
+            border-color: rgba(239, 68, 68, 0.95);
+            background: rgba(254, 202, 202, 0.9);
+            color: #b91c1c;
+            font-weight: 800;
+        }
+
+        .toast {
+            display: none;
+            margin-top: 10px;
+            font-size: 12px;
+            color: #0f766e;
+            border: 1px solid rgba(20, 184, 166, 0.35);
+            background: rgba(20, 184, 166, 0.10);
+            padding: 8px 10px;
+            border-radius: 12px;
+            font-weight: 800;
+        }
+
+        .toast.show {
+            display: block;
+        }
+
+        @media (max-width: 900px) {
+            .content {
+                flex-direction: column;
+                min-height: 0;
+            }
+
+            .sidebar {
+                width: 100%;
+                flex-direction: row;
+                flex-wrap: wrap;
+                gap: 6px 12px;
+                align-items: center;
+            }
+
+            .sidebar-hint {
+                margin-top: 0;
+                border-top: none;
+            }
+
+            .slides-wrapper {
+                min-height: 440px;
+            }
+
+            .slide {
+                inset: 12px 10px 70px 10px;
+            }
+
+            .quiz-wrapper {
+                grid-template-columns: minmax(0, 1fr);
+            }
+
+            .choice-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        /* Access gate */
+        .gate {
+            position: fixed;
+            inset: 0;
+            background: rgba(15, 23, 42, 0.55);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            padding: 16px;
+            z-index: 9999;
+        }
+
+        .gate.show {
+            display: flex;
+        }
+
+        .gate-card {
+            width: min(560px, 100%);
+            background: rgba(255, 255, 255, 0.95);
+            border: 1px solid rgba(20, 184, 166, 0.45);
+            border-radius: 22px;
+            box-shadow: 0 22px 70px rgba(15, 23, 42, 0.25);
+            padding: 16px 16px 14px;
+        }
+
+        .gate-title {
+            font-size: 18px;
+            font-weight: 900;
+            margin-bottom: 6px;
+            color: #0f172a;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .gate-sub {
+            font-size: 13px;
+            color: var(--text-soft);
+            line-height: 1.55;
+            margin-bottom: 10px;
+        }
+
+        .gate-row {
+            display: grid;
+            grid-template-columns: 1fr auto;
+            gap: 8px;
+            align-items: center;
+        }
+
+        .gate-input {
+            width: 100%;
+            border: 1px solid rgba(20, 184, 166, 0.45);
+            border-radius: 14px;
+            padding: 12px 12px;
+            font-size: 14px;
+            outline: none;
+            background: rgba(255, 255, 255, 0.95);
+            color: var(--text-main);
+            text-transform: uppercase;
+            /* auto uppercase visually */
+            letter-spacing: 0.06em;
+            font-weight: 900;
+        }
+
+        .gate-input:focus {
+            border-color: rgba(99, 102, 241, 0.55);
+            box-shadow: 0 0 0 4px rgba(99, 102, 241, 0.12);
+        }
+
+        .gate-note {
+            margin-top: 10px;
+            font-size: 12px;
+            padding: 8px 10px;
+            border-radius: 14px;
+            border: 1px solid rgba(20, 184, 166, 0.35);
+            background: rgba(20, 184, 166, 0.10);
+            color: #0f766e;
+            font-weight: 800;
+        }
+
+        .gate-note.error {
+            border-color: rgba(239, 68, 68, 0.55);
+            background: rgba(254, 202, 202, 0.75);
+            color: #b91c1c;
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- Access Code Gate -->
+    <div class="gate" id="accessGate" aria-hidden="true">
+        <div class="gate-card">
+            <div class="gate-title">🔒 Kode Akses</div>
+            <div class="gate-sub">
+                Masukkan kode akses untuk membuka materi.
+                <br><strong>Catatan:</strong> Huruf akan otomatis menjadi <strong>HURUF BESAR</strong>.
+            </div>
+
+            <div class="gate-row">
+                <input id="accessCodeInput" class="gate-input" type="text" placeholder="MASUKKAN KODE..."
+                    autocomplete="off" inputmode="text" />
+                <button class="btn primary" type="button" id="accessCodeBtn">
+                    <span class="icon">✅</span> Masuk
+                </button>
+            </div>
+
+            <div class="gate-note" id="accessNote">
+                Kode ini dari guru kamu.
+            </div>
+        </div>
+    </div>
+
+    <script>
+
+        // ===== Access Code Gate =====
+        const ACCESS_CODE = "RGMDSLP25";
+        const ACCESS_KEY = "lp_access_ok_rgmdslp25";
+
+        const accessGate = document.getElementById("accessGate");
+        const accessInput = document.getElementById("accessCodeInput");
+        const accessBtn = document.getElementById("accessCodeBtn");
+        const accessNote = document.getElementById("accessNote");
+
+        // Auto-uppercase (real value)
+        function forceUppercase(el) {
+            el.value = (el.value || "").toUpperCase();
+        }
+
+        function lockDeck() {
+            accessGate.classList.add("show");
+            accessGate.setAttribute("aria-hidden", "false");
+            document.body.style.overflow = "hidden";
+        }
+
+        function unlockDeck() {
+            accessGate.classList.remove("show");
+            accessGate.setAttribute("aria-hidden", "true");
+            document.body.style.overflow = "";
+        }
+
+        function validateCode() {
+            forceUppercase(accessInput);
+            const val = (accessInput.value || "").trim();
+            if (val === ACCESS_CODE) {
+                localStorage.setItem(ACCESS_KEY, "1");
+                accessNote.classList.remove("error");
+                accessNote.textContent = "Kode benar ✅ Materi terbuka.";
+                setTimeout(unlockDeck, 250);
+            } else {
+                accessNote.classList.add("error");
+                accessNote.textContent = "Kode salah ❌ Coba lagi ya.";
+            }
+        }
+
+        // Hook events
+        accessInput.addEventListener("input", () => forceUppercase(accessInput));
+        accessInput.addEventListener("keydown", (e) => {
+            if (e.key === "Enter") validateCode();
+        });
+        accessBtn.addEventListener("click", validateCode);
+
+        // Initial gate state
+        const ok = localStorage.getItem(ACCESS_KEY) === "1";
+        if (!ok) lockDeck();
+        else unlockDeck();
+    </script>
+
+    <div class="deck" data-total-slides="9">
+        <div class="floating-shape a"></div>
+        <div class="floating-shape b"></div>
+        <div class="floating-shape c"></div>
+
+        <header class="deck-header">
+            <div class="title-block">
+                <div class="title-pill">
+                    <span class="title-pill-dot"></span>
+                    Lower Primary (2–3 SD) • ScratchJr
+                </div>
+                <div class="main-title">
+                    Tahap 1: Rencana Cerita
+                    <span class="badge">Uang Jajan</span>
+                </div>
+                <p class="subtitle">
+                    Hari ini kamu akan merencanakan animasi ScratchJr bertema <strong>“Menggunakan Uang Jajan dengan
+                        Baik”</strong>.
+                </p>
+            </div>
+
+            <div class="meta">
+                <div class="meta-row">
+                    <span>Mode</span>
+                    <span class="pill">Interactive Slides • HTML</span>
+                </div>
+                <div class="meta-row">
+                    <span>Durasi</span>
+                    <span class="pill">± 60 menit</span>
+                </div>
+                <div class="meta-row" style="width: 180px;">
+                    <div class="progress-bar">
+                        <div class="progress-fill" id="progressFill"></div>
+                    </div>
+                </div>
+            </div>
+        </header>
+
+        <div class="content">
+            <!-- Sidebar -->
+            <aside class="sidebar">
+                <div>
+                    <div class="sidebar-section-title">Slide Saat Ini</div>
+                    <div class="slide-indicator">
+                        <span id="sidebarSlideNumber">1</span><small>/ 9</small>
+                    </div>
+                </div>
+
+                <div class="sidebar-main" id="sidebarMain">Selamat Datang</div>
+                <p class="sidebar-text" id="sidebarText">Kita akan membuat rencana cerita animasi ScratchJr.</p>
+
+                <div class="sidebar-tags">
+                    <span class="sidebar-tag">ScratchJr</span>
+                    <span class="sidebar-tag">Uang Jajan</span>
+                    <span class="sidebar-tag">Proyek Mandiri</span>
+                </div>
+
+                <p class="sidebar-hint">
+                    Pencet <span>←</span> / <span>→</span> atau tombol <span>Next</span>.
+                </p>
+            </aside>
+
+            <!-- Slides -->
+            <main class="slides-wrapper">
+
+                <!-- Slide 1: Cover -->
+                <article class="slide active" data-side-main="Selamat Datang"
+                    data-side-text="Kenalan dulu dengan proyek animasi ScratchJr tentang uang jajan.">
+                    <h2><span class="emoji">🎬</span> Proyek Animasi ScratchJr</h2>
+                    <p class="subtitle-slide">
+                        Dalam beberapa pertemuan ke depan, kamu akan membuat <strong>animasi ceritamu sendiri</strong>.
+                        Ceritanya tentang <strong>uang jajan</strong> dan cara menggunakannya dengan baik.
+                    </p>
+
+                    <section>
+                        <div class="pill-row">
+                            <span class="pill-chip"><span class="dot"></span> Cerita Sederhana</span>
+                            <span class="pill-chip"><span class="dot"></span> Gerak + Teks</span>
+                            <span class="pill-chip"><span class="dot"></span> Ide Kamu Sendiri</span>
+                        </div>
+                    </section>
+
+                    <section class="two-cols">
+                        <div>
+                            <h3>Tujuan Hari Ini</h3>
+                            <ul class="list">
+                                <li>Pilih <strong>tema</strong> dan <strong>judul</strong>.</li>
+                                <li>Tentukan <strong>tokoh</strong> di cerita.</li>
+                                <li>Buat alur <strong>Awal – Masalah – Akhir</strong>.</li>
+                                <li>Pilih <strong>pesan baik</strong> tentang uang.</li>
+                            </ul>
+                        </div>
+                        <div>
+                            <h3>Catatan</h3>
+                            <div class="card">
+                                <p style="margin-bottom:8px;">
+                                    Proyek ini harus dari <strong>ide kamu</strong> ya 😊
+                                </p>
+                                <span class="badge-soft">Tidak perlu sulit. Yang penting ceritanya jelas!</span>
+                            </div>
+                        </div>
+                    </section>
+                </article>
+
+                <!-- Slide 2: 4 tahap proyek -->
+                <article class="slide" data-side-main="Empat Tahap Proyek"
+                    data-side-text="Kamu akan melewati 4 tahap: ide → gambar → gerak → cerita selesai.">
+                    <h2><span class="emoji">🧭</span> 4 Tahap Proyek</h2>
+                    <p class="subtitle-slide">
+                        Ini peta perjalanan proyekmu. Hari ini kita fokus di <strong>Tahap 1</strong>.
+                    </p>
+
+                    <section class="card">
+                        <ol class="list">
+                            <li><strong>Tahap 1:</strong> Rencana cerita (tema, judul, tokoh, alur, pesan uang).</li>
+                            <li><strong>Tahap 2:</strong> Siapkan gambar (karakter, latar, teks).</li>
+                            <li><strong>Tahap 3:</strong> Gerakkan cerita (blok ScratchJr).</li>
+                            <li><strong>Tahap 4:</strong> Rapikan & presentasi.</li>
+                        </ol>
+                    </section>
+
+                    <section>
+                        <p class="badge-soft">Target Tahap 1: Kamu pulang sudah punya rencana cerita yang jelas.</p>
+                    </section>
+                </article>
+
+                <!-- Slide 3: Tema Cerita -->
+                <article class="slide" data-side-main="Pilih Tema Cerita"
+                    data-side-text="Pilih satu tema uang jajan yang paling kamu suka.">
+                    <h2><span class="emoji">🎯</span> Pilih Tema Ceritamu</h2>
+                    <p class="subtitle-slide">
+                        Pilih <strong>satu</strong> tema yang paling cocok dengan ceritamu.
+                    </p>
+
+                    <section class="two-cols">
+                        <div>
+                            <h3>Temanya apa?</h3>
+                            <div class="card">
+                                <div class="choice-grid" id="themeChoices">
+                                    <label class="choice">
+                                        <input type="radio" name="theme" value="Menabung" />
+                                        💰 Menabung
+                                    </label>
+                                    <label class="choice">
+                                        <input type="radio" name="theme" value="Beli jajanan" />
+                                        🍩 Beli jajanan
+                                    </label>
+                                    <label class="choice">
+                                        <input type="radio" name="theme" value="Beli mainan" />
+                                        🧸 Beli mainan
+                                    </label>
+                                    <label class="choice">
+                                        <input type="radio" name="theme" value="Tidak boros" />
+                                        ✅ Tidak boros
+                                    </label>
+                                </div>
+
+                                <div class="field" style="margin-top:10px;">
+                                    <label>Atau tema lain (opsional)</label>
+                                    <input type="text" id="themeOther"
+                                        placeholder="Contoh: Menabung untuk hadiah ulang tahun" />
+                                </div>
+
+                                <div class="btn-row">
+                                    <button class="btn primary" type="button" id="saveThemeBtn">
+                                        <span class="icon">💾</span> Simpan Tema
+                                    </button>
+                                    <button class="btn" type="button" id="clearThemeBtn">
+                                        <span class="icon">🧽</span> Hapus
+                                    </button>
+                                </div>
+                                <div class="toast" id="themeToast">Tema tersimpan ✅</div>
+                            </div>
+                        </div>
+
+                        <div>
+                            <h3>Tips cepat</h3>
+                            <div class="card">
+                                <ul class="list">
+                                    <li>Temanya cukup <strong>1 saja</strong>.</li>
+                                    <li>Ceritanya tentang <strong>uang jajan</strong>.</li>
+                                    <li>Pilih yang paling dekat dengan keseharianmu.</li>
+                                </ul>
+                            </div>
+
+                            <div class="card" style="margin-top:10px;">
+                                <p style="font-size:12px;color:var(--text-soft);">
+                                    <strong>Contoh:</strong> “Aku ingin menabung karena mau beli buku gambar.”
+                                </p>
+                            </div>
+                        </div>
+                    </section>
+                </article>
+
+                <!-- Slide 4: Judul Animasi -->
+                <article class="slide" data-side-main="Tentukan Judul"
+                    data-side-text="Buat judul pendek dan mudah dibaca.">
+                    <h2><span class="emoji">🏷️</span> Judul Animasiku</h2>
+                    <p class="subtitle-slide">
+                        Judul itu seperti nama film. Buat yang <strong>pendek</strong> dan <strong>jelas</strong>.
+                    </p>
+
+                    <section class="two-cols">
+                        <div>
+                            <h3>Tulis judulmu</h3>
+                            <div class="card">
+                                <div class="field">
+                                    <label>Judul animasi</label>
+                                    <input type="text" id="titleInput" placeholder="Contoh: Uang Jajanku Pintar!" />
+                                </div>
+
+                                <div class="btn-row">
+                                    <button class="btn primary" type="button" id="saveTitleBtn">
+                                        <span class="icon">💾</span> Simpan Judul
+                                    </button>
+                                    <button class="btn" type="button" id="clearTitleBtn">
+                                        <span class="icon">🧽</span> Hapus
+                                    </button>
+                                </div>
+                                <div class="toast" id="titleToast">Judul tersimpan ✅</div>
+                            </div>
+                        </div>
+
+                        <div>
+                            <h3>Contoh judul</h3>
+                            <div class="card">
+                                <ul class="list">
+                                    <li>“Aku Bisa Menabung!”</li>
+                                    <li>“Jajan Secukupnya”</li>
+                                    <li>“Pilih yang Penting”</li>
+                                    <li>“Misi: Tidak Boros”</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </section>
+                </article>
+
+                <!-- Slide 5: Tokoh -->
+                <article class="slide" data-side-main="Tokoh Cerita"
+                    data-side-text="Tentukan tokoh utama dan tokoh lain (boleh kosong).">
+                    <h2><span class="emoji">👧👦</span> Tokoh dalam Ceritaku</h2>
+                    <p class="subtitle-slide">
+                        Siapa yang muncul di animasimu? Minimal ada <strong>1 tokoh utama</strong>.
+                    </p>
+
+                    <section class="two-cols">
+                        <div>
+                            <h3>Isi tokoh</h3>
+                            <div class="card">
+                                <div class="form-grid">
+                                    <div class="field">
+                                        <label>Tokoh utama (wajib)</label>
+                                        <input type="text" id="mainChar" placeholder="Contoh: Aku / Rara / Bimo" />
+                                    </div>
+
+                                    <div class="field">
+                                        <label>Tokoh lain (opsional)</label>
+                                        <input type="text" id="otherChar" placeholder="Contoh: Ibu / Teman / Penjual" />
+                                    </div>
+                                </div>
+
+                                <div class="btn-row">
+                                    <button class="btn primary" type="button" id="saveCharBtn">
+                                        <span class="icon">💾</span> Simpan Tokoh
+                                    </button>
+                                    <button class="btn" type="button" id="clearCharBtn">
+                                        <span class="icon">🧽</span> Hapus
+                                    </button>
+                                </div>
+                                <div class="toast" id="charToast">Tokoh tersimpan ✅</div>
+                            </div>
+                        </div>
+
+                        <div>
+                            <h3>Tips</h3>
+                            <div class="card">
+                                <ul class="list">
+                                    <li>Untuk 2–3 SD: cukup <strong>1–2 tokoh</strong>.</li>
+                                    <li>Tokoh bisa “Aku”, boleh juga karakter lucu.</li>
+                                    <li>Nanti tokohnya kamu pilih/gambar di ScratchJr.</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </section>
+                </article>
+
+                <!-- Slide 6: Alur 3 bagian -->
+                <article class="slide" data-side-main="Alur Cerita (3 Bagian)"
+                    data-side-text="Buat alur: Awal – Masalah – Akhir. Singkat saja.">
+                    <h2><span class="emoji">📖</span> Alur Cerita (Awal–Masalah–Akhir)</h2>
+                    <p class="subtitle-slide">
+                        Cerita yang bagus itu runtut. Tulis singkat saja. Boleh 1 kalimat per bagian.
+                    </p>
+
+                    <section class="card">
+                        <div class="form-grid">
+                            <div class="field">
+                                <label>Awal cerita (apa yang terjadi dulu?)</label>
+                                <textarea id="storyStart"
+                                    placeholder="Contoh: Aku dapat uang jajan dari ibu."></textarea>
+                            </div>
+                            <div class="field">
+                                <label>Masalah uang (bingung / ingin beli sesuatu)</label>
+                                <textarea id="storyProblem"
+                                    placeholder="Contoh: Aku ingin jajan banyak, tapi uangnya sedikit."></textarea>
+                            </div>
+                            <div class="field">
+                                <label>Akhir cerita (apa yang dilakukan?)</label>
+                                <textarea id="storyEnd"
+                                    placeholder="Contoh: Aku beli yang penting saja, sisanya ditabung."></textarea>
+                            </div>
+                        </div>
+
+                        <div class="btn-row">
+                            <button class="btn primary" type="button" id="saveStoryBtn">
+                                <span class="icon">💾</span> Simpan Alur
+                            </button>
+                            <button class="btn" type="button" id="clearStoryBtn">
+                                <span class="icon">🧽</span> Hapus
+                            </button>
+                        </div>
+                        <div class="toast" id="storyToast">Alur tersimpan ✅</div>
+                    </section>
+
+                    <section>
+                        <span class="badge-soft">Ingat: Cerita sederhana lebih mudah dibuat di ScratchJr.</span>
+                    </section>
+                </article>
+
+                <!-- Slide 7: Pesan Baik Tentang Uang -->
+                <article class="slide" data-side-main="Pesan Baik Tentang Uang"
+                    data-side-text="Pilih pesan baik yang mau kamu tunjukkan di animasi.">
+                    <h2><span class="emoji">💡</span> Pesan Baik Tentang Uang</h2>
+                    <p class="subtitle-slide">
+                        Di akhir animasi, penonton harus tahu pesan baiknya. Pilih satu ya!
+                    </p>
+
+                    <section class="two-cols">
+                        <div>
+                            <h3>Pilih pesan</h3>
+                            <div class="card">
+                                <div class="choice-grid" id="messageChoices">
+                                    <label class="choice">
+                                        <input type="radio" name="moneyMsg" value="Menabung itu baik" />
+                                        💰 Menabung itu baik
+                                    </label>
+                                    <label class="choice">
+                                        <input type="radio" name="moneyMsg" value="Tidak semua harus dibeli" />
+                                        🛍️ Tidak semua harus dibeli
+                                    </label>
+                                    <label class="choice">
+                                        <input type="radio" name="moneyMsg" value="Pilih yang penting dulu" />
+                                        ✅ Pilih yang penting dulu
+                                    </label>
+                                    <label class="choice">
+                                        <input type="radio" name="moneyMsg" value="Lainnya" />
+                                        ✍️ Lainnya
+                                    </label>
+                                </div>
+
+                                <div class="field" style="margin-top:10px;">
+                                    <label>Jika “Lainnya”, tulis di sini</label>
+                                    <input type="text" id="moneyMsgOther" placeholder="Contoh: Jangan boros ya!" />
+                                </div>
+
+                                <div class="btn-row">
+                                    <button class="btn primary" type="button" id="saveMsgBtn">
+                                        <span class="icon">💾</span> Simpan Pesan
+                                    </button>
+                                    <button class="btn" type="button" id="clearMsgBtn">
+                                        <span class="icon">🧽</span> Hapus
+                                    </button>
+                                </div>
+                                <div class="toast" id="msgToast">Pesan tersimpan ✅</div>
+                            </div>
+                        </div>
+
+                        <div>
+                            <h3>Tips</h3>
+                            <div class="card">
+                                <ul class="list">
+                                    <li>Pesan cukup <strong>1</strong>.</li>
+                                    <li>Nanti bisa dibuat sebagai <strong>teks</strong> di scene terakhir ScratchJr.
+                                    </li>
+                                </ul>
+                            </div>
+                            <div class="card" style="margin-top:10px;">
+                                <p style="font-size:12px;color:var(--text-soft);">
+                                    <strong>Contoh teks penutup:</strong> “Aku beli seperlunya. Sisanya aku tabung!”
+                                </p>
+                            </div>
+                        </div>
+                    </section>
+                </article>
+
+                <!-- Slide 8: Checklist Tahap 1 -->
+                <article class="slide" data-side-main="Checklist Tahap 1"
+                    data-side-text="Cek apakah rencana cerita kamu sudah lengkap.">
+                    <h2><span class="emoji">✅</span> Checklist Tahap 1</h2>
+                    <p class="subtitle-slide">
+                        Sebelum selesai, pastikan kamu sudah punya semua bagian ini.
+                    </p>
+
+                    <section class="card">
+                        <h3>Sudahkah kamu…?</h3>
+                        <ul class="checklist">
+                            <li><input type="checkbox" id="c1" /> Memilih <strong>tema cerita</strong>.</li>
+                            <li><input type="checkbox" id="c2" /> Menulis <strong>judul animasi</strong>.</li>
+                            <li><input type="checkbox" id="c3" /> Menentukan <strong>tokoh utama</strong>.</li>
+                            <li><input type="checkbox" id="c4" /> Menulis <strong>Awal – Masalah – Akhir</strong>.</li>
+                            <li><input type="checkbox" id="c5" /> Memilih <strong>pesan baik tentang uang</strong>.</li>
+                        </ul>
+
+                        <div class="btn-row">
+                            <button class="btn primary" type="button" id="saveChecklistBtn">
+                                <span class="icon">💾</span> Simpan Checklist
+                            </button>
+                            <button class="btn" type="button" id="clearChecklistBtn">
+                                <span class="icon">🧽</span> Reset Checklist
+                            </button>
+                        </div>
+
+                        <div class="toast" id="checkToast">Checklist tersimpan ✅</div>
+                    </section>
+
+                    <section>
+                        <span class="badge-soft">Kalau semua sudah ✔, kamu siap lanjut Tahap 2!</span>
+                    </section>
+                </article>
+
+                <!-- Slide 9: Mini Quiz (super simple) -->
+                <article class="slide" data-side-main="Mini Quiz"
+                    data-side-text="Kuis singkat untuk cek pemahaman Tahap 1.">
+                    <h2><span class="emoji">❓</span> Mini Quiz – Tahap 1</h2>
+                    <p class="subtitle-slide">
+                        Klik salah satu jawaban. Hijau = benar ✅, Merah = coba lagi ❌
+                    </p>
+
+                    <section class="quiz-wrapper">
+                        <div>
+                            <div class="quiz-question">
+                                <div class="quiz-question-title">
+                                    1) Cerita di Tahap 1 dibuat jadi berapa bagian?
+                                </div>
+                                <div class="quiz-options">
+                                    <div class="quiz-option" data-correct="false">1 bagian</div>
+                                    <div class="quiz-option" data-correct="true">3 bagian (Awal–Masalah–Akhir)</div>
+                                    <div class="quiz-option" data-correct="false">10 bagian</div>
+                                </div>
+                            </div>
+
+                            <div class="quiz-question">
+                                <div class="quiz-question-title">
+                                    2) Yang harus ada minimal di cerita adalah…
+                                </div>
+                                <div class="quiz-options">
+                                    <div class="quiz-option" data-correct="true">Tokoh utama</div>
+                                    <div class="quiz-option" data-correct="false">10 tokoh</div>
+                                    <div class="quiz-option" data-correct="false">Suara yang keras</div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div>
+                            <div class="quiz-question">
+                                <div class="quiz-question-title">
+                                    3) Pesan baik tentang uang itu contohnya…
+                                </div>
+                                <div class="quiz-options">
+                                    <div class="quiz-option" data-correct="false">Beli semua yang kamu mau</div>
+                                    <div class="quiz-option" data-correct="true">Pilih yang penting dulu</div>
+                                    <div class="quiz-option" data-correct="false">Uang harus habis</div>
+                                </div>
+                            </div>
+
+                            <div class="card">
+                                <p style="font-size:12px;color:var(--text-soft);">
+                                    <strong>Selesai!</strong> Kalau sudah, kumpulkan worksheet Tahap 1 kamu ke guru ya
+                                    😊
+                                </p>
+                            </div>
+                        </div>
+                    </section>
+                </article>
+
+                <!-- Footer nav -->
+                <div class="footer-nav">
+                    <div class="slide-dots" id="slideDots"></div>
+                    <div class="slide-counter-text" id="slideCounterText">Slide 1 dari 9</div>
+                    <div class="nav-buttons">
+                        <button class="btn" type="button" data-nav="prev">
+                            <span class="icon">←</span> Prev
+                        </button>
+                        <button class="btn primary" type="button" data-nav="next">
+                            Next <span class="icon">→</span>
+                        </button>
+                    </div>
+                </div>
+
+            </main>
+        </div>
+    </div>
+
+    <script>
+        (function () {
+            const slides = Array.from(document.querySelectorAll(".slide"));
+            const totalSlides = slides.length;
+            let currentSlide = 0;
+
+            const sidebarNumber = document.getElementById("sidebarSlideNumber");
+            const sidebarMain = document.getElementById("sidebarMain");
+            const sidebarText = document.getElementById("sidebarText");
+            const progressFill = document.getElementById("progressFill");
+            const slideDotsContainer = document.getElementById("slideDots");
+            const slideCounterText = document.getElementById("slideCounterText");
+            const prevBtn = document.querySelector('button[data-nav="prev"]');
+            const nextBtn = document.querySelector('button[data-nav="next"]');
+
+            // Build dots
+            const dots = slides.map((_, idx) => {
+                const dot = document.createElement("div");
+                dot.className = "slide-dot" + (idx === 0 ? " active" : "");
+                dot.dataset.index = String(idx);
+                slideDotsContainer.appendChild(dot);
+                return dot;
+            });
+
+            function updateSidebar(idx) {
+                const slide = slides[idx];
+                sidebarNumber.textContent = String(idx + 1);
+                sidebarMain.textContent = slide.getAttribute("data-side-main") || "";
+                sidebarText.textContent = slide.getAttribute("data-side-text") || "";
+                slideCounterText.textContent = `Slide ${idx + 1} dari ${totalSlides}`;
+            }
+
+            function updateProgress(idx) {
+                const progress = ((idx + 1) / totalSlides) * 100;
+                progressFill.style.width = progress + "%";
+            }
+
+            function updateDots(idx) {
+                dots.forEach((dot, i) => dot.classList.toggle("active", i === idx));
+            }
+
+            function showSlide(idx) {
+                if (idx < 0 || idx >= totalSlides) return;
+                slides[currentSlide].classList.remove("active");
+                slides[idx].classList.add("active");
+                currentSlide = idx;
+                updateSidebar(idx);
+                updateProgress(idx);
+                updateDots(idx);
+            }
+
+            // Init
+            updateSidebar(0);
+            updateProgress(0);
+
+            prevBtn.addEventListener("click", () => showSlide(currentSlide - 1));
+            nextBtn.addEventListener("click", () => showSlide(currentSlide + 1));
+
+            window.addEventListener("keydown", (e) => {
+                if (e.key === "ArrowLeft") showSlide(currentSlide - 1);
+                if (e.key === "ArrowRight") showSlide(currentSlide + 1);
+            });
+
+            dots.forEach((dot) => {
+                dot.addEventListener("click", () => showSlide(Number(dot.dataset.index || "0")));
+            });
+
+            // Quiz interaction
+            const quizOptions = Array.from(document.querySelectorAll(".quiz-option"));
+            quizOptions.forEach((option) => {
+                option.addEventListener("click", () => {
+                    const question = option.closest(".quiz-question");
+                    if (!question) return;
+                    const siblings = Array.from(question.querySelectorAll(".quiz-option"));
+                    siblings.forEach((s) => s.classList.remove("correct", "wrong"));
+                    const isCorrect = option.dataset.correct === "true";
+                    option.classList.add(isCorrect ? "correct" : "wrong");
+                });
+            });
+
+            // Helpers: choice styling
+            function refreshChoiceGroup(containerId) {
+                const wrap = document.getElementById(containerId);
+                if (!wrap) return;
+                const labels = Array.from(wrap.querySelectorAll(".choice"));
+                labels.forEach(l => {
+                    const input = l.querySelector("input");
+                    const checked = input && input.checked;
+                    l.classList.toggle("selected", !!checked);
+                });
+            }
+
+            // Local storage keys
+            const KEY = {
+                theme: "lp_scratchjr_t1_theme",
+                themeOther: "lp_scratchjr_t1_theme_other",
+                title: "lp_scratchjr_t1_title",
+                mainChar: "lp_scratchjr_t1_mainChar",
+                otherChar: "lp_scratchjr_t1_otherChar",
+                start: "lp_scratchjr_t1_start",
+                problem: "lp_scratchjr_t1_problem",
+                end: "lp_scratchjr_t1_end",
+                msg: "lp_scratchjr_t1_msg",
+                msgOther: "lp_scratchjr_t1_msg_other",
+                checklist: "lp_scratchjr_t1_checklist"
+            };
+
+            function showToast(id) {
+                const el = document.getElementById(id);
+                if (!el) return;
+                el.classList.add("show");
+                setTimeout(() => el.classList.remove("show"), 1200);
+            }
+
+            // Theme save/restore
+            const themeChoices = document.getElementById("themeChoices");
+            const themeOther = document.getElementById("themeOther");
+            const saveThemeBtn = document.getElementById("saveThemeBtn");
+            const clearThemeBtn = document.getElementById("clearThemeBtn");
+
+            themeChoices.addEventListener("change", () => refreshChoiceGroup("themeChoices"));
+            saveThemeBtn.addEventListener("click", () => {
+                const picked = document.querySelector('input[name="theme"]:checked');
+                localStorage.setItem(KEY.theme, picked ? picked.value : "");
+                localStorage.setItem(KEY.themeOther, themeOther.value || "");
+                showToast("themeToast");
+            });
+            clearThemeBtn.addEventListener("click", () => {
+                document.querySelectorAll('input[name="theme"]').forEach(r => r.checked = false);
+                themeOther.value = "";
+                localStorage.removeItem(KEY.theme);
+                localStorage.removeItem(KEY.themeOther);
+                refreshChoiceGroup("themeChoices");
+            });
+
+            // Title save/restore
+            const titleInput = document.getElementById("titleInput");
+            document.getElementById("saveTitleBtn").addEventListener("click", () => {
+                localStorage.setItem(KEY.title, titleInput.value || "");
+                showToast("titleToast");
+            });
+            document.getElementById("clearTitleBtn").addEventListener("click", () => {
+                titleInput.value = "";
+                localStorage.removeItem(KEY.title);
+            });
+
+            // Characters save/restore
+            const mainChar = document.getElementById("mainChar");
+            const otherChar = document.getElementById("otherChar");
+            document.getElementById("saveCharBtn").addEventListener("click", () => {
+                localStorage.setItem(KEY.mainChar, mainChar.value || "");
+                localStorage.setItem(KEY.otherChar, otherChar.value || "");
+                showToast("charToast");
+            });
+            document.getElementById("clearCharBtn").addEventListener("click", () => {
+                mainChar.value = "";
+                otherChar.value = "";
+                localStorage.removeItem(KEY.mainChar);
+                localStorage.removeItem(KEY.otherChar);
+            });
+
+            // Story save/restore
+            const storyStart = document.getElementById("storyStart");
+            const storyProblem = document.getElementById("storyProblem");
+            const storyEnd = document.getElementById("storyEnd");
+            document.getElementById("saveStoryBtn").addEventListener("click", () => {
+                localStorage.setItem(KEY.start, storyStart.value || "");
+                localStorage.setItem(KEY.problem, storyProblem.value || "");
+                localStorage.setItem(KEY.end, storyEnd.value || "");
+                showToast("storyToast");
+            });
+            document.getElementById("clearStoryBtn").addEventListener("click", () => {
+                storyStart.value = "";
+                storyProblem.value = "";
+                storyEnd.value = "";
+                localStorage.removeItem(KEY.start);
+                localStorage.removeItem(KEY.problem);
+                localStorage.removeItem(KEY.end);
+            });
+
+            // Money message save/restore
+            const messageChoices = document.getElementById("messageChoices");
+            const moneyMsgOther = document.getElementById("moneyMsgOther");
+            messageChoices.addEventListener("change", () => refreshChoiceGroup("messageChoices"));
+
+            document.getElementById("saveMsgBtn").addEventListener("click", () => {
+                const picked = document.querySelector('input[name="moneyMsg"]:checked');
+                localStorage.setItem(KEY.msg, picked ? picked.value : "");
+                localStorage.setItem(KEY.msgOther, moneyMsgOther.value || "");
+                showToast("msgToast");
+            });
+            document.getElementById("clearMsgBtn").addEventListener("click", () => {
+                document.querySelectorAll('input[name="moneyMsg"]').forEach(r => r.checked = false);
+                moneyMsgOther.value = "";
+                localStorage.removeItem(KEY.msg);
+                localStorage.removeItem(KEY.msgOther);
+                refreshChoiceGroup("messageChoices");
+            });
+
+            // Checklist save/restore
+            const checks = ["c1", "c2", "c3", "c4", "c5"].map(id => document.getElementById(id));
+            document.getElementById("saveChecklistBtn").addEventListener("click", () => {
+                const state = checks.map(c => !!c.checked);
+                localStorage.setItem(KEY.checklist, JSON.stringify(state));
+                showToast("checkToast");
+            });
+            document.getElementById("clearChecklistBtn").addEventListener("click", () => {
+                checks.forEach(c => c.checked = false);
+                localStorage.removeItem(KEY.checklist);
+            });
+
+            // Restore on load
+            (function restore() {
+                // theme
+                const savedTheme = localStorage.getItem(KEY.theme) || "";
+                const savedThemeOther = localStorage.getItem(KEY.themeOther) || "";
+                if (savedTheme) {
+                    const r = document.querySelector(`input[name="theme"][value="${CSS.escape(savedTheme)}"]`);
+                    if (r) r.checked = true;
+                }
+                themeOther.value = savedThemeOther;
+
+                // title
+                titleInput.value = localStorage.getItem(KEY.title) || "";
+
+                // chars
+                mainChar.value = localStorage.getItem(KEY.mainChar) || "";
+                otherChar.value = localStorage.getItem(KEY.otherChar) || "";
+
+                // story
+                storyStart.value = localStorage.getItem(KEY.start) || "";
+                storyProblem.value = localStorage.getItem(KEY.problem) || "";
+                storyEnd.value = localStorage.getItem(KEY.end) || "";
+
+                // msg
+                const savedMsg = localStorage.getItem(KEY.msg) || "";
+                const savedMsgOther = localStorage.getItem(KEY.msgOther) || "";
+                if (savedMsg) {
+                    const r = document.querySelector(`input[name="moneyMsg"][value="${CSS.escape(savedMsg)}"]`);
+                    if (r) r.checked = true;
+                }
+                moneyMsgOther.value = savedMsgOther;
+
+                // checklist
+                try {
+                    const raw = localStorage.getItem(KEY.checklist);
+                    if (raw) {
+                        const state = JSON.parse(raw);
+                        state.forEach((v, i) => { if (checks[i]) checks[i].checked = !!v; });
+                    }
+                } catch (_) { }
+
+                refreshChoiceGroup("themeChoices");
+                refreshChoiceGroup("messageChoices");
+            })();
+
+        })();
+    </script>
+</body>
+
+</html>
