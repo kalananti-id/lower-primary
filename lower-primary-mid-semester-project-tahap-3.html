@@ -1,0 +1,1595 @@
+<!DOCTYPE html>
+<html lang="id">
+
+<head>
+    <meta charset="UTF-8" />
+    <title>LP ScratchJr – Proyek Mid-Semester Tahap 3</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <style>
+        :root {
+            /* SAME PALETTE AS TAHAP 1-2 */
+            --bg: #ecfeff;
+            --bg-soft: #f0fdfa;
+            --accent: #14b8a6;
+            --accent-soft: rgba(20, 184, 166, .12);
+            --accent-strong: #6366f1;
+            --text-main: #0f172a;
+            --text-soft: #475569;
+            --card: #ffffff;
+            --danger: #ef4444;
+            --success: #16a34a;
+            --radius-xl: 24px;
+            --shadow-soft: 0 18px 45px rgba(20, 184, 166, .22);
+            --transition-fast: .2s ease-out;
+            --transition-med: .35s ease-out;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0
+        }
+
+        body {
+            font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+            background: radial-gradient(circle at top, #cffafe 0, #ecfeff 45%, #f0fdfa 100%);
+            color: var(--text-main);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            padding: 16px;
+        }
+
+        .deck {
+            position: relative;
+            width: 100%;
+            max-width: 1120px;
+            background: linear-gradient(135deg, #f8fafc, #ecfeff 40%, #f0fdfa 100%);
+            border-radius: 32px;
+            padding: 20px 20px 18px;
+            box-shadow: var(--shadow-soft);
+            border: 1px solid rgba(20, 184, 166, .35);
+            overflow: hidden;
+        }
+
+        .blob {
+            position: absolute;
+            border-radius: 999px;
+            filter: blur(28px);
+            opacity: .45;
+            pointer-events: none;
+            z-index: 0
+        }
+
+        .blob.a {
+            width: 260px;
+            height: 260px;
+            background: #67e8f9;
+            top: -80px;
+            right: -60px;
+            animation: float1 14s infinite alternate ease-in-out
+        }
+
+        .blob.b {
+            width: 220px;
+            height: 220px;
+            background: #a7f3d0;
+            bottom: -70px;
+            left: -40px;
+            animation: float2 18s infinite alternate ease-in-out
+        }
+
+        .blob.c {
+            width: 180px;
+            height: 180px;
+            background: rgba(99, 102, 241, .35);
+            top: 40px;
+            left: -60px;
+            animation: float3 16s infinite alternate ease-in-out
+        }
+
+        @keyframes float1 {
+            0% {
+                transform: translate3d(0, 0, 0)
+            }
+
+            100% {
+                transform: translate3d(-40px, 35px, 0)
+            }
+        }
+
+        @keyframes float2 {
+            0% {
+                transform: translate3d(0, 0, 0)
+            }
+
+            100% {
+                transform: translate3d(50px, -25px, 0)
+            }
+        }
+
+        @keyframes float3 {
+            0% {
+                transform: translate3d(0, 0, 0)
+            }
+
+            100% {
+                transform: translate3d(35px, 20px, 0)
+            }
+        }
+
+        header.deck-header {
+            position: relative;
+            z-index: 1;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 16px;
+            padding: 4px 4px 10px;
+            gap: 12px;
+            border-bottom: 1px solid rgba(20, 184, 166, .35);
+        }
+
+        .title-block {
+            display: flex;
+            flex-direction: column;
+            gap: 4px
+        }
+
+        .title-pill {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            background: rgba(255, 255, 255, .9);
+            border-radius: 999px;
+            padding: 4px 10px;
+            font-size: 11px;
+            text-transform: uppercase;
+            letter-spacing: .08em;
+            color: var(--text-soft);
+            border: 1px solid rgba(20, 184, 166, .35);
+        }
+
+        .pill-dot {
+            width: 7px;
+            height: 7px;
+            border-radius: 999px;
+            background: #22c55e;
+            box-shadow: 0 0 16px rgba(34, 197, 94, .55)
+        }
+
+        .main-title {
+            font-size: 20px;
+            font-weight: 900;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            color: #0f172a;
+        }
+
+        .badge {
+            font-size: 11px;
+            text-transform: uppercase;
+            padding: 3px 8px;
+            border-radius: 999px;
+            border: 1px solid rgba(99, 102, 241, .45);
+            color: #3730a3;
+            background: rgba(99, 102, 241, .12);
+            font-weight: 800;
+        }
+
+        .subtitle {
+            font-size: 13px;
+            color: var(--text-soft)
+        }
+
+        .meta {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-end;
+            gap: 4px;
+            font-size: 11px;
+            color: var(--text-soft)
+        }
+
+        .meta-row {
+            display: flex;
+            align-items: center;
+            gap: 8px
+        }
+
+        .pill {
+            border-radius: 999px;
+            padding: 4px 8px;
+            background: rgba(255, 255, 255, .85);
+            border: 1px solid rgba(20, 184, 166, .35);
+        }
+
+        .progress-bar {
+            position: relative;
+            height: 4px;
+            border-radius: 999px;
+            background: rgba(20, 184, 166, .16);
+            overflow: hidden;
+            width: 180px
+        }
+
+        .progress-fill {
+            position: absolute;
+            inset: 0;
+            width: 0%;
+            background: linear-gradient(90deg, #14b8a6, #6366f1);
+            transition: width var(--transition-med)
+        }
+
+        .content {
+            position: relative;
+            z-index: 1;
+            margin-top: 14px;
+            display: flex;
+            gap: 14px;
+            min-height: 460px
+        }
+
+        .sidebar {
+            width: 240px;
+            background: radial-gradient(circle at top left, rgba(255, 255, 255, .9), rgba(236, 254, 255, .9));
+            border-radius: var(--radius-xl);
+            padding: 14px 12px;
+            border: 1px solid rgba(20, 184, 166, .35);
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .sidebar-section-title {
+            font-size: 12px;
+            text-transform: uppercase;
+            letter-spacing: .12em;
+            color: var(--text-soft)
+        }
+
+        .slide-indicator {
+            font-size: 26px;
+            font-weight: 900;
+            color: var(--accent);
+            display: flex;
+            align-items: baseline;
+            gap: 3px
+        }
+
+        .slide-indicator small {
+            font-size: 11px;
+            text-transform: uppercase;
+            color: var(--text-soft)
+        }
+
+        .sidebar-main {
+            font-size: 14px;
+            font-weight: 900;
+            color: #0f172a
+        }
+
+        .sidebar-text {
+            font-size: 12px;
+            color: var(--text-soft);
+            line-height: 1.5
+        }
+
+        .sidebar-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 4px
+        }
+
+        .sidebar-tag {
+            font-size: 10px;
+            padding: 3px 7px;
+            border-radius: 999px;
+            border: 1px solid rgba(20, 184, 166, .35);
+            color: var(--text-soft);
+            background: rgba(255, 255, 255, .8);
+        }
+
+        .sidebar-hint {
+            margin-top: auto;
+            font-size: 11px;
+            color: var(--text-soft);
+            border-top: 1px dashed rgba(20, 184, 166, .35);
+            padding-top: 6px;
+        }
+
+        .sidebar-hint span {
+            color: var(--accent-strong);
+            font-weight: 800
+        }
+
+        .slides-wrapper {
+            flex: 1;
+            background: radial-gradient(circle at top, rgba(255, 255, 255, .55), rgba(236, 254, 255, .75) 55%, rgba(240, 253, 250, .85));
+            border-radius: var(--radius-xl);
+            border: 1px solid rgba(20, 184, 166, .28);
+            padding: 16px 18px 14px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .slide {
+            display: none;
+            opacity: 0;
+            transform: translateX(10px) translateY(4px);
+            transition: opacity var(--transition-med), transform var(--transition-med);
+            position: absolute;
+            inset: 16px 18px 60px 18px;
+            overflow-y: auto;
+            padding-right: 6px;
+        }
+
+        .slide.active {
+            display: block;
+            opacity: 1;
+            transform: translateX(0) translateY(0)
+        }
+
+        .slide h2 {
+            font-size: 20px;
+            margin-bottom: 8px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            color: #0f172a
+        }
+
+        .slide h2 .emoji {
+            font-size: 22px
+        }
+
+        .subtitle-slide {
+            font-size: 13px;
+            color: var(--text-soft);
+            margin-bottom: 14px;
+            line-height: 1.6
+        }
+
+        .pill-row {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 6px;
+            margin-bottom: 12px
+        }
+
+        .chip {
+            font-size: 11px;
+            padding: 4px 9px;
+            border-radius: 999px;
+            background: rgba(255, 255, 255, .86);
+            border: 1px solid rgba(20, 184, 166, .35);
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+            color: var(--text-soft)
+        }
+
+        .chip .dot {
+            width: 6px;
+            height: 6px;
+            border-radius: 999px;
+            background: var(--accent)
+        }
+
+        .card {
+            border-radius: 16px;
+            border: 1px solid rgba(20, 184, 166, .35);
+            padding: 10px 12px;
+            background: var(--card);
+            box-shadow: 0 8px 18px rgba(20, 184, 166, .12);
+            margin-top: 8px;
+        }
+
+        .two-cols {
+            display: grid;
+            grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+            gap: 10px
+        }
+
+        .list {
+            margin-top: 6px;
+            padding-left: 18px;
+            font-size: 13px;
+            color: var(--text-soft)
+        }
+
+        .list li {
+            margin-bottom: 4px
+        }
+
+        .badge-soft {
+            display: inline-flex;
+            font-size: 11px;
+            padding: 3px 7px;
+            border-radius: 999px;
+            background: rgba(20, 184, 166, .10);
+            color: #0f766e;
+            border: 1px solid rgba(20, 184, 166, .35);
+            font-weight: 800;
+        }
+
+        .field label {
+            display: block;
+            font-size: 12px;
+            color: var(--text-soft);
+            margin-bottom: 4px;
+            font-weight: 900;
+        }
+
+        .field input[type="text"],
+        .field textarea,
+        .field select {
+            width: 100%;
+            border: 1px solid rgba(20, 184, 166, .35);
+            border-radius: 12px;
+            padding: 10px 10px;
+            font-size: 13px;
+            outline: none;
+            background: rgba(255, 255, 255, .9);
+            color: var(--text-main);
+            transition: border-color var(--transition-fast), box-shadow var(--transition-fast);
+        }
+
+        .field textarea {
+            min-height: 88px;
+            resize: vertical
+        }
+
+        .field input[type="text"]:focus,
+        .field textarea:focus,
+        .field select:focus {
+            border-color: rgba(99, 102, 241, .55);
+            box-shadow: 0 0 0 4px rgba(99, 102, 241, .10);
+        }
+
+        .btn-row {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-top: 10px
+        }
+
+        .btn {
+            border-radius: 999px;
+            border: 1px solid rgba(20, 184, 166, .45);
+            background: rgba(255, 255, 255, .92);
+            padding: 6px 12px;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 12px;
+            color: var(--text-main);
+            cursor: pointer;
+            font-weight: 900;
+            transition: background var(--transition-fast), transform .1s ease-out, box-shadow .1s ease-out, border-color .1s ease-out;
+        }
+
+        .btn .icon {
+            font-size: 14px
+        }
+
+        .btn.primary {
+            border-color: rgba(99, 102, 241, .6);
+            background: linear-gradient(135deg, rgba(99, 102, 241, .25), rgba(20, 184, 166, .25));
+            color: #0f172a;
+            box-shadow: 0 12px 22px rgba(99, 102, 241, .12);
+        }
+
+        .btn:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 12px 24px rgba(20, 184, 166, .18)
+        }
+
+        .toast {
+            display: none;
+            margin-top: 10px;
+            font-size: 12px;
+            color: #0f766e;
+            border: 1px solid rgba(20, 184, 166, .35);
+            background: rgba(20, 184, 166, .10);
+            padding: 8px 10px;
+            border-radius: 12px;
+            font-weight: 900;
+        }
+
+        .toast.show {
+            display: block
+        }
+
+        .checklist {
+            list-style: none;
+            margin-top: 6px
+        }
+
+        .checklist li {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 8px;
+            font-size: 13px;
+            color: var(--text-soft);
+        }
+
+        .checklist input[type="checkbox"] {
+            width: 16px;
+            height: 16px;
+            accent-color: var(--accent)
+        }
+
+        .choice-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 8px;
+            margin-top: 6px
+        }
+
+        .choice {
+            border: 1px solid rgba(20, 184, 166, .35);
+            background: rgba(255, 255, 255, .85);
+            border-radius: 16px;
+            padding: 10px 10px;
+            cursor: pointer;
+            display: flex;
+            align-items: flex-start;
+            gap: 10px;
+            transition: transform .08s ease-out, border-color var(--transition-fast), background var(--transition-fast);
+            font-size: 12px;
+            color: var(--text-soft);
+            user-select: none;
+            line-height: 1.35;
+        }
+
+        .choice:hover {
+            transform: translateY(-1px);
+            border-color: rgba(20, 184, 166, .65)
+        }
+
+        .choice input {
+            margin-top: 2px;
+            accent-color: var(--accent)
+        }
+
+        .choice.selected {
+            border-color: rgba(99, 102, 241, .6);
+            background: rgba(99, 102, 241, .10);
+            color: #1f2a6d;
+            font-weight: 900;
+        }
+
+        .footer-nav {
+            position: absolute;
+            inset-inline: 18px;
+            bottom: 14px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            z-index: 2;
+            gap: 10px;
+        }
+
+        .slide-dots {
+            display: flex;
+            align-items: center;
+            gap: 5px
+        }
+
+        .slide-dot {
+            width: 7px;
+            height: 7px;
+            border-radius: 999px;
+            border: 1px solid rgba(20, 184, 166, .45);
+            cursor: pointer;
+            opacity: .6;
+            transition: background var(--transition-fast), opacity var(--transition-fast), transform .1s ease-out, border-color var(--transition-fast);
+            background: rgba(255, 255, 255, .85);
+        }
+
+        .slide-dot.active {
+            background: var(--accent-strong);
+            border-color: var(--accent-strong);
+            opacity: 1;
+            transform: scale(1.2);
+        }
+
+        .slide-counter-text {
+            font-size: 11px;
+            color: var(--text-soft)
+        }
+
+        @media (max-width: 900px) {
+
+            /* jangan paksa tinggi */
+            .content {
+                flex-direction: column;
+                min-height: auto;
+            }
+
+            /* sidebar ok seperti sekarang */
+            .sidebar {
+                width: 100%;
+                flex-direction: row;
+                flex-wrap: wrap;
+                gap: 6px 12px;
+                align-items: center;
+            }
+
+            .sidebar-hint {
+                margin-top: 0;
+                border-top: none;
+            }
+
+            /* penting: wrapper jangan "ngunci" area */
+            .slides-wrapper {
+                min-height: 60vh;
+                /* biar ada ruang */
+                padding-bottom: 90px;
+                /* ruang untuk footer nav */
+                overflow: auto;
+                /* yang scroll wrapper */
+            }
+
+            /* penting: slide jangan absolute di layar kecil */
+            .slide {
+                position: relative;
+                inset: auto;
+                display: none;
+                padding-right: 0;
+                overflow: visible;
+                transform: none;
+            }
+
+            .slide.active {
+                display: block;
+                opacity: 1;
+            }
+
+            /* footer nav jangan absolute, biar nggak nindih konten */
+            .footer-nav {
+                position: sticky;
+                bottom: 10px;
+                inset-inline: 10px;
+                background: rgba(255, 255, 255, 0.85);
+                backdrop-filter: blur(8px);
+                border: 1px solid rgba(20, 184, 166, .25);
+                border-radius: 16px;
+                padding: 10px;
+            }
+
+            .choice-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .two-cols {
+                grid-template-columns: 1fr;
+            }
+        }
+
+
+        /* Access gate (same as Tahap 1-2) */
+        .gate {
+            position: fixed;
+            inset: 0;
+            background: rgba(15, 23, 42, .55);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            padding: 16px;
+            z-index: 9999
+        }
+
+        .gate.show {
+            display: flex
+        }
+
+        .gate-card {
+            width: min(560px, 100%);
+            background: rgba(255, 255, 255, .95);
+            border: 1px solid rgba(20, 184, 166, .45);
+            border-radius: 22px;
+            box-shadow: 0 22px 70px rgba(15, 23, 42, .25);
+            padding: 16px 16px 14px;
+        }
+
+        .gate-title {
+            font-size: 18px;
+            font-weight: 900;
+            margin-bottom: 6px;
+            color: #0f172a;
+            display: flex;
+            align-items: center;
+            gap: 8px
+        }
+
+        .gate-sub {
+            font-size: 13px;
+            color: var(--text-soft);
+            line-height: 1.55;
+            margin-bottom: 10px
+        }
+
+        .gate-row {
+            display: grid;
+            grid-template-columns: 1fr auto;
+            gap: 8px;
+            align-items: center
+        }
+
+        .gate-input {
+            width: 100%;
+            border: 1px solid rgba(20, 184, 166, .45);
+            border-radius: 14px;
+            padding: 12px 12px;
+            font-size: 14px;
+            outline: none;
+            background: rgba(255, 255, 255, .95);
+            color: var(--text-main);
+            text-transform: uppercase;
+            letter-spacing: .06em;
+            font-weight: 900;
+        }
+
+        .gate-input:focus {
+            border-color: rgba(99, 102, 241, .55);
+            box-shadow: 0 0 0 4px rgba(99, 102, 241, .12)
+        }
+
+        .gate-note {
+            margin-top: 10px;
+            font-size: 12px;
+            padding: 8px 10px;
+            border-radius: 14px;
+            border: 1px solid rgba(20, 184, 166, .35);
+            background: rgba(20, 184, 166, .10);
+            color: #0f766e;
+            font-weight: 900;
+        }
+
+        .gate-note.error {
+            border-color: rgba(239, 68, 68, .55);
+            background: rgba(254, 202, 202, .75);
+            color: #b91c1c
+        }
+
+        /* Access gate */
+        .gate {
+            position: fixed;
+            inset: 0;
+            background: rgba(15, 23, 42, .55);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            padding: 16px;
+            z-index: 9999
+        }
+
+        .gate.show {
+            display: flex
+        }
+
+        .gate-card {
+            width: min(560px, 100%);
+            background: rgba(255, 255, 255, .95);
+            border: 1px solid rgba(20, 184, 166, .45);
+            border-radius: 22px;
+            box-shadow: 0 22px 70px rgba(15, 23, 42, .25);
+            padding: 16px 16px 14px
+        }
+
+        .gate-title {
+            font-size: 18px;
+            font-weight: 900;
+            margin-bottom: 6px;
+            color: #0f172a;
+            display: flex;
+            align-items: center;
+            gap: 8px
+        }
+
+        .gate-sub {
+            font-size: 13px;
+            color: var(--text-soft);
+            line-height: 1.55;
+            margin-bottom: 10px
+        }
+
+        .gate-row {
+            display: grid;
+            grid-template-columns: 1fr auto;
+            gap: 8px;
+            align-items: center
+        }
+
+        .gate-input {
+            width: 100%;
+            border: 1px solid rgba(20, 184, 166, .45);
+            border-radius: 14px;
+            padding: 12px 12px;
+            font-size: 14px;
+            outline: none;
+            background: rgba(255, 255, 255, .95);
+            color: var(--text-main);
+            text-transform: uppercase;
+            letter-spacing: .06em;
+            font-weight: 900
+        }
+
+        .gate-input:focus {
+            border-color: rgba(99, 102, 241, .55);
+            box-shadow: 0 0 0 4px rgba(99, 102, 241, .12)
+        }
+
+        .gate-note {
+            margin-top: 10px;
+            font-size: 12px;
+            padding: 8px 10px;
+            border-radius: 14px;
+            border: 1px solid rgba(20, 184, 166, .35);
+            background: rgba(20, 184, 166, .10);
+            color: #0f766e;
+            font-weight: 900
+        }
+
+        .gate-note.error {
+            border-color: rgba(239, 68, 68, .55);
+            background: rgba(254, 202, 202, .75);
+            color: #b91c1c
+        }
+    </style>
+</head>
+
+<body>
+    <!-- Access Code Gate -->
+    <div class="gate" id="accessGate" aria-hidden="true">
+        <div class="gate-card">
+            <div class="gate-title">🔒 Kode Akses</div>
+            <div class="gate-sub">
+                Masukkan kode akses untuk membuka materi.
+                
+            </div>
+
+            <div class="gate-row">
+                <input id="accessCodeInput" class="gate-input" type="text" placeholder="MASUKKAN KODE..."
+                    autocomplete="off" />
+                <button class="btn primary" type="button" id="accessCodeBtn">
+                    <span class="icon">✅</span> Masuk
+                </button>
+            </div>
+
+            <div class="gate-note" id="accessNote">Kode ini dari guru kamu.</div>
+        </div>
+    </div>
+
+    <div class="deck" data-total-slides="10">
+        <div class="blob a"></div>
+        <div class="blob b"></div>
+        <div class="blob c"></div>
+
+        <header class="deck-header">
+            <div class="title-block">
+                <div class="title-pill"><span class="pill-dot"></span> Lower Primary (2–3 SD) • ScratchJr</div>
+                <div class="main-title">
+                    Tahap 3: Gerak & Urutan Animasi
+                    <span class="badge">Uang Jajan</span>
+                </div>
+                <p class="subtitle">Hari ini kita bikin ceritamu <b>bergerak</b> dan <b>ganti tempat</b> (scene).</p>
+            </div>
+
+            <div class="meta">
+
+                <div class="meta-row"><span>Mode</span><span class="pill">Interactive Slides</span></div>
+                <div class="meta-row">
+                    <div class="progress-bar">
+                        <div class="progress-fill" id="progressFill"></div>
+                    </div>
+                </div>
+            </div>
+        </header>
+
+        <div class="content">
+            <aside class="sidebar">
+                <div>
+                    <div class="sidebar-section-title">Slide</div>
+                    <div class="slide-indicator"><span id="sidebarSlideNumber">1</span><small>/ 10</small></div>
+                </div>
+
+                <div class="sidebar-main" id="sidebarMain">Mulai Tahap 3</div>
+                <p class="sidebar-text" id="sidebarText">Susun bloknya pelan-pelan ya.</p>
+
+                <div class="sidebar-tags">
+                    <span class="sidebar-tag">Urutan</span>
+                    <span class="sidebar-tag">Gerak</span>
+                    <span class="sidebar-tag">Ganti Latar</span>
+                </div>
+
+                <p class="sidebar-hint">Pakai <span>←</span> / <span>→</span> atau tombol <span>Next</span>.</p>
+            </aside>
+
+            <main class="slides-wrapper">
+
+                <!-- Slide 1 -->
+                <article class="slide active" data-side-main="Mulai Tahap 3"
+                    data-side-text="Kita bikin cerita jadi hidup!">
+                    <h2><span class="emoji">🚦</span> Ayo Mulai!</h2>
+                    <p class="subtitle-slide">
+                        Kamu sudah punya <b>karakter</b>, <b>latar</b>, dan <b>kalimat</b>.
+                        Sekarang kita susun blok ScratchJr supaya animasimu jalan dari awal sampai akhir.
+                    </p>
+
+                    <div class="pill-row">
+                        <span class="chip"><span class="dot"></span> Mulai pakai bendera</span>
+                        <span class="chip"><span class="dot"></span> Gerak sesuai cerita</span>
+                        <span class="chip"><span class="dot"></span> Ganti latar</span>
+                        <span class="chip"><span class="dot"></span> Coba & perbaiki</span>
+                    </div>
+
+                    <div class="card">
+                        <h3 style="font-size:15px;">Aturan hari ini</h3>
+                        <ul class="list">
+                            <li>Susun blok <b>berurutan</b> (jangan loncat-loncat).</li>
+                            <li>Pakai blok secukupnya, yang penting ceritanya jelas.</li>
+                            <li>Kalau salah, gapapa. Kita perbaiki pelan-pelan.</li>
+                        </ul>
+                    </div>
+                </article>
+
+                <!-- Slide 2 -->
+                <article class="slide" data-side-main="Recall Blok"
+                    data-side-text="Kita ingat blok yang sering dipakai.">
+                    <h2><span class="emoji">🧠</span> Ingat Lagi Bloknya</h2>
+                    <p class="subtitle-slide">Centang blok yang kamu ingat dan sering pakai di ScratchJr.</p>
+
+                    <div class="card">
+                        <ul class="checklist">
+                            <li><input type="checkbox" id="r1"> Blok mulai (bendera hijau)</li>
+                            <li><input type="checkbox" id="r2"> Blok gerak (jalan / lompat)</li>
+                            <li><input type="checkbox" id="r3"> Blok diam (tunggu)</li>
+                            <li><input type="checkbox" id="r4"> Blok kata (teks)</li>
+                            <li><input type="checkbox" id="r5"> Blok ganti latar</li>
+                        </ul>
+
+                        <div class="btn-row">
+                            <button class="btn primary" type="button" id="saveRecallBtn"><span class="icon">💾</span>
+                                Simpan</button>
+                            <button class="btn" type="button" id="clearRecallBtn"><span class="icon">🧽</span>
+                                Reset</button>
+                        </div>
+                        <div class="toast" id="recallToast">Tersimpan ✅</div>
+                    </div>
+
+                    <div class="card">
+                        <span class="badge-soft">Tips: Kalau lupa, tanya guru ya 🙂</span>
+                    </div>
+                </article>
+
+                <!-- Slide 3 -->
+                <article class="slide" data-side-main="Mulai Animasi" data-side-text="Pilih cara mulai animasimu.">
+                    <h2><span class="emoji">🏁</span> Animasi Mulainya Pakai Apa?</h2>
+                    <p class="subtitle-slide">Pilih blok awal yang kamu pakai untuk mulai animasi.</p>
+
+                    <div class="card">
+                        <div class="choice-grid" id="startChoices">
+                            <label class="choice"><input type="radio" name="start" value="Bendera hijau"> 🚩 Bendera
+                                hijau</label>
+                            <label class="choice"><input type="radio" name="start" value="Sentuh karakter"> 👆 Sentuh
+                                karakter</label>
+                            <label class="choice"><input type="radio" name="start" value="Mulai otomatis"> ⚡ Mulai
+                                otomatis</label>
+                            <label class="choice"><input type="radio" name="start" value="Lainnya"> ✨ Lainnya</label>
+                        </div>
+
+                        <div class="field" style="margin-top:10px;">
+                            <label>Kalau pilih “Lainnya”, tulis di sini</label>
+                            <input type="text" id="startOther" placeholder="Contoh: ..." />
+                        </div>
+
+                        <div class="btn-row">
+                            <button class="btn primary" type="button" id="saveStartBtn"><span class="icon">💾</span>
+                                Simpan</button>
+                            <button class="btn" type="button" id="clearStartBtn"><span class="icon">🧽</span>
+                                Hapus</button>
+                        </div>
+                        <div class="toast" id="startToast">Tersimpan ✅</div>
+                    </div>
+
+                    <div class="card">
+                        <span class="badge-soft">Saran: Biasanya paling gampang pakai 🚩 bendera hijau.</span>
+                    </div>
+                </article>
+
+                <!-- Slide 4 -->
+                <article class="slide" data-side-main="Karakter Utama"
+                    data-side-text="Tulis nama tokoh utama dan geraknya.">
+                    <h2><span class="emoji">👑</span> Karakter Utama</h2>
+                    <p class="subtitle-slide">Tulis tokoh utama kamu, lalu tulis gerakannya.</p>
+
+                    <div class="card">
+                        <div class="field">
+                            <label>Nama karakter utama</label>
+                            <input type="text" id="mainChar" placeholder="Contoh: Aku / Rara / Bimo" />
+                        </div>
+
+                        <div class="field" style="margin-top:10px;">
+                            <label>Apa yang dilakukan karakter? (boleh singkat)</label>
+                            <textarea id="mainMove"
+                                placeholder="Contoh: jalan ke toko, berhenti, bilang 'menabung'"></textarea>
+                        </div>
+
+                        <div class="btn-row">
+                            <button class="btn primary" type="button" id="saveMainBtn"><span class="icon">💾</span>
+                                Simpan</button>
+                            <button class="btn" type="button" id="clearMainBtn"><span class="icon">🧽</span>
+                                Hapus</button>
+                        </div>
+                        <div class="toast" id="mainToast">Tersimpan ✅</div>
+                    </div>
+                </article>
+
+                <!-- Slide 5 -->
+                <article class="slide" data-side-main="Scene 1–2" data-side-text="Tulis urutan cerita: scene 1 dan 2.">
+                    <h2><span class="emoji">🎬</span> Urutan Cerita (Scene 1–2)</h2>
+                    <p class="subtitle-slide">Tulis dengan kata sederhana. Ini membantu kamu susun bloknya.</p>
+
+                    <div class="card">
+                        <div class="field">
+                            <label>Scene 1: Karakter melakukan apa?</label>
+                            <textarea id="s1" placeholder="Contoh: dapat uang jajan lalu senyum"></textarea>
+                        </div>
+                        <div class="field" style="margin-top:10px;">
+                            <label>Scene 2: Karakter melakukan apa?</label>
+                            <textarea id="s2" placeholder="Contoh: mau jajan tapi uangnya sedikit"></textarea>
+                        </div>
+
+                        <div class="btn-row">
+                            <button class="btn primary" type="button" id="saveS12Btn"><span class="icon">💾</span>
+                                Simpan</button>
+                            <button class="btn" type="button" id="clearS12Btn"><span class="icon">🧽</span>
+                                Hapus</button>
+                        </div>
+                        <div class="toast" id="s12Toast">Tersimpan ✅</div>
+                    </div>
+                </article>
+
+                <!-- Slide 6 -->
+                <article class="slide" data-side-main="Scene 3–4"
+                    data-side-text="Tulis urutan cerita: scene 3 dan 4 (opsional).">
+                    <h2><span class="emoji">🎞️</span> Urutan Cerita (Scene 3–4)</h2>
+                    <p class="subtitle-slide">Kalau ceritamu cuma 3 scene, Scene 4 boleh kosong.</p>
+
+                    <div class="card">
+                        <div class="field">
+                            <label>Scene 3: Karakter melakukan apa?</label>
+                            <textarea id="s3" placeholder="Contoh: pilih kebutuhan dulu"></textarea>
+                        </div>
+                        <div class="field" style="margin-top:10px;">
+                            <label>Scene 4 (opsional): Karakter melakukan apa?</label>
+                            <textarea id="s4" placeholder="Contoh: menabung di celengan"></textarea>
+                        </div>
+
+                        <div class="btn-row">
+                            <button class="btn primary" type="button" id="saveS34Btn"><span class="icon">💾</span>
+                                Simpan</button>
+                            <button class="btn" type="button" id="clearS34Btn"><span class="icon">🧽</span>
+                                Hapus</button>
+                        </div>
+                        <div class="toast" id="s34Toast">Tersimpan ✅</div>
+                    </div>
+                </article>
+
+                <!-- Slide 7 -->
+                <article class="slide" data-side-main="Ganti Latar"
+                    data-side-text="Tulis latar pertama dan latar berikutnya.">
+                    <h2><span class="emoji">🏠➡️🏪</span> Ganti Latar (Scene)</h2>
+                    <p class="subtitle-slide">Kalau ceritamu pindah tempat, latarnya ikut berubah.</p>
+
+                    <div class="card">
+                        <div class="field">
+                            <label>Latar pertama</label>
+                            <input type="text" id="bg1" placeholder="Contoh: Rumah" />
+                        </div>
+                        <div class="field" style="margin-top:10px;">
+                            <label>Latar berikutnya</label>
+                            <input type="text" id="bg2" placeholder="Contoh: Toko" />
+                        </div>
+                        <div class="field" style="margin-top:10px;">
+                            <label>Kenapa pindah latar?</label>
+                            <input type="text" id="bgWhy" placeholder="Contoh: pergi beli barang" />
+                        </div>
+
+                        <div class="btn-row">
+                            <button class="btn primary" type="button" id="saveBgBtn"><span class="icon">💾</span>
+                                Simpan</button>
+                            <button class="btn" type="button" id="clearBgBtn"><span class="icon">🧽</span>
+                                Hapus</button>
+                        </div>
+                        <div class="toast" id="bgToast">Tersimpan ✅</div>
+                    </div>
+
+                    <div class="card">
+                        <span class="badge-soft">Kalau ceritamu cuma di 1 tempat, latar berikutnya boleh kosong.</span>
+                    </div>
+                </article>
+
+                <!-- Slide 8 -->
+                <article class="slide" data-side-main="Cek Animasi" data-side-text="Centang kalau sudah berhasil.">
+                    <h2><span class="emoji">✅</span> Cek Cerita Animasiku</h2>
+                    <p class="subtitle-slide">Centang setelah kamu coba jalankan animasinya.</p>
+
+                    <div class="card">
+                        <ul class="checklist">
+                            <li><input type="checkbox" id="c1"> Animasi bisa dimulai</li>
+                            <li><input type="checkbox" id="c2"> Karakter bergerak</li>
+                            <li><input type="checkbox" id="c3"> Kalimat muncul</li>
+                            <li><input type="checkbox" id="c4"> Latar bisa berubah</li>
+                            <li><input type="checkbox" id="c5"> Cerita bisa selesai sampai akhir</li>
+                        </ul>
+
+                        <div class="btn-row">
+                            <button class="btn primary" type="button" id="saveCheckBtn"><span class="icon">💾</span>
+                                Simpan</button>
+                            <button class="btn" type="button" id="clearCheckBtn"><span class="icon">🧽</span>
+                                Reset</button>
+                        </div>
+                        <div class="toast" id="checkToast">Tersimpan ✅</div>
+                    </div>
+
+                    <div class="card">
+                        <h3 style="font-size:15px;">Kalau belum jalan…</h3>
+                        <ul class="list">
+                            <li>Cek lagi urutan bloknya.</li>
+                            <li>Pastikan ada blok mulai di awal.</li>
+                            <li>Kalau bingung, panggil guru 🙂</li>
+                        </ul>
+                    </div>
+                </article>
+
+                <!-- Slide 9 -->
+                <article class="slide" data-side-main="Screenshot" data-side-text="Ambil 3 screenshot blok kodenya.">
+                    <h2><span class="emoji">📸</span> Screenshot Kode (Minimal 3)</h2>
+                    <p class="subtitle-slide">
+                        Setelah animasimu jalan, ambil <b>minimal 3 screenshot</b> blok-blok kodenya di ScratchJr.
+                    </p>
+
+                    <div class="card">
+                        <div class="pill-row">
+                            <span class="chip"><span class="dot"></span> Screenshot 1: Scene awal</span>
+                            <span class="chip"><span class="dot"></span> Screenshot 2: Scene tengah</span>
+                            <span class="chip"><span class="dot"></span> Screenshot 3: Scene akhir</span>
+                        </div>
+
+                        <ul class="list">
+                            <li>Pastikan bloknya kelihatan jelas.</li>
+                            <li>Kalau bisa, ambil screenshot saat latar berubah juga.</li>
+                        </ul>
+
+                        <div class="field" style="margin-top:10px;">
+                            <label>Sudah ambil screenshot?</label>
+                            <select id="ssDone">
+                                <option value="">Pilih…</option>
+                                <option value="Belum">Belum</option>
+                                <option value="Sudah 1">Sudah 1</option>
+                                <option value="Sudah 2">Sudah 2</option>
+                                <option value="Sudah 3+">Sudah 3+</option>
+                            </select>
+                        </div>
+
+                        <div class="btn-row">
+                            <button class="btn primary" type="button" id="saveSsBtn"><span class="icon">💾</span>
+                                Simpan</button>
+                            <button class="btn" type="button" id="clearSsBtn"><span class="icon">🧽</span>
+                                Reset</button>
+                        </div>
+                        <div class="toast" id="ssToast">Tersimpan ✅</div>
+                    </div>
+                </article>
+
+                <!-- Slide 10 -->
+                <article class="slide" data-side-main="Mini Quiz" data-side-text="Kuis singkat sebelum selesai.">
+                    <h2><span class="emoji">❓</span> Mini Quiz</h2>
+                    <p class="subtitle-slide">Klik jawaban. Kalau merah, coba lagi ya.</p>
+
+                    <section class="card" style="margin-top:0;">
+                        <h3 style="font-size:15px;margin-bottom:6px;">1) Blok harus disusun…</h3>
+                        <div class="choice-grid" id="q1">
+                            <label class="choice"><input type="radio" name="q1" data-correct="true" /> Berurutan</label>
+                            <label class="choice"><input type="radio" name="q1" data-correct="false" /> Acak</label>
+                            <label class="choice"><input type="radio" name="q1" data-correct="false" /> Terbalik</label>
+                            <label class="choice"><input type="radio" name="q1" data-correct="false" /> Tidak perlu
+                                blok</label>
+                        </div>
+                    </section>
+
+                    <section class="card">
+                        <h3 style="font-size:15px;margin-bottom:6px;">2) Untuk mulai animasi, kita pakai…</h3>
+                        <div class="choice-grid" id="q2">
+                            <label class="choice"><input type="radio" name="q2" data-correct="true" /> Blok mulai (misal
+                                bendera)</label>
+                            <label class="choice"><input type="radio" name="q2" data-correct="false" /> Hapus
+                                proyek</label>
+                            <label class="choice"><input type="radio" name="q2" data-correct="false" /> Matikan
+                                tablet</label>
+                            <label class="choice"><input type="radio" name="q2" data-correct="false" /> Lompat tanpa
+                                blok</label>
+                        </div>
+                    </section>
+
+                    <section class="card">
+                        <h3 style="font-size:15px;margin-bottom:6px;">3) Ganti latar dipakai saat…</h3>
+                        <div class="choice-grid" id="q3">
+                            <label class="choice"><input type="radio" name="q3" data-correct="true" /> Cerita pindah
+                                tempat</label>
+                            <label class="choice"><input type="radio" name="q3" data-correct="false" /> Mau hapus
+                                karakter</label>
+                            <label class="choice"><input type="radio" name="q3" data-correct="false" /> Mau buat suara
+                                keras</label>
+                            <label class="choice"><input type="radio" name="q3" data-correct="false" /> Mau ubah nama
+                                file</label>
+                        </div>
+                    </section>
+
+                    <div class="card">
+                        <h3 style="font-size:15px;">Selesai 🎉</h3>
+                        <p style="font-size:13px;color:var(--text-soft);line-height:1.6;">
+                            Mantap! Tahap 3 beres. Besok kita lanjut <b>Tahap 4</b>: rapihin animasi + presentasi.
+                        </p>
+                    </div>
+                </article>
+
+                <!-- Footer -->
+                <div class="footer-nav">
+                    <div class="slide-dots" id="slideDots"></div>
+                    <div class="slide-counter-text" id="slideCounterText">Slide 1 dari 10</div>
+                    <div class="nav-buttons">
+                        <button class="btn" type="button" data-nav="prev"><span class="icon">←</span> Prev</button>
+                        <button class="btn primary" type="button" data-nav="next">Next <span
+                                class="icon">→</span></button>
+                    </div>
+                </div>
+
+            </main>
+        </div>
+    </div>
+
+    <!-- Access Code Gate -->
+    <div class="gate" id="accessGate" aria-hidden="true">
+        <div class="gate-card">
+            <div class="gate-title">🔒 Kode Akses</div>
+            <div class="gate-sub">
+                Masukkan kode akses untuk membuka materi.
+                <br><strong>Catatan:</strong> Huruf otomatis jadi <strong>HURUF BESAR</strong>.
+            </div>
+            <div class="gate-row">
+                <input id="accessCodeInput" class="gate-input" type="text" placeholder="MASUKKAN KODE..."
+                    autocomplete="off" />
+                <button class="btn primary" type="button" id="accessCodeBtn"><span class="icon">✅</span> Masuk</button>
+            </div>
+            <div class="gate-note" id="accessNote">Kode ini dari guru kamu.</div>
+        </div>
+    </div>
+
+    <script>
+        
+        (function () {
+            const slides = Array.from(document.querySelectorAll(".slide"));
+            const totalSlides = slides.length;
+            let currentSlide = 0;
+
+            const sidebarNumber = document.getElementById("sidebarSlideNumber");
+            const sidebarMain = document.getElementById("sidebarMain");
+            const sidebarText = document.getElementById("sidebarText");
+            const progressFill = document.getElementById("progressFill");
+            const slideDotsContainer = document.getElementById("slideDots");
+            const slideCounterText = document.getElementById("slideCounterText");
+            const prevBtn = document.querySelector('button[data-nav="prev"]');
+            const nextBtn = document.querySelector('button[data-nav="next"]');
+
+            const dots = slides.map((_, idx) => {
+                const dot = document.createElement("div");
+                dot.className = "slide-dot" + (idx === 0 ? " active" : "");
+                dot.dataset.index = String(idx);
+                slideDotsContainer.appendChild(dot);
+                return dot;
+            });
+
+            function updateSidebar(idx) {
+                const s = slides[idx];
+                sidebarNumber.textContent = String(idx + 1);
+                sidebarMain.textContent = s.getAttribute("data-side-main") || "";
+                sidebarText.textContent = s.getAttribute("data-side-text") || "";
+                slideCounterText.textContent = `Slide ${idx + 1} dari ${totalSlides}`;
+            }
+            function updateProgress(idx) {
+                const progress = ((idx + 1) / totalSlides) * 100;
+                progressFill.style.width = progress + "%";
+            }
+            function updateDots(idx) {
+                dots.forEach((d, i) => d.classList.toggle("active", i === idx));
+            }
+            function showSlide(idx) {
+                if (idx < 0 || idx >= totalSlides) return;
+                slides[currentSlide].classList.remove("active");
+                slides[idx].classList.add("active");
+                currentSlide = idx;
+                updateSidebar(idx);
+                updateProgress(idx);
+                updateDots(idx);
+            }
+
+            updateSidebar(0);
+            updateProgress(0);
+
+            prevBtn.addEventListener("click", () => showSlide(currentSlide - 1));
+            nextBtn.addEventListener("click", () => showSlide(currentSlide + 1));
+            window.addEventListener("keydown", (e) => {
+                if (e.key === "ArrowLeft") showSlide(currentSlide - 1);
+                if (e.key === "ArrowRight") showSlide(currentSlide + 1);
+            });
+            dots.forEach(dot => dot.addEventListener("click", () => showSlide(Number(dot.dataset.index || "0"))));
+
+            // ===== Storage Keys (Tahap 3) =====
+            const KEY = {
+                recall: "lp_scratchjr_t3_recall",
+                start: "lp_scratchjr_t3_start",
+                startOther: "lp_scratchjr_t3_start_other",
+                mainChar: "lp_scratchjr_t3_main_char",
+                mainMove: "lp_scratchjr_t3_main_move",
+                s1: "lp_scratchjr_t3_s1",
+                s2: "lp_scratchjr_t3_s2",
+                s3: "lp_scratchjr_t3_s3",
+                s4: "lp_scratchjr_t3_s4",
+                bg1: "lp_scratchjr_t3_bg1",
+                bg2: "lp_scratchjr_t3_bg2",
+                bgWhy: "lp_scratchjr_t3_bgwhy",
+                checklist: "lp_scratchjr_t3_checklist",
+                ssDone: "lp_scratchjr_t3_ss_done"
+            };
+
+            function showToast(id) {
+                const el = document.getElementById(id);
+                if (!el) return;
+                el.classList.add("show");
+                setTimeout(() => el.classList.remove("show"), 1200);
+            }
+
+            // ===== Recall checkboxes =====
+            const recallIds = ["r1", "r2", "r3", "r4", "r5"];
+            const recallEls = recallIds.map(id => document.getElementById(id));
+
+            document.getElementById("saveRecallBtn").addEventListener("click", () => {
+                const state = recallEls.map(x => !!x.checked);
+                localStorage.setItem(KEY.recall, JSON.stringify(state));
+                showToast("recallToast");
+            });
+            document.getElementById("clearRecallBtn").addEventListener("click", () => {
+                recallEls.forEach(x => x.checked = false);
+                localStorage.removeItem(KEY.recall);
+            });
+
+            // ===== Start choices =====
+            const startChoices = document.getElementById("startChoices");
+            const startOther = document.getElementById("startOther");
+
+            function refreshRadios(container, name) {
+                const labels = Array.from(container.querySelectorAll(".choice"));
+                labels.forEach(l => {
+                    const input = l.querySelector(`input[name="${name}"]`);
+                    l.classList.toggle("selected", !!(input && input.checked));
+                });
+            }
+            startChoices.addEventListener("change", () => refreshRadios(startChoices, "start"));
+
+            document.getElementById("saveStartBtn").addEventListener("click", () => {
+                const picked = document.querySelector('input[name="start"]:checked');
+                localStorage.setItem(KEY.start, picked ? picked.value : "");
+                localStorage.setItem(KEY.startOther, startOther.value || "");
+                showToast("startToast");
+            });
+            document.getElementById("clearStartBtn").addEventListener("click", () => {
+                document.querySelectorAll('input[name="start"]').forEach(r => r.checked = false);
+                startOther.value = "";
+                localStorage.removeItem(KEY.start);
+                localStorage.removeItem(KEY.startOther);
+                refreshRadios(startChoices, "start");
+            });
+
+            // ===== Main character/move =====
+            const mainChar = document.getElementById("mainChar");
+            const mainMove = document.getElementById("mainMove");
+            document.getElementById("saveMainBtn").addEventListener("click", () => {
+                localStorage.setItem(KEY.mainChar, mainChar.value || "");
+                localStorage.setItem(KEY.mainMove, mainMove.value || "");
+                showToast("mainToast");
+            });
+            document.getElementById("clearMainBtn").addEventListener("click", () => {
+                mainChar.value = ""; mainMove.value = "";
+                localStorage.removeItem(KEY.mainChar);
+                localStorage.removeItem(KEY.mainMove);
+            });
+
+            // ===== Scenes =====
+            const s1 = document.getElementById("s1");
+            const s2 = document.getElementById("s2");
+            const s3 = document.getElementById("s3");
+            const s4 = document.getElementById("s4");
+
+            document.getElementById("saveS12Btn").addEventListener("click", () => {
+                localStorage.setItem(KEY.s1, s1.value || "");
+                localStorage.setItem(KEY.s2, s2.value || "");
+                showToast("s12Toast");
+            });
+            document.getElementById("clearS12Btn").addEventListener("click", () => {
+                s1.value = ""; s2.value = "";
+                localStorage.removeItem(KEY.s1);
+                localStorage.removeItem(KEY.s2);
+            });
+
+            document.getElementById("saveS34Btn").addEventListener("click", () => {
+                localStorage.setItem(KEY.s3, s3.value || "");
+                localStorage.setItem(KEY.s4, s4.value || "");
+                showToast("s34Toast");
+            });
+            document.getElementById("clearS34Btn").addEventListener("click", () => {
+                s3.value = ""; s4.value = "";
+                localStorage.removeItem(KEY.s3);
+                localStorage.removeItem(KEY.s4);
+            });
+
+            // ===== Background shift =====
+            const bg1 = document.getElementById("bg1");
+            const bg2 = document.getElementById("bg2");
+            const bgWhy = document.getElementById("bgWhy");
+
+            document.getElementById("saveBgBtn").addEventListener("click", () => {
+                localStorage.setItem(KEY.bg1, bg1.value || "");
+                localStorage.setItem(KEY.bg2, bg2.value || "");
+                localStorage.setItem(KEY.bgWhy, bgWhy.value || "");
+                showToast("bgToast");
+            });
+            document.getElementById("clearBgBtn").addEventListener("click", () => {
+                bg1.value = ""; bg2.value = ""; bgWhy.value = "";
+                localStorage.removeItem(KEY.bg1);
+                localStorage.removeItem(KEY.bg2);
+                localStorage.removeItem(KEY.bgWhy);
+            });
+
+            // ===== Checklist =====
+            const cIds = ["c1", "c2", "c3", "c4", "c5"];
+            const cEls = cIds.map(id => document.getElementById(id));
+            document.getElementById("saveCheckBtn").addEventListener("click", () => {
+                const state = cEls.map(x => !!x.checked);
+                localStorage.setItem(KEY.checklist, JSON.stringify(state));
+                showToast("checkToast");
+            });
+            document.getElementById("clearCheckBtn").addEventListener("click", () => {
+                cEls.forEach(x => x.checked = false);
+                localStorage.removeItem(KEY.checklist);
+            });
+
+            // ===== Screenshot progress =====
+            const ssDone = document.getElementById("ssDone");
+            document.getElementById("saveSsBtn").addEventListener("click", () => {
+                localStorage.setItem(KEY.ssDone, ssDone.value || "");
+                showToast("ssToast");
+            });
+            document.getElementById("clearSsBtn").addEventListener("click", () => {
+                ssDone.value = "";
+                localStorage.removeItem(KEY.ssDone);
+            });
+
+            // ===== Mini quiz behavior =====
+            function quiz(name) {
+                document.querySelectorAll(`input[name="${name}"]`).forEach(inp => {
+                    inp.addEventListener("change", () => {
+                        const all = Array.from(document.querySelectorAll(`input[name="${name}"]`)).map(i => i.closest(".choice"));
+                        all.forEach(o => {
+                            if (!o) return;
+                            o.classList.remove("selected");
+                            o.style.borderColor = "rgba(20,184,166,.35)";
+                            o.style.background = "rgba(255,255,255,.85)";
+                        });
+                        const parent = inp.closest(".choice");
+                        if (parent) {
+                            parent.classList.add("selected");
+                            const ok = inp.dataset.correct === "true";
+                            parent.style.borderColor = ok ? "rgba(22,163,74,.95)" : "rgba(239,68,68,.95)";
+                            parent.style.background = ok ? "rgba(187,247,208,.9)" : "rgba(254,202,202,.85)";
+                        }
+                    });
+                });
+            }
+            quiz("q1"); quiz("q2"); quiz("q3");
+
+            // ===== Restore =====
+            (function restore() {
+                try {
+                    const raw = localStorage.getItem(KEY.recall);
+                    if (raw) {
+                        const state = JSON.parse(raw);
+                        state.forEach((v, i) => { if (recallEls[i]) recallEls[i].checked = !!v; });
+                    }
+                } catch (_) { }
+
+                try {
+                    const startVal = localStorage.getItem(KEY.start) || "";
+                    if (startVal) {
+                        const r = document.querySelector(`input[name="start"][value="${CSS.escape(startVal)}"]`);
+                        if (r) r.checked = true;
+                    }
+                    startOther.value = localStorage.getItem(KEY.startOther) || "";
+                    refreshRadios(startChoices, "start");
+                } catch (_) { }
+
+                mainChar.value = localStorage.getItem(KEY.mainChar) || "";
+                mainMove.value = localStorage.getItem(KEY.mainMove) || "";
+
+                s1.value = localStorage.getItem(KEY.s1) || "";
+                s2.value = localStorage.getItem(KEY.s2) || "";
+                s3.value = localStorage.getItem(KEY.s3) || "";
+                s4.value = localStorage.getItem(KEY.s4) || "";
+
+                bg1.value = localStorage.getItem(KEY.bg1) || "";
+                bg2.value = localStorage.getItem(KEY.bg2) || "";
+                bgWhy.value = localStorage.getItem(KEY.bgWhy) || "";
+
+                try {
+                    const raw = localStorage.getItem(KEY.checklist);
+                    if (raw) {
+                        const state = JSON.parse(raw);
+                        state.forEach((v, i) => { if (cEls[i]) cEls[i].checked = !!v; });
+                    }
+                } catch (_) { }
+
+                ssDone.value = localStorage.getItem(KEY.ssDone) || "";
+            })();
+
+            // ===== Access Code Gate =====
+            const ACCESS_CODE = "RGMDSLP25";
+            const ACCESS_KEY = "lp_access_ok_rgmdslp25"; // shared with tahap lain
+
+            const accessGate = document.getElementById("accessGate");
+            const accessInput = document.getElementById("accessCodeInput");
+            const accessBtn = document.getElementById("accessCodeBtn");
+            const accessNote = document.getElementById("accessNote");
+
+            function forceUppercase(el) { el.value = (el.value || "").toUpperCase(); }
+            function lockDeck() {
+                accessGate.classList.add("show");
+                accessGate.setAttribute("aria-hidden", "false");
+                document.body.style.overflow = "hidden";
+            }
+            function unlockDeck() {
+                accessGate.classList.remove("show");
+                accessGate.setAttribute("aria-hidden", "true");
+                document.body.style.overflow = "";
+            }
+            function validateCode() {
+                forceUppercase(accessInput);
+                const val = (accessInput.value || "").trim();
+                if (val === ACCESS_CODE) {
+                    localStorage.setItem(ACCESS_KEY, "1");
+                    accessNote.classList.remove("error");
+                    accessNote.textContent = "Kode benar ✅ Materi terbuka.";
+                    setTimeout(unlockDeck, 250);
+                } else {
+                    accessNote.classList.add("error");
+                    accessNote.textContent = "Kode salah ❌ Coba lagi ya.";
+                }
+            }
+            accessInput.addEventListener("input", () => forceUppercase(accessInput));
+            accessInput.addEventListener("keydown", (e) => { if (e.key === "Enter") validateCode(); });
+            accessBtn.addEventListener("click", validateCode);
+
+            const ok = localStorage.getItem(ACCESS_KEY) === "1";
+            if (!ok) lockDeck(); else unlockDeck();
+
+        })();
+    </script>
+</body>
+
+</html>
