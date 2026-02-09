@@ -1,0 +1,1328 @@
+<!doctype html>
+<html lang="id">
+
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>UOB MDS – Lower Primary – Rencanakan Dulu, Baru Coba (ScratchJr)</title>
+  <style>
+    :root {
+      --bg1: #F7FAFF;
+      --bg2: #F3F6FF;
+      --card: #FFFFFF;
+      --ink: #0F172A;
+      --muted: #475569;
+      --line: rgba(226, 232, 240, .95);
+      --brand: #4F46E5;
+      --brand2: #06B6D4;
+      --ok: #16A34A;
+      --bad: #DC2626;
+      --radius: 22px;
+      --shadow: 0 18px 40px rgba(15, 23, 42, .08);
+      --shadow2: 0 10px 22px rgba(15, 23, 42, .06);
+      --focus: 0 0 0 4px rgba(79, 70, 229, .18);
+      --mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+      --sans: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, "Apple Color Emoji", "Segoe UI Emoji";
+    }
+
+    * {
+      box-sizing: border-box
+    }
+
+    body {
+      margin: 0;
+      font-family: var(--sans);
+      color: var(--ink);
+      background:
+        radial-gradient(1200px 520px at 10% 0%, rgba(6, 182, 212, .18), transparent 60%),
+        radial-gradient(1200px 520px at 90% 0%, rgba(79, 70, 229, .16), transparent 55%),
+        linear-gradient(180deg, var(--bg1), var(--bg2) 45%, var(--bg1));
+      min-height: 100vh;
+    }
+
+    .app {
+      width: min(1100px, 96vw);
+      margin: 18px auto 26px;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .topbar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      padding: 12px 14px;
+      border: 1px solid var(--line);
+      border-radius: 18px;
+      background: rgba(255, 255, 255, .72);
+      backdrop-filter: blur(10px);
+      box-shadow: var(--shadow2);
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .logo {
+      width: 38px;
+      height: 38px;
+      border-radius: 14px;
+      background: linear-gradient(135deg, rgba(79, 70, 229, .18), rgba(6, 182, 212, .20));
+      border: 1px solid rgba(226, 232, 240, .9);
+      display: grid;
+      place-items: center;
+      font-weight: 1000;
+      color: rgba(79, 70, 229, 1);
+    }
+
+    .brand h1 {
+      margin: 0;
+      font-size: 14px;
+      line-height: 1.15;
+      letter-spacing: .2px;
+    }
+
+    .brand .sub {
+      font-size: 12px;
+      color: var(--muted);
+      font-weight: 800;
+      margin-top: 2px;
+    }
+
+    .controls {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+
+    .btn {
+      border: 1px solid rgba(226, 232, 240, .95);
+      background: rgba(255, 255, 255, .9);
+      padding: 10px 12px;
+      border-radius: 16px;
+      font-weight: 1000;
+      cursor: pointer;
+      box-shadow: 0 8px 16px rgba(15, 23, 42, .06);
+      transition: transform .06s ease, box-shadow .12s ease, background .12s ease;
+      user-select: none;
+    }
+
+    .btn:hover {
+      transform: translateY(-1px)
+    }
+
+    .btn:active {
+      transform: translateY(0px)
+    }
+
+    .btn.primary {
+      background: linear-gradient(135deg, rgba(79, 70, 229, .12), rgba(6, 182, 212, .14));
+      border-color: rgba(79, 70, 229, .18);
+    }
+
+    .btn.ghost {
+      background: transparent;
+      box-shadow: none
+    }
+
+    .btn:focus {
+      outline: none;
+      box-shadow: var(--focus);
+    }
+
+    .progressWrap {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      min-width: 260px;
+      justify-content: flex-end;
+    }
+
+    .progress {
+      width: 180px;
+      height: 10px;
+      background: rgba(226, 232, 240, .9);
+      border-radius: 999px;
+      overflow: hidden;
+      border: 1px solid rgba(226, 232, 240, .95);
+    }
+
+    .bar {
+      height: 100%;
+      width: 0%;
+      background: linear-gradient(90deg, rgba(79, 70, 229, .85), rgba(6, 182, 212, .85));
+      border-radius: 999px;
+      transition: width .25s ease;
+    }
+
+    .count {
+      font-family: var(--mono);
+      font-size: 12px;
+      color: var(--muted);
+      font-weight: 900;
+    }
+
+    .stage {
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      background: rgba(255, 255, 255, .60);
+      box-shadow: var(--shadow);
+      padding: 14px;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      min-height: calc(100vh - 145px);
+    }
+
+    .slide {
+      flex: 1;
+      background: rgba(255, 255, 255, .68);
+      border: 1px solid rgba(229, 234, 245, .95);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow2);
+      padding: 20px;
+      overflow: hidden;
+      /* important for internal scroll */
+      backdrop-filter: blur(8px);
+    }
+
+    .slideInner {
+      max-width: 980px;
+      margin: 0 auto;
+      max-height: calc(100vh - 190px);
+      overflow-y: auto;
+      padding-right: 8px;
+    }
+
+    .slideInner::-webkit-scrollbar {
+      width: 10px;
+    }
+
+    .slideInner::-webkit-scrollbar-thumb {
+      background: rgba(96, 112, 153, .25);
+      border-radius: 999px;
+      border: 3px solid rgba(255, 255, 255, .9);
+    }
+
+    .slideInner::-webkit-scrollbar-track {
+      background: transparent;
+    }
+
+    h2 {
+      margin: 6px 0 10px;
+      font-size: 30px;
+      letter-spacing: -.3px
+    }
+
+    h3 {
+      margin: 0 0 8px;
+      font-size: 18px
+    }
+
+    p {
+      margin: 0 0 10px;
+      color: var(--muted);
+      font-weight: 800;
+      line-height: 1.55
+    }
+
+    .kicker {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      font-weight: 1000;
+      font-size: 12px;
+      letter-spacing: .2px;
+      padding: 7px 10px;
+      border-radius: 999px;
+      border: 1px solid rgba(79, 70, 229, .16);
+      background: rgba(79, 70, 229, .06);
+      color: rgba(55, 65, 81, .95);
+    }
+
+    .grid {
+      display: grid;
+      gap: 14px
+    }
+
+    .cols2 {
+      grid-template-columns: 1fr 1fr
+    }
+
+    @media (max-width: 860px) {
+      .cols2 {
+        grid-template-columns: 1fr
+      }
+
+      .progressWrap {
+        min-width: unset
+      }
+
+      .progress {
+        width: 130px
+      }
+
+      h2 {
+        font-size: 26px
+      }
+    }
+
+    .card {
+      background: rgba(255, 255, 255, .92);
+      border: 1px solid rgba(226, 232, 240, .95);
+      border-radius: 22px;
+      padding: 14px;
+      box-shadow: 0 10px 18px rgba(15, 23, 42, .06);
+    }
+
+    .hint {
+      background: rgba(6, 182, 212, .10);
+      border: 1px dashed rgba(6, 182, 212, .35);
+      border-radius: 18px;
+      padding: 12px 14px;
+      color: rgba(30, 41, 59, .92);
+      font-weight: 900;
+      line-height: 1.5;
+    }
+
+    .miniRow {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+      align-items: center
+    }
+
+    .tag {
+      display: inline-flex;
+      align-items: center;
+      padding: 7px 10px;
+      border-radius: 999px;
+      border: 1px solid rgba(226, 232, 240, .95);
+      background: rgba(255, 255, 255, .92);
+      color: rgba(30, 41, 59, .92);
+      font-weight: 1000;
+      font-size: 12px;
+    }
+
+
+    /* ScratchJr block visual (simple) */
+    .sjrBlocks {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      margin-top: 10px
+    }
+
+    .sjrRow {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      align-items: flex-start
+    }
+
+    .sjrBlock {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 10px 12px;
+      border-radius: 16px;
+      border: 1px solid rgba(226, 232, 240, .95);
+      background: rgba(255, 255, 255, .96);
+      font-weight: 1000;
+      color: rgba(15, 23, 42, .92);
+      box-shadow: 0 8px 16px rgba(15, 23, 42, .05);
+      user-select: none;
+    }
+
+    .sjrBlock small {
+      font-weight: 900;
+      color: rgba(71, 85, 105, .95)
+    }
+
+    .bStart {
+      background: rgba(34, 197, 94, .10);
+      border-color: rgba(34, 197, 94, .25)
+    }
+
+    .bMove {
+      background: rgba(59, 130, 246, .10);
+      border-color: rgba(59, 130, 246, .25)
+    }
+
+    .bEvent {
+      background: rgba(245, 158, 11, .12);
+      border-color: rgba(245, 158, 11, .28)
+    }
+
+    .bMsg {
+      background: rgba(249, 115, 22, .12);
+      border-color: rgba(249, 115, 22, .28)
+    }
+
+    .bLook {
+      background: rgba(168, 85, 247, .10);
+      border-color: rgba(168, 85, 247, .25)
+    }
+
+    .sjrCaption {
+      margin-top: 10px;
+      color: var(--muted);
+      font-weight: 900;
+      line-height: 1.55
+    }
+
+    ul.list {
+      margin: 8px 0 0 18px;
+      color: var(--muted);
+      font-weight: 850;
+      line-height: 1.55
+    }
+
+    .choices {
+      display: grid;
+      gap: 10px;
+      margin-top: 10px
+    }
+
+    .choice {
+      border: 1px solid rgba(226, 232, 240, .95);
+      border-radius: 18px;
+      padding: 12px 14px;
+      background: rgba(255, 255, 255, .96);
+      font-weight: 950;
+      color: rgba(30, 41, 59, .96);
+      cursor: pointer;
+      user-select: none;
+      transition: transform .06s ease, border-color .12s ease, background .12s ease;
+    }
+
+    .choice:hover {
+      transform: translateY(-1px)
+    }
+
+    .choice.active {
+      border-color: rgba(79, 70, 229, .35);
+      background: rgba(79, 70, 229, .06)
+    }
+
+    .choice.ok {
+      border-color: rgba(22, 163, 74, .35);
+      background: rgba(22, 163, 74, .08)
+    }
+
+    .choice.bad {
+      border-color: rgba(220, 38, 38, .35);
+      background: rgba(220, 38, 38, .08)
+    }
+
+    .feedback {
+      display: none;
+      margin-top: 10px;
+      border-radius: 18px;
+      padding: 12px 14px;
+      border: 1px solid rgba(226, 232, 240, .95);
+      background: rgba(255, 255, 255, .92);
+      color: var(--muted);
+      font-weight: 900;
+      line-height: 1.5;
+    }
+
+    .feedback.show {
+      display: block
+    }
+
+    .fbOk {
+      border-color: rgba(22, 163, 74, .35);
+      background: rgba(22, 163, 74, .08);
+      color: rgba(15, 23, 42, .92)
+    }
+
+    .fbBad {
+      border-color: rgba(220, 38, 38, .35);
+      background: rgba(220, 38, 38, .08);
+      color: rgba(15, 23, 42, .92)
+    }
+
+    /* Toggle blocks (reused) */
+    .habit {
+      border: 1px solid var(--line);
+      border-radius: 18px;
+      padding: 12px;
+      margin-top: 10px;
+      background: linear-gradient(180deg, #FFFFFF, #F7FAFF);
+    }
+
+    .habitHead {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px
+    }
+
+    .miniBtn {
+      padding: 8px 10px;
+      border-radius: 14px;
+      font-size: 12px;
+      font-weight: 1000
+    }
+
+    .habitBody {
+      margin-top: 10px;
+      display: none;
+      padding: 10px 12px;
+      border-radius: 16px;
+      border: 1px dashed rgba(96, 112, 153, .35);
+      background: rgba(79, 70, 229, .06);
+      color: var(--muted);
+      font-weight: 850;
+      line-height: 1.5;
+    }
+
+    .habitBody.show {
+      display: block
+    }
+
+    .habitBody p {
+      margin: 6px 0
+    }
+
+    /* Mini “digital tree” */
+    .tree {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 14px;
+      margin-top: 10px;
+    }
+
+    .treeBox {
+      border: 1px solid rgba(226, 232, 240, .95);
+      border-radius: 22px;
+      padding: 14px;
+      background: rgba(255, 255, 255, .92);
+      box-shadow: 0 10px 18px rgba(15, 23, 42, .06);
+    }
+
+    .treeTop {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      margin-bottom: 8px;
+      font-weight: 1000;
+    }
+
+    .fruitRow {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-top: 10px
+    }
+
+    .fruit {
+      width: 38px;
+      height: 38px;
+      border-radius: 14px;
+      border: 1px solid rgba(226, 232, 240, .95);
+      background: rgba(255, 255, 255, .96);
+      display: grid;
+      place-items: center;
+      font-size: 18px;
+      cursor: pointer;
+      user-select: none;
+      transition: transform .06s ease, background .12s ease, border-color .12s ease;
+    }
+
+    .fruit:hover {
+      transform: translateY(-1px)
+    }
+
+    .fruit.good.active {
+      border-color: rgba(22, 163, 74, .35);
+      background: rgba(22, 163, 74, .10)
+    }
+
+    .fruit.bad.active {
+      border-color: rgba(220, 38, 38, .35);
+      background: rgba(220, 38, 38, .10)
+    }
+
+    .input {
+      width: 100%;
+      border: 1px solid rgba(226, 232, 240, .95);
+      background: rgba(255, 255, 255, .96);
+      border-radius: 16px;
+      padding: 12px 14px;
+      font-weight: 950;
+      color: rgba(30, 41, 59, .96);
+    }
+  </style>
+</head>
+
+<body>
+  <!-- ACCESS GATE -->
+  <div id="accessGate" style="
+  position:fixed;
+  inset:0;
+  background:linear-gradient(135deg,#eef2ff,#ecfeff);
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  z-index:9999;
+">
+    <div class="card" style="max-width:420px;width:92%;text-align:center">
+      <h2>🔐 Kode Akses</h2>
+      <p>Masukkan kode untuk memulai sesi.</p>
+
+      <input id="accessInput" class="input" placeholder="MASUKKAN KODE" autocomplete="off"
+        style="text-align:center;font-weight:900;letter-spacing:2px" />
+
+      <button class="btn primary" id="accessBtn" style="margin-top:12px">
+        Masuk
+      </button>
+
+      <div class="feedback" id="accessFb" style="margin-top:10px"></div>
+
+      <div class="hint" style="margin-top:10px">
+        Kode diberikan oleh guru.
+      </div>
+    </div>
+  </div>
+
+  <div class="app">
+    <div class="topbar">
+      <div class="brand">
+        <div class="logo">LP</div>
+        <div>
+          <h1>Lower Primary</h1>
+          <div class="sub">Merencanakan Ide & Mencoba dengan Aman (ScratchJr)</div>
+        </div>
+      </div>
+
+      <div class="controls">
+        <button class="btn ghost" id="btnHome" title="Kembali ke awal">🏠 Awal</button>
+        <button class="btn" id="btnPrev" title="Sebelumnya (←)">←</button>
+        <button class="btn primary" id="btnNext" title="Berikutnya (→)">→</button>
+      </div>
+
+      <div class="progressWrap">
+        <div class="progress" aria-label="Progress">
+          <div class="bar" id="bar"></div>
+        </div>
+        <div class="count" id="count">1/1</div>
+      </div>
+    </div>
+
+    <div class="stage">
+      <div class="slide" role="region" aria-label="Slide">
+        <div class="slideInner" id="content"></div>
+      </div>
+
+    </div>
+  </div>
+
+  <script>
+    const slides = [
+      {
+        title: "Pembuka", html: `
+        <h2>🧠 Rencanakan dulu, baru coba!</h2>
+        <p>Hari ini kita belajar: bikin <b>rencana</b>, lalu <b>coba</b> di ScratchJr.</p>
+        <div class="grid cols2" style="margin-top:10px">
+          <div class="card">
+            <h3>Target kita</h3>
+            <ul class="list">
+              <li>Tahu bedanya <b>urut</b> dan <b>asal</b></li>
+              <li>Bisa <b>coba lagi</b> kalau belum berhasil</li>
+              <li>Ingat cara <b>aman</b> saat pakai tablet</li>
+            </ul>
+            <div class="tagRow"><span class="tag">Sambung dari Sesi 25</span></div>
+          </div>
+          <div class="card">
+            <h3>Siap?</h3>
+            <p>Klik tombol ini ya.</p>
+            <button class="btn primary" data-goto="1">🚀 Mulai</button>
+          </div>
+        </div>
+      `},
+
+      {
+        title: "Ingat Sesi 25", html: `
+        <h2>Masih ingat kemarin?</h2>
+        <p>Kemarin kita belajar: <b>Masalah → Solusi → Urutan langkah</b>.</p>
+        <div class="grid cols2" style="margin-top:10px">
+          <div class="card">
+            <h3>Quiz cepat</h3>
+            <p style="margin:0 0 10px">Urutan yang benar itu…</p>
+            <div class="choices" data-quiz="recap25">
+              <div class="choice" data-answer="right">Masalah → Solusi → Urutan</div>
+              <div class="choice" data-answer="wrong">Solusi → Masalah → Urutan</div>
+            </div>
+            <div class="feedback" data-quiz-feedback="recap25"></div>
+          </div>
+          <div class="card">
+            <h3>Hari ini naik level</h3>
+            <ul class="list">
+              <li>Kita tambah: <b>Rencana</b></li>
+              <li>Lalu: <b>Coba</b> dan <b>Cek</b></li>
+            </ul>
+            <button class="btn secondary" data-goto="2">➡️ Lanjut</button>
+          </div>
+        </div>
+      `},
+
+      {
+        title: "Hari ini", html: `
+        <h2>Hari ini kita akan…</h2>
+        <p>Klik checklist-nya ya.</p>
+        <div class="card" style="margin-top:10px">
+          <div class="choices" data-select-group data-limit="3">
+            <div class="choice">📋 Bikin rencana</div>
+            <div class="choice">▶️ Jalankan proyek</div>
+            <div class="choice">🔁 Coba lagi kalau belum pas</div>
+          </div>
+          <div class="hint" style="margin-top:10px">Boleh klik semuanya.</div>
+        </div>
+        <div class="card" style="margin-top:12px">
+          <button class="btn primary" data-goto="3">🚦 Mulai belajar</button>
+        </div>
+      `},
+
+      {
+        title: "Apa itu rencana?", html: `
+        <h2>📋 Apa itu rencana?</h2>
+        <p>Rencana itu langkah yang kita siapkan <b>sebelum mulai</b>.</p>
+        <div class="grid cols2" style="margin-top:10px">
+          <div class="card">
+            <h3>Pilih yang benar</h3>
+            <div class="choices" data-quiz="plan1">
+              <div class="choice" data-answer="right">Rencana dibuat sebelum mulai</div>
+              <div class="choice" data-answer="wrong">Rencana dibuat setelah selesai</div>
+            </div>
+            <div class="feedback" data-quiz-feedback="plan1"></div>
+          </div>
+          <div class="card">
+            <h3>Contoh gampang</h3>
+            <p style="margin:0">Mau berangkat sekolah:</p>
+            <ul class="list">
+              <li>Pakai seragam</li>
+              <li>Pakai sepatu</li>
+              <li>Berangkat</li>
+            </ul>
+          </div>
+        </div>
+      `},
+
+      {
+        title: "Susun rencana", html: `
+        <h2>🧩 Susun rencana (contoh)</h2>
+        <p>Klik langkahnya sampai jadi urut.</p>
+        <div class="grid cols2" style="margin-top:10px">
+          <div class="card">
+            <h3>Langkah pilihan</h3>
+            <div class="choices" data-order-pool="ogPlan">
+              <div class="choice" data-step="Selesai bikin tugas">Selesai bikin tugas</div>
+              <div class="choice" data-step="Tekan SIMPAN">Tekan SIMPAN</div>
+              <div class="choice" data-step="Taruh di folder khusus">Taruh di folder khusus</div>
+              <div class="choice" data-step="Beri nama yang jelas">Beri nama yang jelas</div>
+            </div>
+            <div class="hint" style="margin-top:10px">Klik satu-satu ya.</div>
+          </div>
+          <div class="card">
+            <h3>Urutanmu</h3>
+            <ol class="list" id="ogPlanList" style="margin-top:8px"></ol>
+            <div style="display:flex;gap:10px;flex-wrap:wrap;margin-top:10px">
+              <button class="btn primary" data-order-check="ogPlan" data-answer="Selesai bikin tugas|Tekan SIMPAN|Taruh di folder khusus|Beri nama yang jelas">✅ Cek</button>
+              <button class="btn" data-order-reset="ogPlan">🧹 Hapus</button>
+            </div>
+            <div class="feedback" id="ogPlanFb"></div>
+          </div>
+        </div>
+      `},
+
+      {
+        title: "Masalah kecil di tablet", html: `
+        <h2>Masalah kecil di tablet</h2>
+        <p>Pilih yang pernah kamu alami.</p>
+        <div class="grid cols2" style="margin-top:10px">
+          <div class="card">
+            <div class="choices" data-select-group data-limit="3">
+              <div class="choice">📄 File hilang</div>
+              <div class="choice">🤷 Lupa disimpan</div>
+              <div class="choice">🔎 Bingung filenya di mana</div>
+            </div>
+            <div class="hint" style="margin-top:10px">Tidak apa-apa kalau belum pernah.</div>
+          </div>
+          <div class="card">
+            <h3>Solusi utama</h3>
+            <ul class="list">
+              <li>Biasakan <b>simpan</b></li>
+              <li>Pakai <b>nama file</b> yang jelas</li>
+              <li>Simpan di <b>folder khusus</b></li>
+            </ul>
+          </div>
+        </div>
+      `},
+
+      {
+        title: "Masuk ScratchJr", html: `
+        <h2>🐱 Sekarang ke ScratchJr</h2>
+        <p>Kita coba rencana “menyimpan file” lewat cerita.</p>
+        <div class="grid cols2" style="margin-top:10px">
+          <div class="card">
+            <h3>Cerita</h3>
+            <p style="margin:0 0 10px">Ada <b>Anak</b>, <b>Komputer</b>, dan <b>Folder Aman</b>.</p>
+            <div class="tagRow">
+              <span class="tag">Anak</span><span class="tag">Komputer</span><span class="tag">Folder Aman</span>
+            </div>
+          </div>
+          <div class="card">
+            <h3>Langkahnya</h3>
+            <ul class="list">
+              <li>Mulai</li>
+              <li>Anak mendekati komputer</li>
+              <li>Tekan simpan</li>
+              <li>Muncul tanda ✔️</li>
+            </ul>
+            <button class="btn primary" data-goto="7">➡️ Mulai aktivitas</button>
+          </div>
+        </div>
+      `},
+      {
+        title: "Aktivitas 1: Siapkan proyek", html: `
+        <h2>🧰 Aktivitas 1: Siapkan Proyek</h2>
+        <p>Ikuti langkah ini di ScratchJr ya.</p>
+        <div class="grid cols2" style="margin-top:10px">
+          <div class="card">
+            <h3>Langkah di ScratchJr</h3>
+            <ul class="list">
+              <li>Buat halaman baru</li>
+              <li>Pilih background “kelas / rumah”</li>
+              <li>Tambah 3 sprite: <b>Anak</b>, <b>Komputer</b>, <b>Folder</b></li>
+            </ul>
+            <div class="hint" style="margin-top:10px">Kalau sprite folder belum ada, pakai <b>kotak</b> dulu ya.</div>
+          </div>
+          <div class="card">
+            <h3>Checklist</h3>
+            <p style="margin:0 0 8px">Klik kalau sudah.</p>
+            <div class="choices" data-select-group data-limit="3">
+              <div class="choice">✅ Background sudah dipilih</div>
+              <div class="choice">✅ Sprite Anak sudah ada</div>
+              <div class="choice">✅ Komputer & Folder sudah ada</div>
+            </div>
+            <button class="btn primary" data-goto="8" style="margin-top:12px">➡️ Lanjut coding</button>
+          </div>
+        </div>
+      `},
+
+      {
+        title: "Aktivitas 2: Kode Sprite Anak", html: `
+        <h2>🐥 Aktivitas 2: Kode Anak</h2>
+        <p>Buat kode ini di sprite <b>Anak</b>, lalu coba jalankan.</p>
+        <div class="grid cols2" style="margin-top:10px">
+          <div class="card">
+            <h3>Target gerak</h3>
+            <ul class="list">
+              <li>Mulai saat 🟩 bendera hijau</li>
+              <li>Anak jalan mendekati komputer</li>
+              <li>Berhenti sebentar</li>
+            </ul>
+            <div class="sjrRow" style="margin-top:10px">
+              <div class="sjrBlock bStart">🟩 Mulai</div>
+              <div class="sjrBlock bMove">➡️ Jalan (3)</div>
+              <div class="sjrBlock bMove">⏱️ Tunggu</div>
+            </div>
+            <div class="sjrCaption">Kalau lewat jauh, kurangi angka jalannya.</div>
+          </div>
+          <div class="card">
+            <h3>Kuis cepat</h3>
+            <p style="margin:0 0 10px">Blok pertama harus…</p>
+            <div class="choices" data-quiz="kidFirstBlock">
+              <div class="choice" data-answer="right">🟩 Bendera hijau</div>
+              <div class="choice" data-answer="wrong">👆 Kalau ditekan</div>
+            </div>
+            <div class="feedback" data-quiz-feedback="kidFirstBlock"></div>
+            <button class="btn primary" data-goto="9" style="margin-top:12px">➡️ Lihat contoh blok</button>
+          </div>
+        </div>
+      `},
+
+
+
+      {
+        title: "Kode blok yang benar", html: `
+  <h2>🧩 Kode blok ScratchJr yang benar</h2>
+  <p>Ini contoh <b>urutan blok</b> supaya cerita “simpan file” jalan.</p>
+  <div class="grid cols2" style="margin-top:10px">
+    <div class="card">
+      <h3>1) Sprite Anak</h3>
+      <div class="sjrBlocks">
+        <div class="sjrRow">
+          <div class="sjrBlock bStart">🟩 <span>Mulai</span> <small>(bendera hijau)</small></div>
+          <div class="sjrBlock bMove">➡️ <span>Jalan ke komputer</span></div>
+          <div class="sjrBlock bMove">⏱️ <span>Tunggu sebentar</span></div>
+        </div>
+      </div>
+      <div class="sjrCaption">Anak jalan dulu sampai dekat komputer.</div>
+    </div>
+    <div class="card">
+      <h3>2) Sprite Tombol “Simpan”</h3>
+      <div class="sjrBlocks">
+        <div class="sjrRow">
+          <div class="sjrBlock bEvent">👆 <span>Kalau ditekan</span></div>
+          <div class="sjrBlock bMsg">📣 <span>Kirim pesan</span> <small>SIMPAN</small></div>
+        </div>
+      </div>
+      <div class="sjrCaption">Saat tombolnya ditekan, dia mengirim pesan “SIMPAN”.</div>
+    </div>
+  </div>
+  <div class="card" style="margin-top:12px">
+    <h3>3) Sprite Komputer / Folder</h3>
+    <div class="sjrRow" style="margin-top:8px">
+      <div class="sjrBlock bMsg">📨 <span>Kalau terima pesan</span> <small>SIMPAN</small></div>
+      <div class="sjrBlock bLook">✔️ <span>Tampilkan tanda centang</span></div>
+      <div class="sjrBlock bMove">📁 <span>File pindah ke folder</span></div>
+    </div>
+    <div class="sjrCaption">Begitu pesan “SIMPAN” datang, komputer kasih tanda ✔️ dan file masuk folder.</div>
+    <button class="btn primary" data-goto="10" style="margin-top:10px">➡️ Lanjut</button>
+  </div>
+`},
+
+      {
+        title: "Pilih blok yang cocok", html: `
+  <h2>🎯 Pilih blok yang cocok</h2>
+  <p>Kuis cepat: tombol “Simpan” harus pakai blok yang mana?</p>
+  <div class="grid cols2" style="margin-top:10px">
+    <div class="card">
+      <h3>Tombol “Simpan”</h3>
+      <div class="sjrRow" style="margin-top:8px">
+        <div class="sjrBlock bEvent">👆 Kalau ditekan</div>
+        <div class="sjrBlock bMsg">📣 Kirim pesan SIMPAN</div>
+      </div>
+      <div class="hint" style="margin-top:10px">Klik jawaban yang benar ya.</div>
+    </div>
+    <div class="card">
+      <h3>Pilih 1 jawaban</h3>
+      <div class="choices" data-quiz="saveBtnCode">
+        <div class="choice" data-answer="right">👆 Kalau ditekan → 📣 Kirim pesan “SIMPAN”</div>
+        <div class="choice" data-answer="wrong">🟩 Mulai → ➡️ Jalan terus</div>
+      </div>
+      <div class="feedback" data-quiz-feedback="saveBtnCode"></div>
+      <button class="btn primary" data-goto="11" style="margin-top:10px">➡️ Lanjut bikin tombol</button>
+    </div>
+  </div>
+`},
+
+      {
+        title: "Aktivitas 3: Tombol Simpan", html: `
+        <h2>💾 Aktivitas 3: Tombol “Simpan”</h2>
+        <p>Sekarang kita bikin tombol yang bisa <b>mengirim pesan</b>.</p>
+        <div class="grid cols2" style="margin-top:10px">
+          <div class="card">
+            <h3>Susun langkahnya</h3>
+            <p style="margin:0 0 10px">Klik sampai urut untuk tombol “Simpan”.</p>
+            <div class="choices" data-order-pool="ogSaveBtn">
+              <div class="choice" data-step="Pilih sprite Tombol Simpan">Pilih sprite Tombol Simpan</div>
+              <div class="choice" data-step="Tambah blok: Kalau ditekan">Tambah blok: Kalau ditekan</div>
+              <div class="choice" data-step="Tambah blok: Kirim pesan SIMPAN">Tambah blok: Kirim pesan SIMPAN</div>
+              <div class="choice" data-step="Coba klik tombolnya">Coba klik tombolnya</div>
+            </div>
+            <div class="hint" style="margin-top:10px">Ini bukan di sprite Anak ya, ini di tombolnya.</div>
+          </div>
+          <div class="card">
+            <h3>Urutanmu</h3>
+            <ol class="list" id="ogSaveBtnList" style="margin-top:8px"></ol>
+            <div style="display:flex;gap:10px;flex-wrap:wrap;margin-top:10px">
+              <button class="btn primary" data-order-check="ogSaveBtn" data-answer="Pilih sprite Tombol Simpan|Tambah blok: Kalau ditekan|Tambah blok: Kirim pesan SIMPAN|Coba klik tombolnya">✅ Cek</button>
+              <button class="btn" data-order-reset="ogSaveBtn">🧹 Hapus</button>
+            </div>
+            <div class="feedback" id="ogSaveBtnFb"></div>
+            <button class="btn primary" data-goto="12" style="margin-top:12px">➡️ Lanjut folder</button>
+          </div>
+        </div>
+      `},
+
+      {
+        title: "Aktivitas 4: Folder bereaksi", html: `
+        <h2>📁 Aktivitas 4: Folder Aman</h2>
+        <p>Folder muncul saat menerima pesan <b>SIMPAN</b>.</p>
+        <div class="grid cols2" style="margin-top:10px">
+          <div class="card">
+            <h3>Target kode</h3>
+            <div class="sjrRow" style="margin-top:8px">
+              <div class="sjrBlock bMsg">📨 Terima pesan SIMPAN</div>
+              <div class="sjrBlock bLook">👀 Muncul / tanda ✔️</div>
+            </div>
+            <div class="sjrCaption">Kalau folder sudah terlihat dari awal, coba buat dia “sembunyi” dulu.</div>
+          </div>
+          <div class="card">
+            <h3>Kuis cepat</h3>
+            <p style="margin:0 0 10px">Folder mulai bergerak saat…</p>
+            <div class="choices" data-quiz="folderTrigger">
+              <div class="choice" data-answer="right">📨 Terima pesan SIMPAN</div>
+              <div class="choice" data-answer="wrong">🟩 Bendera hijau</div>
+            </div>
+            <div class="feedback" data-quiz-feedback="folderTrigger"></div>
+            <button class="btn primary" data-goto="13" style="margin-top:12px">▶️ Tes proyek</button>
+          </div>
+        </div>
+      `},
+
+
+      {
+        title: "Coba jalankan", html: `
+        <h2>▶️ Jalankan dulu</h2>
+        <p>Pura-pura kita tekan bendera hijau ya.</p>
+        <div class="grid cols2" style="margin-top:10px">
+          <div class="card">
+            <h3>Mulai dari mana?</h3>
+            <div class="choices" data-quiz="startFlag">
+              <div class="choice" data-answer="right">🟩 Tekan bendera hijau</div>
+              <div class="choice" data-answer="wrong">❌ Tekan random</div>
+            </div>
+            <div class="feedback" data-quiz-feedback="startFlag"></div>
+          </div>
+          <div class="card">
+            <h3>Tips</h3>
+            <p style="margin:0">Kalau belum sesuai, kita <b>coba lagi</b> dan <b>perbaiki</b>.</p>
+            <div class="tagRow"><span class="tag">Tidak perlu panik</span><span class="tag">Pelan-pelan</span></div>
+          </div>
+        </div>
+      `},
+
+      {
+        title: "Berhasil atau belum?", html: `
+        <h2>Berhasil atau belum?</h2>
+        <p>Kalau file belum masuk folder, kita harus…</p>
+        <div class="card" style="margin-top:10px">
+          <div class="choices" data-quiz="tryFix">
+            <div class="choice" data-answer="right">🔁 Ubah langkah lalu coba lagi</div>
+            <div class="choice" data-answer="wrong">😤 Marah lalu berhenti</div>
+          </div>
+          <div class="feedback" data-quiz-feedback="tryFix"></div>
+        </div>
+      `},
+
+      {
+        title: "Aman saat pakai tablet", html: `
+        <h2>🔐 Aman saat pakai tablet</h2>
+        <p>Klik yang termasuk kebiasaan aman.</p>
+        <div class="grid cols2" style="margin-top:10px">
+          <div class="card">
+            <h3>Kebiasaan aman</h3>
+            <div class="choices" data-select-group data-limit="3">
+              <div class="choice">💾 Sering simpan proyek</div>
+              <div class="choice">🧾 Kasih nama file yang jelas</div>
+              <div class="choice">🙋 Kalau bingung, tanya guru/ortu</div>
+            </div>
+          </div>
+          <div class="card">
+            <h3>Quiz kecil</h3>
+            <p style="margin:0 0 10px">Password sebaiknya…</p>
+            <div class="choices" data-quiz="passSafe">
+              <div class="choice" data-answer="right">Bukan nama sendiri, bukan 123</div>
+              <div class="choice" data-answer="wrong">Nama sendiri saja biar mudah</div>
+            </div>
+            <div class="feedback" data-quiz-feedback="passSafe"></div>
+          </div>
+        </div>
+      `},
+
+      {
+        title: "Selesai", html: `
+        <h2>🎉 Selesai!</h2>
+        <p>Besok kita bisa bikin proyek yang lebih seru lagi.</p>
+        <div class="card" style="margin-top:10px">
+          <button class="btn" data-goto="0">🏠 Kembali ke awal</button>
+        </div>
+      `}
+    ];
+
+
+    let idx = 0;
+    const content = document.getElementById("content");
+    const bar = document.getElementById("bar");
+    const count = document.getElementById("count");
+    const btnPrev = document.getElementById("btnPrev");
+    const btnNext = document.getElementById("btnNext");
+    const btnHome = document.getElementById("btnHome");
+
+    function clamp(n, a, b) { return Math.max(a, Math.min(b, n)); }
+
+    /* ===============================
+   ACCESS CODE GATE
+================================ */
+    const ACCESS_CODE = "RGMDSLP25";
+
+    const gate = document.getElementById("accessGate");
+    const input = document.getElementById("accessInput");
+    const btn = document.getElementById("accessBtn");
+    const fb = document.getElementById("accessFb");
+
+    // auto uppercase
+    input.addEventListener("input", () => {
+      input.value = input.value.toUpperCase();
+    });
+
+    // submit handler
+    btn.addEventListener("click", checkAccess);
+    input.addEventListener("keydown", (e) => {
+      if (e.key === "Enter") checkAccess();
+    });
+
+    function checkAccess() {
+      if (input.value.trim() === ACCESS_CODE) {
+        gate.style.display = "none";
+      } else {
+        fb.className = "feedback show fbBad";
+        fb.textContent = "Kode salah. Coba lagi.";
+      }
+    }
+
+    function render() {
+      const s = slides[idx];
+      content.innerHTML = s.html;
+      // update progress
+      const pct = ((idx + 1) / slides.length) * 100;
+      bar.style.width = pct + "%";
+      count.textContent = `${idx + 1}/${slides.length}`;
+      // wire interactivity
+      wireInteractions();
+      // handle goto buttons
+      content.querySelectorAll("[data-goto]").forEach(b => {
+        b.addEventListener("click", () => {
+          const to = Number(b.getAttribute("data-goto"));
+          idx = clamp(to, 0, slides.length - 1);
+          render();
+          content.scrollTop = 0;
+        });
+      });
+    }
+
+    function showFeedback(el, html, type) {
+      if (!el) return;
+      el.classList.add("show");
+      el.style.display = "block";
+      el.classList.remove("fbOk", "fbBad");
+      if (type === "ok") el.classList.add("fbOk");
+      if (type === "bad") el.classList.add("fbBad");
+      el.innerHTML = html;
+    }
+
+    function wireQuiz(group) {
+      const id = group.getAttribute("data-quiz");
+      const fb = content.querySelector(`[data-quiz-feedback="${id}"]`);
+      const items = [...group.querySelectorAll(".choice")];
+
+      items.forEach(ch => {
+        ch.addEventListener("click", () => {
+          items.forEach(x => x.classList.remove("active", "ok", "bad"));
+          ch.classList.add("active");
+
+          const isRight = ch.getAttribute("data-answer") === "right";
+          if (isRight) {
+            ch.classList.add("ok");
+            const msg = getQuizMsg(id, true);
+            showFeedback(fb, msg, "ok");
+          } else {
+            ch.classList.add("bad");
+            const msg = getQuizMsg(id, false);
+            showFeedback(fb, msg, "bad");
+          }
+        });
+      });
+    }
+
+    function wireSelectGroup() {
+      content.querySelectorAll("[data-select-group]").forEach(group => {
+        const limit = Number(group.getAttribute("data-limit")) || 999;
+        const choices = [...group.querySelectorAll(".choice")];
+
+        choices.forEach(ch => {
+          ch.addEventListener("click", () => {
+            const isActive = ch.classList.contains("active");
+
+            if (isActive) {
+              ch.classList.remove("active");
+              return;
+            }
+
+            const activeCount = choices.filter(c => c.classList.contains("active")).length;
+            if (activeCount >= limit) return;
+
+            ch.classList.add("active");
+          });
+        });
+      });
+    }
+
+
+    function getQuizMsg(id, ok) {
+
+      const msgs = {
+        recap25: { ok: "✅ Mantap! Itu urutan yang kemarin.", bad: "⚠️ Coba lagi ya. Mulai dari masalah." },
+        plan1: { ok: "✅ Betul! Rencana dibuat sebelum mulai.", bad: "⚠️ Kita rencanakan dulu sebelum mulai." },
+        startFlag: { ok: "✅ Benar. Mulai dari bendera hijau.", bad: "⚠️ Mulai yang benar itu bendera hijau." },
+        tryFix: { ok: "✅ Iya! Ubah lalu coba lagi.", bad: "⚠️ Jangan marah. Coba dan perbaiki ya." },
+        saveBtnCode: { ok: "✅ Betul! Tombol simpan kirim pesan SIMPAN.", bad: "⚠️ Coba lagi. Tombol simpan itu: kalau ditekan → kirim pesan." },
+
+        kidFirstBlock: { ok: "✅ Betul! Mulainya dari bendera hijau.", bad: "⚠️ Coba lagi ya. Sprite Anak mulainya dari bendera hijau." },
+
+        folderTrigger: { ok: "✅ Betul! Folder bergerak saat terima pesan.", bad: "⚠️ Coba lagi. Foldernya tunggu pesan SIMPAN dulu ya." },
+        passSafe: { ok: "✅ Aman! Password jangan mudah ditebak.", bad: "⚠️ Lebih aman kalau password tidak mudah ditebak." }
+      };
+
+      const m = msgs[id];
+      if (!m) return ok ? "✅ Benar!" : "⚠️ Coba lagi.";
+      return ok ? m.ok : m.bad;
+    }
+
+    function wireToggles() {
+      content.querySelectorAll("[data-toggle]").forEach(btn => {
+        btn.addEventListener("click", () => {
+          const id = btn.getAttribute("data-toggle");
+          const panel = content.querySelector("#" + id);
+          if (!panel) return;
+
+          const isOpen = panel.classList.contains("show");
+          panel.classList.toggle("show", !isOpen);
+
+          // text change if button not ghost
+          if (btn.classList.contains("miniBtn") || btn.classList.contains("btn")) {
+            btn.textContent = isOpen ? (btn.textContent.includes("Tutup") ? btn.textContent.replace("Tutup", "Lihat") : "Lihat") : "Tutup";
+          }
+          if (!isOpen) panel.scrollIntoView({ behavior: "smooth", block: "nearest" });
+        });
+      });
+    }
+
+    function wireTreeGameV2() {
+      const goodGroup = content.querySelector('[data-select-group="good"]');
+      const badGroup = content.querySelector('[data-select-group="bad"]');
+      const checkBtn = content.querySelector('[data-check-tree]');
+      const resetBtn = content.querySelector('[data-reset-tree]');
+      const tag = content.querySelector('#treeTag');
+      const fb = content.querySelector('#treeFb');
+
+      if (!goodGroup || !badGroup || !checkBtn || !resetBtn) return;
+
+      function countActive(group) {
+        return group.querySelectorAll('.choice.active').length;
+      }
+
+      checkBtn.addEventListener('click', () => {
+        const g = countActive(goodGroup);
+        const b = countActive(badGroup);
+
+        tag.style.display = 'inline-flex';
+        fb.classList.add('show');
+
+        if (g === 3 && b === 3) {
+          tag.textContent = '✅ Mantap!';
+          fb.className = 'feedback show fbOk';
+          fb.innerHTML =
+            'Keren! Kamu sudah bisa membedakan contoh jejak digital yang baik dan tidak baik.';
+        } else {
+          tag.textContent = '⚠️ Belum lengkap';
+          fb.className = 'feedback show fbBad';
+          fb.innerHTML =
+            `Pilih <b>3</b> jejak baik dan <b>3</b> jejak tidak baik.<br>
+        Sekarang: baik ${g}/3, tidak baik ${b}/3.`;
+        }
+      });
+
+      resetBtn.addEventListener('click', () => {
+        goodGroup.querySelectorAll('.choice').forEach(c => c.classList.remove('active'));
+        badGroup.querySelectorAll('.choice').forEach(c => c.classList.remove('active'));
+        tag.style.display = 'none';
+        tag.textContent = '';
+        fb.className = 'feedback';
+        fb.innerHTML = '';
+      });
+    }
+
+    /* ORDER GAME via event delegation (works with innerHTML slides) */
+    const orderState = new Map(); // pool -> [steps]
+
+    document.addEventListener("click", (e) => {
+      const choice = e.target.closest(".choice");
+      if (choice) {
+        const poolEl = choice.closest("[data-order-pool]");
+        if (poolEl) {
+          const pool = poolEl.dataset.orderPool;
+          const list = document.getElementById(pool + "List");
+          const fb = document.getElementById(pool + "Fb");
+          if (!list) return;
+
+          const step = choice.dataset.step || choice.textContent.trim();
+          const arr = orderState.get(pool) || [];
+          if (arr.includes(step)) return;
+          arr.push(step);
+          orderState.set(pool, arr);
+
+          const li = document.createElement("li");
+          li.dataset.step = step;
+          li.textContent = step;
+          list.appendChild(li);
+
+          if (fb) { fb.className = "feedback"; fb.style.display = "none"; fb.textContent = ""; }
+          return;
+        }
+      }
+
+      const resetBtn = e.target.closest("[data-order-reset]");
+      if (resetBtn) {
+        const pool = resetBtn.dataset.orderReset;
+        orderState.set(pool, []);
+        const list = document.getElementById(pool + "List");
+        const fb = document.getElementById(pool + "Fb");
+        if (list) list.innerHTML = "";
+        if (fb) { fb.className = "feedback"; fb.style.display = "none"; fb.textContent = ""; }
+        return;
+      }
+
+      const checkBtn = e.target.closest("[data-order-check]");
+      if (checkBtn) {
+        const pool = checkBtn.dataset.orderCheck;
+        const answer = (checkBtn.dataset.answer || "").split("|");
+        const fb = document.getElementById(pool + "Fb");
+        if (!fb) return;
+
+        const user = orderState.get(pool) || [];
+        const ok = user.join("|") === answer.join("|");
+        showFeedback(fb, ok ? "✅ Urutannya sudah pas!" : "🔁 Belum pas. Hapus lalu susun lagi ya.", ok ? "ok" : "bad");
+      }
+    });
+
+    function wireInteractions() {
+      content.querySelectorAll("[data-quiz]").forEach(wireQuiz);
+      wireSelectGroup();
+      wireToggles();
+      wireTreeGameV2();
+    }
+
+    function go(d) {
+      idx = clamp(idx + d, 0, slides.length - 1);
+      render();
+      content.scrollTop = 0;
+    }
+
+    btnPrev.addEventListener("click", () => go(-1));
+    btnNext.addEventListener("click", () => go(1));
+    btnHome.addEventListener("click", () => { idx = 0; render(); content.scrollTop = 0; });
+
+    window.addEventListener("keydown", (e) => {
+      if (e.key === "ArrowLeft") go(-1);
+      if (e.key === "ArrowRight") go(1);
+      if (e.key === "Home") { idx = 0; render(); content.scrollTop = 0; }
+    });
+
+    // init
+    render();
+  </script>
+</body>
+
+</html>
