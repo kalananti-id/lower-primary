@@ -1,0 +1,1210 @@
+<!doctype html>
+<html lang="id">
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>UOB MDS – Lower Primary – 4.6 Pilih dengan Bijak (ScratchJr)</title>
+    <style>
+        :root {
+            --bg1: #F7FAFF;
+            --bg2: #F3F6FF;
+            --card: #FFFFFF;
+            --ink: #0F172A;
+            --muted: #475569;
+            --line: rgba(226, 232, 240, .95);
+            --brand: #4F46E5;
+            --brand2: #06B6D4;
+            --ok: #16A34A;
+            --bad: #DC2626;
+            --radius: 22px;
+            --shadow: 0 18px 40px rgba(15, 23, 42, .08);
+            --shadow2: 0 10px 22px rgba(15, 23, 42, .06);
+            --focus: 0 0 0 4px rgba(79, 70, 229, .18);
+            --mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+            --sans: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, "Apple Color Emoji", "Segoe UI Emoji";
+        }
+
+        * {
+            box-sizing: border-box
+        }
+
+        body {
+            margin: 0;
+            font-family: var(--sans);
+            color: var(--ink);
+            background:
+                radial-gradient(1200px 520px at 10% 0%, rgba(6, 182, 212, .18), transparent 60%),
+                radial-gradient(1200px 520px at 90% 0%, rgba(79, 70, 229, .16), transparent 55%),
+                linear-gradient(180deg, var(--bg1), var(--bg2) 45%, var(--bg1));
+            min-height: 100vh;
+        }
+
+        .app {
+            width: min(1100px, 96vw);
+            margin: 18px auto 26px;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .topbar {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 10px;
+            padding: 12px 14px;
+            border: 1px solid var(--line);
+            border-radius: 18px;
+            background: rgba(255, 255, 255, .72);
+            backdrop-filter: blur(10px);
+            box-shadow: var(--shadow2);
+        }
+
+        .brand {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .logo {
+            width: 38px;
+            height: 38px;
+            border-radius: 14px;
+            background: linear-gradient(135deg, rgba(79, 70, 229, .18), rgba(6, 182, 212, .20));
+            border: 1px solid rgba(226, 232, 240, .9);
+            display: grid;
+            place-items: center;
+            font-weight: 1000;
+            color: rgba(79, 70, 229, 1);
+        }
+
+        .brand h1 {
+            margin: 0;
+            font-size: 14px;
+            line-height: 1.15;
+            letter-spacing: .2px;
+        }
+
+        .brand .sub {
+            font-size: 12px;
+            color: var(--muted);
+            font-weight: 800;
+            margin-top: 2px;
+        }
+
+        .controls {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+
+        .btn {
+            border: 1px solid rgba(226, 232, 240, .95);
+            background: rgba(255, 255, 255, .9);
+            padding: 10px 12px;
+            border-radius: 16px;
+            font-weight: 1000;
+            cursor: pointer;
+            box-shadow: 0 8px 16px rgba(15, 23, 42, .06);
+            transition: transform .06s ease, box-shadow .12s ease, background .12s ease;
+            user-select: none;
+        }
+
+        .btn:hover {
+            transform: translateY(-1px)
+        }
+
+        .btn:active {
+            transform: translateY(0px)
+        }
+
+        .btn.primary {
+            background: linear-gradient(135deg, rgba(79, 70, 229, .12), rgba(6, 182, 212, .14));
+            border-color: rgba(79, 70, 229, .18);
+        }
+
+        .btn.ghost {
+            background: transparent;
+            box-shadow: none
+        }
+
+        .btn:focus {
+            outline: none;
+            box-shadow: var(--focus);
+        }
+
+        .progressWrap {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            min-width: 260px;
+            justify-content: flex-end;
+        }
+
+        .progress {
+            width: 180px;
+            height: 10px;
+            background: rgba(226, 232, 240, .9);
+            border-radius: 999px;
+            overflow: hidden;
+            border: 1px solid rgba(226, 232, 240, .95);
+        }
+
+        .bar {
+            height: 100%;
+            width: 0%;
+            background: linear-gradient(90deg, rgba(79, 70, 229, .85), rgba(6, 182, 212, .85));
+            border-radius: 999px;
+            transition: width .25s ease;
+        }
+
+        .count {
+            font-family: var(--mono);
+            font-size: 12px;
+            color: var(--muted);
+            font-weight: 900;
+        }
+
+        .stage {
+            border: 1px solid var(--line);
+            border-radius: var(--radius);
+            background: rgba(255, 255, 255, .60);
+            box-shadow: var(--shadow);
+            padding: 14px;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            min-height: calc(100vh - 145px);
+        }
+
+        .slide {
+            flex: 1;
+            background: rgba(255, 255, 255, .68);
+            border: 1px solid rgba(229, 234, 245, .95);
+            border-radius: var(--radius);
+            box-shadow: var(--shadow2);
+            padding: 20px;
+            overflow: hidden;
+            /* important for internal scroll */
+            backdrop-filter: blur(8px);
+        }
+
+        .slideInner {
+            max-width: 980px;
+            margin: 0 auto;
+            max-height: calc(100vh - 190px);
+            overflow-y: auto;
+            padding-right: 8px;
+        }
+
+        .slideInner::-webkit-scrollbar {
+            width: 10px;
+        }
+
+        .slideInner::-webkit-scrollbar-thumb {
+            background: rgba(96, 112, 153, .25);
+            border-radius: 999px;
+            border: 3px solid rgba(255, 255, 255, .9);
+        }
+
+        .slideInner::-webkit-scrollbar-track {
+            background: transparent;
+        }
+
+        h2 {
+            margin: 6px 0 10px;
+            font-size: 30px;
+            letter-spacing: -.3px
+        }
+
+        h3 {
+            margin: 0 0 8px;
+            font-size: 18px
+        }
+
+        p {
+            margin: 0 0 10px;
+            color: var(--muted);
+            font-weight: 800;
+            line-height: 1.55
+        }
+
+        .kicker {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            font-weight: 1000;
+            font-size: 12px;
+            letter-spacing: .2px;
+            padding: 7px 10px;
+            border-radius: 999px;
+            border: 1px solid rgba(79, 70, 229, .16);
+            background: rgba(79, 70, 229, .06);
+            color: rgba(55, 65, 81, .95);
+        }
+
+        .grid {
+            display: grid;
+            gap: 14px
+        }
+
+        .cols2 {
+            grid-template-columns: 1fr 1fr
+        }
+
+        @media (max-width: 860px) {
+            .cols2 {
+                grid-template-columns: 1fr
+            }
+
+            .progressWrap {
+                min-width: unset
+            }
+
+            .progress {
+                width: 130px
+            }
+
+            h2 {
+                font-size: 26px
+            }
+        }
+
+        .card {
+            background: rgba(255, 255, 255, .92);
+            border: 1px solid rgba(226, 232, 240, .95);
+            border-radius: 22px;
+            padding: 14px;
+            box-shadow: 0 10px 18px rgba(15, 23, 42, .06);
+        }
+
+
+
+        .card.tappable {
+            cursor: pointer;
+            border-style: dashed;
+            border-color: rgba(79, 70, 229, .28);
+            background: rgba(255, 255, 255, .88);
+            transition: transform .08s ease, box-shadow .12s ease;
+        }
+
+        .card.tappable:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 14px 26px rgba(15, 23, 42, .10);
+        }
+
+        .card.tappable:active {
+            transform: translateY(0px);
+        }
+
+        .hint {
+            background: rgba(6, 182, 212, .10);
+            border: 1px dashed rgba(6, 182, 212, .35);
+            border-radius: 18px;
+            padding: 12px 14px;
+            color: rgba(30, 41, 59, .92);
+            font-weight: 900;
+            line-height: 1.5;
+        }
+
+        .miniRow {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+            align-items: center
+        }
+
+        .tag {
+            display: inline-flex;
+            align-items: center;
+            padding: 7px 10px;
+            border-radius: 999px;
+            border: 1px solid rgba(226, 232, 240, .95);
+            background: rgba(255, 255, 255, .92);
+            color: rgba(30, 41, 59, .92);
+            font-weight: 1000;
+            font-size: 12px;
+        }
+
+        ul.list {
+            margin: 8px 0 0 18px;
+            color: var(--muted);
+            font-weight: 850;
+            line-height: 1.55
+        }
+
+        .choices {
+            display: grid;
+            gap: 10px;
+            margin-top: 10px
+        }
+
+        .choice {
+            border: 1px solid rgba(226, 232, 240, .95);
+            border-radius: 18px;
+            padding: 12px 14px;
+            background: rgba(255, 255, 255, .96);
+            font-weight: 950;
+            color: rgba(30, 41, 59, .96);
+            cursor: pointer;
+            user-select: none;
+            transition: transform .06s ease, border-color .12s ease, background .12s ease;
+        }
+
+        .choice:hover {
+            transform: translateY(-1px)
+        }
+
+        .choice.active {
+            border-color: rgba(79, 70, 229, .35);
+            background: rgba(79, 70, 229, .06)
+        }
+
+        .choice.ok {
+            border-color: rgba(22, 163, 74, .35);
+            background: rgba(22, 163, 74, .08)
+        }
+
+        .choice.bad {
+            border-color: rgba(220, 38, 38, .35);
+            background: rgba(220, 38, 38, .08)
+        }
+
+        .feedback {
+            display: none;
+            margin-top: 10px;
+            border-radius: 18px;
+            padding: 12px 14px;
+            border: 1px solid rgba(226, 232, 240, .95);
+            background: rgba(255, 255, 255, .92);
+            color: var(--muted);
+            font-weight: 900;
+            line-height: 1.5;
+        }
+
+        .feedback.show {
+            display: block
+        }
+
+        .fbOk {
+            border-color: rgba(22, 163, 74, .35);
+            background: rgba(22, 163, 74, .08);
+            color: rgba(15, 23, 42, .92)
+        }
+
+        .fbBad {
+            border-color: rgba(220, 38, 38, .35);
+            background: rgba(220, 38, 38, .08);
+            color: rgba(15, 23, 42, .92)
+        }
+
+        /* Toggle blocks (reused) */
+        .habit {
+            border: 1px solid var(--line);
+            border-radius: 18px;
+            padding: 12px;
+            margin-top: 10px;
+            background: linear-gradient(180deg, #FFFFFF, #F7FAFF);
+        }
+
+        .habitHead {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 10px
+        }
+
+        .miniBtn {
+            padding: 8px 10px;
+            border-radius: 14px;
+            font-size: 12px;
+            font-weight: 1000
+        }
+
+        .habitBody {
+            margin-top: 10px;
+            display: none;
+            padding: 10px 12px;
+            border-radius: 16px;
+            border: 1px dashed rgba(96, 112, 153, .35);
+            background: rgba(79, 70, 229, .06);
+            color: var(--muted);
+            font-weight: 850;
+            line-height: 1.5;
+        }
+
+        .habitBody.show {
+            display: block
+        }
+
+        .habitBody p {
+            margin: 6px 0
+        }
+
+        /* Mini “digital tree” */
+        .tree {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 14px;
+            margin-top: 10px;
+        }
+
+        .treeBox {
+            border: 1px solid rgba(226, 232, 240, .95);
+            border-radius: 22px;
+            padding: 14px;
+            background: rgba(255, 255, 255, .92);
+            box-shadow: 0 10px 18px rgba(15, 23, 42, .06);
+        }
+
+        .treeTop {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 10px;
+            margin-bottom: 8px;
+            font-weight: 1000;
+        }
+
+        .fruitRow {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-top: 10px
+        }
+
+        .fruit {
+            width: 38px;
+            height: 38px;
+            border-radius: 14px;
+            border: 1px solid rgba(226, 232, 240, .95);
+            background: rgba(255, 255, 255, .96);
+            display: grid;
+            place-items: center;
+            font-size: 18px;
+            cursor: pointer;
+            user-select: none;
+            transition: transform .06s ease, background .12s ease, border-color .12s ease;
+        }
+
+        .fruit:hover {
+            transform: translateY(-1px)
+        }
+
+        .fruit.good.active {
+            border-color: rgba(22, 163, 74, .35);
+            background: rgba(22, 163, 74, .10)
+        }
+
+        .fruit.bad.active {
+            border-color: rgba(220, 38, 38, .35);
+            background: rgba(220, 38, 38, .10)
+        }
+
+        .input {
+            width: 100%;
+            border: 1px solid rgba(226, 232, 240, .95);
+            background: rgba(255, 255, 255, .96);
+            border-radius: 16px;
+            padding: 12px 14px;
+            font-weight: 950;
+            color: rgba(30, 41, 59, .96);
+        }
+    </style>
+</head>
+
+<body>
+    <!-- ACCESS GATE -->
+    <div id="accessGate" style="
+  position:fixed;
+  inset:0;
+  background:linear-gradient(135deg,#eef2ff,#ecfeff);
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  z-index:9999;
+">
+        <div class="card" style="max-width:420px;width:92%;text-align:center">
+            <h2>🔐 Kode Akses</h2>
+            <p>Masukkan kode untuk memulai sesi.</p>
+
+            <input id="accessInput" class="input" placeholder="MASUKKAN KODE" autocomplete="off"
+                style="text-align:center;font-weight:900;letter-spacing:2px" />
+
+            <button class="btn primary" id="accessBtn" style="margin-top:12px">
+                Masuk
+            </button>
+
+            <div class="feedback" id="accessFb" style="margin-top:10px"></div>
+
+            <div class="hint" style="margin-top:10px">
+                Kode diberikan oleh guru.
+            </div>
+        </div>
+    </div>
+
+    <div class="app">
+        <div class="topbar">
+            <div class="brand">
+                <div class="logo">LP</div>
+                <div>
+                    <h1>Lower Primary</h1>
+                    <div class="sub">4.5 Aman dan Logis di Dunia Digital</div>
+                </div>
+            </div>
+
+            <div class="controls">
+                <button class="btn ghost" id="btnHome" title="Kembali ke awal">🏠 Awal</button>
+                <button class="btn" id="btnPrev" title="Sebelumnya (←)">←</button>
+                <button class="btn primary" id="btnNext" title="Berikutnya (→)">→</button>
+            </div>
+
+            <div class="progressWrap">
+                <div class="progress" aria-label="Progress">
+                    <div class="bar" id="bar"></div>
+                </div>
+                <div class="count" id="count">1/1</div>
+            </div>
+        </div>
+
+        <div class="stage">
+            <div class="slide" role="region" aria-label="Slide">
+                <div class="slideInner" id="content"></div>
+            </div>
+
+        </div>
+    </div>
+
+    <script>
+
+
+        const slides = [
+            {
+                title: "Pembuka", html: `
+          <h2>🔀 Pilih dengan Bijak</h2>
+          <p>Di game, kadang kamu pilih jalan <b>A</b> atau <b>B</b>. Nah… di dunia digital juga ada pilihan!</p>
+
+          <div class="card" style="margin-top:12px">
+            <div class="kicker">🙋 Interaksi</div>
+            <h3 style="margin:6px 0 6px">Angkat tangan!</h3>
+            <p style="margin:0">Pernah pilih jalan berbeda di game? (Ayo angkat tangan!)</p>
+          </div>
+
+          <div class="card" style="margin-top:12px;text-align:center">
+            <div class="kicker">🎯 Tujuan</div>
+            <p style="margin:10px 0 0">Kamu paham: <b>pilihan → akibat</b>.<br/>Kita bikin cerita bercabang di ScratchJr.</p>
+          </div>
+        `
+            },
+
+            {
+                title: "Pilihan & Akibat", html: `
+          <h2>Setiap Pilihan Ada Akibatnya</h2>
+          <p>Kalau kamu klik sesuatu, pasti ada yang terjadi.</p>
+
+          <div class="grid cols2" style="margin-top:10px">
+            <div class="card">
+              <div class="kicker">📨 Contoh 1</div>
+              <h3 style="margin:6px 0 6px">Tekan “kirim”</h3>
+              <p style="margin:0">Apa yang terjadi? <b>Pesan terkirim.</b></p>
+            </div>
+            <div class="card">
+              <div class="kicker">🗑️ Contoh 2</div>
+              <h3 style="margin:6px 0 6px">Tekan “hapus”</h3>
+              <p style="margin:0">Apa yang terjadi? <b>File bisa hilang.</b></p>
+            </div>
+          </div>
+
+          <div class="card" style="margin-top:12px">
+            <div class="kicker">💬 Jawab bareng</div>
+            <p style="margin:8px 0 0">Kalau “hapus”, boleh asal… <b>yakin dulu</b> ya 🙂</p>
+          </div>
+        `
+            },
+
+            {
+                title: "Pilihan Aman", html: `
+          <h2>Dunia Digital Banyak Pilihan</h2>
+          <p>Pilih yang <b>aman</b> dan <b>baik</b>, ya.</p>
+
+          <div class="card" style="margin-top:10px">
+            <div class="kicker">👀 Pilih mana yang aman?</div>
+            <div class="choices" data-quiz="qAman1">
+              <div class="choice" data-answer="right">Tulis komentar: “Makasih ya!”</div>
+              <div class="choice" data-answer="wrong">Tulis komentar: “Ih jelek!”</div>
+            </div>
+            <div class="feedback" data-quiz-feedback="qAman1"></div>
+          </div>
+
+          <div class="card" style="margin-top:12px">
+            <div class="kicker">🧠 Ingat</div>
+            <p style="margin:8px 0 0">Kalau ragu, tanya guru/ortu dulu.</p>
+          </div>
+        `
+            },
+
+            {
+                title: "Cerita Hari Ini", html: `
+          <h2>📖 Cerita Hari Ini</h2>
+          <p>Ada karakter yang diajak melakukan <b>2 hal</b>:</p>
+
+          <div class="grid cols2" style="margin-top:10px">
+            <div class="card">
+              <div class="kicker">✅ Pilihan baik</div>
+              <h3 style="margin:6px 0 6px">Membantu teman</h3>
+              <p style="margin:0">Hasilnya bikin senang.</p>
+            </div>
+            <div class="card">
+              <div class="kicker">⚠️ Pilihan buruk</div>
+              <h3 style="margin:6px 0 6px">Mengganggu teman</h3>
+              <p style="margin:0">Hasilnya bikin sedih.</p>
+            </div>
+          </div>
+
+          <div class="card" style="margin-top:12px">
+            <div class="kicker">🎮 Nanti di proyek</div>
+            <p style="margin:8px 0 0">Kamu yang pilih… lalu ceritanya <b>pindah halaman</b> sesuai pilihanmu.</p>
+          </div>
+        `
+            },
+
+            {
+                title: "Apa Itu Page?", html: `
+          <h2>📄 Apa Itu <i>Page</i>?</h2>
+          <p><b>Page</b> itu halaman cerita di ScratchJr. Kayak buku komik!</p>
+
+          <div class="card" style="margin-top:10px">
+            <div class="kicker">🧩 Contoh</div>
+            <ul class="list" style="margin-top:10px">
+              <li><b>Page 1</b>: tempat memilih</li>
+              <li><b>Page 2</b>: cerita pilihan baik</li>
+              <li><b>Page 3</b>: cerita pilihan buruk</li>
+            </ul>
+          </div>
+
+          <div class="card" style="margin-top:12px">
+            <div class="kicker">✅ Mini cek</div>
+            <p style="margin:0 0 10px">Kalau pilih baik, ke page berapa?</p>
+            <div class="choices" data-quiz="qPage">
+              <div class="choice" data-answer="right">Ke Page 2</div>
+              <div class="choice" data-answer="wrong">Ke Page 3</div>
+            </div>
+            <div class="feedback" data-quiz-feedback="qPage"></div>
+          </div>
+        `
+            },
+
+            {
+                title: "Aturan Main", html: `
+          <h2>🧩 Aturan Main Proyek</h2>
+          <p>Kita bikin 3 page. Simpel kok 🙂</p>
+
+          <div class="card" style="margin-top:10px">
+            <ul class="list" style="margin-top:10px">
+              <li><b>Page 1</b>: ada 2 pilihan (baik / buruk)</li>
+              <li><b>Page 2</b>: akhir baik → hati senang</li>
+              <li><b>Page 3</b>: akhir buruk → ada akibatnya</li>
+            </ul>
+          </div>
+
+          <div class="card" style="margin-top:12px">
+            <div class="kicker">🙋 Tebak cepat</div>
+            <p style="margin:0 0 10px">Akhir senang itu page yang mana?</p>
+            <div class="choices" data-quiz="qSenang">
+              <div class="choice" data-answer="right">Page 2</div>
+              <div class="choice" data-answer="wrong">Page 3</div>
+            </div>
+            <div class="feedback" data-quiz-feedback="qSenang"></div>
+          </div>
+        `
+            },
+
+            {
+                title: "Simulasi Page", html: `
+          <h2>🎮 Coba Pilih!</h2>
+          <p>Klik salah satu tombol. Nanti pindah “page” (slide) ya.</p>
+
+          <div class="grid cols2" style="margin-top:10px">
+            <div class="card" style="text-align:center">
+              <div class="kicker">✅ Pilihan baik</div>
+              <p style="margin:10px 0 12px">Aku pilih yang <b>baik</b>!</p>
+              <button class="btn primary" data-goto="7">➡️ Ke Page Baik</button>
+            </div>
+
+            <div class="card" style="text-align:center">
+              <div class="kicker">⚠️ Pilihan buruk</div>
+              <p style="margin:10px 0 12px">Aku pilih yang <b>buruk</b>…</p>
+              <button class="btn" data-goto="8">➡️ Ke Page Buruk</button>
+            </div>
+          </div>
+
+          <div class="hint" style="margin-top:12px">Tenang, ini cuma simulasi di slide 🙂</div>
+        `
+            },
+
+            {
+                title: "Page Baik", html: `
+          <h2>✅ Page Baik</h2>
+          <p>Ceritanya begini…</p>
+
+          <div class="card" style="margin-top:10px">
+            <div class="kicker">🌟 Cerita</div>
+            <p style="margin:10px 0 0"><b>Aku mengembalikan barang milik teman.</b><br/>Temanku senang. Aku ikut bangga!</p>
+          </div>
+
+          <div class="card" style="margin-top:12px">
+            <div class="kicker">🙂 Tanya</div>
+            <p style="margin:0 0 10px">Kalau kamu pilih baik, rasanya…</p>
+            <div class="choices" data-quiz="qFeelGood">
+              <div class="choice" data-answer="right">Senang / bangga</div>
+              <div class="choice" data-answer="wrong">Kesal / marah</div>
+            </div>
+            <div class="feedback" data-quiz-feedback="qFeelGood"></div>
+          </div>
+
+          <div style="margin-top:10px">
+            <button class="btn ghost" data-goto="6">⬅️ Balik ke Pilihan</button>
+          </div>
+        `
+            },
+
+            {
+                title: "Page Buruk", html: `
+          <h2>⚠️ Page Buruk</h2>
+          <p>Ceritanya begini…</p>
+
+          <div class="card" style="margin-top:10px">
+            <div class="kicker">😕 Cerita</div>
+            <p style="margin:10px 0 0"><b>Aku mengganggu teman.</b><br/>Temanku sedih. Aku jadi nggak enak.</p>
+          </div>
+
+          <div class="card" style="margin-top:12px">
+            <div class="kicker">🤔 Tanya</div>
+            <p style="margin:0 0 10px">Kalau pilih buruk, rasanya…</p>
+            <div class="choices" data-quiz="qFeelBad">
+              <div class="choice" data-answer="right">Tidak enak / khawatir</div>
+              <div class="choice" data-answer="wrong">Bangga sekali</div>
+            </div>
+            <div class="feedback" data-quiz-feedback="qFeelBad"></div>
+          </div>
+
+          <div style="margin-top:10px">
+            <button class="btn ghost" data-goto="6">⬅️ Balik ke Pilihan</button>
+          </div>
+        `
+            },
+
+            {
+                title: "Mengapa Penting?", html: `
+          <h2>✨ Mengapa Ini Penting?</h2>
+          <p>Di dunia digital, pilihanmu bisa bikin orang lain <b>senang</b> atau <b>sedih</b>.</p>
+
+          <div class="grid cols2" style="margin-top:10px">
+            <div class="card">
+              <div class="kicker">💛 Kata baik</div>
+              <p style="margin:10px 0 0">Bikin teman merasa dihargai.</p>
+            </div>
+            <div class="card">
+              <div class="kicker">🔒 Jaga diri</div>
+              <p style="margin:10px 0 0">Info pribadi (nama lengkap, alamat, password) <b>jangan dibagi</b>.</p>
+            </div>
+          </div>
+
+          <div class="card" style="margin-top:12px">
+            <div class="kicker">🧩 Mini quiz</div>
+            <p style="margin:0 0 10px">Pilih kalimat yang baik:</p>
+            <div class="choices" data-quiz="qKalimat">
+              <div class="choice" data-answer="right">“Makasih ya sudah bantu!”</div>
+              <div class="choice" data-answer="wrong">“Pergi sana! Aku nggak mau.”</div>
+            </div>
+            <div class="feedback" data-quiz-feedback="qKalimat"></div>
+          </div>
+        `
+            },
+
+            {
+                title: "Praktik Proyek", html: `
+          <h2>🛠️ Praktik Membuat Proyek</h2>
+          <p>Waktunya bikin proyekmu sendiri.</p>
+
+          <div class="card" style="margin-top:10px">
+            <div class="kicker">⏱️ Misi 12–15 menit</div>
+            <ul class="list" style="margin-top:10px">
+              <li>Buat <b>3 page</b></li>
+              <li><b>Page 1</b>: 2 pilihan (baik/buruk)</li>
+              <li><b>Page 2</b>: akhir baik</li>
+              <li><b>Page 3</b>: akhir buruk</li>
+            </ul>
+          </div>
+
+          <div class="hint" style="margin-top:12px">Kalau bingung, minta guru lihat dulu ya 🙂</div>
+        `
+            },
+
+            {
+                title: "Uji & Perbaiki", html: `
+          <h2>🔎 Uji & Perbaiki</h2>
+          <p>Setelah bikin, cek bareng teman.</p>
+
+          <div class="card" style="margin-top:10px">
+            <div class="kicker">✅ Checklist</div>
+            <ul class="list" style="margin-top:10px">
+              <li>Pilihan baik pindah ke <b>Page 2</b>?</li>
+              <li>Pilihan buruk pindah ke <b>Page 3</b>?</li>
+              <li>Ceritanya jelas?</li>
+            </ul>
+          </div>
+
+          <div class="card" style="margin-top:12px">
+            <div class="kicker">👫 Pair test</div>
+            <p style="margin:10px 0 0">Coba proyek temanmu. Lalu bilang: <b>“Bagus!”</b> dan satu saran kecil.</p>
+          </div>
+        `
+            },
+
+            {
+                title: "Penutup", html: `
+          <h2>🎉 Selesai!</h2>
+          <p>Hari ini kamu belajar:</p>
+
+          <div class="card" style="margin-top:10px">
+            <ul class="list" style="margin-top:10px">
+              <li><b>Pilihan → akibat</b></li>
+              <li>Pilih yang <b>baik</b> di dunia digital</li>
+              <li>Berpikir sebelum klik 🙂</li>
+            </ul>
+          </div>
+
+          <div class="card" style="margin-top:12px">
+            <div class="kicker">💬 Tutup bareng</div>
+            <p style="margin:10px 0 0">Kalau besok mau komentar, pilih kata yang… <b>baik!</b></p>
+          </div>
+
+          <div class="card" style="margin-top:12px;text-align:center">
+            <button class="btn primary" data-goto="0">🏁 Balik ke awal</button>
+          </div>
+        `
+            },
+        ];
+
+
+        let idx = 0;
+        const content = document.getElementById("content");
+        const bar = document.getElementById("bar");
+        const count = document.getElementById("count");
+        const btnPrev = document.getElementById("btnPrev");
+        const btnNext = document.getElementById("btnNext");
+        const btnHome = document.getElementById("btnHome");
+
+        function clamp(n, a, b) { return Math.max(a, Math.min(b, n)); }
+
+        /* ===============================
+       ACCESS CODE GATE
+    ================================ */
+        const ACCESS_CODE = "RGMDSLP25";
+
+        const gate = document.getElementById("accessGate");
+        const input = document.getElementById("accessInput");
+        const btn = document.getElementById("accessBtn");
+        const fb = document.getElementById("accessFb");
+
+        // auto uppercase
+        input.addEventListener("input", () => {
+            input.value = input.value.toUpperCase();
+        });
+
+        // submit handler
+        btn.addEventListener("click", checkAccess);
+        input.addEventListener("keydown", (e) => {
+            if (e.key === "Enter") checkAccess();
+        });
+
+        function checkAccess() {
+            if (input.value.trim() === ACCESS_CODE) {
+                gate.style.display = "none";
+            } else {
+                fb.className = "feedback show fbBad";
+                fb.textContent = "Kode salah. Coba lagi.";
+            }
+        }
+
+        function render() {
+            const s = slides[idx];
+            content.innerHTML = s.html;
+            // update progress
+            const pct = ((idx + 1) / slides.length) * 100;
+            bar.style.width = pct + "%";
+            count.textContent = `${idx + 1}/${slides.length}`;
+            // wire interactivity
+            wireInteractions();
+            // handle goto buttons
+            content.querySelectorAll("[data-goto]").forEach(b => {
+                b.addEventListener("click", () => {
+                    const to = Number(b.getAttribute("data-goto"));
+                    idx = clamp(to, 0, slides.length - 1);
+                    render();
+                    content.scrollTop = 0;
+                });
+            });
+        }
+
+        function showFeedback(el, html, type) {
+            if (!el) return;
+            el.classList.add("show");
+            el.style.display = "block";
+            el.classList.remove("fbOk", "fbBad");
+            if (type === "ok") el.classList.add("fbOk");
+            if (type === "bad") el.classList.add("fbBad");
+            el.innerHTML = html;
+        }
+
+        function wireQuiz(group) {
+            const id = group.getAttribute("data-quiz");
+            const fb = content.querySelector(`[data-quiz-feedback="${id}"]`);
+            const items = [...group.querySelectorAll(".choice")];
+
+            items.forEach(ch => {
+                ch.addEventListener("click", () => {
+                    items.forEach(x => x.classList.remove("active", "ok", "bad"));
+                    ch.classList.add("active");
+
+                    const isRight = ch.getAttribute("data-answer") === "right";
+                    if (isRight) {
+                        ch.classList.add("ok");
+                        const msg = getQuizMsg(id, true);
+                        showFeedback(fb, msg, "ok");
+                    } else {
+                        ch.classList.add("bad");
+                        const msg = getQuizMsg(id, false);
+                        showFeedback(fb, msg, "bad");
+                    }
+                });
+            });
+        }
+
+        function wireSelectGroup() {
+            content.querySelectorAll("[data-select-group]").forEach(group => {
+                const limit = Number(group.getAttribute("data-limit")) || 999;
+                const choices = [...group.querySelectorAll(".choice")];
+
+                choices.forEach(ch => {
+                    ch.addEventListener("click", () => {
+                        const isActive = ch.classList.contains("active");
+
+                        if (isActive) {
+                            ch.classList.remove("active");
+                            return;
+                        }
+
+                        const activeCount = choices.filter(c => c.classList.contains("active")).length;
+                        if (activeCount >= limit) return;
+
+                        ch.classList.add("active");
+                    });
+                });
+            });
+        }
+
+
+        function getQuizMsg(id, ok) {
+
+            const msgs = {
+                qPikir: { ok: "✅ Betul! Pikir dulu ya.", bad: "⚠️ Yuk pikir dulu sebelum klik." },
+                qKata: { ok: "✅ Iya! Itu kata yang baik 💛", bad: "⚠️ Yuk pilih kata yang baik ya." },
+                qUrut: { ok: "✅ Benar! Urutannya rapi.", bad: "⚠️ Coba lagi. Mulai dari tap dulu ya." },
+                qBeda: { ok: "✅ Betul! Kalau beda, tidak nyambung.", bad: "⚠️ Kalau beda, biasanya tidak menjawab." },
+                qAkhir1: { ok: "✅ Mantap! Tap dulu, baru pesan, lalu jawab.", bad: "⚠️ Yuk pilih urutan yang rapi." },
+                qAkhir2: { ok: "✅ Betul! Aman itu pikir dulu & kata baik.", bad: "⚠️ Yuk pilih: pikir dulu & kata baik." }
+            };
+
+            const m = msgs[id];
+            if (!m) return ok ? "✅ Benar!" : "⚠️ Coba lagi.";
+            return ok ? m.ok : m.bad;
+        }
+
+        function wireToggles() {
+            content.querySelectorAll("[data-toggle]").forEach(btn => {
+                btn.addEventListener("click", () => {
+                    const id = btn.getAttribute("data-toggle");
+                    const panel = content.querySelector("#" + id);
+                    if (!panel) return;
+
+                    const isOpen = panel.classList.contains("show");
+                    panel.classList.toggle("show", !isOpen);
+
+                    // text change if button not ghost
+                    if (btn.classList.contains("miniBtn") || btn.classList.contains("btn")) {
+                        btn.textContent = isOpen ? (btn.textContent.includes("Tutup") ? btn.textContent.replace("Tutup", "Lihat") : "Lihat") : "Tutup";
+                    }
+                    if (!isOpen) panel.scrollIntoView({ behavior: "smooth", block: "nearest" });
+                });
+            });
+        }
+
+        function wireTreeGameV2() {
+            const goodGroup = content.querySelector('[data-select-group="good"]');
+            const badGroup = content.querySelector('[data-select-group="bad"]');
+            const checkBtn = content.querySelector('[data-check-tree]');
+            const resetBtn = content.querySelector('[data-reset-tree]');
+            const tag = content.querySelector('#treeTag');
+            const fb = content.querySelector('#treeFb');
+
+            if (!goodGroup || !badGroup || !checkBtn || !resetBtn) return;
+
+            function countActive(group) {
+                return group.querySelectorAll('.choice.active').length;
+            }
+
+            checkBtn.addEventListener('click', () => {
+                const g = countActive(goodGroup);
+                const b = countActive(badGroup);
+
+                tag.style.display = 'inline-flex';
+                fb.classList.add('show');
+
+                if (g === 3 && b === 3) {
+                    tag.textContent = '✅ Mantap!';
+                    fb.className = 'feedback show fbOk';
+                    fb.innerHTML =
+                        'Keren! Kamu sudah bisa membedakan contoh jejak digital yang baik dan tidak baik.';
+                } else {
+                    tag.textContent = '⚠️ Belum lengkap';
+                    fb.className = 'feedback show fbBad';
+                    fb.innerHTML =
+                        `Pilih <b>3</b> jejak baik dan <b>3</b> jejak tidak baik.<br>
+        Sekarang: baik ${g}/3, tidak baik ${b}/3.`;
+                }
+            });
+
+            resetBtn.addEventListener('click', () => {
+                goodGroup.querySelectorAll('.choice').forEach(c => c.classList.remove('active'));
+                badGroup.querySelectorAll('.choice').forEach(c => c.classList.remove('active'));
+                tag.style.display = 'none';
+                tag.textContent = '';
+                fb.className = 'feedback';
+                fb.innerHTML = '';
+            });
+        }
+
+        // ===== Timers (for practice) =====
+        const __timers = new Map();
+
+        function formatMMSS(total) {
+            const m = Math.floor(total / 60);
+            const s = total % 60;
+            return String(m).padStart(2, "0") + ":" + String(s).padStart(2, "0");
+        }
+
+        function wireTimers() {
+            // start buttons
+            content.querySelectorAll("[data-timer-start]").forEach(btn => {
+                btn.addEventListener("click", () => {
+                    const id = btn.getAttribute("data-timer-start");
+                    const seconds = Number(btn.getAttribute("data-seconds")) || 60;
+                    const el = content.querySelector("#" + id);
+                    if (!el) return;
+
+                    // clear previous
+                    if (__timers.has(id)) clearInterval(__timers.get(id));
+
+                    let remaining = seconds;
+                    el.textContent = formatMMSS(remaining);
+
+                    const handle = setInterval(() => {
+                        remaining -= 1;
+                        if (remaining <= 0) {
+                            remaining = 0;
+                            el.textContent = formatMMSS(remaining);
+                            clearInterval(handle);
+                            __timers.delete(id);
+
+                            // little celebration
+                            const fb = content.querySelector(".feedback");
+                            // do nothing intrusive; timer ends quietly
+                        } else {
+                            el.textContent = formatMMSS(remaining);
+                        }
+                    }, 1000);
+
+                    __timers.set(id, handle);
+                });
+            });
+
+            // reset buttons
+            content.querySelectorAll("[data-timer-reset]").forEach(btn => {
+                btn.addEventListener("click", () => {
+                    const id = btn.getAttribute("data-timer-reset");
+                    const seconds = Number(btn.getAttribute("data-seconds")) || 60;
+                    const el = content.querySelector("#" + id);
+                    if (!el) return;
+
+                    if (__timers.has(id)) {
+                        clearInterval(__timers.get(id));
+                        __timers.delete(id);
+                    }
+                    el.textContent = formatMMSS(seconds);
+                });
+            });
+        }
+
+        // ===== Tap simulation cards =====
+        function wireTapSim() {
+            const fb = content.querySelector("#tapFeedback");
+            if (!fb) return;
+
+            content.querySelectorAll("[data-tap]").forEach((card) => {
+                card.addEventListener("click", () => {
+                    const id = card.getAttribute("data-tap");
+
+                    if (id === "tapA") {
+                        fb.className = "feedback show fbOk";
+                        fb.innerHTML =
+                            "Kamu mengetuk <b>Karakter A</b> 👆<br><br>" +
+                            "Karakter A: <b>Halo! Aku kirim pesan ya!</b> ✉️<br>" +
+                            "Karakter A kirim: <b>pesan1</b><br><br>" +
+                            "Karakter B menerima <b>pesan1</b> ✅<br>" +
+                            "Karakter B: <b>Aku dengar pesannya!</b> 😊";
+                    } else if (id === "tapB" || id === "tap2") {
+                        // dukung id baru tapB atau id lama tap2
+                        fb.className = "feedback show fbOk";
+                        fb.innerHTML = "Kamu mengetuk <b>Karakter B</b> 👆<br><br>Karakter B: <b>Apa kabar?</b> 😊";
+                    } else {
+                        fb.className = "feedback show";
+                        fb.textContent = "Diketuk!";
+                    }
+                });
+            });
+        }
+
+        function wireInteractions() {
+            content.querySelectorAll("[data-quiz]").forEach(wireQuiz);
+            wireSelectGroup();
+            wireToggles();
+            wireTreeGameV2();
+            wireTapSim();
+        }
+
+        function go(d) {
+            idx = clamp(idx + d, 0, slides.length - 1);
+            render();
+            content.scrollTop = 0;
+        }
+
+        btnPrev.addEventListener("click", () => go(-1));
+        btnNext.addEventListener("click", () => go(1));
+        btnHome.addEventListener("click", () => { idx = 0; render(); content.scrollTop = 0; });
+
+        window.addEventListener("keydown", (e) => {
+            if (e.key === "ArrowLeft") go(-1);
+            if (e.key === "ArrowRight") go(1);
+            if (e.key === "Home") { idx = 0; render(); content.scrollTop = 0; }
+        });
+
+        // init
+        render();
+    </script>
+</body>
+
+</html>
