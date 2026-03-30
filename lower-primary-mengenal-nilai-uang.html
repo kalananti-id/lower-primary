@@ -1,0 +1,915 @@
+<!doctype html>
+<html lang="id">
+
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>UOB MDS – Lower Primary – Mengenal Nilai Uang</title>
+  <style>
+    :root {
+      --bg1: #F7FAFF;
+      --bg2: #F3F6FF;
+      --card: #FFFFFF;
+      --ink: #0F172A;
+      --muted: #475569;
+      --line: rgba(226, 232, 240, .95);
+      --brand: #4F46E5;
+      --brand2: #06B6D4;
+      --ok: #16A34A;
+      --bad: #DC2626;
+      --radius: 22px;
+      --shadow: 0 18px 40px rgba(15, 23, 42, .08);
+      --shadow2: 0 10px 22px rgba(15, 23, 42, .06);
+      --focus: 0 0 0 4px rgba(79, 70, 229, .18);
+      --mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+      --sans: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, "Apple Color Emoji", "Segoe UI Emoji";
+    }
+
+    * {
+      box-sizing: border-box
+    }
+
+    body {
+      margin: 0;
+      font-family: var(--sans);
+      color: var(--ink);
+      background:
+        radial-gradient(1200px 520px at 10% 0%, rgba(6, 182, 212, .18), transparent 60%),
+        radial-gradient(1200px 520px at 90% 0%, rgba(79, 70, 229, .16), transparent 55%),
+        linear-gradient(180deg, var(--bg1), var(--bg2) 45%, var(--bg1));
+      min-height: 100vh;
+    }
+
+    .app {
+      width: min(1100px, 96vw);
+      margin: 18px auto 26px;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .topbar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      padding: 12px 14px;
+      border: 1px solid var(--line);
+      border-radius: 18px;
+      background: rgba(255, 255, 255, .72);
+      backdrop-filter: blur(10px);
+      box-shadow: var(--shadow2);
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .logo {
+      width: 38px;
+      height: 38px;
+      border-radius: 14px;
+      background: linear-gradient(135deg, rgba(79, 70, 229, .18), rgba(6, 182, 212, .20));
+      border: 1px solid rgba(226, 232, 240, .9);
+      display: grid;
+      place-items: center;
+      font-weight: 1000;
+      color: rgba(79, 70, 229, 1);
+    }
+
+    .brand h1 {
+      margin: 0;
+      font-size: 14px;
+      line-height: 1.15;
+      letter-spacing: .2px;
+    }
+
+    .brand .sub {
+      font-size: 12px;
+      color: var(--muted);
+      font-weight: 800;
+      margin-top: 2px;
+    }
+
+    .controls {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+
+    .btn {
+      border: 1px solid rgba(226, 232, 240, .95);
+      background: rgba(255, 255, 255, .9);
+      padding: 10px 12px;
+      border-radius: 16px;
+      font-weight: 1000;
+      cursor: pointer;
+      box-shadow: 0 8px 16px rgba(15, 23, 42, .06);
+      transition: transform .06s ease, box-shadow .12s ease, background .12s ease;
+      user-select: none;
+    }
+
+    .btn:hover {
+      transform: translateY(-1px)
+    }
+
+    .btn:active {
+      transform: translateY(0px)
+    }
+
+    .btn.primary {
+      background: linear-gradient(135deg, rgba(79, 70, 229, .12), rgba(6, 182, 212, .14));
+      border-color: rgba(79, 70, 229, .18);
+    }
+
+    .btn.ghost {
+      background: transparent;
+      box-shadow: none
+    }
+
+    .btn:focus {
+      outline: none;
+      box-shadow: var(--focus);
+    }
+
+    .progressWrap {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      min-width: 260px;
+      justify-content: flex-end;
+    }
+
+    .progress {
+      width: 180px;
+      height: 10px;
+      background: rgba(226, 232, 240, .9);
+      border-radius: 999px;
+      overflow: hidden;
+      border: 1px solid rgba(226, 232, 240, .95);
+    }
+
+    .bar {
+      height: 100%;
+      width: 0%;
+      background: linear-gradient(90deg, rgba(79, 70, 229, .85), rgba(6, 182, 212, .85));
+      border-radius: 999px;
+      transition: width .25s ease;
+    }
+
+    .count {
+      font-family: var(--mono);
+      font-size: 12px;
+      color: var(--muted);
+      font-weight: 900;
+    }
+
+    .stage {
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      background: rgba(255, 255, 255, .60);
+      box-shadow: var(--shadow);
+      padding: 14px;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      min-height: calc(100vh - 145px);
+    }
+
+    .slide {
+      flex: 1;
+      background: rgba(255, 255, 255, .68);
+      border: 1px solid rgba(229, 234, 245, .95);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow2);
+      padding: 20px;
+      overflow: hidden;
+      backdrop-filter: blur(8px);
+    }
+
+    .slideInner {
+      max-width: 980px;
+      margin: 0 auto;
+      max-height: calc(100vh - 190px);
+      overflow-y: auto;
+      padding-right: 8px;
+    }
+
+    .slideInner::-webkit-scrollbar {
+      width: 10px;
+    }
+
+    .slideInner::-webkit-scrollbar-thumb {
+      background: rgba(96, 112, 153, .25);
+      border-radius: 999px;
+      border: 3px solid rgba(255, 255, 255, .9);
+    }
+
+    .slideInner::-webkit-scrollbar-track {
+      background: transparent;
+    }
+
+    h2 {
+      margin: 6px 0 10px;
+      font-size: 30px;
+      letter-spacing: -.3px
+    }
+
+    h3 {
+      margin: 0 0 8px;
+      font-size: 18px
+    }
+
+    p {
+      margin: 0 0 10px;
+      color: var(--muted);
+      font-weight: 800;
+      line-height: 1.55
+    }
+
+    .kicker {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      font-weight: 1000;
+      font-size: 12px;
+      letter-spacing: .2px;
+      padding: 7px 10px;
+      border-radius: 999px;
+      border: 1px solid rgba(79, 70, 229, .16);
+      background: rgba(79, 70, 229, .06);
+      color: rgba(55, 65, 81, .95);
+    }
+
+    .grid {
+      display: grid;
+      gap: 14px
+    }
+
+    .cols2 {
+      grid-template-columns: 1fr 1fr
+    }
+
+    @media (max-width: 860px) {
+      .cols2 {
+        grid-template-columns: 1fr
+      }
+
+      .progressWrap {
+        min-width: unset
+      }
+
+      .progress {
+        width: 130px
+      }
+
+      h2 {
+        font-size: 26px
+      }
+    }
+
+    .card {
+      background: rgba(255, 255, 255, .92);
+      border: 1px solid rgba(226, 232, 240, .95);
+      border-radius: 22px;
+      padding: 14px;
+      box-shadow: 0 10px 18px rgba(15, 23, 42, .06);
+    }
+
+    .miniRow {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+      align-items: center
+    }
+
+    .tag {
+      display: inline-flex;
+      align-items: center;
+      padding: 7px 10px;
+      border-radius: 999px;
+      border: 1px solid rgba(226, 232, 240, .95);
+      background: rgba(255, 255, 255, .92);
+      color: rgba(30, 41, 59, .92);
+      font-weight: 1000;
+      font-size: 12px;
+    }
+
+    ul.list {
+      margin: 8px 0 0 18px;
+      color: var(--muted);
+      font-weight: 850;
+      line-height: 1.55
+    }
+
+    .choices {
+      display: grid;
+      gap: 10px;
+      margin-top: 10px
+    }
+
+    .choice {
+      border: 1px solid rgba(226, 232, 240, .95);
+      border-radius: 18px;
+      padding: 12px 14px;
+      background: rgba(255, 255, 255, .96);
+      font-weight: 950;
+      color: rgba(30, 41, 59, .96);
+      cursor: pointer;
+      user-select: none;
+      transition: transform .06s ease, border-color .12s ease, background .12s ease;
+    }
+
+    .choice:hover {
+      transform: translateY(-1px)
+    }
+
+    .choice.active {
+      border-color: rgba(79, 70, 229, .35);
+      background: rgba(79, 70, 229, .06)
+    }
+
+    .choice.ok {
+      border-color: rgba(22, 163, 74, .35);
+      background: rgba(22, 163, 74, .08)
+    }
+
+    .choice.bad {
+      border-color: rgba(220, 38, 38, .35);
+      background: rgba(220, 38, 38, .08)
+    }
+
+    .feedback {
+      display: none;
+      margin-top: 10px;
+      border-radius: 18px;
+      padding: 12px 14px;
+      border: 1px solid rgba(226, 232, 240, .95);
+      background: rgba(255, 255, 255, .92);
+      color: var(--muted);
+      font-weight: 900;
+      line-height: 1.5;
+    }
+
+    .feedback.show {
+      display: block
+    }
+
+    .fbOk {
+      border-color: rgba(22, 163, 74, .35);
+      background: rgba(22, 163, 74, .08);
+      color: rgba(15, 23, 42, .92)
+    }
+
+    .fbBad {
+      border-color: rgba(220, 38, 38, .35);
+      background: rgba(220, 38, 38, .08);
+      color: rgba(15, 23, 42, .92)
+    }
+
+    .input {
+      width: 100%;
+      border: 1px solid rgba(226, 232, 240, .95);
+      background: rgba(255, 255, 255, .96);
+      border-radius: 16px;
+      padding: 12px 14px;
+      font-weight: 950;
+      color: rgba(30, 41, 59, .96);
+    }
+
+    .emojiBig {
+      font-size: 58px;
+      line-height: 1;
+    }
+
+    .moneyPill {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-width: 84px;
+      padding: 10px 14px;
+      border-radius: 18px;
+      background: linear-gradient(135deg, rgba(34, 197, 94, .14), rgba(16, 185, 129, .12));
+      border: 1px solid rgba(34, 197, 94, .18);
+      font-weight: 1000;
+      color: #166534;
+    }
+
+    .scenarioBox {
+      border: 1px dashed rgba(79, 70, 229, .30);
+      border-radius: 22px;
+      padding: 16px;
+      background: linear-gradient(180deg, rgba(79, 70, 229, .05), rgba(6, 182, 212, .05));
+    }
+  </style>
+</head>
+
+<body>
+  <div id="accessGate"
+    style="position:fixed; inset:0; background:linear-gradient(135deg,#eef2ff,#ecfeff); display:flex; align-items:center; justify-content:center; z-index:9999;">
+    <div class="card" style="max-width:420px;width:92%;text-align:center">
+      <h2>🔐 Kode Akses</h2>
+      <p>Masukkan kode untuk memulai sesi.</p>
+      <input id="accessInput" class="input" placeholder="MASUKKAN KODE" autocomplete="off"
+        style="text-align:center;font-weight:900;letter-spacing:2px" />
+      <button class="btn primary" id="accessBtn" style="margin-top:12px">Masuk</button>
+      <div class="feedback" id="accessFb" style="margin-top:10px"></div>
+      <div class="card" style="margin-top:10px;background:rgba(79,70,229,.05)">
+        <p style="margin:0">Kode diberikan oleh guru.</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="app">
+    <div class="topbar">
+      <div class="brand">
+        <div class="logo">LP</div>
+        <div>
+          <h1>Lower Primary</h1>
+          <div class="sub">Mengenal Nilai Uang</div>
+        </div>
+      </div>
+
+      <div class="controls">
+        <button class="btn ghost" id="btnHome" title="Kembali ke awal">🏠 Awal</button>
+        <button class="btn" id="btnPrev" title="Sebelumnya (←)">←</button>
+        <button class="btn primary" id="btnNext" title="Berikutnya (→)">→</button>
+      </div>
+
+      <div class="progressWrap">
+        <div class="progress" aria-label="Progress">
+          <div class="bar" id="bar"></div>
+        </div>
+        <div class="count" id="count">1/1</div>
+      </div>
+    </div>
+
+    <div class="stage">
+      <div class="slide" role="region" aria-label="Slide">
+        <div class="slideInner" id="content"></div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const slides = [
+      {
+        title: "Pembuka",
+        html: `
+      <h2>💰 Mengenal Nilai Uang</h2>
+      <p>Hari ini kita akan belajar tentang uang, nilainya, dan bagaimana uang membantu kita membuat pilihan.</p>
+
+      <div class="card" style="margin-top:10px">
+        <div class="kicker">👀 Coba pikirkan</div>
+        <p style="margin:8px 0 0">Pernahkah kamu melihat orang tuamu berbelanja di pasar, minimarket, atau kantin sekolah?</p>
+      </div>
+
+      <div class="hint" style="margin-top:12px">
+        Barang yang ingin dibeli harus disesuaikan dengan jumlah uang yang kita punya.
+      </div>
+    `
+      },
+
+      {
+        title: "Uang dalam Kehidupan Sehari-hari",
+        html: `
+      <h2>Uang dalam Kehidupan Sehari-hari</h2>
+      <p>Uang digunakan untuk membeli barang yang kita butuhkan atau inginkan.</p>
+
+      <div class="grid cols2" style="margin-top:10px">
+        <div class="card">
+          <div class="kicker">🛒 Contoh tempat</div>
+          <p style="margin:8px 0 0">Pasar</p>
+          <p>Minimarket</p>
+          <p>Kantin sekolah</p>
+        </div>
+        <div class="card">
+          <div class="kicker">🧺 Contoh barang</div>
+          <p style="margin:8px 0 0">Makanan</p>
+          <p>Minuman</p>
+          <p>Alat tulis</p>
+        </div>
+      </div>
+
+      <div class="card" style="margin-top:12px">
+        <div class="kicker">💡 Ingat</div>
+        <p style="margin:8px 0 0">Kita tidak bisa memberi uang sedikit untuk mendapatkan banyak barang sekaligus.</p>
+      </div>
+    `
+      },
+
+      {
+        title: "Apa Itu Nilai Uang",
+        html: `
+      <h2>Apa Itu Nilai Uang?</h2>
+      <p>Setiap uang punya nilai yang berbeda.</p>
+
+      <div class="card" style="margin-top:10px">
+        <p>Ada uang Rp1.000, Rp2.000, Rp5.000, bahkan Rp10.000.</p>
+        <p style="margin-top:8px"><b>Semakin besar angkanya, semakin banyak nilainya.</b></p>
+      </div>
+
+      <div class="grid cols2" style="margin-top:12px">
+        <div class="card">
+          <div class="kicker">🪙 Koin</div>
+          <p style="margin:8px 0 0">Ada uang berbentuk koin.</p>
+        </div>
+        <div class="card">
+          <div class="kicker">💵 Kertas</div>
+          <p style="margin:8px 0 0">Ada juga uang berbentuk kertas.</p>
+        </div>
+      </div>
+    `
+      },
+
+      {
+        title: "Bandingkan Nilai Uang",
+        html: `
+      <h2>Bandingkan Nilai Uang</h2>
+      <p>Mana yang nilainya lebih banyak?</p>
+
+      <div class="card" style="margin-top:10px">
+        <div class="choices" data-money-choice="compare1">
+          <div class="choice" data-answer="wrong">Rp2.000 lebih banyak</div>
+          <div class="choice" data-answer="right">Rp5.000 lebih banyak</div>
+          <div class="choice" data-answer="wrong">Sama saja</div>
+          <div class="choice" data-answer="wrong">Tidak bisa dibandingkan</div>
+        </div>
+        <div class="feedback" id="moneyFb1"></div>
+      </div>
+    `
+      },
+
+      {
+        title: "Kenapa Kita Perlu Tahu Nilai Uang",
+        html: `
+      <h2>Mengapa Kita Harus Mengenal Nilai Uang?</h2>
+      <p>Nilai uang membantu kita memilih barang dengan tepat.</p>
+
+      <div class="card" style="margin-top:10px">
+        <div class="kicker">🥖 Contoh</div>
+        <p style="margin:8px 0 0">Harga roti Rp3.000</p>
+        <p>Kamu punya Rp2.000 → belum bisa beli</p>
+        <p>Kamu punya Rp5.000 → bisa beli</p>
+      </div>
+
+      <div class="hint" style="margin-top:12px">
+        Kalau uangmu belum cukup, berarti kamu belum bisa membeli barang itu.
+      </div>
+    `
+      },
+
+      {
+        title: "Quiz Roti",
+        html: `
+      <h2>🎯 Bisa Beli atau Tidak?</h2>
+      <p>Harga roti Rp3.000. Kamu punya Rp2.000. Apa yang benar?</p>
+
+      <div class="card" style="margin-top:10px">
+        <div class="choices" data-money-choice="bread">
+          <div class="choice" data-answer="wrong">Bisa beli roti</div>
+          <div class="choice" data-answer="right">Belum bisa beli roti</div>
+          <div class="choice" data-answer="wrong">Bisa beli dua roti</div>
+          <div class="choice" data-answer="wrong">Roti jadi gratis</div>
+        </div>
+        <div class="feedback" id="moneyFb2"></div>
+      </div>
+    `
+      },
+
+      {
+        title: "Nilai Uang Membantu Memilih",
+        html: `
+      <h2>Nilai Uang Membantu Kita Membuat Pilihan</h2>
+      <p>Saat tahu nilai uang, kita bisa berpikir lebih baik sebelum membeli sesuatu.</p>
+
+      <div class="card" style="margin-top:10px">
+        <div class="kicker">✅ Kita jadi bisa</div>
+        <p style="margin:8px 0 0">Menghitung</p>
+        <p>Membandingkan harga</p>
+        <p>Menentukan mana yang bisa dibeli</p>
+      </div>
+    `
+      },
+
+      {
+        title: "Pilihan di Kantin",
+        html: `
+      <h2>Contoh Pilihan di Kantin</h2>
+      <p>Kamu membawa Rp4.000 ke kantin.</p>
+
+      <div class="card" style="margin-top:10px">
+        <p>Es teh = Rp3.000</p>
+        <p>Permen = Rp1.000</p>
+        <p>Susu = Rp4.000</p>
+      </div>
+
+      <div class="card" style="margin-top:12px">
+        <div class="kicker">🤔 Pikirkan</div>
+        <p style="margin:8px 0 0">Dengan Rp4.000, kamu bisa membeli <b>es teh dan permen</b>.</p>
+        <p>Atau kamu bisa membeli <b>susu saja</b>.</p>
+      </div>
+    `
+      },
+
+      {
+        title: "Quiz Kantin",
+        html: `
+      <h2>🛍️ Pilih dengan Uangmu</h2>
+      <p>Kamu punya Rp4.000. Mana yang bisa kamu beli?</p>
+
+      <div class="card" style="margin-top:10px">
+        <div class="choices" data-money-choice="canteen">
+          <div class="choice" data-answer="wrong">Susu dan es teh</div>
+          <div class="choice" data-answer="right">Es teh dan permen</div>
+          <div class="choice" data-answer="wrong">Susu dan permen</div>
+          <div class="choice" data-answer="wrong">Semua barang</div>
+        </div>
+        <div class="feedback" id="moneyFb3"></div>
+      </div>
+    `
+      },
+
+      {
+        title: "Uang dan Dunia Digital",
+        html: `
+      <h2>Uang Juga Penting di Dunia Digital</h2>
+      <p>Mengenal nilai uang juga membantu kita saat bermain game atau melihat iklan digital.</p>
+
+      <div class="card" style="margin-top:10px">
+        <div class="kicker">📱 Ingat</div>
+        <p style="margin:8px 0 0">Jangan sembarangan meng-klik sesuatu yang terlihat menarik kalau kita belum tahu nilainya.</p>
+      </div>
+
+      <div class="hint" style="margin-top:12px">
+        Pikir dulu sebelum memilih, baik di dunia nyata maupun di dunia digital.
+      </div>
+    `
+      },
+
+      {
+        title: "Koneksi ke Coding",
+        html: `
+      <h2>🤖 Hubungkan dengan Coding</h2>
+      <p>Di coding, kita juga bisa memakai angka untuk menunjukkan nilai.</p>
+
+      <div class="card" style="margin-top:10px">
+        <p>Seperti uang, angka di program juga bisa dibandingkan.</p>
+        <p style="margin-top:8px"><b>Lebih besar</b> atau <b>lebih kecil</b>.</p>
+      </div>
+
+      <div class="card" style="margin-top:12px">
+        <div class="kicker">Contoh sederhana</div>
+        <p style="margin:8px 0 0">Kalau uang = 5.000 dan harga = 3.000, berarti uang cukup.</p>
+      </div>
+    `
+      },
+
+      {
+        title: "Quiz Akhir",
+        html: `
+      <h2>🎉 Quiz Akhir</h2>
+      <p>Mengapa kita perlu mengenal nilai uang?</p>
+
+      <div class="card" style="margin-top:10px">
+        <div class="choices" data-money-choice="final">
+          <div class="choice" data-answer="wrong">Supaya uang cepat habis</div>
+          <div class="choice" data-answer="right">Supaya bisa memilih barang dengan tepat</div>
+          <div class="choice" data-answer="wrong">Supaya semua barang bisa dibeli</div>
+          <div class="choice" data-answer="wrong">Supaya tidak perlu melihat harga</div>
+        </div>
+        <div class="feedback" id="moneyFb4"></div>
+      </div>
+    `
+      },
+
+      {
+        title: "Penutup",
+        html: `
+      <h2>✅ Kesimpulan</h2>
+      <p>Sekarang kamu sudah belajar mengenal nilai uang.</p>
+
+      <div class="card" style="margin-top:10px">
+        <ul class="list">
+          <li>Uang punya nilai yang berbeda</li>
+          <li>Nilai uang membantu kita membeli barang dengan tepat</li>
+          <li>Jumlah uang mempengaruhi pilihan kita</li>
+          <li>Kita perlu berpikir sebelum membeli</li>
+        </ul>
+      </div>
+
+      <div class="card" style="margin-top:12px;text-align:center">
+        <button class="btn primary" data-goto="0">🏁 Balik ke awal</button>
+      </div>
+    `
+      }
+    ];
+
+    let idx = 0;
+    const content = document.getElementById("content");
+    const bar = document.getElementById("bar");
+    const count = document.getElementById("count");
+    const btnPrev = document.getElementById("btnPrev");
+    const btnNext = document.getElementById("btnNext");
+    const btnHome = document.getElementById("btnHome");
+
+    function clamp(n, a, b) { return Math.max(a, Math.min(b, n)); }
+
+    const ACCESS_CODE = "RGMDSLP25";
+    const gate = document.getElementById("accessGate");
+    const input = document.getElementById("accessInput");
+    const btn = document.getElementById("accessBtn");
+    const fb = document.getElementById("accessFb");
+
+    input.addEventListener("input", () => { input.value = input.value.toUpperCase(); });
+    btn.addEventListener("click", checkAccess);
+    input.addEventListener("keydown", (e) => { if (e.key === "Enter") checkAccess(); });
+
+    function checkAccess() {
+      if (input.value.trim() === ACCESS_CODE) {
+        gate.style.display = "none";
+      } else {
+        fb.className = "feedback show fbBad";
+        fb.textContent = "Kode salah. Coba lagi.";
+      }
+    }
+
+    function getQuizMsg(id, ok) {
+      const msgs = {
+        qNina: {
+          ok: "✅ Betul! Penghapus lebih dibutuhkan Nina untuk belajar.",
+          bad: "⚠️ Coba lagi ya. Nina butuh barang yang lebih penting dulu."
+        },
+        qAkhir: {
+          ok: "✅ Ya! Kalau uang belum cukup, sebaiknya ditunda dulu.",
+          bad: "⚠️ Belum tepat. Kalau uang belum cukup, kita tidak perlu memaksa membeli."
+        }
+      };
+      const m = msgs[id];
+      if (!m) return ok ? "✅ Benar!" : "⚠️ Coba lagi.";
+      return ok ? m.ok : m.bad;
+    }
+
+    function showFeedback(el, html, type) {
+      if (!el) return;
+      el.classList.add("show");
+      el.style.display = "block";
+      el.classList.remove("fbOk", "fbBad");
+      if (type === "ok") el.classList.add("fbOk");
+      if (type === "bad") el.classList.add("fbBad");
+      el.innerHTML = html;
+    }
+
+    function wireQuiz(group) {
+      const id = group.getAttribute("data-quiz");
+      const fb = content.querySelector(`[data-quiz-feedback="${id}"]`);
+      const items = [...group.querySelectorAll(".choice")];
+      items.forEach(ch => {
+        ch.addEventListener("click", () => {
+          items.forEach(x => x.classList.remove("active", "ok", "bad"));
+          ch.classList.add("active");
+          const isRight = ch.getAttribute("data-answer") === "right";
+          ch.classList.add(isRight ? "ok" : "bad");
+          showFeedback(fb, getQuizMsg(id, isRight), isRight ? "ok" : "bad");
+        });
+      });
+    }
+
+    function wireSimpleChoice() {
+      content.querySelectorAll('[data-choice-simple]').forEach(group => {
+        const fb = content.querySelector('#pick1Fb');
+        const items = [...group.querySelectorAll('.choice')];
+        items.forEach(ch => {
+          ch.addEventListener('click', () => {
+            items.forEach(x => x.classList.remove('active', 'ok', 'bad'));
+            ch.classList.add('active', 'ok');
+            showFeedback(fb, '👍 Pilihanmu boleh berbeda. Yang penting, kamu bisa menjelaskan alasannya.', 'ok');
+          });
+        });
+      });
+    }
+
+    function wireEventBlockQuiz() {
+      const wrap = content.querySelector('[data-event-choice="eventblock"]');
+      const fb = content.querySelector('#eventBlockFb');
+      if (!wrap || !fb) return;
+
+      wrap.querySelectorAll('.choice').forEach(ch => {
+        ch.addEventListener('click', () => {
+          wrap.querySelectorAll('.choice').forEach(x => {
+            x.classList.remove('ok', 'bad', 'active');
+          });
+
+          const right = ch.getAttribute('data-answer') === 'right';
+          ch.classList.add('active');
+          ch.classList.add(right ? 'ok' : 'bad');
+
+          fb.className = 'feedback show ' + (right ? 'fbOk' : 'fbBad');
+          fb.innerHTML = right
+            ? '✅ Betul! Kalau karakter harus bergerak saat disentuh, kita pakai blok <b>Tap</b>.'
+            : '⚠️ Belum tepat. Coba pilih blok event yang aktif saat pemain menyentuh karakter.';
+        });
+      });
+    }
+
+    function wireMoneyQuiz() {
+      const quizMap = {
+        compare1: "moneyFb1",
+        bread: "moneyFb2",
+        canteen: "moneyFb3",
+        final: "moneyFb4"
+      };
+
+      Object.keys(quizMap).forEach(key => {
+        const wrap = content.querySelector('[data-money-choice="' + key + '"]');
+        const fb = content.querySelector('#' + quizMap[key]);
+        if (!wrap || !fb) return;
+
+        wrap.querySelectorAll('.choice').forEach(ch => {
+          ch.addEventListener('click', () => {
+            wrap.querySelectorAll('.choice').forEach(x => {
+              x.classList.remove('ok', 'bad', 'active');
+            });
+
+            const right = ch.getAttribute('data-answer') === 'right';
+            ch.classList.add('active');
+            ch.classList.add(right ? 'ok' : 'bad');
+
+            fb.className = 'feedback show ' + (right ? 'fbOk' : 'fbBad');
+
+            if (key === "compare1") {
+              fb.innerHTML = right
+                ? '✅ Betul! Rp5.000 nilainya lebih banyak daripada Rp2.000.'
+                : '⚠️ Coba lagi. Lihat angkanya ya, mana yang lebih besar?';
+            } else if (key === "bread") {
+              fb.innerHTML = right
+                ? '✅ Betul! Kalau harga roti Rp3.000 dan uangmu Rp2.000, berarti belum cukup.'
+                : '⚠️ Belum tepat. Uangmu masih kurang untuk membeli roti.';
+            } else if (key === "canteen") {
+              fb.innerHTML = right
+                ? '✅ Ya! Rp3.000 + Rp1.000 = Rp4.000, jadi pas.'
+                : '⚠️ Coba hitung lagi jumlah uang dan harga barangnya.';
+            } else if (key === "final") {
+              fb.innerHTML = right
+                ? '✅ Hebat! Mengenal nilai uang membantu kita memilih barang dengan tepat.'
+                : '⚠️ Coba lagi ya. Kita belajar nilai uang supaya bisa memilih dengan bijak.';
+            }
+          });
+        });
+      });
+    }
+
+    function wireInteractions() {
+      content.querySelectorAll('[data-quiz]').forEach(wireQuiz);
+      wireSimpleChoice();
+      wireSelectGroup();
+      wireToggles();
+      wireTreeGameV2();
+      wireTapSim();
+      wireTimers();
+      wireEventBlockQuiz();
+      wireMoneyQuiz()
+    }
+
+    function render() {
+      const s = slides[idx];
+      content.innerHTML = s.html;
+      const pct = ((idx + 1) / slides.length) * 100;
+      bar.style.width = pct + "%";
+      count.textContent = `${idx + 1}/${slides.length}`;
+      wireInteractions();
+
+      content.querySelectorAll('[data-goto]').forEach(b => {
+        b.addEventListener('click', () => {
+          const to = Number(b.getAttribute('data-goto'));
+          idx = clamp(to, 0, slides.length - 1);
+          render();
+          content.scrollTop = 0;
+        });
+      });
+    }
+
+    function go(d) {
+      idx = clamp(idx + d, 0, slides.length - 1);
+      render();
+      content.scrollTop = 0;
+    }
+
+    btnPrev.addEventListener("click", () => go(-1));
+    btnNext.addEventListener("click", () => go(1));
+    btnHome.addEventListener("click", () => { idx = 0; render(); content.scrollTop = 0; });
+
+    window.addEventListener("keydown", (e) => {
+      if (e.key === "ArrowLeft") go(-1);
+      if (e.key === "ArrowRight") go(1);
+      if (e.key === "Home") { idx = 0; render(); content.scrollTop = 0; }
+    });
+
+    render();
+  </script>
+</body>
+
+</html>
