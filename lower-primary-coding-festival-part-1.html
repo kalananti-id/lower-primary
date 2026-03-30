@@ -1,0 +1,1090 @@
+<!doctype html>
+<html lang="id">
+
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>UOB MDS – Lower Primary – Coding Festival Stage 1</title>
+  <style>
+    :root {
+      --bg1: #F7FAFF;
+      --bg2: #F3F6FF;
+      --card: #FFFFFF;
+      --ink: #0F172A;
+      --muted: #475569;
+      --line: rgba(226, 232, 240, .95);
+      --brand: #4F46E5;
+      --brand2: #06B6D4;
+      --ok: #16A34A;
+      --bad: #DC2626;
+      --warn: #F59E0B;
+      --radius: 22px;
+      --shadow: 0 18px 40px rgba(15, 23, 42, .08);
+      --shadow2: 0 10px 22px rgba(15, 23, 42, .06);
+      --focus: 0 0 0 4px rgba(79, 70, 229, .18);
+      --mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+      --sans: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, "Apple Color Emoji", "Segoe UI Emoji";
+    }
+
+    * {
+      box-sizing: border-box
+    }
+
+    body {
+      margin: 0;
+      font-family: var(--sans);
+      color: var(--ink);
+      background:
+        radial-gradient(1200px 520px at 10% 0%, rgba(6, 182, 212, .18), transparent 60%),
+        radial-gradient(1200px 520px at 90% 0%, rgba(79, 70, 229, .16), transparent 55%),
+        linear-gradient(180deg, var(--bg1), var(--bg2) 45%, var(--bg1));
+      min-height: 100vh;
+    }
+
+    .app {
+      width: min(1100px, 96vw);
+      margin: 18px auto 26px;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .topbar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      padding: 12px 14px;
+      border: 1px solid var(--line);
+      border-radius: 18px;
+      background: rgba(255, 255, 255, .72);
+      backdrop-filter: blur(10px);
+      box-shadow: var(--shadow2);
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .logo {
+      width: 38px;
+      height: 38px;
+      border-radius: 14px;
+      background: linear-gradient(135deg, rgba(79, 70, 229, .18), rgba(6, 182, 212, .20));
+      border: 1px solid rgba(226, 232, 240, .9);
+      display: grid;
+      place-items: center;
+      font-weight: 1000;
+      color: rgba(79, 70, 229, 1);
+    }
+
+    .brand h1 {
+      margin: 0;
+      font-size: 14px;
+      line-height: 1.15;
+      letter-spacing: .2px;
+    }
+
+    .brand .sub {
+      font-size: 12px;
+      color: var(--muted);
+      font-weight: 800;
+      margin-top: 2px;
+    }
+
+    .controls {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+
+    .btn {
+      border: 1px solid rgba(226, 232, 240, .95);
+      background: rgba(255, 255, 255, .9);
+      padding: 10px 12px;
+      border-radius: 16px;
+      font-weight: 1000;
+      cursor: pointer;
+      box-shadow: 0 8px 16px rgba(15, 23, 42, .06);
+      transition: transform .06s ease, box-shadow .12s ease, background .12s ease;
+      user-select: none;
+    }
+
+    .btn:hover {
+      transform: translateY(-1px)
+    }
+
+    .btn:active {
+      transform: translateY(0px)
+    }
+
+    .btn.primary {
+      background: linear-gradient(135deg, rgba(79, 70, 229, .12), rgba(6, 182, 212, .14));
+      border-color: rgba(79, 70, 229, .18);
+    }
+
+    .btn.ghost {
+      background: transparent;
+      box-shadow: none
+    }
+
+    .btn:focus {
+      outline: none;
+      box-shadow: var(--focus);
+    }
+
+    .progressWrap {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      min-width: 260px;
+      justify-content: flex-end;
+    }
+
+    .progress {
+      width: 180px;
+      height: 10px;
+      background: rgba(226, 232, 240, .9);
+      border-radius: 999px;
+      overflow: hidden;
+      border: 1px solid rgba(226, 232, 240, .95);
+    }
+
+    .bar {
+      height: 100%;
+      width: 0%;
+      background: linear-gradient(90deg, rgba(79, 70, 229, .85), rgba(6, 182, 212, .85));
+      border-radius: 999px;
+      transition: width .25s ease;
+    }
+
+    .count {
+      font-family: var(--mono);
+      font-size: 12px;
+      color: var(--muted);
+      font-weight: 900;
+    }
+
+    .stage {
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      background: rgba(255, 255, 255, .60);
+      box-shadow: var(--shadow);
+      padding: 14px;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      min-height: calc(100vh - 145px);
+    }
+
+    .slide {
+      flex: 1;
+      background: rgba(255, 255, 255, .68);
+      border: 1px solid rgba(229, 234, 245, .95);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow2);
+      padding: 20px;
+      overflow: hidden;
+      backdrop-filter: blur(8px);
+    }
+
+    .slideInner {
+      max-width: 980px;
+      margin: 0 auto;
+      max-height: calc(100vh - 190px);
+      overflow-y: auto;
+      padding-right: 8px;
+    }
+
+    .slideInner::-webkit-scrollbar {
+      width: 10px;
+    }
+
+    .slideInner::-webkit-scrollbar-thumb {
+      background: rgba(96, 112, 153, .25);
+      border-radius: 999px;
+      border: 3px solid rgba(255, 255, 255, .9);
+    }
+
+    .slideInner::-webkit-scrollbar-track {
+      background: transparent;
+    }
+
+    h2 {
+      margin: 6px 0 10px;
+      font-size: 30px;
+      letter-spacing: -.3px
+    }
+
+    h3 {
+      margin: 0 0 8px;
+      font-size: 18px
+    }
+
+    p {
+      margin: 0 0 10px;
+      color: var(--muted);
+      font-weight: 800;
+      line-height: 1.55
+    }
+
+    .kicker {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      font-weight: 1000;
+      font-size: 12px;
+      letter-spacing: .2px;
+      padding: 7px 10px;
+      border-radius: 999px;
+      border: 1px solid rgba(79, 70, 229, .16);
+      background: rgba(79, 70, 229, .06);
+      color: rgba(55, 65, 81, .95);
+    }
+
+    .grid {
+      display: grid;
+      gap: 14px
+    }
+
+    .cols2 {
+      grid-template-columns: 1fr 1fr
+    }
+
+    .cols3 {
+      grid-template-columns: repeat(3, 1fr)
+    }
+
+    @media (max-width: 860px) {
+
+      .cols2,
+      .cols3 {
+        grid-template-columns: 1fr
+      }
+
+      .progressWrap {
+        min-width: unset
+      }
+
+      .progress {
+        width: 130px
+      }
+
+      h2 {
+        font-size: 26px
+      }
+    }
+
+    .card {
+      background: rgba(255, 255, 255, .92);
+      border: 1px solid rgba(226, 232, 240, .95);
+      border-radius: 22px;
+      padding: 14px;
+      box-shadow: 0 10px 18px rgba(15, 23, 42, .06);
+    }
+
+    .miniRow {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+      align-items: center
+    }
+
+    .tag {
+      display: inline-flex;
+      align-items: center;
+      padding: 7px 10px;
+      border-radius: 999px;
+      border: 1px solid rgba(226, 232, 240, .95);
+      background: rgba(255, 255, 255, .92);
+      color: rgba(30, 41, 59, .92);
+      font-weight: 1000;
+      font-size: 12px;
+    }
+
+    ul.list {
+      margin: 8px 0 0 18px;
+      color: var(--muted);
+      font-weight: 850;
+      line-height: 1.55
+    }
+
+    .choices {
+      display: grid;
+      gap: 10px;
+      margin-top: 10px
+    }
+
+    .choice {
+      border: 1px solid rgba(226, 232, 240, .95);
+      border-radius: 18px;
+      padding: 12px 14px;
+      background: rgba(255, 255, 255, .96);
+      font-weight: 950;
+      color: rgba(30, 41, 59, .96);
+      cursor: pointer;
+      user-select: none;
+      transition: transform .06s ease, border-color .12s ease, background .12s ease;
+    }
+
+    .choice:hover {
+      transform: translateY(-1px)
+    }
+
+    .choice.active {
+      border-color: rgba(79, 70, 229, .35);
+      background: rgba(79, 70, 229, .06)
+    }
+
+    .choice.ok {
+      border-color: rgba(22, 163, 74, .35);
+      background: rgba(22, 163, 74, .08)
+    }
+
+    .choice.bad {
+      border-color: rgba(220, 38, 38, .35);
+      background: rgba(220, 38, 38, .08)
+    }
+
+    .feedback {
+      display: none;
+      margin-top: 10px;
+      border-radius: 18px;
+      padding: 12px 14px;
+      border: 1px solid rgba(226, 232, 240, .95);
+      background: rgba(255, 255, 255, .92);
+      color: var(--muted);
+      font-weight: 900;
+      line-height: 1.5;
+    }
+
+    .feedback.show {
+      display: block
+    }
+
+    .fbOk {
+      border-color: rgba(22, 163, 74, .35);
+      background: rgba(22, 163, 74, .08);
+      color: rgba(15, 23, 42, .92)
+    }
+
+    .fbBad {
+      border-color: rgba(220, 38, 38, .35);
+      background: rgba(220, 38, 38, .08);
+      color: rgba(15, 23, 42, .92)
+    }
+
+    .input {
+      width: 100%;
+      border: 1px solid rgba(226, 232, 240, .95);
+      background: rgba(255, 255, 255, .96);
+      border-radius: 16px;
+      padding: 12px 14px;
+      font-weight: 950;
+      color: rgba(30, 41, 59, .96);
+    }
+
+    .emojiBig {
+      font-size: 58px;
+      line-height: 1;
+    }
+
+    .timelineCard {
+      position: relative;
+      padding-left: 18px;
+    }
+
+    .timelineCard::before {
+      content: "";
+      position: absolute;
+      left: 0;
+      top: 6px;
+      bottom: 6px;
+      width: 4px;
+      border-radius: 999px;
+      background: linear-gradient(180deg, rgba(79, 70, 229, .75), rgba(6, 182, 212, .7));
+    }
+
+    .pitchStep {
+      border: 1px dashed rgba(79, 70, 229, .28);
+      background: linear-gradient(180deg, rgba(79, 70, 229, .04), rgba(6, 182, 212, .04));
+    }
+
+    .checkPill {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 9px 12px;
+      border-radius: 999px;
+      background: rgba(255, 255, 255, .9);
+      border: 1px solid rgba(226, 232, 240, .95);
+      font-weight: 950;
+      color: rgba(30, 41, 59, .95);
+    }
+
+    .twoBig {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 14px;
+    }
+
+    @media (max-width: 860px) {
+      .twoBig {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .bigNum {
+      width: 42px;
+      height: 42px;
+      border-radius: 14px;
+      display: grid;
+      place-items: center;
+      font-weight: 1000;
+      background: linear-gradient(135deg, rgba(79, 70, 229, .16), rgba(6, 182, 212, .16));
+      border: 1px solid rgba(79, 70, 229, .18);
+      color: rgba(79, 70, 229, 1);
+      flex: 0 0 auto;
+    }
+  </style>
+</head>
+
+<body>
+  <div id="accessGate"
+    style="position:fixed; inset:0; background:linear-gradient(135deg,#eef2ff,#ecfeff); display:flex; align-items:center; justify-content:center; z-index:9999;">
+    <div class="card" style="max-width:420px;width:92%;text-align:center">
+      <h2>🔐 Kode Akses</h2>
+      <p>Masukkan kode untuk memulai sesi.</p>
+      <input id="accessInput" class="input" placeholder="MASUKKAN KODE" autocomplete="off"
+        style="text-align:center;font-weight:900;letter-spacing:2px" />
+      <button class="btn primary" id="accessBtn" style="margin-top:12px">Masuk</button>
+      <div class="feedback" id="accessFb" style="margin-top:10px"></div>
+      <div class="card" style="margin-top:10px;background:rgba(79,70,229,.05)">
+        <p style="margin:0">Kode diberikan oleh guru.</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="app">
+    <div class="topbar">
+      <div class="brand">
+        <div class="logo">LP</div>
+        <div>
+          <h1>Lower Primary</h1>
+          <div class="sub">Coding Festival – Stage 1</div>
+        </div>
+      </div>
+
+      <div class="controls">
+        <button class="btn ghost" id="btnHome" title="Kembali ke awal">🏠 Awal</button>
+        <button class="btn" id="btnPrev" title="Sebelumnya (←)">←</button>
+        <button class="btn primary" id="btnNext" title="Berikutnya (→)">→</button>
+      </div>
+
+      <div class="progressWrap">
+        <div class="progress" aria-label="Progress">
+          <div class="bar" id="bar"></div>
+        </div>
+        <div class="count" id="count">1/1</div>
+      </div>
+    </div>
+
+    <div class="stage">
+      <div class="slide" role="region" aria-label="Slide">
+        <div class="slideInner" id="content"></div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const slides = [
+      {
+        title: "Pembuka",
+        html: `
+          <h2>🎉 Coding Festival Dimulai!</h2>
+          <p>Hari ini kita mulai perjalanan membuat proyek coding kita sendiri.</p>
+
+          <div class="grid cols2" style="margin-top:12px;align-items:center">
+            <div class="card">
+              <div class="kicker">Hari ini kita akan...</div>
+              <p style="margin:8px 0 0">Mengenal Coding Festival</p>
+              <p style="margin:8px 0 0">Melihat apa yang harus disiapkan</p>
+              <p style="margin:8px 0 0">Mulai mencari ide proyek</p>
+            </div>
+            <div class="card" style="text-align:center">
+              <div class="emojiBig">🚀🎮💡</div>
+              <p style="margin-top:10px">Kamu akan jadi kreator proyekmu sendiri!</p>
+            </div>
+          </div>
+        `
+      },
+
+      {
+        title: "Apa itu Coding Festival",
+        html: `
+          <h2>Apa Itu Coding Festival?</h2>
+          <p>Coding Festival adalah kegiatan membuat proyek coding sebagai bagian dari pembelajaran.</p>
+
+          <div class="card" style="margin-top:12px">
+            <div class="kicker">Intinya</div>
+            <ul class="list" style="margin-top:10px">
+              <li>Kamu membuat proyek coding sendiri</li>
+              <li>Kamu belajar dari ide sampai jadi karya</li>
+              <li>Proyek terbaik akan lanjut ke tahap berikutnya</li>
+            </ul>
+          </div>
+
+          <div class="card" style="margin-top:12px">
+            <p style="margin:0">Jadi, ini bukan hanya lomba. Ini juga bagian dari pengalaman belajar kamu.</p>
+          </div>
+        `
+      },
+
+      {
+        title: "Tahapan kompetisi",
+        html: `
+          <h2>🗺️ Perjalanan Coding Festival</h2>
+          <p>Coding Festival punya beberapa tahap. Sekarang kita fokus di tahap pertama dulu.</p>
+
+          <div class="grid cols2" style="margin-top:12px">
+            <div class="card timelineCard">
+              <div class="kicker">April</div>
+              <p style="margin:8px 0 0"><b>Innovation Month</b></p>
+              <p style="margin:8px 0 0">Membuat proyek di kelas</p>
+            </div>
+
+            <div class="card timelineCard">
+              <div class="kicker">Mei</div>
+              <p style="margin:8px 0 0"><b>Seleksi Awal & Semifinal</b></p>
+              <p style="margin:8px 0 0">Proyek dinilai dan dipresentasikan</p>
+            </div>
+
+            <div class="card timelineCard" style="grid-column:1/-1">
+              <div class="kicker">Juni</div>
+              <p style="margin:8px 0 0"><b>Final Hackathon</b></p>
+              <p style="margin:8px 0 0">Finalis melanjutkan ke tahap akhir</p>
+            </div>
+          </div>
+        `
+      },
+
+      {
+        title: "Stage 1",
+        html: `
+          <h2>🚩 Sekarang Kita di Stage 1</h2>
+          <p>Stage 1 adalah tahap membuat dan menyiapkan proyek.</p>
+
+          <div class="card" style="margin-top:12px">
+            <div class="kicker">Fokus kita sekarang</div>
+            <ul class="list" style="margin-top:10px">
+              <li>Menentukan ide</li>
+              <li>Merencanakan proyek</li>
+              <li>Membangun proyek</li>
+              <li>Menyiapkan penjelasan proyek</li>
+            </ul>
+          </div>
+
+          <div class="card" style="margin-top:12px">
+            <p style="margin:0">Hari ini kita mulai dari <b>ide</b> dan <b>rencana proyek</b> dulu ya.</p>
+          </div>
+        `
+      },
+
+      {
+        title: "Tema wajib",
+        html: `
+          <h2>💰 Tema Kita: Financial Literacy</h2>
+          <p>Artinya, proyekmu harus berhubungan dengan cara mengelola uang dengan baik.</p>
+
+          <div class="grid cols2" style="margin-top:12px">
+            <div class="card">
+              <div class="kicker">Contoh topik</div>
+              <p style="margin:8px 0 0">Menabung sejak dini</p>
+              <p style="margin:8px 0 0">Kebutuhan dan keinginan</p>
+              <p style="margin:8px 0 0">Mengelola uang jajan</p>
+            </div>
+
+            <div class="card">
+              <div class="kicker">Boleh juga</div>
+              <p style="margin:8px 0 0">Rencana pengeluaran sederhana</p>
+              <p style="margin:8px 0 0">Mengenal bank untuk menabung</p>
+              <p style="margin:8px 0 0">Pilihan keputusan finansial</p>
+            </div>
+          </div>
+        `
+      },
+
+      {
+        title: "Khusus lower primary",
+        html: `
+          <h2>👧🧒 Untuk Lower Primary</h2>
+          <p>Untuk jenjangmu, proyek yang dibuat bisa berupa animasi atau proyek interaktif sederhana.</p>
+
+          <div class="card" style="margin-top:12px">
+            <div class="kicker">Yang cocok untuk kamu</div>
+            <ul class="list" style="margin-top:10px">
+              <li>Cerita interaktif tentang uang jajan</li>
+              <li>Game memilih jajan atau menabung</li>
+              <li>Animasi tentang kebutuhan dan keinginan</li>
+            </ul>
+          </div>
+
+          <div class="card" style="margin-top:12px;text-align:center">
+            <div class="emojiBig">🍦💰🏦</div>
+            <p style="margin-top:10px">Tidak harus rumit. Yang penting jelas, berjalan, dan mudah dipahami.</p>
+          </div>
+        `
+      },
+
+      {
+        title: "Pilih ide proyek",
+        html: `
+          <h2>💡 Mulai dari Ide yang Dekat</h2>
+          <p>Pilih ide yang dekat dengan kehidupan sehari-hari supaya lebih mudah dibuat dan dijelaskan.</p>
+
+          <div class="choices" data-quiz="qIdeDekat">
+            <div class="choice" data-answer="right">Aku membuat game tentang memilih jajan atau menabung</div>
+            <div class="choice" data-answer="wrong">Aku membuat cerita yang tidak berhubungan dengan uang</div>
+            <div class="choice" data-answer="wrong">Aku membuat animasi tanpa tujuan yang jelas</div>
+          </div>
+          <div class="feedback" data-quiz-feedback="qIdeDekat"></div>
+        `
+      },
+
+      {
+        title: "Rencanakan proyek",
+        html: `
+          <h2>📝 Sebelum Coding, Rencanakan Dulu</h2>
+          <p>Setelah punya ide, kamu perlu membuat rencana sederhana.</p>
+
+          <div class="card" style="margin-top:12px">
+            <div class="kicker">Yang perlu ditentukan</div>
+            <ul class="list" style="margin-top:10px">
+              <li>Tujuan proyek</li>
+              <li>Siapa yang akan memainkan</li>
+              <li>Apa yang bisa dilakukan pemain</li>
+            </ul>
+          </div>
+
+          <div class="card" style="margin-top:12px">
+            <p style="margin:0">Kamu juga boleh membuat sketsa atau gambaran awal sebelum mulai coding.</p>
+          </div>
+        `
+      },
+
+      {
+        title: "Bangun proyek",
+        html: `
+          <h2>🧩 Lalu, Mulai Bangun Proyek</h2>
+          <p>Setelah rencananya siap, kamu mulai membuat proyekmu di ScratchJr.</p>
+
+          <div class="grid cols2" style="margin-top:12px">
+            <div class="card">
+              <div class="kicker">Mulai dari</div>
+              <p style="margin:8px 0 0">Tampilan awal</p>
+              <p style="margin:8px 0 0">Karakter</p>
+              <p style="margin:8px 0 0">Latar / scene</p>
+            </div>
+
+            <div class="card">
+              <div class="kicker">Tambahkan juga</div>
+              <p style="margin:8px 0 0">Interaksi sederhana</p>
+              <p style="margin:8px 0 0">Pilihan untuk pemain</p>
+              <p style="margin:8px 0 0">Hasil dari pilihan</p>
+            </div>
+          </div>
+        `
+      },
+
+      {
+        title: "Ciri proyek yang baik",
+        html: `
+          <h2>✅ Proyek yang Baik Itu...</h2>
+          <p>Proyekmu tidak harus susah. Tapi harus jelas dan bisa dimainkan.</p>
+
+          <div class="card" style="margin-top:12px">
+            <ul class="list">
+              <li>Sesuai tema uang / financial literacy</li>
+              <li>Program berjalan dengan baik</li>
+              <li>Ada interaksi untuk pemain</li>
+              <li>Tampilannya mudah dipahami</li>
+              <li>Idenya sederhana tapi jelas</li>
+            </ul>
+          </div>
+        `
+      },
+
+      {
+        title: "Hal penting",
+        html: `
+          <h2>⚠️ Hal yang Perlu Diperhatikan</h2>
+          <p>Ada beberapa aturan penting saat membuat proyek.</p>
+
+          <div class="grid cols2" style="margin-top:12px">
+            <div class="card">
+              <div class="kicker">Ingat ya</div>
+              <p style="margin:8px 0 0">Proyek adalah karya sendiri</p>
+              <p style="margin:8px 0 0">Boleh minta bantuan guru</p>
+              <p style="margin:8px 0 0">Boleh pakai aset dari internet dengan bijak</p>
+            </div>
+
+            <div class="card">
+              <div class="kicker">Yang penting</div>
+              <p style="margin:8px 0 0">Jangan menyalin seluruh proyek orang lain</p>
+              <p style="margin:8px 0 0">Kalau pakai proyek lama, harus dikembangkan lagi</p>
+              <p style="margin:8px 0 0">AI hanya boleh sebagai alat bantu belajar</p>
+            </div>
+          </div>
+        `
+      },
+
+      {
+        title: "Kriteria penilaian",
+        html: `
+          <h2>🏆 Yang Akan Dinilai</h2>
+          <p>Juri akan melihat beberapa bagian dari proyekmu.</p>
+
+          <div class="grid cols2" style="margin-top:12px">
+            <div class="card">
+              <div class="kicker">Ide</div>
+              <p style="margin:8px 0 0">Cerita dan masalahnya jelas</p>
+            </div>
+
+            <div class="card">
+              <div class="kicker">Logika</div>
+              <p style="margin:8px 0 0">Program berjalan dengan baik</p>
+            </div>
+
+            <div class="card">
+              <div class="kicker">Kreativitas</div>
+              <p style="margin:8px 0 0">Tampilan menarik dan unik</p>
+            </div>
+
+            <div class="card">
+              <div class="kicker">Pesan uang</div>
+              <p style="margin:8px 0 0">Ada pembelajaran tentang mengelola uang</p>
+            </div>
+          </div>
+        `
+      },
+
+      {
+        title: "Pitching intro",
+        html: `
+          <h2>🗣️ Selain Proyek, Kamu Juga Butuh Pitch Deck</h2>
+          <p>Pitch deck adalah slide sederhana untuk menceritakan proyekmu.</p>
+
+          <div class="card" style="margin-top:12px">
+            <div class="kicker">Fungsinya</div>
+            <ul class="list" style="margin-top:10px">
+              <li>Membantu orang lain mengerti proyekmu</li>
+              <li>Menjelaskan ide dan cara kerja game</li>
+              <li>Menunjukkan manfaat proyekmu</li>
+            </ul>
+          </div>
+
+          <div class="card" style="margin-top:12px">
+            <p style="margin:0">Jadi, pitch deck itu seperti <b>cerita singkat</b> tentang game kamu.</p>
+          </div>
+        `
+      },
+
+      {
+        title: "Pitching step 1",
+        html: `
+          <h2>📄 Pitch Deck Step 1</h2>
+          <p>Slide pertama berisi judul proyekmu.</p>
+
+          <div class="card pitchStep" style="margin-top:12px">
+            <div class="miniRow">
+              <div class="bigNum">1</div>
+              <div>
+                <div class="kicker">Isi slide 1</div>
+                <ul class="list" style="margin-top:10px">
+                  <li>Judul game / proyek</li>
+                  <li>Nama pembuat</li>
+                  <li>Boleh tambah gambar proyek</li>
+                </ul>
+              </div>
+            </div>
+          </div>
+
+          <div class="card" style="margin-top:12px">
+            <p style="margin:0"><b>Contoh:</b> “Pilih Jajan atau Menabung”</p>
+          </div>
+        `
+      },
+
+      {
+        title: "Pitching step 2",
+        html: `
+          <h2>📄 Pitch Deck Step 2</h2>
+          <p>Slide kedua menjelaskan masalah atau cerita proyekmu.</p>
+
+          <div class="card pitchStep" style="margin-top:12px">
+            <div class="miniRow">
+              <div class="bigNum">2</div>
+              <div>
+                <div class="kicker">Isi slide 2</div>
+                <ul class="list" style="margin-top:10px">
+                  <li>Masalah apa yang kamu angkat</li>
+                  <li>Kenapa masalah ini penting</li>
+                  <li>Apa yang ingin kamu ajarkan</li>
+                </ul>
+              </div>
+            </div>
+          </div>
+
+          <div class="card" style="margin-top:12px">
+            <p style="margin:0"><b>Contoh:</b> “Anak-anak perlu belajar memilih antara jajan dan menabung.”</p>
+          </div>
+        `
+      },
+
+      {
+        title: "Pitching step 3",
+        html: `
+          <h2>📄 Pitch Deck Step 3</h2>
+          <p>Slide ketiga menjelaskan cara kerja proyekmu.</p>
+
+          <div class="card pitchStep" style="margin-top:12px">
+            <div class="miniRow">
+              <div class="bigNum">3</div>
+              <div>
+                <div class="kicker">Isi slide 3</div>
+                <ul class="list" style="margin-top:10px">
+                  <li>Cara memainkan game</li>
+                  <li>Pilihan apa yang ada</li>
+                  <li>Apa hasil dari tiap pilihan</li>
+                </ul>
+              </div>
+            </div>
+          </div>
+
+          <div class="card" style="margin-top:12px">
+            <p style="margin:0"><b>Contoh:</b> Pemain memilih jajan atau menabung, lalu melihat hasilnya.</p>
+          </div>
+        `
+      },
+
+      {
+        title: "Pitching step 4",
+        html: `
+          <h2>📄 Pitch Deck Step 4</h2>
+          <p>Slide keempat menjelaskan manfaat proyekmu.</p>
+
+          <div class="card pitchStep" style="margin-top:12px">
+            <div class="miniRow">
+              <div class="bigNum">4</div>
+              <div>
+                <div class="kicker">Isi slide 4</div>
+                <ul class="list" style="margin-top:10px">
+                  <li>Apa pembelajaran dari game ini</li>
+                  <li>Bagaimana game ini membantu pemain</li>
+                  <li>Pesan tentang uang yang ingin disampaikan</li>
+                </ul>
+              </div>
+            </div>
+          </div>
+
+          <div class="card" style="margin-top:12px">
+            <p style="margin:0"><b>Contoh:</b> Game ini membantu anak belajar mengelola uang jajan dengan bijak.</p>
+          </div>
+        `
+      },
+
+      {
+        title: "Komponen submit",
+        html: `
+          <h2>📦 Nanti Saat Submit, Kamu Perlu Menyiapkan...</h2>
+          <p>Untuk Lower Primary, ada beberapa komponen yang perlu dikumpulkan.</p>
+
+          <div class="grid cols2" style="margin-top:12px">
+            <div class="card"><div class="checkPill">📁 File proyek ScratchJr (.sjr)</div></div>
+            <div class="card"><div class="checkPill">🎥 Video saat memainkan proyek</div></div>
+            <div class="card"><div class="checkPill">📝 Deskripsi proyek</div></div>
+            <div class="card"><div class="checkPill">🖼️ Screenshot proyek</div></div>
+            <div class="card"><div class="checkPill">👤 Foto profil</div></div>
+            <div class="card"><div class="checkPill">📊 Pitch deck</div></div>
+          </div>
+        `
+      },
+
+      {
+        title: "Checklist akhir",
+        html: `
+          <h2>🧪 Cek Proyekmu Sebelum Submit</h2>
+          <p>Sebelum dikumpulkan, pastikan proyekmu sudah siap.</p>
+
+          <div class="choices" data-quiz="qChecklist">
+            <div class="choice" data-answer="right">Proyek bisa dibuka, berjalan, dan ada interaksi</div>
+            <div class="choice" data-answer="wrong">Yang penting tampilannya lucu walau tidak bisa dimainkan</div>
+            <div class="choice" data-answer="wrong">Boleh submit link yang belum bisa dibuka</div>
+          </div>
+          <div class="feedback" data-quiz-feedback="qChecklist"></div>
+        `
+      },
+
+      {
+        title: "Brainstorming",
+        html: `
+          <h2>✍️ Sekarang Giliran Kamu</h2>
+          <p>Ayo mulai pikirkan proyekmu.</p>
+
+          <div class="card" style="margin-top:12px">
+            <div class="kicker">Pikirkan 4 hal ini</div>
+            <ul class="list" style="margin-top:10px">
+              <li>Judul proyekku apa?</li>
+              <li>Masalah apa yang ingin kuangkat?</li>
+              <li>Pemain bisa memilih apa?</li>
+              <li>Pesan tentang uangnya apa?</li>
+            </ul>
+          </div>
+        `
+      },
+
+      {
+        title: "Penutup",
+        html: `
+          <h2>🔥 Kamu Siap Memulai Stage 1</h2>
+          <p>Hari ini kamu sudah kenal Coding Festival dan tahu apa yang harus disiapkan.</p>
+
+          <div class="card" style="margin-top:12px">
+            <div class="kicker">Yang sudah kita pelajari</div>
+            <ul class="list" style="margin-top:10px">
+              <li>Apa itu Coding Festival</li>
+              <li>Tema proyek: Financial Literacy</li>
+              <li>Cara menyiapkan proyek</li>
+              <li>Langkah membuat pitch deck</li>
+              <li>Komponen yang perlu dikumpulkan</li>
+            </ul>
+          </div>
+
+          <div class="card" style="margin-top:12px;text-align:center">
+            <button class="btn primary" data-goto="0">🏁 Balik ke awal</button>
+          </div>
+        `
+      }
+    ];
+
+    let idx = 0;
+    const content = document.getElementById("content");
+    const bar = document.getElementById("bar");
+    const count = document.getElementById("count");
+    const btnPrev = document.getElementById("btnPrev");
+    const btnNext = document.getElementById("btnNext");
+    const btnHome = document.getElementById("btnHome");
+
+    function clamp(n, a, b) { return Math.max(a, Math.min(b, n)); }
+
+    const ACCESS_CODE = "RGMDSLP25";
+    const gate = document.getElementById("accessGate");
+    const input = document.getElementById("accessInput");
+    const btn = document.getElementById("accessBtn");
+    const fb = document.getElementById("accessFb");
+
+    input.addEventListener("input", () => { input.value = input.value.toUpperCase(); });
+    btn.addEventListener("click", checkAccess);
+    input.addEventListener("keydown", (e) => { if (e.key === "Enter") checkAccess(); });
+
+    function checkAccess() {
+      if (input.value.trim() === ACCESS_CODE) {
+        gate.style.display = "none";
+      } else {
+        fb.className = "feedback show fbBad";
+        fb.textContent = "Kode salah. Coba lagi.";
+      }
+    }
+
+    function getQuizMsg(id, ok) {
+      const msgs = {
+        qIdeDekat: {
+          ok: "✅ Betul! Ide yang dekat dengan kehidupan sehari-hari biasanya lebih mudah dibuat dan dijelaskan.",
+          bad: "⚠️ Coba lagi ya. Pilih ide yang masih berhubungan dengan uang dan punya tujuan yang jelas."
+        },
+        qChecklist: {
+          ok: "✅ Benar! Sebelum submit, proyek harus bisa dibuka, berjalan dengan baik, dan punya interaksi.",
+          bad: "⚠️ Belum tepat. Proyek yang dikumpulkan harus bisa diakses dan dijalankan dengan baik."
+        }
+      };
+      const m = msgs[id];
+      if (!m) return ok ? "✅ Benar!" : "⚠️ Coba lagi.";
+      return ok ? m.ok : m.bad;
+    }
+
+    function showFeedback(el, html, type) {
+      if (!el) return;
+      el.classList.add("show");
+      el.style.display = "block";
+      el.classList.remove("fbOk", "fbBad");
+      if (type === "ok") el.classList.add("fbOk");
+      if (type === "bad") el.classList.add("fbBad");
+      el.innerHTML = html;
+    }
+
+    function wireQuiz(group) {
+      const id = group.getAttribute("data-quiz");
+      const fb = content.querySelector(`[data-quiz-feedback="${id}"]`);
+      const items = [...group.querySelectorAll(".choice")];
+      items.forEach(ch => {
+        ch.addEventListener("click", () => {
+          items.forEach(x => x.classList.remove("active", "ok", "bad"));
+          ch.classList.add("active");
+          const isRight = ch.getAttribute("data-answer") === "right";
+          ch.classList.add(isRight ? "ok" : "bad");
+          showFeedback(fb, getQuizMsg(id, isRight), isRight ? "ok" : "bad");
+        });
+      });
+    }
+
+    function render() {
+      const s = slides[idx];
+      content.innerHTML = s.html;
+      const pct = ((idx + 1) / slides.length) * 100;
+      bar.style.width = pct + "%";
+      count.textContent = `${idx + 1}/${slides.length}`;
+
+      content.querySelectorAll('[data-quiz]').forEach(wireQuiz);
+
+      content.querySelectorAll('[data-goto]').forEach(b => {
+        b.addEventListener('click', () => {
+          const to = Number(b.getAttribute('data-goto'));
+          idx = clamp(to, 0, slides.length - 1);
+          render();
+          content.scrollTop = 0;
+        });
+      });
+    }
+
+    function go(d) {
+      idx = clamp(idx + d, 0, slides.length - 1);
+      render();
+      content.scrollTop = 0;
+    }
+
+    btnPrev.addEventListener("click", () => go(-1));
+    btnNext.addEventListener("click", () => go(1));
+    btnHome.addEventListener("click", () => {
+      idx = 0;
+      render();
+      content.scrollTop = 0;
+    });
+
+    window.addEventListener("keydown", (e) => {
+      if (e.key === "ArrowLeft") go(-1);
+      if (e.key === "ArrowRight") go(1);
+      if (e.key === "Home") {
+        idx = 0;
+        render();
+        content.scrollTop = 0;
+      }
+    });
+
+    render();
+  </script>
+</body>
+
+</html>

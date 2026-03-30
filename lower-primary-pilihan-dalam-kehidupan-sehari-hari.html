@@ -1,0 +1,914 @@
+<!doctype html>
+<html lang="id">
+
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>UOB MDS – Lower Primary – 5.1 Pilihan dalam Kehidupan Sehari-hari</title>
+  <style>
+    :root {
+      --bg1: #F7FAFF;
+      --bg2: #F3F6FF;
+      --card: #FFFFFF;
+      --ink: #0F172A;
+      --muted: #475569;
+      --line: rgba(226, 232, 240, .95);
+      --brand: #4F46E5;
+      --brand2: #06B6D4;
+      --ok: #16A34A;
+      --bad: #DC2626;
+      --radius: 22px;
+      --shadow: 0 18px 40px rgba(15, 23, 42, .08);
+      --shadow2: 0 10px 22px rgba(15, 23, 42, .06);
+      --focus: 0 0 0 4px rgba(79, 70, 229, .18);
+      --mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+      --sans: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, "Apple Color Emoji", "Segoe UI Emoji";
+    }
+
+    * {
+      box-sizing: border-box
+    }
+
+    body {
+      margin: 0;
+      font-family: var(--sans);
+      color: var(--ink);
+      background:
+        radial-gradient(1200px 520px at 10% 0%, rgba(6, 182, 212, .18), transparent 60%),
+        radial-gradient(1200px 520px at 90% 0%, rgba(79, 70, 229, .16), transparent 55%),
+        linear-gradient(180deg, var(--bg1), var(--bg2) 45%, var(--bg1));
+      min-height: 100vh;
+    }
+
+    .app {
+      width: min(1100px, 96vw);
+      margin: 18px auto 26px;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .topbar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      padding: 12px 14px;
+      border: 1px solid var(--line);
+      border-radius: 18px;
+      background: rgba(255, 255, 255, .72);
+      backdrop-filter: blur(10px);
+      box-shadow: var(--shadow2);
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .logo {
+      width: 38px;
+      height: 38px;
+      border-radius: 14px;
+      background: linear-gradient(135deg, rgba(79, 70, 229, .18), rgba(6, 182, 212, .20));
+      border: 1px solid rgba(226, 232, 240, .9);
+      display: grid;
+      place-items: center;
+      font-weight: 1000;
+      color: rgba(79, 70, 229, 1);
+    }
+
+    .brand h1 {
+      margin: 0;
+      font-size: 14px;
+      line-height: 1.15;
+      letter-spacing: .2px;
+    }
+
+    .brand .sub {
+      font-size: 12px;
+      color: var(--muted);
+      font-weight: 800;
+      margin-top: 2px;
+    }
+
+    .controls {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+
+    .btn {
+      border: 1px solid rgba(226, 232, 240, .95);
+      background: rgba(255, 255, 255, .9);
+      padding: 10px 12px;
+      border-radius: 16px;
+      font-weight: 1000;
+      cursor: pointer;
+      box-shadow: 0 8px 16px rgba(15, 23, 42, .06);
+      transition: transform .06s ease, box-shadow .12s ease, background .12s ease;
+      user-select: none;
+    }
+
+    .btn:hover {
+      transform: translateY(-1px)
+    }
+
+    .btn:active {
+      transform: translateY(0px)
+    }
+
+    .btn.primary {
+      background: linear-gradient(135deg, rgba(79, 70, 229, .12), rgba(6, 182, 212, .14));
+      border-color: rgba(79, 70, 229, .18);
+    }
+
+    .btn.ghost {
+      background: transparent;
+      box-shadow: none
+    }
+
+    .btn:focus {
+      outline: none;
+      box-shadow: var(--focus);
+    }
+
+    .progressWrap {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      min-width: 260px;
+      justify-content: flex-end;
+    }
+
+    .progress {
+      width: 180px;
+      height: 10px;
+      background: rgba(226, 232, 240, .9);
+      border-radius: 999px;
+      overflow: hidden;
+      border: 1px solid rgba(226, 232, 240, .95);
+    }
+
+    .bar {
+      height: 100%;
+      width: 0%;
+      background: linear-gradient(90deg, rgba(79, 70, 229, .85), rgba(6, 182, 212, .85));
+      border-radius: 999px;
+      transition: width .25s ease;
+    }
+
+    .count {
+      font-family: var(--mono);
+      font-size: 12px;
+      color: var(--muted);
+      font-weight: 900;
+    }
+
+    .stage {
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      background: rgba(255, 255, 255, .60);
+      box-shadow: var(--shadow);
+      padding: 14px;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      min-height: calc(100vh - 145px);
+    }
+
+    .slide {
+      flex: 1;
+      background: rgba(255, 255, 255, .68);
+      border: 1px solid rgba(229, 234, 245, .95);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow2);
+      padding: 20px;
+      overflow: hidden;
+      backdrop-filter: blur(8px);
+    }
+
+    .slideInner {
+      max-width: 980px;
+      margin: 0 auto;
+      max-height: calc(100vh - 190px);
+      overflow-y: auto;
+      padding-right: 8px;
+    }
+
+    .slideInner::-webkit-scrollbar {
+      width: 10px;
+    }
+
+    .slideInner::-webkit-scrollbar-thumb {
+      background: rgba(96, 112, 153, .25);
+      border-radius: 999px;
+      border: 3px solid rgba(255, 255, 255, .9);
+    }
+
+    .slideInner::-webkit-scrollbar-track {
+      background: transparent;
+    }
+
+    h2 {
+      margin: 6px 0 10px;
+      font-size: 30px;
+      letter-spacing: -.3px
+    }
+
+    h3 {
+      margin: 0 0 8px;
+      font-size: 18px
+    }
+
+    p {
+      margin: 0 0 10px;
+      color: var(--muted);
+      font-weight: 800;
+      line-height: 1.55
+    }
+
+    .kicker {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      font-weight: 1000;
+      font-size: 12px;
+      letter-spacing: .2px;
+      padding: 7px 10px;
+      border-radius: 999px;
+      border: 1px solid rgba(79, 70, 229, .16);
+      background: rgba(79, 70, 229, .06);
+      color: rgba(55, 65, 81, .95);
+    }
+
+    .grid {
+      display: grid;
+      gap: 14px
+    }
+
+    .cols2 {
+      grid-template-columns: 1fr 1fr
+    }
+
+    @media (max-width: 860px) {
+      .cols2 {
+        grid-template-columns: 1fr
+      }
+
+      .progressWrap {
+        min-width: unset
+      }
+
+      .progress {
+        width: 130px
+      }
+
+      h2 {
+        font-size: 26px
+      }
+    }
+
+    .card {
+      background: rgba(255, 255, 255, .92);
+      border: 1px solid rgba(226, 232, 240, .95);
+      border-radius: 22px;
+      padding: 14px;
+      box-shadow: 0 10px 18px rgba(15, 23, 42, .06);
+    }
+
+    .miniRow {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+      align-items: center
+    }
+
+    .tag {
+      display: inline-flex;
+      align-items: center;
+      padding: 7px 10px;
+      border-radius: 999px;
+      border: 1px solid rgba(226, 232, 240, .95);
+      background: rgba(255, 255, 255, .92);
+      color: rgba(30, 41, 59, .92);
+      font-weight: 1000;
+      font-size: 12px;
+    }
+
+    ul.list {
+      margin: 8px 0 0 18px;
+      color: var(--muted);
+      font-weight: 850;
+      line-height: 1.55
+    }
+
+    .choices {
+      display: grid;
+      gap: 10px;
+      margin-top: 10px
+    }
+
+    .choice {
+      border: 1px solid rgba(226, 232, 240, .95);
+      border-radius: 18px;
+      padding: 12px 14px;
+      background: rgba(255, 255, 255, .96);
+      font-weight: 950;
+      color: rgba(30, 41, 59, .96);
+      cursor: pointer;
+      user-select: none;
+      transition: transform .06s ease, border-color .12s ease, background .12s ease;
+    }
+
+    .choice:hover {
+      transform: translateY(-1px)
+    }
+
+    .choice.active {
+      border-color: rgba(79, 70, 229, .35);
+      background: rgba(79, 70, 229, .06)
+    }
+
+    .choice.ok {
+      border-color: rgba(22, 163, 74, .35);
+      background: rgba(22, 163, 74, .08)
+    }
+
+    .choice.bad {
+      border-color: rgba(220, 38, 38, .35);
+      background: rgba(220, 38, 38, .08)
+    }
+
+    .feedback {
+      display: none;
+      margin-top: 10px;
+      border-radius: 18px;
+      padding: 12px 14px;
+      border: 1px solid rgba(226, 232, 240, .95);
+      background: rgba(255, 255, 255, .92);
+      color: var(--muted);
+      font-weight: 900;
+      line-height: 1.5;
+    }
+
+    .feedback.show {
+      display: block
+    }
+
+    .fbOk {
+      border-color: rgba(22, 163, 74, .35);
+      background: rgba(22, 163, 74, .08);
+      color: rgba(15, 23, 42, .92)
+    }
+
+    .fbBad {
+      border-color: rgba(220, 38, 38, .35);
+      background: rgba(220, 38, 38, .08);
+      color: rgba(15, 23, 42, .92)
+    }
+
+    .input {
+      width: 100%;
+      border: 1px solid rgba(226, 232, 240, .95);
+      background: rgba(255, 255, 255, .96);
+      border-radius: 16px;
+      padding: 12px 14px;
+      font-weight: 950;
+      color: rgba(30, 41, 59, .96);
+    }
+
+    .emojiBig {
+      font-size: 58px;
+      line-height: 1;
+    }
+
+    .moneyPill {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-width: 84px;
+      padding: 10px 14px;
+      border-radius: 18px;
+      background: linear-gradient(135deg, rgba(34, 197, 94, .14), rgba(16, 185, 129, .12));
+      border: 1px solid rgba(34, 197, 94, .18);
+      font-weight: 1000;
+      color: #166534;
+    }
+
+    .scenarioBox {
+      border: 1px dashed rgba(79, 70, 229, .30);
+      border-radius: 22px;
+      padding: 16px;
+      background: linear-gradient(180deg, rgba(79, 70, 229, .05), rgba(6, 182, 212, .05));
+    }
+  </style>
+</head>
+
+<body>
+  <div id="accessGate"
+    style="position:fixed; inset:0; background:linear-gradient(135deg,#eef2ff,#ecfeff); display:flex; align-items:center; justify-content:center; z-index:9999;">
+    <div class="card" style="max-width:420px;width:92%;text-align:center">
+      <h2>🔐 Kode Akses</h2>
+      <p>Masukkan kode untuk memulai sesi.</p>
+      <input id="accessInput" class="input" placeholder="MASUKKAN KODE" autocomplete="off"
+        style="text-align:center;font-weight:900;letter-spacing:2px" />
+      <button class="btn primary" id="accessBtn" style="margin-top:12px">Masuk</button>
+      <div class="feedback" id="accessFb" style="margin-top:10px"></div>
+      <div class="card" style="margin-top:10px;background:rgba(79,70,229,.05)">
+        <p style="margin:0">Kode diberikan oleh guru.</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="app">
+    <div class="topbar">
+      <div class="brand">
+        <div class="logo">LP</div>
+        <div>
+          <h1>Lower Primary</h1>
+          <div class="sub">5.1 Pilihan dalam Kehidupan Sehari-hari</div>
+        </div>
+      </div>
+
+      <div class="controls">
+        <button class="btn ghost" id="btnHome" title="Kembali ke awal">🏠 Awal</button>
+        <button class="btn" id="btnPrev" title="Sebelumnya (←)">←</button>
+        <button class="btn primary" id="btnNext" title="Berikutnya (→)">→</button>
+      </div>
+
+      <div class="progressWrap">
+        <div class="progress" aria-label="Progress">
+          <div class="bar" id="bar"></div>
+        </div>
+        <div class="count" id="count">1/1</div>
+      </div>
+    </div>
+
+    <div class="stage">
+      <div class="slide" role="region" aria-label="Slide">
+        <div class="slideInner" id="content"></div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const slides = [
+      {
+        title: "Pembuka", html: `
+                    <h2>🤔 Pilihan dalam Kehidupan Sehari-hari</h2>
+                    <p>Setiap hari, kita sering memilih sesuatu. Kadang memilih itu mudah, kadang juga bikin bingung.</p>
+
+                    <div class="grid cols2" style="margin-top:12px;align-items:center">
+                        <div class="card">
+                            <div class="kicker">Contoh sehari-hari</div>
+                            <p style="margin:8px 0 0">Mau jajan atau menabung?</p>
+                            <p style="margin:8px 0 0">Mau main atau mengerjakan tugas?</p>
+                            <p style="margin:8px 0 0">Mau beli permen atau pensil?</p>
+                        </div>
+                        <div class="card" style="text-align:center">
+                            <div class="emojiBig">🍦 ✏️ 💰</div>
+                            <p style="margin-top:10px">Hari ini kita belajar memilih dengan lebih bijak.</p>
+                        </div>
+                    </div>
+                `
+      },
+      {
+        title: "Situasi awal", html: `
+                    <h2>Kamu Lagi Bingung Nih…</h2>
+                    <p>Bayangkan kamu punya uang jajan <b>Rp5.000</b>. Kamu melihat dua barang yang kamu suka.</p>
+
+                    <div class="grid cols2" style="margin-top:12px">
+                        <div class="card" style="text-align:center">
+                            <div class="emojiBig">🍦</div>
+                            <h3 style="margin-top:8px">Es krim</h3>
+                            <div class="moneyPill">Rp5.000</div>
+                        </div>
+                        <div class="card" style="text-align:center">
+                            <div class="emojiBig">✏️</div>
+                            <h3 style="margin-top:8px">Pensil lucu</h3>
+                            <div class="moneyPill">Rp5.000</div>
+                        </div>
+                    </div>
+
+                    <div class="card" style="margin-top:12px">
+                        <div class="kicker">Masalahnya…</div>
+                        <p style="margin:8px 0 0">Uangmu hanya cukup untuk satu. Berarti kamu harus memilih.</p>
+                    </div>
+                `
+      },
+      {
+        title: "Interaksi 1", html: `
+                    <h2>🎮 Kamu Pilih yang Mana?</h2>
+                    <p>Klik pilihanmu. Tidak apa-apa jawabannya berbeda. Yang penting, kamu punya alasan.</p>
+
+                    <div class="choices" data-choice-simple="pick1">
+                        <div class="choice" data-answer="any">🍦 Aku pilih es krim</div>
+                        <div class="choice" data-answer="any">✏️ Aku pilih pensil lucu</div>
+                    </div>
+                    <div class="feedback" id="pick1Fb"></div>
+
+                    <div class="card" style="margin-top:12px">
+                        <div class="kicker">Ingat ya</div>
+                        <p style="margin:8px 0 0">Memilih itu bukan asal ambil. Kita perlu berpikir dulu.</p>
+                    </div>
+                `
+      },
+      {
+        title: "Pilihan tidak selalu mudah", html: `
+                    <h2>Pilihan Tidak Selalu Mudah</h2>
+                    <p>Saat memilih sesuatu, kita tidak hanya melihat satu hal saja. Kita bisa memikirkan lebih dari satu hal.</p>
+
+                    <div class="grid cols2" style="margin-top:12px">
+                        <div class="card">
+                            <div class="kicker">Hal yang bisa dipikirkan</div>
+                            <p style="margin:8px 0 0">Apakah uangku cukup?</p>
+                            <p style="margin:8px 0 0">Apakah barang ini penting?</p>
+                            <p style="margin:8px 0 0">Apakah harus dibeli sekarang?</p>
+                        </div>
+                        <div class="card" style="text-align:center">
+                            <div class="emojiBig">🧠</div>
+                            <p style="margin-top:10px">Kalau kita berpikir dulu, pilihan kita bisa jadi lebih baik.</p>
+                        </div>
+                    </div>
+                `
+      },
+      {
+        title: "Cerita pendek", html: `
+                    <h2>Cerita Singkat</h2>
+                    <p>Nina punya uang Rp5.000. Ia ingin membeli stiker lucu. Tapi ia juga butuh penghapus karena penghapus lamanya sudah habis.</p>
+                    <p>Uangnya tidak cukup untuk membeli keduanya. Nina pun tidak bisa memilih asal-asalan. Ia harus memikirkan mana yang lebih perlu lebih dulu.</p>
+
+                    <div class="scenarioBox" style="margin-top:12px">
+                        <div class="kicker">Pertanyaan kecil</div>
+                        <p style="margin:8px 0 0">Kalau kamu jadi Nina, kamu pilih yang mana dulu?</p>
+                    </div>
+                `
+      },
+      {
+        title: "Interaksi 2", html: `
+                    <h2>📚 Ayo Bantu Nina</h2>
+                    <p>Klik pilihan yang menurutmu lebih baik dibeli dulu.</p>
+
+                    <div class="choices" data-quiz="qNina">
+                        <div class="choice" data-answer="wrong">✨ Stiker lucu</div>
+                        <div class="choice" data-answer="right">🧽 Penghapus</div>
+                    </div>
+                    <div class="feedback" data-quiz-feedback="qNina"></div>
+                `
+      },
+      {
+        title: "Berpikir sebelum memilih", html: `
+                    <h2>Berpikir Sebelum Memilih</h2>
+                    <p>Sebelum memilih, kita bisa bertanya pada diri sendiri. Pertanyaan kecil ini membantu kita supaya tidak terburu-buru.</p>
+
+                    <div class="card" style="margin-top:12px">
+                        <div class="kicker">Tanya ke diri sendiri</div>
+                        <ul class="list" style="margin-top:10px">
+                            <li>Apakah aku benar-benar butuh ini?</li>
+                            <li>Apakah uangku cukup?</li>
+                            <li>Apakah aku harus membeli sekarang?</li>
+                        </ul>
+                    </div>
+
+                    <div class="card" style="margin-top:12px">
+                        <p style="margin:0">Kalau kita biasa berpikir seperti ini, kita bisa jadi anak yang lebih hati-hati dan bijak.</p>
+                    </div>
+                `
+      },
+      {
+        title: "Akibat pilihan", html: `
+                    <h2>Setiap Pilihan Punya Akibat</h2>
+                    <p>Pilihan yang kita ambil bisa memberi hasil yang berbeda.</p>
+
+                    <div class="grid cols2" style="margin-top:12px">
+                        <div class="card">
+                            <div class="kicker">Kalau pilih jajan</div>
+                            <p style="margin:8px 0 0">Uangmu bisa habis lebih cepat.</p>
+                        </div>
+                        <div class="card">
+                            <div class="kicker">Kalau pilih menabung</div>
+                            <p style="margin:8px 0 0">Uangmu bisa bertambah sedikit demi sedikit.</p>
+                        </div>
+                    </div>
+
+                    <div class="card" style="margin-top:12px">
+                        <div class="kicker">Jadi…</div>
+                        <p style="margin:8px 0 0">Saat memilih, kita juga perlu memikirkan apa yang akan terjadi setelah itu.</p>
+                    </div>
+                `
+      },
+      {
+        title: "Logika sederhana", html: `
+                    <h2>Ini Namanya Berpikir Logis</h2>
+                    <p>Saat memilih, kita memakai alasan. Inilah yang disebut berpikir logis.</p>
+
+                    <div class="grid cols2" style="margin-top:12px">
+                        <div class="card">
+                            <div class="kicker">Contoh 1</div>
+                            <p style="margin:8px 0 0">Kalau uang cukup, aku bisa membeli.</p>
+                        </div>
+                        <div class="card">
+                            <div class="kicker">Contoh 2</div>
+                            <p style="margin:8px 0 0">Kalau uang tidak cukup, aku harus menunda dulu.</p>
+                        </div>
+                    </div>
+
+                    <div class="card" style="margin-top:12px;text-align:center">
+                        <div class="emojiBig">🤖</div>
+                        <p style="margin-top:10px">Cara berpikir seperti ini juga dipakai saat belajar coding.</p>
+                    </div>
+                `
+      },
+      {
+        title: "Hubungannya dengan coding", html: `
+                    <h2>Menghubungkan dengan Coding</h2>
+                    <p>Dalam coding, program juga berjalan sesuai aturan. Program memeriksa kondisi, lalu memberi hasil.</p>
+
+                    <div class="grid cols2" style="margin-top:12px">
+                        <div class="card">
+                            <div class="kicker">Contoh sederhana</div>
+                            <p style="margin:8px 0 0">Kalau karakter disentuh, karakter bergerak.</p>
+                        </div>
+                        <div class="card">
+                            <div class="kicker">Artinya</div>
+                            <p style="margin:8px 0 0">Komputer mengikuti aturan yang kita buat.</p>
+                        </div>
+                    </div>
+
+                    <div class="card" style="margin-top:12px">
+                        <p style="margin:0">Jadi, saat belajar memilih dengan baik, kamu juga sedang latihan berpikir rapi seperti saat coding.</p>
+                    </div>
+                `
+      },
+      {
+        title: "Pilihan di ScratchJr",
+        html: `
+      <h2>🤖 Pilihan di ScratchJr</h2>
+      <p>Di ScratchJr, kita juga bisa membuat <b>pilihan</b>. Karakter bisa mulai bergerak dengan blok event yang berbeda.</p>
+
+      <div class="grid cols2" style="margin-top:10px">
+        <div class="card">
+          <div class="kicker">🚩 Pilihan 1</div>
+          <p style="margin:8px 0 10px"><b>Green Flag</b></p>
+          <img src="https://uob-1328237036.cos.ap-singapore.myqcloud.com//file-uploader/images/9fafbec3-26d3-4914-9d7a-78e222e74a85.png"
+               alt="Blok green flag ScratchJr"
+               style="width:100%;max-width:280px;display:block;margin:0 auto;border-radius:18px;border:1px solid rgba(226,232,240,.95)" />
+          <p style="margin:10px 0 0">Kalau pakai blok ini, proyek mulai saat tombol <b>bendera hijau</b> ditekan.</p>
+        </div>
+
+        <div class="card">
+          <div class="kicker">👆 Pilihan 2</div>
+          <p style="margin:8px 0 10px"><b>Tap / Karakter Diklik</b></p>
+          <img src="https://uob-1328237036.cos.ap-singapore.myqcloud.com//file-uploader/images/da01abd4-0de5-45a4-beae-1a7669fd51a7.png"
+               alt="Blok tap ScratchJr"
+               style="width:100%;max-width:280px;display:block;margin:0 auto;border-radius:18px;border:1px solid rgba(226,232,240,.95)" />
+          <p style="margin:10px 0 0">Kalau pakai blok ini, karakter bergerak saat <b>karakternya disentuh</b>.</p>
+        </div>
+      </div>
+    `
+      },
+
+      {
+        title: "Contoh Pilihan Event Block",
+        html: `
+      <h2>Memilih Blok yang Tepat</h2>
+      <p>Kita pilih blok sesuai cara mainnya ya.</p>
+
+      <div class="card" style="margin-top:10px">
+        <div class="kicker">🎬 Contoh 1</div>
+        <p style="margin:8px 0 0">Kalau kamu mau <b>semua cerita langsung mulai</b>, pilih blok <b>Green Flag</b>.</p>
+      </div>
+
+      <div class="card" style="margin-top:12px">
+        <div class="kicker">🎮 Contoh 2</div>
+        <p style="margin:8px 0 0">Kalau kamu mau karakter bergerak <b>saat pemain menyentuh karakter</b>, pilih blok <b>Tap</b>.</p>
+      </div>
+
+      <div class="grid cols2" style="margin-top:12px">
+        <div class="card">
+          <div class="kicker">🚩 Cocok untuk...</div>
+          <p style="margin:8px 0 0">Cerita pembuka, animasi mulai bersama, atau proyek yang langsung jalan dari awal.</p>
+        </div>
+        <div class="card">
+          <div class="kicker">👆 Cocok untuk...</div>
+          <p style="margin:8px 0 0">Game sederhana, memilih karakter, atau interaksi saat pemain menyentuh sprite.</p>
+        </div>
+      </div>
+    `
+      },
+
+      {
+        title: "Quiz Event Block",
+        html: `
+      <h2>🎯 Pilih Event Block yang Tepat</h2>
+      <p>Kalau kita ingin karakter bergerak <b>saat disentuh</b>, blok mana yang sebaiknya dipilih?</p>
+
+      <div class="card" style="margin-top:10px">
+        <div class="choices" data-bug-choice="eventblock">
+          <div class="choice" data-answer="wrong">🚩 Green Flag</div>
+          <div class="choice" data-answer="right">👆 Tap / Karakter Diklik</div>
+          <div class="choice" data-answer="wrong">💬 Say</div>
+        </div>
+        <div class="feedback" id="eventBlockFb"></div>
+      </div>
+
+      <div class="hint" style="margin-top:12px">
+        Petunjuk: kita ingin karakter mulai bergerak <b>setelah pemain menyentuhnya</b>.
+      </div>
+    `
+      },
+      {
+        title: "Quiz akhir", html: `
+                    <h2>📝 Quiz Singkat</h2>
+                    <p>Kalau uangmu tidak cukup untuk membeli barang, apa yang sebaiknya kamu lakukan?</p>
+
+                    <div class="choices" data-quiz="qAkhir">
+                        <div class="choice" data-answer="wrong">Tetap beli saja</div>
+                        <div class="choice" data-answer="right">Tunda dulu dan pikirkan lagi</div>
+                        <div class="choice" data-answer="wrong">Ambil semua yang diinginkan</div>
+                    </div>
+                    <div class="feedback" data-quiz-feedback="qAkhir"></div>
+                `
+      },
+      {
+        title: "Penutup", html: `
+                    <h2>🎉 Hebat!</h2>
+                    <p>Sekarang kamu sudah belajar bahwa memilih itu perlu dipikirkan dulu.</p>
+
+                    <div class="card" style="margin-top:12px">
+                        <div class="kicker">Yang kita pelajari hari ini</div>
+                        <ul class="list" style="margin-top:10px">
+                            <li>Kita sering membuat pilihan setiap hari.</li>
+                            <li>Pilihan tidak selalu mudah.</li>
+                            <li>Kita perlu berpikir sebelum memilih.</li>
+                            <li>Cara berpikir ini juga membantu saat belajar coding.</li>
+                        </ul>
+                    </div>
+
+                    <div class="card" style="margin-top:12px;text-align:center">
+                        <button class="btn primary" data-goto="0">🏁 Balik ke awal</button>
+                    </div>
+                `
+      }
+    ];
+
+    let idx = 0;
+    const content = document.getElementById("content");
+    const bar = document.getElementById("bar");
+    const count = document.getElementById("count");
+    const btnPrev = document.getElementById("btnPrev");
+    const btnNext = document.getElementById("btnNext");
+    const btnHome = document.getElementById("btnHome");
+
+    function clamp(n, a, b) { return Math.max(a, Math.min(b, n)); }
+
+    const ACCESS_CODE = "RGMDSLP25";
+    const gate = document.getElementById("accessGate");
+    const input = document.getElementById("accessInput");
+    const btn = document.getElementById("accessBtn");
+    const fb = document.getElementById("accessFb");
+
+    input.addEventListener("input", () => { input.value = input.value.toUpperCase(); });
+    btn.addEventListener("click", checkAccess);
+    input.addEventListener("keydown", (e) => { if (e.key === "Enter") checkAccess(); });
+
+    function checkAccess() {
+      if (input.value.trim() === ACCESS_CODE) {
+        gate.style.display = "none";
+      } else {
+        fb.className = "feedback show fbBad";
+        fb.textContent = "Kode salah. Coba lagi.";
+      }
+    }
+
+    function getQuizMsg(id, ok) {
+      const msgs = {
+        qNina: {
+          ok: "✅ Betul! Penghapus lebih dibutuhkan Nina untuk belajar.",
+          bad: "⚠️ Coba lagi ya. Nina butuh barang yang lebih penting dulu."
+        },
+        qAkhir: {
+          ok: "✅ Ya! Kalau uang belum cukup, sebaiknya ditunda dulu.",
+          bad: "⚠️ Belum tepat. Kalau uang belum cukup, kita tidak perlu memaksa membeli."
+        }
+      };
+      const m = msgs[id];
+      if (!m) return ok ? "✅ Benar!" : "⚠️ Coba lagi.";
+      return ok ? m.ok : m.bad;
+    }
+
+    function showFeedback(el, html, type) {
+      if (!el) return;
+      el.classList.add("show");
+      el.style.display = "block";
+      el.classList.remove("fbOk", "fbBad");
+      if (type === "ok") el.classList.add("fbOk");
+      if (type === "bad") el.classList.add("fbBad");
+      el.innerHTML = html;
+    }
+
+    function wireQuiz(group) {
+      const id = group.getAttribute("data-quiz");
+      const fb = content.querySelector(`[data-quiz-feedback="${id}"]`);
+      const items = [...group.querySelectorAll(".choice")];
+      items.forEach(ch => {
+        ch.addEventListener("click", () => {
+          items.forEach(x => x.classList.remove("active", "ok", "bad"));
+          ch.classList.add("active");
+          const isRight = ch.getAttribute("data-answer") === "right";
+          ch.classList.add(isRight ? "ok" : "bad");
+          showFeedback(fb, getQuizMsg(id, isRight), isRight ? "ok" : "bad");
+        });
+      });
+    }
+
+    function wireSimpleChoice() {
+      content.querySelectorAll('[data-choice-simple]').forEach(group => {
+        const fb = content.querySelector('#pick1Fb');
+        const items = [...group.querySelectorAll('.choice')];
+        items.forEach(ch => {
+          ch.addEventListener('click', () => {
+            items.forEach(x => x.classList.remove('active', 'ok', 'bad'));
+            ch.classList.add('active', 'ok');
+            showFeedback(fb, '👍 Pilihanmu boleh berbeda. Yang penting, kamu bisa menjelaskan alasannya.', 'ok');
+          });
+        });
+      });
+    }
+
+    function wireEventBlockQuiz() {
+      const wrap = content.querySelector('[data-event-choice="eventblock"]');
+      const fb = content.querySelector('#eventBlockFb');
+      if (!wrap || !fb) return;
+
+      wrap.querySelectorAll('.choice').forEach(ch => {
+        ch.addEventListener('click', () => {
+          wrap.querySelectorAll('.choice').forEach(x => {
+            x.classList.remove('ok', 'bad', 'active');
+          });
+
+          const right = ch.getAttribute('data-answer') === 'right';
+          ch.classList.add('active');
+          ch.classList.add(right ? 'ok' : 'bad');
+
+          fb.className = 'feedback show ' + (right ? 'fbOk' : 'fbBad');
+          fb.innerHTML = right
+            ? '✅ Betul! Kalau karakter harus bergerak saat disentuh, kita pakai blok <b>Tap</b>.'
+            : '⚠️ Belum tepat. Coba pilih blok event yang aktif saat pemain menyentuh karakter.';
+        });
+      });
+    }
+
+    function wireInteractions() {
+      content.querySelectorAll('[data-quiz]').forEach(wireQuiz);
+      wireSimpleChoice();
+      wireSelectGroup();
+      wireToggles();
+      wireTreeGameV2();
+      wireTapSim();
+      wireTimers();
+      wireEventBlockQuiz();
+    }
+
+    function render() {
+      const s = slides[idx];
+      content.innerHTML = s.html;
+      const pct = ((idx + 1) / slides.length) * 100;
+      bar.style.width = pct + "%";
+      count.textContent = `${idx + 1}/${slides.length}`;
+      wireInteractions();
+
+      content.querySelectorAll('[data-goto]').forEach(b => {
+        b.addEventListener('click', () => {
+          const to = Number(b.getAttribute('data-goto'));
+          idx = clamp(to, 0, slides.length - 1);
+          render();
+          content.scrollTop = 0;
+        });
+      });
+    }
+
+    function go(d) {
+      idx = clamp(idx + d, 0, slides.length - 1);
+      render();
+      content.scrollTop = 0;
+    }
+
+    btnPrev.addEventListener("click", () => go(-1));
+    btnNext.addEventListener("click", () => go(1));
+    btnHome.addEventListener("click", () => { idx = 0; render(); content.scrollTop = 0; });
+
+    window.addEventListener("keydown", (e) => {
+      if (e.key === "ArrowLeft") go(-1);
+      if (e.key === "ArrowRight") go(1);
+      if (e.key === "Home") { idx = 0; render(); content.scrollTop = 0; }
+    });
+
+    render();
+  </script>
+</body>
+
+</html>
