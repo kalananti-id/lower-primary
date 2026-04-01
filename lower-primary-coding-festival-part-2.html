@@ -1,0 +1,642 @@
+<!doctype html>
+<html lang="id">
+
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>UOB MDS – Lower Primary – Coding Festival Stage 1 (Part 2)</title>
+
+<style>
+:root{
+--bg1:#F7FAFF;
+--bg2:#F3F6FF;
+--card:#FFFFFF;
+--ink:#0F172A;
+--muted:#475569;
+--line:rgba(226,232,240,.95);
+--brand:#4F46E5;
+--brand2:#06B6D4;
+--ok:#16A34A;
+--bad:#DC2626;
+--radius:22px;
+--shadow:0 18px 40px rgba(15,23,42,.08);
+--shadow2:0 10px 22px rgba(15,23,42,.06);
+--focus:0 0 0 4px rgba(79,70,229,.18);
+--sans:ui-sans-serif,system-ui;
+}
+
+*{box-sizing:border-box}
+body{
+margin:0;
+font-family:var(--sans);
+background:linear-gradient(180deg,var(--bg1),var(--bg2));
+color:var(--ink);
+min-height:100vh;
+}
+
+.app{
+width:min(1000px,95vw);
+margin:20px auto;
+display:flex;
+flex-direction:column;
+gap:12px;
+}
+
+.topbar{
+display:flex;
+justify-content:space-between;
+align-items:center;
+padding:12px;
+border-radius:16px;
+background:white;
+border:1px solid var(--line);
+gap:10px;
+flex-wrap:wrap;
+}
+
+.logo{
+width:36px;
+height:36px;
+border-radius:12px;
+display:grid;
+place-items:center;
+background:linear-gradient(135deg,#e0e7ff,#cffafe);
+font-weight:900;
+}
+
+.btn{
+padding:8px 12px;
+border-radius:12px;
+border:1px solid var(--line);
+cursor:pointer;
+font-weight:900;
+background:white;
+}
+
+.btn.primary{background:#eef2ff}
+
+.progress{
+height:8px;
+background:#e2e8f0;
+border-radius:999px;
+overflow:hidden;
+}
+
+.bar{
+height:100%;
+width:0;
+background:#6366f1;
+transition:width .2s ease;
+}
+
+.slide{
+padding:20px;
+border-radius:20px;
+background:white;
+border:1px solid var(--line);
+}
+
+.card{
+padding:14px;
+border-radius:18px;
+border:1px solid var(--line);
+margin-top:10px;
+background:#fff;
+}
+
+.choices{
+display:grid;
+gap:10px;
+margin-top:10px;
+}
+
+.choice{
+padding:12px;
+border-radius:16px;
+border:1px solid var(--line);
+cursor:pointer;
+font-weight:900;
+background:#fff;
+}
+
+.choice.active{background:#eef2ff}
+.choice.ok{background:#dcfce7}
+.choice.bad{background:#fee2e2}
+
+.feedback{
+display:none;
+margin-top:10px;
+padding:10px;
+border-radius:12px;
+border:1px solid var(--line);
+background:#fff;
+font-weight:900;
+}
+
+.feedback.show{display:block}
+
+.checklist{
+margin-top:10px;
+display:grid;
+gap:8px;
+}
+
+.checkItem{
+padding:10px 12px;
+border-radius:14px;
+border:1px solid var(--line);
+cursor:pointer;
+font-weight:900;
+background:#fff;
+}
+
+.checkItem.done{background:#eef2ff}
+
+.meter{
+height:8px;
+background:#e2e8f0;
+border-radius:999px;
+overflow:hidden;
+margin-top:10px;
+}
+
+.meterBar{
+height:100%;
+width:0;
+background:#6366f1;
+transition:width .2s ease;
+}
+
+.meterText{
+margin-top:8px;
+font-size:12px;
+color:var(--muted);
+font-weight:900;
+}
+
+textarea{
+width:100%;
+padding:10px;
+border-radius:12px;
+border:1px solid var(--line);
+margin-top:8px;
+font:inherit;
+resize:vertical;
+min-height:54px;
+}
+
+.kicker{
+display:inline-flex;
+align-items:center;
+gap:8px;
+font-weight:1000;
+font-size:12px;
+padding:7px 10px;
+border-radius:999px;
+border:1px solid rgba(79,70,229,.16);
+background:rgba(79,70,229,.06);
+color:#374151;
+}
+
+.emojiBig{
+font-size:54px;
+line-height:1;
+}
+
+.grid{
+display:grid;
+gap:12px;
+}
+
+.cols2{
+grid-template-columns:1fr 1fr;
+}
+
+@media (max-width:800px){
+.cols2{grid-template-columns:1fr}
+}
+</style>
+</head>
+
+<body>
+
+<div id="accessGate" style="position:fixed;inset:0;background:linear-gradient(135deg,#eef2ff,#ecfeff);display:flex;align-items:center;justify-content:center;z-index:9999;">
+  <div class="card" style="max-width:420px;width:92%;text-align:center">
+    <h2>🔐 Masukkan Kode</h2>
+    <p>Masukkan kode untuk memulai sesi.</p>
+    <input id="accessInput" style="width:100%;padding:12px;border-radius:12px;border:1px solid #cbd5e1;text-align:center;font-weight:900;letter-spacing:2px"/>
+    <button class="btn primary" id="accessBtn" style="margin-top:12px">Masuk</button>
+    <div class="feedback" id="accessFb" style="margin-top:10px"></div>
+    <div class="card" style="margin-top:10px;background:rgba(79,70,229,.05)">
+      <p style="margin:0">Kode diberikan oleh guru.</p>
+    </div>
+  </div>
+</div>
+
+<div class="app">
+
+  <div class="topbar">
+    <div style="display:flex;gap:10px;align-items:center">
+      <div class="logo">LP</div>
+      <div><b>Lower Primary</b><br><small>Coding Festival – Part 2</small></div>
+    </div>
+
+    <div style="display:flex;gap:6px">
+      <button class="btn" id="prev">←</button>
+      <button class="btn primary" id="next">→</button>
+    </div>
+
+    <div style="width:120px">
+      <div class="progress"><div class="bar" id="bar"></div></div>
+    </div>
+  </div>
+
+  <div class="slide" id="content"></div>
+
+</div>
+
+<script>
+const ACCESS_CODE = "RGMDSLP25";
+
+const slides = [
+
+{
+html: `
+<div class="kicker">Lower Primary • ScratchJr • Part 2</div>
+<h2>🛠️ Lanjutkan Proyekmu!</h2>
+<p>Sekarang kita membuat proyekmu jadi lebih jelas, lebih seru, dan siap ditunjukkan ke orang lain.</p>
+
+<div class="card">
+  Hari ini kita akan:
+  <br>• melihat alur proyek
+  <br>• mengecek pilihan dan hasil
+  <br>• mencoba menjelaskan proyek
+</div>
+`
+},
+
+{
+html: `
+<h2>🎮 Proyek Punya Alur</h2>
+<p>Supaya proyekmu mudah dipahami, harus ada urutan yang jelas.</p>
+
+<div class="grid cols2">
+  <div class="card"><b>Awal</b><br>Kenalkan cerita atau tokoh</div>
+  <div class="card"><b>Akhir</b><br>Lihat hasil dari pilihan</div>
+</div>
+
+<div class="card"><b>Tengah</b><br>Pemain memilih sesuatu</div>
+`
+},
+
+{
+html: `
+<h2>🧩 Alur Mana yang Benar?</h2>
+
+<div class="choices" data-quiz="alur">
+  <div class="choice" data-answer="wrong">Langsung selesai</div>
+  <div class="choice" data-answer="right">Ada awal, pilihan, lalu hasil</div>
+  <div class="choice" data-answer="wrong">Semua sama dari awal</div>
+</div>
+
+<div class="feedback" data-quiz-feedback="alur"></div>
+`
+},
+
+{
+html: `
+<h2>🔀 Pilihan Pemain</h2>
+<p>Pilihan membuat proyek jadi lebih menarik.</p>
+
+<div class="choices" data-quiz="pilihan">
+  <div class="choice" data-answer="right">Pemain memilih lalu hasil berubah</div>
+  <div class="choice" data-answer="wrong">Semua pilihan sama saja</div>
+  <div class="choice" data-answer="wrong">Tidak ada pilihan</div>
+</div>
+
+<div class="feedback" data-quiz-feedback="pilihan"></div>
+`
+},
+
+{
+html: `
+<h2>💡 Contoh</h2>
+<div class="card">
+<b>Pilih Jajan atau Menabung</b>
+<br><br>
+Kalau pilih jajan → uang cepat habis
+<br>
+Kalau pilih menabung → uang bertambah
+</div>
+`
+},
+
+{
+html: `
+<h2>✅ Ciri Interaksi yang Bagus</h2>
+
+<div class="choices" data-multi="interaction">
+  <div class="choice" data-correct="true">Pemain bisa memilih</div>
+  <div class="choice" data-correct="true">Ada hasil berbeda</div>
+  <div class="choice" data-correct="true">Ada pesan yang jelas</div>
+  <div class="choice" data-correct="false">Hanya gambar bergerak saja</div>
+</div>
+
+<button id="checkInteraction" class="btn primary" style="margin-top:10px">Cek</button>
+<div class="feedback" id="interactionFb"></div>
+`
+},
+
+{
+html: `
+<h2>🧪 Cek Proyekmu</h2>
+
+<div class="checklist" data-checklist="testing">
+  <div class="checkItem">Bisa dibuka</div>
+  <div class="checkItem">Bisa dimainkan</div>
+  <div class="checkItem">Ada pilihan</div>
+  <div class="checkItem">Ada hasil</div>
+</div>
+
+<div class="meter"><div class="meterBar" id="testingBar"></div></div>
+<div class="meterText" id="testingText">0 dari 4 selesai</div>
+`
+},
+
+{
+html: `
+<h2>🐞 Kalau Ada yang Belum Jalan</h2>
+
+<div class="choices" data-quiz="bug">
+  <div class="choice" data-answer="right">Cek lagi blok dan urutannya</div>
+  <div class="choice" data-answer="wrong">Biarkan saja</div>
+  <div class="choice" data-answer="wrong">Hapus semua</div>
+</div>
+
+<div class="feedback" data-quiz-feedback="bug"></div>
+`
+},
+
+{
+html: `
+<h2>🎤 Ceritakan Proyekmu</h2>
+<p>Orang lain harus bisa mengerti proyekmu.</p>
+
+<div class="card">
+• Judul proyek
+<br>• Ceritanya
+<br>• Pilihannya
+<br>• Pesan tentang uang
+</div>
+`
+},
+
+{
+html: `
+<h2>🗣️ Latihan Cerita</h2>
+
+<textarea id="t1" placeholder="Judul proyek"></textarea>
+<textarea id="t2" placeholder="Ceritanya"></textarea>
+<textarea id="t3" placeholder="Pilihannya"></textarea>
+<textarea id="t4" placeholder="Pesan tentang uang"></textarea>
+
+<button id="preview" class="btn primary" style="margin-top:10px">Preview</button>
+<div class="feedback" id="pv"></div>
+`
+},
+
+{
+html: `
+<h2>✅ Final Check</h2>
+
+<div class="checklist" data-checklist="final">
+  <div class="checkItem">Ide jelas</div>
+  <div class="checkItem">Ada pilihan</div>
+  <div class="checkItem">Ada hasil</div>
+  <div class="checkItem">Siap dijelaskan</div>
+</div>
+
+<div class="meter"><div class="meterBar" id="finalBar"></div></div>
+<div class="meterText" id="finalText">0 dari 4 siap</div>
+`
+},
+
+{
+html: `
+<h2>🔥 Hebat!</h2>
+<p>Kamu sudah siap melanjutkan proyekmu.</p>
+
+<div class="card" style="text-align:center">
+  <div class="emojiBig">🎉💡🎮</div>
+  <p style="margin-top:10px">Sekarang proyekmu lebih siap untuk ditampilkan!</p>
+</div>
+
+<button class="btn primary" onclick="idx=0;render()" style="margin-top:10px">Ulang dari Awal</button>
+`
+}
+
+];
+
+let idx = 0;
+
+const content = document.getElementById("content");
+const prevBtn = document.getElementById("prev");
+const nextBtn = document.getElementById("next");
+const bar = document.getElementById("bar");
+
+const accessBtn = document.getElementById("accessBtn");
+const accessInput = document.getElementById("accessInput");
+const accessFb = document.getElementById("accessFb");
+const accessGate = document.getElementById("accessGate");
+
+function clamp(n, min, max){
+  return Math.max(min, Math.min(max, n));
+}
+
+function render(){
+  content.innerHTML = slides[idx].html;
+  bar.style.width = ((idx + 1) / slides.length * 100) + "%";
+
+  wireQuiz();
+  wireChecklist();
+  wireMulti();
+  wirePreview();
+  wireGoto();
+}
+
+function wireQuiz(){
+  content.querySelectorAll("[data-quiz]").forEach(group => {
+    const id = group.dataset.quiz;
+    const fb = content.querySelector(`[data-quiz-feedback="${id}"]`);
+
+    group.querySelectorAll(".choice").forEach(ch => {
+      ch.onclick = () => {
+        group.querySelectorAll(".choice").forEach(c => c.classList.remove("ok","bad","active"));
+        ch.classList.add("active");
+        const ok = ch.dataset.answer === "right";
+        ch.classList.add(ok ? "ok" : "bad");
+        if (fb) {
+          fb.classList.add("show");
+          fb.innerText = getQuizMsg(id, ok);
+        }
+      };
+    });
+  });
+}
+
+function getQuizMsg(id, ok){
+  const msgs = {
+    alur: {
+      ok: "Benar! Proyek yang baik punya awal, pilihan, dan hasil.",
+      bad: "Coba lagi ya. Proyek butuh urutan yang jelas."
+    },
+    pilihan: {
+      ok: "Benar! Pilihan membuat hasil bisa berbeda.",
+      bad: "Coba lagi ya. Pilihan sebaiknya membuat perubahan."
+    },
+    bug: {
+      ok: "Benar! Cek lagi blok dan urutannya ya.",
+      bad: "Coba lagi ya. Kalau belum jalan, kita cek lagi."
+    }
+  };
+  return msgs[id] ? (ok ? msgs[id].ok : msgs[id].bad) : (ok ? "Benar!" : "Coba lagi!");
+}
+
+function wireChecklist(){
+  content.querySelectorAll("[data-checklist]").forEach(group => {
+    const items = [...group.querySelectorAll(".checkItem")];
+    const name = group.dataset.checklist;
+
+    const meterBar = content.querySelector(`#${name}Bar`);
+    const meterText = content.querySelector(`#${name}Text`);
+
+    const refresh = () => {
+      const done = items.filter(i => i.classList.contains("done")).length;
+      const total = items.length;
+      if (meterBar) meterBar.style.width = (done / total * 100) + "%";
+      if (meterText) meterText.innerText = `${done} dari ${total} selesai`;
+    };
+
+    items.forEach(it => {
+      it.onclick = () => {
+        it.classList.toggle("done");
+        refresh();
+      };
+    });
+
+    refresh();
+  });
+}
+
+function wireMulti(){
+  const group = content.querySelector('[data-multi="interaction"]');
+  if(!group) return;
+
+  const items = [...group.querySelectorAll(".choice")];
+  const fb = content.querySelector("#interactionFb");
+  const checkBtn = content.querySelector("#checkInteraction");
+
+  items.forEach(i => {
+    i.onclick = () => i.classList.toggle("active");
+  });
+
+  checkBtn?.addEventListener("click", () => {
+    let correct = true;
+    let selectedAny = false;
+
+    items.forEach(i => {
+      i.classList.remove("ok","bad");
+      const should = i.dataset.correct === "true";
+      const active = i.classList.contains("active");
+
+      if (active) selectedAny = true;
+      if (should && !active) correct = false;
+      if (!should && active) correct = false;
+
+      if (active) i.classList.add(should ? "ok" : "bad");
+    });
+
+    if (fb) {
+      fb.classList.add("show");
+      fb.innerText = !selectedAny
+        ? "Pilih dulu ya."
+        : correct
+          ? "Bagus! Proyekmu perlu pilihan, hasil, dan pesan."
+          : "Belum tepat. Ingat, bukan cuma animasi ya.";
+    }
+  });
+}
+
+function wirePreview(){
+  const previewBtn = content.querySelector("#preview");
+  if (!previewBtn) return;
+
+  previewBtn.addEventListener("click", () => {
+    const t1 = content.querySelector("#t1")?.value || "";
+    const t2 = content.querySelector("#t2")?.value || "";
+    const t3 = content.querySelector("#t3")?.value || "";
+    const t4 = content.querySelector("#t4")?.value || "";
+
+    const pv = content.querySelector("#pv");
+    if (!pv) return;
+
+    pv.classList.add("show");
+    pv.innerHTML = `<b>Judul:</b> ${t1 || "-"}<br><b>Cerita:</b> ${t2 || "-"}<br><b>Pilihan:</b> ${t3 || "-"}<br><b>Pesan:</b> ${t4 || "-"}`;
+  });
+}
+
+function wireGoto(){
+  content.querySelectorAll("[data-goto]").forEach(btn => {
+    btn.addEventListener("click", () => {
+      const to = Number(btn.getAttribute("data-goto"));
+      idx = clamp(to, 0, slides.length - 1);
+      render();
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    });
+  });
+}
+
+function go(step){
+  idx = clamp(idx + step, 0, slides.length - 1);
+  render();
+  window.scrollTo({ top: 0, behavior: "smooth" });
+}
+
+prevBtn.addEventListener("click", () => go(-1));
+nextBtn.addEventListener("click", () => go(1));
+
+window.addEventListener("keydown", (e) => {
+  if (accessGate.style.display !== "none") return;
+  if (e.key === "ArrowLeft") go(-1);
+  if (e.key === "ArrowRight") go(1);
+  if (e.key === "Home") {
+    idx = 0;
+    render();
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  }
+});
+
+accessBtn.addEventListener("click", checkAccess);
+accessInput.addEventListener("keydown", (e) => {
+  if (e.key === "Enter") checkAccess();
+});
+accessInput.addEventListener("input", e => {
+  e.target.value = e.target.value.toUpperCase();
+});
+
+function checkAccess(){
+  const val = accessInput.value.toUpperCase().trim();
+  if(val === ACCESS_CODE){
+    accessGate.style.display = "none";
+    render();
+  } else {
+    accessFb.classList.add("show");
+    accessFb.innerText = "Kode salah. Coba lagi.";
+  }
+}
+
+render();
+</script>
+
+</body>
+</html>
