@@ -2,266 +2,289 @@
 <html lang="id">
 
 <head>
-<meta charset="utf-8"/>
-<meta name="viewport" content="width=device-width,initial-scale=1"/>
-<title>UOB MDS – Lower Primary – Coding Festival Stage 1 (Part 2)</title>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>UOB MDS – Lower Primary – Coding Festival Stage 1 (Part 2)</title>
 
-<style>
-:root{
---bg1:#F7FAFF;
---bg2:#F3F6FF;
---card:#FFFFFF;
---ink:#0F172A;
---muted:#475569;
---line:rgba(226,232,240,.95);
---brand:#4F46E5;
---brand2:#06B6D4;
---ok:#16A34A;
---bad:#DC2626;
---radius:22px;
---shadow:0 18px 40px rgba(15,23,42,.08);
---shadow2:0 10px 22px rgba(15,23,42,.06);
---focus:0 0 0 4px rgba(79,70,229,.18);
---sans:ui-sans-serif,system-ui;
-}
+    <style>
+        :root {
+            --bg1: #F7FAFF;
+            --bg2: #F3F6FF;
+            --card: #FFFFFF;
+            --ink: #0F172A;
+            --muted: #475569;
+            --line: rgba(226, 232, 240, .95);
+            --brand: #4F46E5;
+            --brand2: #06B6D4;
+            --ok: #16A34A;
+            --bad: #DC2626;
+            --radius: 22px;
+            --shadow: 0 18px 40px rgba(15, 23, 42, .08);
+            --shadow2: 0 10px 22px rgba(15, 23, 42, .06);
+            --focus: 0 0 0 4px rgba(79, 70, 229, .18);
+            --sans: ui-sans-serif, system-ui;
+        }
 
-*{box-sizing:border-box}
-body{
-margin:0;
-font-family:var(--sans);
-background:linear-gradient(180deg,var(--bg1),var(--bg2));
-color:var(--ink);
-min-height:100vh;
-}
+        * {
+            box-sizing: border-box
+        }
 
-.app{
-width:min(1000px,95vw);
-margin:20px auto;
-display:flex;
-flex-direction:column;
-gap:12px;
-}
+        body {
+            margin: 0;
+            font-family: var(--sans);
+            background: linear-gradient(180deg, var(--bg1), var(--bg2));
+            color: var(--ink);
+            min-height: 100vh;
+        }
 
-.topbar{
-display:flex;
-justify-content:space-between;
-align-items:center;
-padding:12px;
-border-radius:16px;
-background:white;
-border:1px solid var(--line);
-gap:10px;
-flex-wrap:wrap;
-}
+        .app {
+            width: min(1000px, 95vw);
+            margin: 20px auto;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
 
-.logo{
-width:36px;
-height:36px;
-border-radius:12px;
-display:grid;
-place-items:center;
-background:linear-gradient(135deg,#e0e7ff,#cffafe);
-font-weight:900;
-}
+        .topbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 12px;
+            border-radius: 16px;
+            background: white;
+            border: 1px solid var(--line);
+            gap: 10px;
+            flex-wrap: wrap;
+        }
 
-.btn{
-padding:8px 12px;
-border-radius:12px;
-border:1px solid var(--line);
-cursor:pointer;
-font-weight:900;
-background:white;
-}
+        .logo {
+            width: 36px;
+            height: 36px;
+            border-radius: 12px;
+            display: grid;
+            place-items: center;
+            background: linear-gradient(135deg, #e0e7ff, #cffafe);
+            font-weight: 900;
+        }
 
-.btn.primary{background:#eef2ff}
+        .btn {
+            padding: 8px 12px;
+            border-radius: 12px;
+            border: 1px solid var(--line);
+            cursor: pointer;
+            font-weight: 900;
+            background: white;
+        }
 
-.progress{
-height:8px;
-background:#e2e8f0;
-border-radius:999px;
-overflow:hidden;
-}
+        .btn.primary {
+            background: #eef2ff
+        }
 
-.bar{
-height:100%;
-width:0;
-background:#6366f1;
-transition:width .2s ease;
-}
+        .progress {
+            height: 8px;
+            background: #e2e8f0;
+            border-radius: 999px;
+            overflow: hidden;
+        }
 
-.slide{
-padding:20px;
-border-radius:20px;
-background:white;
-border:1px solid var(--line);
-}
+        .bar {
+            height: 100%;
+            width: 0;
+            background: #6366f1;
+            transition: width .2s ease;
+        }
 
-.card{
-padding:14px;
-border-radius:18px;
-border:1px solid var(--line);
-margin-top:10px;
-background:#fff;
-}
+        .slide {
+            padding: 20px;
+            border-radius: 20px;
+            background: white;
+            border: 1px solid var(--line);
+        }
 
-.choices{
-display:grid;
-gap:10px;
-margin-top:10px;
-}
+        .card {
+            padding: 14px;
+            border-radius: 18px;
+            border: 1px solid var(--line);
+            margin-top: 10px;
+            background: #fff;
+        }
 
-.choice{
-padding:12px;
-border-radius:16px;
-border:1px solid var(--line);
-cursor:pointer;
-font-weight:900;
-background:#fff;
-}
+        .choices {
+            display: grid;
+            gap: 10px;
+            margin-top: 10px;
+        }
 
-.choice.active{background:#eef2ff}
-.choice.ok{background:#dcfce7}
-.choice.bad{background:#fee2e2}
+        .choice {
+            padding: 12px;
+            border-radius: 16px;
+            border: 1px solid var(--line);
+            cursor: pointer;
+            font-weight: 900;
+            background: #fff;
+        }
 
-.feedback{
-display:none;
-margin-top:10px;
-padding:10px;
-border-radius:12px;
-border:1px solid var(--line);
-background:#fff;
-font-weight:900;
-}
+        .choice.active {
+            background: #eef2ff
+        }
 
-.feedback.show{display:block}
+        .choice.ok {
+            background: #dcfce7
+        }
 
-.checklist{
-margin-top:10px;
-display:grid;
-gap:8px;
-}
+        .choice.bad {
+            background: #fee2e2
+        }
 
-.checkItem{
-padding:10px 12px;
-border-radius:14px;
-border:1px solid var(--line);
-cursor:pointer;
-font-weight:900;
-background:#fff;
-}
+        .feedback {
+            display: none;
+            margin-top: 10px;
+            padding: 10px;
+            border-radius: 12px;
+            border: 1px solid var(--line);
+            background: #fff;
+            font-weight: 900;
+        }
 
-.checkItem.done{background:#eef2ff}
+        .feedback.show {
+            display: block
+        }
 
-.meter{
-height:8px;
-background:#e2e8f0;
-border-radius:999px;
-overflow:hidden;
-margin-top:10px;
-}
+        .checklist {
+            margin-top: 10px;
+            display: grid;
+            gap: 8px;
+        }
 
-.meterBar{
-height:100%;
-width:0;
-background:#6366f1;
-transition:width .2s ease;
-}
+        .checkItem {
+            padding: 10px 12px;
+            border-radius: 14px;
+            border: 1px solid var(--line);
+            cursor: pointer;
+            font-weight: 900;
+            background: #fff;
+        }
 
-.meterText{
-margin-top:8px;
-font-size:12px;
-color:var(--muted);
-font-weight:900;
-}
+        .checkItem.done {
+            background: #eef2ff
+        }
 
-textarea{
-width:100%;
-padding:10px;
-border-radius:12px;
-border:1px solid var(--line);
-margin-top:8px;
-font:inherit;
-resize:vertical;
-min-height:54px;
-}
+        .meter {
+            height: 8px;
+            background: #e2e8f0;
+            border-radius: 999px;
+            overflow: hidden;
+            margin-top: 10px;
+        }
 
-.kicker{
-display:inline-flex;
-align-items:center;
-gap:8px;
-font-weight:1000;
-font-size:12px;
-padding:7px 10px;
-border-radius:999px;
-border:1px solid rgba(79,70,229,.16);
-background:rgba(79,70,229,.06);
-color:#374151;
-}
+        .meterBar {
+            height: 100%;
+            width: 0;
+            background: #6366f1;
+            transition: width .2s ease;
+        }
 
-.emojiBig{
-font-size:54px;
-line-height:1;
-}
+        .meterText {
+            margin-top: 8px;
+            font-size: 12px;
+            color: var(--muted);
+            font-weight: 900;
+        }
 
-.grid{
-display:grid;
-gap:12px;
-}
+        textarea {
+            width: 100%;
+            padding: 10px;
+            border-radius: 12px;
+            border: 1px solid var(--line);
+            margin-top: 8px;
+            font: inherit;
+            resize: vertical;
+            min-height: 54px;
+        }
 
-.cols2{
-grid-template-columns:1fr 1fr;
-}
+        .kicker {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            font-weight: 1000;
+            font-size: 12px;
+            padding: 7px 10px;
+            border-radius: 999px;
+            border: 1px solid rgba(79, 70, 229, .16);
+            background: rgba(79, 70, 229, .06);
+            color: #374151;
+        }
 
-@media (max-width:800px){
-.cols2{grid-template-columns:1fr}
-}
-</style>
+        .emojiBig {
+            font-size: 54px;
+            line-height: 1;
+        }
+
+        .grid {
+            display: grid;
+            gap: 12px;
+        }
+
+        .cols2 {
+            grid-template-columns: 1fr 1fr;
+        }
+
+        @media (max-width:800px) {
+            .cols2 {
+                grid-template-columns: 1fr
+            }
+        }
+    </style>
 </head>
 
 <body>
 
-<div id="accessGate" style="position:fixed;inset:0;background:linear-gradient(135deg,#eef2ff,#ecfeff);display:flex;align-items:center;justify-content:center;z-index:9999;">
-  <div class="card" style="max-width:420px;width:92%;text-align:center">
-    <h2>🔐 Masukkan Kode</h2>
-    <p>Masukkan kode untuk memulai sesi.</p>
-    <input id="accessInput" style="width:100%;padding:12px;border-radius:12px;border:1px solid #cbd5e1;text-align:center;font-weight:900;letter-spacing:2px"/>
-    <button class="btn primary" id="accessBtn" style="margin-top:12px">Masuk</button>
-    <div class="feedback" id="accessFb" style="margin-top:10px"></div>
-    <div class="card" style="margin-top:10px;background:rgba(79,70,229,.05)">
-      <p style="margin:0">Kode diberikan oleh guru.</p>
-    </div>
-  </div>
-</div>
-
-<div class="app">
-
-  <div class="topbar">
-    <div style="display:flex;gap:10px;align-items:center">
-      <div class="logo">LP</div>
-      <div><b>Lower Primary</b><br><small>Coding Festival – Part 2</small></div>
+    <div id="accessGate"
+        style="position:fixed;inset:0;background:linear-gradient(135deg,#eef2ff,#ecfeff);display:flex;align-items:center;justify-content:center;z-index:9999;">
+        <div class="card" style="max-width:420px;width:92%;text-align:center">
+            <h2>🔐 Masukkan Kode</h2>
+            <p>Masukkan kode untuk memulai sesi.</p>
+            <input id="accessInput"
+                style="width:100%;padding:12px;border-radius:12px;border:1px solid #cbd5e1;text-align:center;font-weight:900;letter-spacing:2px" />
+            <button class="btn primary" id="accessBtn" style="margin-top:12px">Masuk</button>
+            <div class="feedback" id="accessFb" style="margin-top:10px"></div>
+            <div class="card" style="margin-top:10px;background:rgba(79,70,229,.05)">
+                <p style="margin:0">Kode diberikan oleh guru.</p>
+            </div>
+        </div>
     </div>
 
-    <div style="display:flex;gap:6px">
-      <button class="btn" id="prev">←</button>
-      <button class="btn primary" id="next">→</button>
+    <div class="app">
+
+        <div class="topbar">
+            <div style="display:flex;gap:10px;align-items:center">
+                <div class="logo">LP</div>
+                <div><b>Lower Primary</b><br><small>Coding Festival – Part 2</small></div>
+            </div>
+
+            <div style="display:flex;gap:6px">
+                <button class="btn" id="prev">←</button>
+                <button class="btn primary" id="next">→</button>
+            </div>
+
+            <div style="width:120px">
+                <div class="progress">
+                    <div class="bar" id="bar"></div>
+                </div>
+            </div>
+        </div>
+
+        <div class="slide" id="content"></div>
+
     </div>
 
-    <div style="width:120px">
-      <div class="progress"><div class="bar" id="bar"></div></div>
-    </div>
-  </div>
+    <script>
+        const ACCESS_CODE = "RGMDSLP25";
 
-  <div class="slide" id="content"></div>
+        const slides = [
 
-</div>
-
-<script>
-const ACCESS_CODE = "RGMDSLP25";
-
-const slides = [
-
-{
-html: `
+            {
+                html: `
 <div class="kicker">Lower Primary • ScratchJr • Part 2</div>
 <h2>🛠️ Lanjutkan Proyekmu!</h2>
 <p>Sekarang kita membuat proyekmu jadi lebih jelas, lebih seru, dan siap ditunjukkan ke orang lain.</p>
@@ -273,10 +296,10 @@ html: `
   <br>• mencoba menjelaskan proyek
 </div>
 `
-},
+            },
 
-{
-html: `
+            {
+                html: `
 <h2>🎮 Proyek Punya Alur</h2>
 <p>Supaya proyekmu mudah dipahami, harus ada urutan yang jelas.</p>
 
@@ -287,10 +310,10 @@ html: `
 
 <div class="card"><b>Tengah</b><br>Pemain memilih sesuatu</div>
 `
-},
+            },
 
-{
-html: `
+            {
+                html: `
 <h2>🧩 Alur Mana yang Benar?</h2>
 
 <div class="choices" data-quiz="alur">
@@ -301,10 +324,10 @@ html: `
 
 <div class="feedback" data-quiz-feedback="alur"></div>
 `
-},
+            },
 
-{
-html: `
+            {
+                html: `
 <h2>🔀 Pilihan Pemain</h2>
 <p>Pilihan membuat proyek jadi lebih menarik.</p>
 
@@ -316,10 +339,10 @@ html: `
 
 <div class="feedback" data-quiz-feedback="pilihan"></div>
 `
-},
+            },
 
-{
-html: `
+            {
+                html: `
 <h2>💡 Contoh</h2>
 <div class="card">
 <b>Pilih Jajan atau Menabung</b>
@@ -329,10 +352,10 @@ Kalau pilih jajan → uang cepat habis
 Kalau pilih menabung → uang bertambah
 </div>
 `
-},
+            },
 
-{
-html: `
+            {
+                html: `
 <h2>✅ Ciri Interaksi yang Bagus</h2>
 
 <div class="choices" data-multi="interaction">
@@ -345,10 +368,10 @@ html: `
 <button id="checkInteraction" class="btn primary" style="margin-top:10px">Cek</button>
 <div class="feedback" id="interactionFb"></div>
 `
-},
+            },
 
-{
-html: `
+            {
+                html: `
 <h2>🧪 Cek Proyekmu</h2>
 
 <div class="checklist" data-checklist="testing">
@@ -361,10 +384,10 @@ html: `
 <div class="meter"><div class="meterBar" id="testingBar"></div></div>
 <div class="meterText" id="testingText">0 dari 4 selesai</div>
 `
-},
+            },
 
-{
-html: `
+            {
+                html: `
 <h2>🐞 Kalau Ada yang Belum Jalan</h2>
 
 <div class="choices" data-quiz="bug">
@@ -375,38 +398,87 @@ html: `
 
 <div class="feedback" data-quiz-feedback="bug"></div>
 `
-},
+            },
 
-{
-html: `
-<h2>🎤 Ceritakan Proyekmu</h2>
-<p>Orang lain harus bisa mengerti proyekmu.</p>
+            {
+                title: "Waktunya Membuat Pitch Deck!",
+                html: `
+      <h2>📢 Pamerkan Karyamu dengan Pitch Deck!</h2>
+      <p>Proyekmu sudah selesai dan berjalan dengan baik? Keren! Sekarang saatnya membuat <b>Pitch Deck</b> (Presentasi singkat 4-5 halaman menggunakan PPT, Google Slides, atau Canva) agar juri dan pengunjung pameran mengerti seberapa hebat karyamu.</p>
+      <div class="card" style="text-align:center; padding: 20px;">
+        <div style="font-size: 3rem;">🖼️🗣️✨</div>
+        <p style="margin-top:10px; font-weight: 500;">Pitch deck membantu orang lain memahami masalah apa yang kamu selesaikan dan bagaimana cara kerja proyekmu secara visual!</p>
+      </div>
+    `
+            },
+            {
+                title: "Isi Pitch Deck",
+                html: `
+      <h2>🧩 4 Komponen Wajib di Pitch Deck-mu</h2>
+      <p>Jangan buat presentasi yang terlalu panjang. Cukup pastikan 4 hal ini ada di dalamnya:</p>
+      <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-top: 15px;">
+        <div class="card" style="padding: 15px;">
+          <h3 style="margin-top: 0; color: var(--brand);">1. Judul & Perkenalan</h3>
+          <p style="font-size: 0.9em; margin-bottom: 0;">Tuliskan nama proyekmu, nama lengkap, asal sekolah, dan jenjang kategori-mu.</p>
+        </div>
+        <div class="card" style="padding: 15px;">
+          <h3 style="margin-top: 0; color: var(--brand);">2. Masalah</h3>
+          <p style="font-size: 0.9em; margin-bottom: 0;">Ceritakan masalah sehari-hari yang menginspirasimu untuk membuat proyek ini.</p>
+        </div>
+        <div class="card" style="padding: 15px;">
+          <h3 style="margin-top: 0; color: var(--brand);">3. Solusi & Cara Kerja</h3>
+          <p style="font-size: 0.9em; margin-bottom: 0;">Masukkan <i>screenshot</i> proyekmu dan jelaskan langkah-langkah memainkannya/menggunakannya.</p>
+        </div>
+        <div class="card" style="padding: 15px;">
+          <h3 style="margin-top: 0; color: var(--brand);">4. Literasi Keuangan</h3>
+          <p style="font-size: 0.9em; margin-bottom: 0;">Jelaskan manfaat proyekmu dan pesan apa yang ingin kamu sampaikan soal uang atau menabung.</p>
+        </div>
+      </div>
+    `
+            },
+            {
+                title: "Kuis Pitch Deck",
+                html: `
+    <h2>💡 Pitch Deck Aplikasi yang Baik Itu Seperti Apa?</h2>
+    <p>Pilih jawaban yang paling menunjukkan pitch deck yang jelas dan mudah dipahami.</p>
 
-<div class="card">
-• Judul proyek
-<br>• Ceritanya
-<br>• Pilihannya
-<br>• Pesan tentang uang
-</div>
-`
-},
+    <div class="choices" data-quiz="deck">
+      <div class="choice" data-answer="wrong">
+        Menjelaskan semua blok App Inventor satu per satu dengan teks panjang di setiap slide
+      </div>
 
-{
-html: `
-<h2>🗣️ Latihan Cerita</h2>
+      <div class="choice" data-answer="right">
+        Menjelaskan masalah, fitur utama, cara kerja aplikasi, dan manfaatnya dengan visual yang jelas dan ringkas
+      </div>
 
-<textarea id="t1" placeholder="Judul proyek"></textarea>
-<textarea id="t2" placeholder="Ceritanya"></textarea>
-<textarea id="t3" placeholder="Pilihannya"></textarea>
-<textarea id="t4" placeholder="Pesan tentang uang"></textarea>
+      <div class="choice" data-answer="wrong">
+        Memenuhi slide dengan semua screenshot layar tanpa penjelasan fungsi aplikasi
+      </div>
+    </div>
 
-<button id="preview" class="btn primary" style="margin-top:10px">Preview</button>
-<div class="feedback" id="pv"></div>
-`
-},
+    <div class="feedback" data-quiz-feedback="deck"></div>
+  `
+            },
+            {
+                title: "Checklist Pengumpulan",
+                html: `
+    <h2>✅ Checklist Sebelum Mengumpulkan Karya</h2>
+    <p>Pastikan semua komponen ini sudah siap sebelum kamu mengirimkannya ke sistem (LMS):</p>
+    <div class="checklist" data-checklist="submission">
+      <div class="checkItem"><div class="checkBox"></div><div>Proyek sudah selesai, dites, dan berjalan tanpa <i>error/bug</i>.</div></div>
+      <div class="checkItem"><div class="checkBox"></div><div>Deskripsi singkat proyek sudah ditulis (Masalah, Cara Kerja, Manfaat).</div></div>
+      <div class="checkItem"><div class="checkBox"></div><div>Pitch Deck (PDF/PPT/Canva) maksimal 5 halaman sudah selesai dibuat.</div></div>
+      <div class="checkItem"><div class="checkBox"></div><div>Video demo singkat sudah direkam (Jika diwajibkan oleh panitia).</div></div>
+    </div>
 
-{
-html: `
+    <div class="meterWrap">
+      <div class="meter"><div class="meterBar" id="submissionMeter"></div></div>
+      <div class="meterText" id="submissionMeterText">0 dari 4 komponen siap</div>
+    </div>
+  `
+            },
+            {
+                html: `
 <h2>✅ Final Check</h2>
 
 <div class="checklist" data-checklist="final">
@@ -419,10 +491,10 @@ html: `
 <div class="meter"><div class="meterBar" id="finalBar"></div></div>
 <div class="meterText" id="finalText">0 dari 4 siap</div>
 `
-},
+            },
 
-{
-html: `
+            {
+                html: `
 <h2>🔥 Hebat!</h2>
 <p>Kamu sudah siap melanjutkan proyekmu.</p>
 
@@ -433,210 +505,241 @@ html: `
 
 <button class="btn primary" onclick="idx=0;render()" style="margin-top:10px">Ulang dari Awal</button>
 `
-}
+            }
 
-];
+        ];
 
-let idx = 0;
+        let idx = 0;
 
-const content = document.getElementById("content");
-const prevBtn = document.getElementById("prev");
-const nextBtn = document.getElementById("next");
-const bar = document.getElementById("bar");
+        const content = document.getElementById("content");
+        const prevBtn = document.getElementById("prev");
+        const nextBtn = document.getElementById("next");
+        const bar = document.getElementById("bar");
 
-const accessBtn = document.getElementById("accessBtn");
-const accessInput = document.getElementById("accessInput");
-const accessFb = document.getElementById("accessFb");
-const accessGate = document.getElementById("accessGate");
+        const accessBtn = document.getElementById("accessBtn");
+        const accessInput = document.getElementById("accessInput");
+        const accessFb = document.getElementById("accessFb");
+        const accessGate = document.getElementById("accessGate");
 
-function clamp(n, min, max){
-  return Math.max(min, Math.min(max, n));
-}
-
-function render(){
-  content.innerHTML = slides[idx].html;
-  bar.style.width = ((idx + 1) / slides.length * 100) + "%";
-
-  wireQuiz();
-  wireChecklist();
-  wireMulti();
-  wirePreview();
-  wireGoto();
-}
-
-function wireQuiz(){
-  content.querySelectorAll("[data-quiz]").forEach(group => {
-    const id = group.dataset.quiz;
-    const fb = content.querySelector(`[data-quiz-feedback="${id}"]`);
-
-    group.querySelectorAll(".choice").forEach(ch => {
-      ch.onclick = () => {
-        group.querySelectorAll(".choice").forEach(c => c.classList.remove("ok","bad","active"));
-        ch.classList.add("active");
-        const ok = ch.dataset.answer === "right";
-        ch.classList.add(ok ? "ok" : "bad");
-        if (fb) {
-          fb.classList.add("show");
-          fb.innerText = getQuizMsg(id, ok);
+        function clamp(n, min, max) {
+            return Math.max(min, Math.min(max, n));
         }
-      };
-    });
-  });
-}
 
-function getQuizMsg(id, ok){
-  const msgs = {
-    alur: {
-      ok: "Benar! Proyek yang baik punya awal, pilihan, dan hasil.",
-      bad: "Coba lagi ya. Proyek butuh urutan yang jelas."
-    },
-    pilihan: {
-      ok: "Benar! Pilihan membuat hasil bisa berbeda.",
-      bad: "Coba lagi ya. Pilihan sebaiknya membuat perubahan."
-    },
-    bug: {
-      ok: "Benar! Cek lagi blok dan urutannya ya.",
-      bad: "Coba lagi ya. Kalau belum jalan, kita cek lagi."
-    }
-  };
-  return msgs[id] ? (ok ? msgs[id].ok : msgs[id].bad) : (ok ? "Benar!" : "Coba lagi!");
-}
+        function render() {
+            content.innerHTML = slides[idx].html;
+            bar.style.width = ((idx + 1) / slides.length * 100) + "%";
 
-function wireChecklist(){
-  content.querySelectorAll("[data-checklist]").forEach(group => {
-    const items = [...group.querySelectorAll(".checkItem")];
-    const name = group.dataset.checklist;
+            wireQuiz();
+            wireChecklist();
+            wireMulti();
+            wirePreview();
+            wireGoto();
+            showFeedback("deck", ""); // Reset feedback kuis deck setiap render
+        }
 
-    const meterBar = content.querySelector(`#${name}Bar`);
-    const meterText = content.querySelector(`#${name}Text`);
+        // Fungsi tambahan untuk menampilkan teks balasan (feedback) pada kuis
+        function showFeedback(quizId, message) {
+            const feedbackEl = document.querySelector(`[data-quiz-feedback="${quizId}"]`);
+            if (feedbackEl) {
+                feedbackEl.style.display = "block";
+                feedbackEl.style.backgroundColor = message.includes("Tepat") ? "#dcfce7" : "#fee2e2";
+                feedbackEl.style.color = message.includes("Tepat") ? "#166534" : "#991b1b";
+                feedbackEl.innerHTML = `<strong>${message.includes("Tepat") ? "Benar!" : "Coba Lagi!"}</strong> ${message}`;
+            }
+        }
 
-    const refresh = () => {
-      const done = items.filter(i => i.classList.contains("done")).length;
-      const total = items.length;
-      if (meterBar) meterBar.style.width = (done / total * 100) + "%";
-      if (meterText) meterText.innerText = `${done} dari ${total} selesai`;
-    };
+        function wireQuiz() {
+            content.querySelectorAll("[data-quiz]").forEach(group => {
+                const id = group.dataset.quiz;
+                const fb = content.querySelector(`[data-quiz-feedback="${id}"]`);
 
-    items.forEach(it => {
-      it.onclick = () => {
-        it.classList.toggle("done");
-        refresh();
-      };
-    });
+                group.querySelectorAll(".choice").forEach(ch => {
+                    ch.onclick = () => {
+                        group.querySelectorAll(".choice").forEach(c => c.classList.remove("ok", "bad", "active"));
+                        ch.classList.add("active");
+                        const ok = ch.dataset.answer === "right";
+                        ch.classList.add(ok ? "ok" : "bad");
+                        if (fb) {
+                            fb.classList.add("show");
+                            fb.innerText = getQuizMsg(id, ok);
+                        }
+                    };
+                });
+            });
+        }
 
-    refresh();
-  });
-}
+        function getQuizMsg(id, ok) {
+            const msgs = {
+                alur: {
+                    ok: "Benar! Proyek yang baik punya awal, pilihan, dan hasil.",
+                    bad: "Coba lagi ya. Proyek butuh urutan yang jelas."
+                },
+                pilihan: {
+                    ok: "Benar! Pilihan membuat hasil bisa berbeda.",
+                    bad: "Coba lagi ya. Pilihan sebaiknya membuat perubahan."
+                },
+                bug: {
+                    ok: "Benar! Cek lagi blok dan urutannya ya.",
+                    bad: "Coba lagi ya. Kalau belum jalan, kita cek lagi."
+                },
+                deck: {
+                    ok: "✅ Tepat! Pitch deck aplikasi yang baik menjelaskan masalah, solusi, cara kerja, dan manfaat dengan ringkas dan jelas.",
+                    bad: "⚠️ Belum tepat. Pitch deck bukan tempat menaruh semua detail, tetapi menyampaikan inti aplikasi secara visual dan mudah dipahami."
+                }
+            };
+            return msgs[id] ? (ok ? msgs[id].ok : msgs[id].bad) : (ok ? "Benar!" : "Coba lagi!");
+        }
 
-function wireMulti(){
-  const group = content.querySelector('[data-multi="interaction"]');
-  if(!group) return;
+        function wireChecklist() {
+            content.querySelectorAll("[data-checklist]").forEach(group => {
+                const items = [...group.querySelectorAll(".checkItem")];
+            const parentId = group.getAttribute("data-checklist");
 
-  const items = [...group.querySelectorAll(".choice")];
-  const fb = content.querySelector("#interactionFb");
-  const checkBtn = content.querySelector("#checkInteraction");
+                let meterId = "";
+                let textId = "";
 
-  items.forEach(i => {
-    i.onclick = () => i.classList.toggle("active");
-  });
+                if (parentId === "testing") {
+                    meterId = "testingMeter";
+                    textId = "testingMeterText";
+                } else if (parentId === "submission") {
+                    meterId = "submissionMeter";
+                    textId = "submissionMeterText";
+                } else if (parentId === "final") {
+                    meterId = "finalMeter";
+                    textId = "finalMeterText";
+                }
 
-  checkBtn?.addEventListener("click", () => {
-    let correct = true;
-    let selectedAny = false;
+                const meterBar = content.querySelector(`#${name}Bar`);
+                const meterText = content.querySelector(`#${name}Text`);
 
-    items.forEach(i => {
-      i.classList.remove("ok","bad");
-      const should = i.dataset.correct === "true";
-      const active = i.classList.contains("active");
+                const refresh = () => {
+                    const done = items.filter(i => i.classList.contains("done")).length;
+                    const total = items.length;
+                    if (meterBar) meterBar.style.width = (done / total * 100) + "%";
+                    if (meterText) meterText.innerText = `${done} dari ${total} selesai`;
+                };
 
-      if (active) selectedAny = true;
-      if (should && !active) correct = false;
-      if (!should && active) correct = false;
+                items.forEach(it => {
+                    it.onclick = () => {
+                        it.classList.toggle("done");
+                        refresh();
+                    };
+                });
 
-      if (active) i.classList.add(should ? "ok" : "bad");
-    });
+                refresh();
+            });
+        }
 
-    if (fb) {
-      fb.classList.add("show");
-      fb.innerText = !selectedAny
-        ? "Pilih dulu ya."
-        : correct
-          ? "Bagus! Proyekmu perlu pilihan, hasil, dan pesan."
-          : "Belum tepat. Ingat, bukan cuma animasi ya.";
-    }
-  });
-}
+        function wireMulti() {
+            const group = content.querySelector('[data-multi="interaction"]');
+            if (!group) return;
 
-function wirePreview(){
-  const previewBtn = content.querySelector("#preview");
-  if (!previewBtn) return;
+            const items = [...group.querySelectorAll(".choice")];
+            const fb = content.querySelector("#interactionFb");
+            const checkBtn = content.querySelector("#checkInteraction");
 
-  previewBtn.addEventListener("click", () => {
-    const t1 = content.querySelector("#t1")?.value || "";
-    const t2 = content.querySelector("#t2")?.value || "";
-    const t3 = content.querySelector("#t3")?.value || "";
-    const t4 = content.querySelector("#t4")?.value || "";
+            items.forEach(i => {
+                i.onclick = () => i.classList.toggle("active");
+            });
 
-    const pv = content.querySelector("#pv");
-    if (!pv) return;
+            checkBtn?.addEventListener("click", () => {
+                let correct = true;
+                let selectedAny = false;
 
-    pv.classList.add("show");
-    pv.innerHTML = `<b>Judul:</b> ${t1 || "-"}<br><b>Cerita:</b> ${t2 || "-"}<br><b>Pilihan:</b> ${t3 || "-"}<br><b>Pesan:</b> ${t4 || "-"}`;
-  });
-}
+                items.forEach(i => {
+                    i.classList.remove("ok", "bad");
+                    const should = i.dataset.correct === "true";
+                    const active = i.classList.contains("active");
 
-function wireGoto(){
-  content.querySelectorAll("[data-goto]").forEach(btn => {
-    btn.addEventListener("click", () => {
-      const to = Number(btn.getAttribute("data-goto"));
-      idx = clamp(to, 0, slides.length - 1);
-      render();
-      window.scrollTo({ top: 0, behavior: "smooth" });
-    });
-  });
-}
+                    if (active) selectedAny = true;
+                    if (should && !active) correct = false;
+                    if (!should && active) correct = false;
 
-function go(step){
-  idx = clamp(idx + step, 0, slides.length - 1);
-  render();
-  window.scrollTo({ top: 0, behavior: "smooth" });
-}
+                    if (active) i.classList.add(should ? "ok" : "bad");
+                });
 
-prevBtn.addEventListener("click", () => go(-1));
-nextBtn.addEventListener("click", () => go(1));
+                if (fb) {
+                    fb.classList.add("show");
+                    fb.innerText = !selectedAny
+                        ? "Pilih dulu ya."
+                        : correct
+                            ? "Bagus! Proyekmu perlu pilihan, hasil, dan pesan."
+                            : "Belum tepat. Ingat, bukan cuma animasi ya.";
+                }
+            });
+        }
 
-window.addEventListener("keydown", (e) => {
-  if (accessGate.style.display !== "none") return;
-  if (e.key === "ArrowLeft") go(-1);
-  if (e.key === "ArrowRight") go(1);
-  if (e.key === "Home") {
-    idx = 0;
-    render();
-    window.scrollTo({ top: 0, behavior: "smooth" });
-  }
-});
+        function wirePreview() {
+            const previewBtn = content.querySelector("#preview");
+            if (!previewBtn) return;
 
-accessBtn.addEventListener("click", checkAccess);
-accessInput.addEventListener("keydown", (e) => {
-  if (e.key === "Enter") checkAccess();
-});
-accessInput.addEventListener("input", e => {
-  e.target.value = e.target.value.toUpperCase();
-});
+            previewBtn.addEventListener("click", () => {
+                const t1 = content.querySelector("#t1")?.value || "";
+                const t2 = content.querySelector("#t2")?.value || "";
+                const t3 = content.querySelector("#t3")?.value || "";
+                const t4 = content.querySelector("#t4")?.value || "";
 
-function checkAccess(){
-  const val = accessInput.value.toUpperCase().trim();
-  if(val === ACCESS_CODE){
-    accessGate.style.display = "none";
-    render();
-  } else {
-    accessFb.classList.add("show");
-    accessFb.innerText = "Kode salah. Coba lagi.";
-  }
-}
+                const pv = content.querySelector("#pv");
+                if (!pv) return;
 
-render();
-</script>
+                pv.classList.add("show");
+                pv.innerHTML = `<b>Judul:</b> ${t1 || "-"}<br><b>Cerita:</b> ${t2 || "-"}<br><b>Pilihan:</b> ${t3 || "-"}<br><b>Pesan:</b> ${t4 || "-"}`;
+            });
+        }
+
+        function wireGoto() {
+            content.querySelectorAll("[data-goto]").forEach(btn => {
+                btn.addEventListener("click", () => {
+                    const to = Number(btn.getAttribute("data-goto"));
+                    idx = clamp(to, 0, slides.length - 1);
+                    render();
+                    window.scrollTo({ top: 0, behavior: "smooth" });
+                });
+            });
+        }
+
+        function go(step) {
+            idx = clamp(idx + step, 0, slides.length - 1);
+            render();
+            window.scrollTo({ top: 0, behavior: "smooth" });
+        }
+
+        prevBtn.addEventListener("click", () => go(-1));
+        nextBtn.addEventListener("click", () => go(1));
+
+        window.addEventListener("keydown", (e) => {
+            if (accessGate.style.display !== "none") return;
+            if (e.key === "ArrowLeft") go(-1);
+            if (e.key === "ArrowRight") go(1);
+            if (e.key === "Home") {
+                idx = 0;
+                render();
+                window.scrollTo({ top: 0, behavior: "smooth" });
+            }
+        });
+
+        accessBtn.addEventListener("click", checkAccess);
+        accessInput.addEventListener("keydown", (e) => {
+            if (e.key === "Enter") checkAccess();
+        });
+        accessInput.addEventListener("input", e => {
+            e.target.value = e.target.value.toUpperCase();
+        });
+
+        function checkAccess() {
+            const val = accessInput.value.toUpperCase().trim();
+            if (val === ACCESS_CODE) {
+                accessGate.style.display = "none";
+                render();
+            } else {
+                accessFb.classList.add("show");
+                accessFb.innerText = "Kode salah. Coba lagi.";
+            }
+        }
+
+        render();
+    </script>
 
 </body>
+
 </html>
