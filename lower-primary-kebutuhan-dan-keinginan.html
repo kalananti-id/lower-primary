@@ -1,0 +1,1029 @@
+<!doctype html>
+<html lang="id">
+
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Kebutuhan dan Keinginan</title>
+  <style>
+    :root {
+      --bg1: #F7FAFF;
+      --bg2: #F3F6FF;
+      --card: #FFFFFF;
+      --ink: #0F172A;
+      --muted: #475569;
+      --line: rgba(226, 232, 240, .95);
+      --brand: #4F46E5;
+      --brand2: #06B6D4;
+      --ok: #16A34A;
+      --bad: #DC2626;
+      --radius: 22px;
+      --shadow: 0 18px 40px rgba(15, 23, 42, .08);
+      --shadow2: 0 10px 22px rgba(15, 23, 42, .06);
+      --focus: 0 0 0 4px rgba(79, 70, 229, .18);
+      --mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+      --sans: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, "Apple Color Emoji", "Segoe UI Emoji";
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      font-family: var(--sans);
+      color: var(--ink);
+      background:
+        radial-gradient(1200px 520px at 10% 0%, rgba(6, 182, 212, .18), transparent 60%),
+        radial-gradient(1200px 520px at 90% 0%, rgba(79, 70, 229, .16), transparent 55%),
+        linear-gradient(180deg, var(--bg1), var(--bg2) 45%, var(--bg1));
+      min-height: 100vh;
+    }
+
+    .app {
+      width: min(1100px, 96vw);
+      margin: 18px auto 26px;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .topbar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      padding: 12px 14px;
+      border: 1px solid var(--line);
+      border-radius: 18px;
+      background: rgba(255, 255, 255, .72);
+      backdrop-filter: blur(10px);
+      box-shadow: var(--shadow2);
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .logo {
+      width: 38px;
+      height: 38px;
+      border-radius: 14px;
+      background: linear-gradient(135deg, rgba(79, 70, 229, .18), rgba(6, 182, 212, .20));
+      border: 1px solid rgba(226, 232, 240, .9);
+      display: grid;
+      place-items: center;
+      font-weight: 1000;
+      color: rgba(79, 70, 229, 1);
+    }
+
+    .brand h1 {
+      margin: 0;
+      font-size: 14px;
+      line-height: 1.15;
+      letter-spacing: .2px;
+    }
+
+    .brand .sub {
+      font-size: 12px;
+      color: var(--muted);
+      font-weight: 800;
+      margin-top: 2px;
+    }
+
+    .controls {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+
+    .btn {
+      border: 1px solid rgba(226, 232, 240, .95);
+      background: rgba(255, 255, 255, .9);
+      padding: 10px 12px;
+      border-radius: 16px;
+      font-weight: 1000;
+      cursor: pointer;
+      box-shadow: 0 8px 16px rgba(15, 23, 42, .06);
+      transition: transform .06s ease, box-shadow .12s ease, background .12s ease;
+      user-select: none;
+    }
+
+    .btn:hover {
+      transform: translateY(-1px);
+    }
+
+    .btn:active {
+      transform: translateY(0px);
+    }
+
+    .btn.primary {
+      background: linear-gradient(135deg, rgba(79, 70, 229, .12), rgba(6, 182, 212, .14));
+      border-color: rgba(79, 70, 229, .18);
+    }
+
+    .btn.ghost {
+      background: transparent;
+      box-shadow: none;
+    }
+
+    .btn:focus {
+      outline: none;
+      box-shadow: var(--focus);
+    }
+
+    .progressWrap {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      min-width: 260px;
+      justify-content: flex-end;
+    }
+
+    .progress {
+      width: 180px;
+      height: 10px;
+      background: rgba(226, 232, 240, .9);
+      border-radius: 999px;
+      overflow: hidden;
+      border: 1px solid rgba(226, 232, 240, .95);
+    }
+
+    .bar {
+      height: 100%;
+      width: 0%;
+      background: linear-gradient(90deg, rgba(79, 70, 229, .85), rgba(6, 182, 212, .85));
+      border-radius: 999px;
+      transition: width .25s ease;
+    }
+
+    .count {
+      font-family: var(--mono);
+      font-size: 12px;
+      color: var(--muted);
+      font-weight: 900;
+    }
+
+    .stage {
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      background: rgba(255, 255, 255, .60);
+      box-shadow: var(--shadow);
+      padding: 14px;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      min-height: calc(100vh - 145px);
+    }
+
+    .slide {
+      flex: 1;
+      background: rgba(255, 255, 255, .68);
+      border: 1px solid rgba(229, 234, 245, .95);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow2);
+      padding: 20px;
+      overflow: hidden;
+      backdrop-filter: blur(8px);
+    }
+
+    .slideInner {
+      max-width: 980px;
+      margin: 0 auto;
+      max-height: calc(100vh - 190px);
+      overflow-y: auto;
+      padding-right: 8px;
+    }
+
+    .slideInner::-webkit-scrollbar {
+      width: 10px;
+    }
+
+    .slideInner::-webkit-scrollbar-thumb {
+      background: rgba(96, 112, 153, .25);
+      border-radius: 999px;
+      border: 3px solid rgba(255, 255, 255, .9);
+    }
+
+    .slideInner::-webkit-scrollbar-track {
+      background: transparent;
+    }
+
+    h2 {
+      margin: 6px 0 10px;
+      font-size: 30px;
+      letter-spacing: -.3px;
+    }
+
+    h3 {
+      margin: 0 0 8px;
+      font-size: 18px;
+    }
+
+    p {
+      margin: 0 0 10px;
+      color: var(--muted);
+      font-weight: 800;
+      line-height: 1.55;
+    }
+
+    .kicker {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      font-weight: 1000;
+      font-size: 12px;
+      letter-spacing: .2px;
+      padding: 7px 10px;
+      border-radius: 999px;
+      border: 1px solid rgba(79, 70, 229, .16);
+      background: rgba(79, 70, 229, .06);
+      color: rgba(55, 65, 81, .95);
+    }
+
+    .grid {
+      display: grid;
+      gap: 14px;
+    }
+
+    .cols2 {
+      grid-template-columns: 1fr 1fr;
+    }
+
+    .cols3 {
+      grid-template-columns: repeat(3, 1fr);
+    }
+
+    @media (max-width: 860px) {
+
+      .cols2,
+      .cols3 {
+        grid-template-columns: 1fr;
+      }
+
+      .progressWrap {
+        min-width: unset;
+      }
+
+      .progress {
+        width: 130px;
+      }
+
+      h2 {
+        font-size: 26px;
+      }
+    }
+
+    .card {
+      background: rgba(255, 255, 255, .92);
+      border: 1px solid rgba(226, 232, 240, .95);
+      border-radius: 22px;
+      padding: 14px;
+      box-shadow: 0 10px 18px rgba(15, 23, 42, .06);
+    }
+
+    .hint {
+      background: rgba(6, 182, 212, .10);
+      border: 1px dashed rgba(6, 182, 212, .35);
+      border-radius: 18px;
+      padding: 12px 14px;
+      color: rgba(30, 41, 59, .92);
+      font-weight: 900;
+      line-height: 1.5;
+    }
+
+    ul.list {
+      margin: 8px 0 0 18px;
+      color: var(--muted);
+      font-weight: 850;
+      line-height: 1.55;
+    }
+
+    .choices {
+      display: grid;
+      gap: 10px;
+      margin-top: 10px;
+    }
+
+    .choice {
+      border: 1px solid rgba(226, 232, 240, .95);
+      border-radius: 18px;
+      padding: 12px 14px;
+      background: rgba(255, 255, 255, .96);
+      font-weight: 950;
+      color: rgba(30, 41, 59, .96);
+      cursor: pointer;
+      user-select: none;
+      transition: transform .06s ease, border-color .12s ease, background .12s ease;
+    }
+
+    .choice:hover {
+      transform: translateY(-1px);
+    }
+
+    .choice.active {
+      border-color: rgba(79, 70, 229, .35);
+      background: rgba(79, 70, 229, .06);
+    }
+
+    .choice.ok {
+      border-color: rgba(22, 163, 74, .35);
+      background: rgba(22, 163, 74, .08);
+    }
+
+    .choice.bad {
+      border-color: rgba(220, 38, 38, .35);
+      background: rgba(220, 38, 38, .08);
+    }
+
+    .feedback {
+      display: none;
+      margin-top: 10px;
+      border-radius: 18px;
+      padding: 12px 14px;
+      border: 1px solid rgba(226, 232, 240, .95);
+      background: rgba(255, 255, 255, .92);
+      color: var(--muted);
+      font-weight: 900;
+      line-height: 1.5;
+    }
+
+    .feedback.show {
+      display: block;
+    }
+
+    .fbOk {
+      border-color: rgba(22, 163, 74, .35);
+      background: rgba(22, 163, 74, .08);
+      color: rgba(15, 23, 42, .92);
+    }
+
+    .fbBad {
+      border-color: rgba(220, 38, 38, .35);
+      background: rgba(220, 38, 38, .08);
+      color: rgba(15, 23, 42, .92);
+    }
+
+    .input {
+      width: 100%;
+      border: 1px solid rgba(226, 232, 240, .95);
+      background: rgba(255, 255, 255, .96);
+      border-radius: 16px;
+      padding: 12px 14px;
+      font-weight: 950;
+      color: rgba(30, 41, 59, .96);
+    }
+
+    .emojiBig {
+      font-size: 58px;
+      line-height: 1;
+    }
+
+    .pill {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-width: 90px;
+      padding: 8px 12px;
+      border-radius: 999px;
+      background: linear-gradient(135deg, rgba(79, 70, 229, .10), rgba(6, 182, 212, .10));
+      border: 1px solid rgba(79, 70, 229, .16);
+      font-weight: 1000;
+      color: #3730a3;
+    }
+
+    .scenarioBox {
+      border: 1px dashed rgba(79, 70, 229, .30);
+      border-radius: 22px;
+      padding: 16px;
+      background: linear-gradient(180deg, rgba(79, 70, 229, .05), rgba(6, 182, 212, .05));
+    }
+  </style>
+</head>
+
+<body>
+  <div id="accessGate"
+    style="position:fixed; inset:0; background:linear-gradient(135deg,#eef2ff,#ecfeff); display:flex; align-items:center; justify-content:center; z-index:9999;">
+    <div class="card" style="max-width:420px;width:92%;text-align:center">
+      <h2>🔐 Kode Akses</h2>
+      <p>Masukkan kode untuk memulai sesi.</p>
+      <input id="accessInput" class="input" placeholder="MASUKKAN KODE" autocomplete="off"
+        style="text-align:center;font-weight:900;letter-spacing:2px" />
+      <button class="btn primary" id="accessBtn" style="margin-top:12px">Masuk</button>
+      <div class="feedback" id="accessFb" style="margin-top:10px"></div>
+      <div class="card" style="margin-top:10px;background:rgba(79,70,229,.05)">
+        <p style="margin:0">Kode diberikan oleh guru.</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="app">
+    <div class="topbar">
+      <div class="brand">
+        <div class="logo">LP</div>
+        <div>
+          <h1>Lower Primary</h1>
+          <div class="sub">Kebutuhan dan Keinginan</div>
+        </div>
+      </div>
+
+      <div class="controls">
+        <button class="btn ghost" id="btnHome" title="Kembali ke awal">🏠 Awal</button>
+        <button class="btn" id="btnPrev" title="Sebelumnya (←)">←</button>
+        <button class="btn primary" id="btnNext" title="Berikutnya (→)">→</button>
+      </div>
+
+      <div class="progressWrap">
+        <div class="progress" aria-label="Progress">
+          <div class="bar" id="bar"></div>
+        </div>
+        <div class="count" id="count">1/1</div>
+      </div>
+    </div>
+
+    <div class="stage">
+      <div class="slide" role="region" aria-label="Slide">
+        <div class="slideInner" id="content"></div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const ACCESS_CODE = "RGMDSLP25";
+
+    const slides = [
+      {
+        title: "Pembuka",
+        html: `
+          <h2>🛍️ Kebutuhan dan Keinginan</h2>
+          <p>Hari ini kita belajar membedakan mana yang penting dulu dan mana yang boleh nanti.</p>
+
+          <div class="grid cols2" style="margin-top:12px;align-items:center">
+            <div class="card">
+              <div class="kicker">Contoh</div>
+              <p style="margin:8px 0 0">Buku tulis 📘</p>
+              <p style="margin:8px 0 0">Pensil ✏️</p>
+              <p style="margin:8px 0 0">Es krim 🍦</p>
+              <p style="margin:8px 0 0">Mainan 🧸</p>
+            </div>
+            <div class="card" style="text-align:center">
+              <div class="emojiBig">🤔</div>
+              <p style="margin-top:10px">Kalau uangmu terbatas, mana yang dipilih dulu?</p>
+            </div>
+          </div>
+        `
+      },
+
+      {
+        title: "Apa itu kebutuhan",
+        html: `
+          <h2>Apa Itu Kebutuhan?</h2>
+          <p>Kebutuhan adalah hal yang penting dan membantu kita beraktivitas dengan baik.</p>
+
+          <div class="grid cols3" style="margin-top:12px">
+            <div class="card" style="text-align:center">
+              <div class="emojiBig">📘</div>
+              <p style="margin-top:8px"><b>Buku</b></p>
+            </div>
+            <div class="card" style="text-align:center">
+              <div class="emojiBig">✏️</div>
+              <p style="margin-top:8px"><b>Pensil</b></p>
+            </div>
+            <div class="card" style="text-align:center">
+              <div class="emojiBig">💧</div>
+              <p style="margin-top:8px"><b>Air minum</b></p>
+            </div>
+          </div>
+
+          <div class="hint" style="margin-top:12px">
+            Kalau kebutuhan tidak terpenuhi, kegiatan kita bisa terganggu.
+          </div>
+        `
+      },
+
+      {
+        title: "Apa itu keinginan",
+        html: `
+          <h2>Apa Itu Keinginan?</h2>
+          <p>Keinginan adalah hal yang menyenangkan, tetapi tidak harus dibeli dulu.</p>
+
+          <div class="grid cols3" style="margin-top:12px">
+            <div class="card" style="text-align:center">
+              <div class="emojiBig">🍦</div>
+              <p style="margin-top:8px"><b>Es krim</b></p>
+            </div>
+            <div class="card" style="text-align:center">
+              <div class="emojiBig">🧸</div>
+              <p style="margin-top:8px"><b>Mainan</b></p>
+            </div>
+            <div class="card" style="text-align:center">
+              <div class="emojiBig">🎮</div>
+              <p style="margin-top:8px"><b>Game</b></p>
+            </div>
+          </div>
+
+          <div class="hint" style="margin-top:12px">
+            Kalau keinginan belum terpenuhi, kita tetap bisa belajar dan beraktivitas seperti biasa.
+          </div>
+        `
+      },
+
+      {
+        title: "Bandingkan",
+        html: `
+          <h2>Bandingkan Yuk!</h2>
+          <p>Perhatikan dua contoh ini.</p>
+
+          <div class="grid cols2" style="margin-top:12px">
+            <div class="card">
+              <div class="kicker">Kebutuhan</div>
+              <p style="margin:8px 0 0">Membantu belajar, sehat, dan beraktivitas.</p>
+            </div>
+            <div class="card">
+              <div class="kicker">Keinginan</div>
+              <p style="margin:8px 0 0">Menyenangkan, tetapi tidak wajib dibeli dulu.</p>
+            </div>
+          </div>
+
+          <div class="card" style="margin-top:12px">
+            <p style="margin:0">Jadi, kalau uang terbatas, <b>kebutuhan didahulukan</b>.</p>
+          </div>
+        `
+      },
+
+      {
+        title: "Quiz 1",
+        html: `
+          <h2>🎯 Mana Kebutuhan?</h2>
+          <p>Klik jawaban yang termasuk kebutuhan.</p>
+
+          <div class="choices" data-quiz="qNeed1">
+            <div class="choice" data-answer="right">✏️ Pensil</div>
+            <div class="choice" data-answer="wrong">🍭 Permen</div>
+            <div class="choice" data-answer="wrong">🧸 Mainan</div>
+          </div>
+          <div class="feedback" data-quiz-feedback="qNeed1"></div>
+        `
+      },
+
+      {
+        title: "Quiz 2",
+        html: `
+          <h2>🎮 Mana Keinginan?</h2>
+          <p>Klik jawaban yang termasuk keinginan.</p>
+
+          <div class="choices" data-quiz="qWant1">
+            <div class="choice" data-answer="wrong">📘 Buku tulis</div>
+            <div class="choice" data-answer="right">🍦 Es krim</div>
+            <div class="choice" data-answer="wrong">💧 Air minum</div>
+          </div>
+          <div class="feedback" data-quiz-feedback="qWant1"></div>
+        `
+      },
+
+      {
+        title: "Cerita Rani",
+        html: `
+          <h2>Cerita Rani</h2>
+          <p>Rani punya uang Rp5.000. Ia butuh penghapus untuk sekolah. Tapi ia juga ingin membeli es krim.</p>
+
+          <div class="scenarioBox" style="margin-top:12px">
+            <div class="kicker">Pikirkan</div>
+            <p style="margin:8px 0 0">Menurutmu, apa yang sebaiknya dibeli dulu oleh Rani?</p>
+          </div>
+
+          <div class="grid cols2" style="margin-top:12px">
+            <div class="card" style="text-align:center">
+              <div class="emojiBig">🧽</div>
+              <p style="margin-top:8px"><b>Penghapus</b></p>
+            </div>
+            <div class="card" style="text-align:center">
+              <div class="emojiBig">🍦</div>
+              <p style="margin-top:8px"><b>Es krim</b></p>
+            </div>
+          </div>
+        `
+      },
+
+      {
+        title: "Quiz Rani",
+        html: `
+          <h2>📚 Bantu Rani Memilih</h2>
+          <p>Klik pilihan yang lebih baik dibeli dulu.</p>
+
+          <div class="choices" data-quiz="qRani">
+            <div class="choice" data-answer="right">🧽 Penghapus</div>
+            <div class="choice" data-answer="wrong">🍦 Es krim</div>
+          </div>
+          <div class="feedback" data-quiz-feedback="qRani"></div>
+        `
+      },
+
+      {
+        title: "Dunia digital",
+        html: `
+          <h2>Di Dunia Digital Juga Sama</h2>
+          <p>Kita juga bisa membedakan kebutuhan dan keinginan saat memakai perangkat digital.</p>
+
+          <div class="grid cols2" style="margin-top:12px">
+            <div class="card">
+              <div class="kicker">Kebutuhan digital</div>
+              <p style="margin:8px 0 0">Aplikasi belajar</p>
+              <p>Video pembelajaran</p>
+              <p>Alat untuk mengerjakan tugas</p>
+            </div>
+            <div class="card">
+              <div class="kicker">Keinginan digital</div>
+              <p style="margin:8px 0 0">Game</p>
+              <p>Stiker lucu</p>
+              <p>Filter kamera</p>
+            </div>
+          </div>
+        `
+      },
+
+      {
+        title: "Quiz digital",
+        html: `
+          <h2>📱 Mana yang Lebih Perlu?</h2>
+          <p>Kalau kamu mau belajar, mana yang lebih perlu dipakai dulu?</p>
+
+          <div class="choices" data-quiz="qDigital">
+            <div class="choice" data-answer="right">📘 Aplikasi belajar</div>
+            <div class="choice" data-answer="wrong">🎮 Game</div>
+            <div class="choice" data-answer="wrong">✨ Filter lucu</div>
+          </div>
+          <div class="feedback" data-quiz-feedback="qDigital"></div>
+        `
+      },
+
+      {
+        title: "Kenapa penting",
+        html: `
+          <h2>Mengapa Penting Dibedakan?</h2>
+          <p>Kalau kita tahu bedanya, kita bisa memakai uang dengan lebih bijak.</p>
+
+          <div class="grid cols2" style="margin-top:12px">
+            <div class="card">
+              <div class="kicker">Kalau kebutuhan didahulukan</div>
+              <p style="margin:8px 0 0">Belajar lebih lancar</p>
+              <p>Kegiatan lebih rapi</p>
+            </div>
+            <div class="card">
+              <div class="kicker">Kalau hanya ikut keinginan</div>
+              <p style="margin:8px 0 0">Uang bisa cepat habis </p>
+                          <p>Hal penting bisa terlupa</p>
+            </div>
+          </div>
+
+          <div class="hint" style="margin-top:12px">
+            Jadi, kita perlu memikirkan mana yang lebih penting dulu.
+          </div>
+        `
+      },
+
+      {
+        title: "Contoh di sekolah",
+        html: `
+          <h2>Contoh di Sekolah</h2>
+          <p>Kamu punya uang terbatas. Mana yang sebaiknya dibeli dulu?</p>
+
+          <div class="grid cols2" style="margin-top:12px">
+            <div class="card" style="text-align:center">
+              <div class="emojiBig">✏️</div>
+              <h3 style="margin-top:8px">Pensil</h3>
+              <p>Dipakai untuk belajar</p>
+            </div>
+            <div class="card" style="text-align:center">
+              <div class="emojiBig">🍭</div>
+              <h3 style="margin-top:8px">Permen</h3>
+              <p>Enak, tapi tidak wajib</p>
+            </div>
+          </div>
+
+          <div class="card" style="margin-top:12px">
+            <div class="kicker">Ingat</div>
+            <p style="margin:8px 0 0">Pensil termasuk kebutuhan. Permen termasuk keinginan.</p>
+          </div>
+        `
+      },
+
+      {
+        title: "Quiz sekolah",
+        html: `
+          <h2>📝 Pilih yang Lebih Penting</h2>
+          <p>Kamu hanya bisa membeli satu. Mana yang sebaiknya didahulukan?</p>
+
+          <div class="choices" data-quiz="qSekolah">
+            <div class="choice" data-answer="right">✏️ Pensil</div>
+            <div class="choice" data-answer="wrong">🍭 Permen</div>
+            <div class="choice" data-answer="wrong">🎈 Balon</div>
+            <div class="choice" data-answer="wrong">🎮 Mainan kecil</div>
+          </div>
+          <div class="feedback" data-quiz-feedback="qSekolah"></div>
+        `
+      },
+
+      {
+        title: "Contoh di dunia digital",
+        html: `
+          <h2>Di Dunia Digital Juga Sama</h2>
+          <p>Di dunia digital, ada yang memang dibutuhkan. Ada juga yang hanya untuk seru-seruan.</p>
+
+          <div class="grid cols2" style="margin-top:12px">
+            <div class="card">
+              <div class="kicker">📚 Kebutuhan digital</div>
+              <p style="margin:8px 0 0">Aplikasi belajar</p>
+              <p>Video pembelajaran</p>
+              <p>Alat untuk mengerjakan tugas</p>
+            </div>
+            <div class="card">
+              <div class="kicker">🎮 Keinginan digital</div>
+              <p style="margin:8px 0 0">Game</p>
+              <p>Stiker digital lucu</p>
+              <p>Filter kamera</p>
+            </div>
+          </div>
+        `
+      },
+
+      {
+        title: "Quiz digital",
+        html: `
+          <h2>📱 Ayo Pilih</h2>
+          <p>Mana yang termasuk kebutuhan di dunia digital?</p>
+
+          <div class="choices" data-quiz="qDigital">
+            <div class="choice" data-answer="wrong">Game balapan</div>
+            <div class="choice" data-answer="right">Aplikasi belajar</div>
+            <div class="choice" data-answer="wrong">Stiker chat lucu</div>
+            <div class="choice" data-answer="wrong">Filter kamera</div>
+          </div>
+          <div class="feedback" data-quiz-feedback="qDigital"></div>
+        `
+      },
+
+      {
+        title: "Latihan memilih",
+        html: `
+          <h2>🎮 Latihan Memilih</h2>
+          <p>Klik yang menurutmu termasuk <b>kebutuhan</b>.</p>
+
+          <div class="choices" data-multi-check="kebutuhan1">
+            <div class="choice" data-answer="right">📘 Buku tulis</div>
+            <div class="choice" data-answer="wrong">🧸 Mainan</div>
+            <div class="choice" data-answer="right">💧 Air minum</div>
+            <div class="choice" data-answer="wrong">🍦 Es krim tambahan</div>
+          </div>
+
+          <button class="btn primary" data-check-multi="kebutuhan1" style="margin-top:12px">Cek Jawaban</button>
+          <div class="feedback" id="multiFb1"></div>
+        `
+      },
+
+      {
+        title: "Akibat pilihan",
+        html: `
+          <h2>Setiap Pilihan Punya Akibat</h2>
+          <p>Kalau kita memilih kebutuhan lebih dulu, kegiatan kita bisa berjalan lebih lancar.</p>
+
+          <div class="grid cols2" style="margin-top:12px">
+            <div class="card">
+              <div class="kicker">✅ Pilih kebutuhan dulu</div>
+              <p style="margin:8px 0 0">Bisa belajar dengan baik</p>
+              <p>Uang dipakai untuk hal penting</p>
+            </div>
+            <div class="card">
+              <div class="kicker">⚠️ Hanya ikut keinginan</div>
+              <p style="margin:8px 0 0">Uang cepat habis</p>
+              <p>Bisa lupa membeli yang penting</p>
+            </div>
+          </div>
+        `
+      },
+
+      {
+        title: "Hubungkan dengan coding",
+        html: `
+          <h2>🤖 Hubungkan dengan Coding</h2>
+          <p>Di coding, kita juga membuat pilihan. Program bisa dibuat untuk memilih hasil yang paling tepat.</p>
+
+          <div class="card" style="margin-top:12px">
+            <div class="kicker">Contoh berpikir</div>
+            <p style="margin:8px 0 0">Kalau barang itu penting → pilih dulu</p>
+            <p>Kalau hanya tambahan → pikir dulu</p>
+          </div>
+
+          <div class="card" style="margin-top:12px">
+            <p style="margin:0">Jadi, saat belajar kebutuhan dan keinginan, kamu juga sedang belajar berpikir logis seperti saat coding.</p>
+          </div>
+        `
+      },
+
+      {
+        title: "Pilihan di ScratchJr",
+        html: `
+          <h2>ScratchJr: Pilih yang Mana?</h2>
+          <p>Kita bisa membuat cerita sederhana tentang memilih kebutuhan atau keinginan.</p>
+
+          <div class="grid cols2" style="margin-top:12px">
+            <div class="card">
+              <div class="kicker">👆 Tap</div>
+              <p style="margin:8px 0 0">Karakter bergerak saat disentuh</p>
+              <p>Cocok untuk game memilih</p>
+            </div>
+            <div class="card">
+              <div class="kicker">🚩 Green Flag</div>
+              <p style="margin:8px 0 0">Cerita langsung mulai</p>
+              <p>Cocok untuk pembuka cerita</p>
+            </div>
+          </div>
+
+          <div class="hint" style="margin-top:12px">
+            Kalau mau pemain ikut memilih, blok <b>Tap</b> biasanya lebih cocok.
+          </div>
+        `
+      },
+
+      {
+        title: "Quiz ScratchJr",
+        html: `
+          <h2>🎯 Quiz ScratchJr</h2>
+          <p>Kalau kita ingin pemain menyentuh pilihan “Kebutuhan” atau “Keinginan”, blok mana yang lebih cocok?</p>
+
+          <div class="choices" data-quiz="qScratch">
+            <div class="choice" data-answer="wrong">💬 Say</div>
+            <div class="choice" data-answer="right">👆 Tap</div>
+            <div class="choice" data-answer="wrong">➡️ Move</div>
+            <div class="choice" data-answer="wrong">🔊 Sound</div>
+          </div>
+          <div class="feedback" data-quiz-feedback="qScratch"></div>
+        `
+      },
+
+      {
+        title: "Quiz akhir",
+        html: `
+          <h2>🌟 Quiz Akhir</h2>
+          <p>Kalau uangmu terbatas, apa yang sebaiknya didahulukan?</p>
+
+          <div class="choices" data-quiz="qAkhir53">
+            <div class="choice" data-answer="wrong">Mainan baru</div>
+            <div class="choice" data-answer="wrong">Snack tambahan</div>
+            <div class="choice" data-answer="right">Kebutuhan</div>
+            <div class="choice" data-answer="wrong">Semua dibeli sekaligus</div>
+          </div>
+          <div class="feedback" data-quiz-feedback="qAkhir53"></div>
+        `
+      },
+
+      {
+        title: "Penutup",
+        html: `
+          <h2>🎉 Hebat!</h2>
+          <p>Sekarang kamu sudah belajar membedakan kebutuhan dan keinginan.</p>
+
+          <div class="card" style="margin-top:12px">
+            <div class="kicker">Yang kita pelajari hari ini</div>
+            <ul class="list" style="margin-top:10px">
+              <li>Kebutuhan adalah hal yang penting.</li>
+              <li>Keinginan adalah hal tambahan yang tidak wajib.</li>
+              <li>Kebutuhan sebaiknya didahulukan.</li>
+              <li>Cara berpikir ini membantu kita memilih dengan lebih bijak.</li>
+            </ul>
+          </div>
+
+          <div class="card" style="margin-top:12px;text-align:center">
+            <button class="btn primary" data-goto="0">🏁 Balik ke awal</button>
+          </div>
+        `
+      }
+    ];
+
+    let currentSlide = 0;
+    const contentEl = document.getElementById("content");
+    const barEl = document.getElementById("bar");
+    const countEl = document.getElementById("count");
+    const accessGate = document.getElementById("accessGate");
+    const accessInput = document.getElementById("accessInput");
+
+    function showSlide(index) {
+      if (index < 0 || index >= slides.length) return;
+      currentSlide = index;
+      const slide = slides[index];
+      contentEl.innerHTML = slide.html;
+      barEl.style.width = `${((index + 1) / slides.length) * 100}%`;
+      countEl.textContent = `${index + 1}/${slides.length}`;
+    }
+    document.getElementById("btnNext").addEventListener("click", () => showSlide(currentSlide + 1));
+    document.getElementById("btnPrev").addEventListener("click", () => showSlide(currentSlide - 1));
+    document.getElementById("btnHome").addEventListener("click", () => showSlide(0));
+    document.addEventListener("keydown", (e) => {
+      if (e.key === "ArrowRight") showSlide(currentSlide + 1);
+      else if (e.key === "ArrowLeft") showSlide(currentSlide - 1);
+    });
+    document.addEventListener("click", (e) => {
+      if (e.target.matches("[data-quiz] .choice")) {
+        const choice = e.target;
+        const quizWrap = choice.closest("[data-quiz]");
+        const quizId = quizWrap.getAttribute("data-quiz");
+        const feedbackEl = document.querySelector(`[data-quiz-feedback="${quizId}"]`);
+
+        quizWrap.querySelectorAll(".choice").forEach(item => {
+          item.classList.remove("active", "ok", "bad");
+        });
+
+        const answer = choice.getAttribute("data-answer");
+        choice.classList.add("active");
+
+        if (answer === "right") {
+          choice.classList.add("ok");
+          feedbackEl.textContent = "Benar!";
+          feedbackEl.classList.remove("fbBad");
+          feedbackEl.classList.add("fbOk", "show");
+        } else {
+          choice.classList.add("bad");
+          feedbackEl.textContent = "Coba lagi ya!";
+          feedbackEl.classList.remove("fbOk");
+          feedbackEl.classList.add("fbBad", "show");
+        }
+
+      } else if (e.target.matches("[data-multi-check] .choice")) {
+        e.target.classList.toggle("active");
+
+      } else if (e.target.matches("[data-check-multi]")) {
+        const btn = e.target;
+        const multiId = btn.getAttribute("data-check-multi");
+        const choices = document.querySelectorAll(`[data-multi-check="${multiId}"] .choice`);
+        const feedbackEl = document.getElementById(`multiFb${multiId.slice(-1)}`);
+
+        let allCorrect = true;
+        let pickedAny = false;
+
+        choices.forEach(choice => {
+          const shouldBePicked = choice.getAttribute("data-answer") === "right";
+          const isPicked = choice.classList.contains("active");
+
+          choice.classList.remove("ok", "bad");
+
+          if (isPicked) pickedAny = true;
+
+          if (isPicked && shouldBePicked) {
+            choice.classList.add("ok");
+          } else if (isPicked && !shouldBePicked) {
+            choice.classList.add("bad");
+            allCorrect = false;
+          } else if (!isPicked && shouldBePicked) {
+            allCorrect = false;
+          }
+        });
+
+        if (!pickedAny) {
+          feedbackEl.textContent = "Pilih dulu jawabanmu ya!";
+          feedbackEl.classList.remove("fbOk");
+          feedbackEl.classList.add("fbBad", "show");
+        } else if (allCorrect) {
+          feedbackEl.textContent = "Hebat! Jawabanmu benar.";
+          feedbackEl.classList.remove("fbBad");
+          feedbackEl.classList.add("fbOk", "show");
+        } else {
+          feedbackEl.textContent = "Masih ada yang belum tepat. Coba lagi ya!";
+          feedbackEl.classList.remove("fbOk");
+          feedbackEl.classList.add("fbBad", "show");
+        }
+
+      } else if (e.target.matches("[data-goto]")) {
+        const index = parseInt(e.target.getAttribute("data-goto"), 10);
+        showSlide(index);
+      }
+    });
+
+    document.getElementById("accessBtn").addEventListener("click", () => {
+      const code = accessInput.value.trim().toUpperCase();
+      const feedbackEl = document.getElementById("accessFb");
+      if (code === ACCESS_CODE) {
+        accessGate.style.display = "none";
+        showSlide(0);
+      } else {
+        feedbackEl.textContent = "Kode salah, coba lagi!";
+        feedbackEl.classList.add("fbBad", "show");
+      }
+    });
+
+    accessInput.addEventListener("input", () => {
+      accessInput.value = accessInput.value.toUpperCase();
+    });
+    accessInput.addEventListener("keydown", (e) => {
+      if (e.key === "Enter") {
+        document.getElementById("accessBtn").click();
+      }
+    });
+
+    showSlide(0);
+  </script>
+</body>
+
+</html>
