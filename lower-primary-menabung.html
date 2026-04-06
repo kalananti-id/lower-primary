@@ -1,0 +1,893 @@
+<!doctype html>
+<html lang="id">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>UOB MDS – Lower Primary – Menyusun Prioritas</title>
+  <style>
+    :root {
+      --bg1: #F7FAFF;
+      --bg2: #F3F6FF;
+      --ink: #0F172A;
+      --muted: #475569;
+      --line: rgba(226, 232, 240, .95);
+      --brand: #4F46E5;
+      --brand2: #06B6D4;
+      --ok: #16A34A;
+      --bad: #DC2626;
+      --radius: 22px;
+      --shadow: 0 18px 40px rgba(15, 23, 42, .08);
+      --shadow2: 0 10px 22px rgba(15, 23, 42, .06);
+      --focus: 0 0 0 4px rgba(79, 70, 229, .18);
+      --mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+      --sans: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, "Apple Color Emoji", "Segoe UI Emoji";
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      font-family: var(--sans);
+      color: var(--ink);
+      background:
+        radial-gradient(1200px 520px at 10% 0%, rgba(6, 182, 212, .18), transparent 60%),
+        radial-gradient(1200px 520px at 90% 0%, rgba(79, 70, 229, .16), transparent 55%),
+        linear-gradient(180deg, var(--bg1), var(--bg2) 45%, var(--bg1));
+      min-height: 100vh;
+    }
+
+    .app {
+      width: min(1100px, 96vw);
+      margin: 18px auto 26px;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .topbar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      padding: 12px 14px;
+      border: 1px solid var(--line);
+      border-radius: 18px;
+      background: rgba(255, 255, 255, .72);
+      backdrop-filter: blur(10px);
+      box-shadow: var(--shadow2);
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .logo {
+      width: 38px;
+      height: 38px;
+      border-radius: 14px;
+      background: linear-gradient(135deg, rgba(79, 70, 229, .18), rgba(6, 182, 212, .20));
+      border: 1px solid rgba(226, 232, 240, .9);
+      display: grid;
+      place-items: center;
+      font-weight: 1000;
+      color: rgba(79, 70, 229, 1);
+    }
+
+    .brand h1 {
+      margin: 0;
+      font-size: 14px;
+      line-height: 1.15;
+      letter-spacing: .2px;
+    }
+
+    .brand .sub {
+      font-size: 12px;
+      color: var(--muted);
+      font-weight: 800;
+      margin-top: 2px;
+    }
+
+    .controls {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+
+    .btn {
+      border: 1px solid rgba(226, 232, 240, .95);
+      background: rgba(255, 255, 255, .9);
+      padding: 10px 12px;
+      border-radius: 16px;
+      font-weight: 1000;
+      cursor: pointer;
+      box-shadow: 0 8px 16px rgba(15, 23, 42, .06);
+      transition: transform .06s ease, box-shadow .12s ease, background .12s ease;
+      user-select: none;
+    }
+
+    .btn:hover { transform: translateY(-1px); }
+    .btn:active { transform: translateY(0); }
+
+    .btn.primary {
+      background: linear-gradient(135deg, rgba(79, 70, 229, .12), rgba(6, 182, 212, .14));
+      border-color: rgba(79, 70, 229, .18);
+    }
+
+    .btn.ghost {
+      background: transparent;
+      box-shadow: none;
+    }
+
+    .btn:focus {
+      outline: none;
+      box-shadow: var(--focus);
+    }
+
+    .progressWrap {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      min-width: 260px;
+      justify-content: flex-end;
+    }
+
+    .progress {
+      width: 180px;
+      height: 10px;
+      background: rgba(226, 232, 240, .9);
+      border-radius: 999px;
+      overflow: hidden;
+      border: 1px solid rgba(226, 232, 240, .95);
+    }
+
+    .bar {
+      height: 100%;
+      width: 0%;
+      background: linear-gradient(90deg, rgba(79, 70, 229, .85), rgba(6, 182, 212, .85));
+      border-radius: 999px;
+      transition: width .25s ease;
+    }
+
+    .count {
+      font-family: var(--mono);
+      font-size: 12px;
+      color: var(--muted);
+      font-weight: 900;
+    }
+
+    .stage {
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      background: rgba(255, 255, 255, .60);
+      box-shadow: var(--shadow);
+      padding: 14px;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      min-height: calc(100vh - 145px);
+    }
+
+    .slide {
+      flex: 1;
+      background: rgba(255, 255, 255, .68);
+      border: 1px solid rgba(229, 234, 245, .95);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow2);
+      padding: 20px;
+      overflow: hidden;
+      backdrop-filter: blur(8px);
+    }
+
+    .slideInner {
+      max-width: 980px;
+      margin: 0 auto;
+      max-height: calc(100vh - 190px);
+      overflow-y: auto;
+      padding-right: 8px;
+    }
+
+    .slideInner::-webkit-scrollbar { width: 10px; }
+    .slideInner::-webkit-scrollbar-thumb {
+      background: rgba(96, 112, 153, .25);
+      border-radius: 999px;
+      border: 3px solid rgba(255, 255, 255, .9);
+    }
+
+    h2 {
+      margin: 6px 0 10px;
+      font-size: 30px;
+      letter-spacing: -.3px;
+    }
+
+    h3 {
+      margin: 0 0 8px;
+      font-size: 18px;
+    }
+
+    p {
+      margin: 0 0 10px;
+      color: var(--muted);
+      font-weight: 800;
+      line-height: 1.55;
+    }
+
+    .kicker {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      font-weight: 1000;
+      font-size: 12px;
+      letter-spacing: .2px;
+      padding: 7px 10px;
+      border-radius: 999px;
+      border: 1px solid rgba(79, 70, 229, .16);
+      background: rgba(79, 70, 229, .06);
+      color: rgba(55, 65, 81, .95);
+    }
+
+    .grid {
+      display: grid;
+      gap: 14px;
+    }
+
+    .cols2 { grid-template-columns: 1fr 1fr; }
+    .cols3 { grid-template-columns: repeat(3, 1fr); }
+
+    @media (max-width: 860px) {
+      .cols2, .cols3 { grid-template-columns: 1fr; }
+      .progressWrap { min-width: unset; }
+      .progress { width: 130px; }
+      h2 { font-size: 26px; }
+    }
+
+    .card {
+      background: rgba(255, 255, 255, .92);
+      border: 1px solid rgba(226, 232, 240, .95);
+      border-radius: 22px;
+      padding: 14px;
+      box-shadow: 0 10px 18px rgba(15, 23, 42, .06);
+    }
+
+    .hint {
+      background: rgba(6, 182, 212, .10);
+      border: 1px dashed rgba(6, 182, 212, .35);
+      border-radius: 18px;
+      padding: 12px 14px;
+      color: rgba(30, 41, 59, .92);
+      font-weight: 900;
+      line-height: 1.5;
+    }
+
+    ul.list {
+      margin: 8px 0 0 18px;
+      color: var(--muted);
+      font-weight: 850;
+      line-height: 1.55;
+    }
+
+    .choices {
+      display: grid;
+      gap: 10px;
+      margin-top: 10px;
+    }
+
+    .choice {
+      border: 1px solid rgba(226, 232, 240, .95);
+      border-radius: 18px;
+      padding: 12px 14px;
+      background: rgba(255, 255, 255, .96);
+      font-weight: 950;
+      color: rgba(30, 41, 59, .96);
+      cursor: pointer;
+      user-select: none;
+      transition: transform .06s ease, border-color .12s ease, background .12s ease;
+    }
+
+    .choice:hover { transform: translateY(-1px); }
+    .choice.active {
+      border-color: rgba(79, 70, 229, .35);
+      background: rgba(79, 70, 229, .06);
+    }
+    .choice.ok {
+      border-color: rgba(22, 163, 74, .35);
+      background: rgba(22, 163, 74, .08);
+    }
+    .choice.bad {
+      border-color: rgba(220, 38, 38, .35);
+      background: rgba(220, 38, 38, .08);
+    }
+
+    .feedback {
+      display: none;
+      margin-top: 10px;
+      border-radius: 18px;
+      padding: 12px 14px;
+      border: 1px solid rgba(226, 232, 240, .95);
+      background: rgba(255, 255, 255, .92);
+      color: var(--muted);
+      font-weight: 900;
+      line-height: 1.5;
+    }
+
+    .feedback.show { display: block; }
+    .fbOk {
+      border-color: rgba(22, 163, 74, .35);
+      background: rgba(22, 163, 74, .08);
+      color: rgba(15, 23, 42, .92);
+    }
+    .fbBad {
+      border-color: rgba(220, 38, 38, .35);
+      background: rgba(220, 38, 38, .08);
+      color: rgba(15, 23, 42, .92);
+    }
+
+    .input {
+      width: 100%;
+      border: 1px solid rgba(226, 232, 240, .95);
+      background: rgba(255, 255, 255, .96);
+      border-radius: 16px;
+      padding: 12px 14px;
+      font-weight: 950;
+      color: rgba(30, 41, 59, .96);
+    }
+
+    .emojiBig {
+      font-size: 58px;
+      line-height: 1;
+    }
+
+    .pill {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-width: 92px;
+      padding: 8px 12px;
+      border-radius: 999px;
+      background: linear-gradient(135deg, rgba(79, 70, 229, .10), rgba(6, 182, 212, .10));
+      border: 1px solid rgba(79, 70, 229, .16);
+      font-weight: 1000;
+      color: #3730a3;
+    }
+
+    .scenarioBox {
+      border: 1px dashed rgba(79, 70, 229, .30);
+      border-radius: 22px;
+      padding: 16px;
+      background: linear-gradient(180deg, rgba(79, 70, 229, .05), rgba(6, 182, 212, .05));
+    }
+
+    .sortWrap {
+      display: grid;
+      gap: 10px;
+      margin-top: 10px;
+    }
+
+    .sortItem {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      border: 1px solid rgba(226, 232, 240, .95);
+      border-radius: 18px;
+      padding: 12px 14px;
+      background: rgba(255,255,255,.96);
+      font-weight: 950;
+    }
+
+    .sortNum {
+      width: 34px;
+      height: 34px;
+      display: grid;
+      place-items: center;
+      border-radius: 999px;
+      background: rgba(79,70,229,.10);
+      color: #3730a3;
+      font-weight: 1000;
+      flex: 0 0 auto;
+    }
+
+    .miniBtns {
+      display: flex;
+      gap: 6px;
+      margin-left: auto;
+    }
+
+    .miniBtn {
+      border: 1px solid rgba(226,232,240,.95);
+      background: white;
+      border-radius: 12px;
+      padding: 6px 10px;
+      cursor: pointer;
+      font-weight: 1000;
+    }
+  </style>
+</head>
+<body>
+  <div id="accessGate" style="position:fixed; inset:0; background:linear-gradient(135deg,#eef2ff,#ecfeff); display:flex; align-items:center; justify-content:center; z-index:9999;">
+    <div class="card" style="max-width:420px;width:92%;text-align:center">
+      <h2>🔐 Kode Akses</h2>
+      <p>Masukkan kode untuk memulai sesi.</p>
+      <input id="accessInput" class="input" placeholder="MASUKKAN KODE" autocomplete="off" style="text-align:center;font-weight:900;letter-spacing:2px" />
+      <button class="btn primary" id="accessBtn" style="margin-top:12px">Masuk</button>
+      <div class="feedback" id="accessFb" style="margin-top:10px"></div>
+      <div class="card" style="margin-top:10px;background:rgba(79,70,229,.05)">
+        <p style="margin:0">Kode diberikan oleh guru.</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="app">
+    <div class="topbar">
+      <div class="brand">
+        <div class="logo">LP</div>
+        <div>
+          <h1>Lower Primary</h1>
+          <div class="sub">Menyusun Prioritas</div>
+        </div>
+      </div>
+
+      <div class="controls">
+        <button class="btn ghost" id="btnHome" title="Kembali ke awal">🏠 Awal</button>
+        <button class="btn" id="btnPrev" title="Sebelumnya (←)">←</button>
+        <button class="btn primary" id="btnNext" title="Berikutnya (→)">→</button>
+      </div>
+
+      <div class="progressWrap">
+        <div class="progress" aria-label="Progress">
+          <div class="bar" id="bar"></div>
+        </div>
+        <div class="count" id="count">1/1</div>
+      </div>
+    </div>
+
+    <div class="stage">
+      <div class="slide" role="region" aria-label="Slide">
+        <div class="slideInner" id="content"></div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const ACCESS_CODE = "RGMDSLP25";
+
+    const slides = [
+      <!-- TAMBAHKAN DI ARRAY slides -->
+
+{
+  title: "Pembuka 5.5",
+  html: `
+    <h2>💰 Menabung Itu Penting</h2>
+    <p>Hari ini kita belajar bahwa uang tidak harus habis hari ini.</p>
+
+    <div class="grid cols2" style="margin-top:12px">
+      <div class="card" style="text-align:center">
+        <div class="emojiBig">💸</div>
+        <p style="margin-top:8px">Uang jajan</p>
+      </div>
+      <div class="card" style="text-align:center">
+        <div class="emojiBig">🐷</div>
+        <p style="margin-top:8px">Celengan</p>
+      </div>
+    </div>
+
+    <div class="hint" style="margin-top:12px">
+      Tidak semua uang harus dihabiskan. Kita bisa menyimpannya.
+    </div>
+  `
+},
+
+{
+  title: "Apa itu menabung",
+  html: `
+    <h2>Apa Itu Menabung?</h2>
+    <p>Menabung adalah menyisihkan sebagian uang untuk digunakan nanti.</p>
+
+    <div class="card" style="margin-top:12px">
+      <p style="margin:0">Kita tidak menghabiskan semua uang sekaligus.</p>
+    </div>
+
+    <div class="card" style="margin-top:12px">
+      <div class="kicker">Contoh</div>
+      <p style="margin:8px 0 0">Simpan sedikit demi sedikit setiap hari.</p>
+    </div>
+  `
+},
+
+{
+  title: "Quiz menabung",
+  html: `
+    <h2>🎯 Coba Pilih</h2>
+    <p>Mana yang menunjukkan menabung?</p>
+
+    <div class="choices" data-quiz="qTabung1">
+      <div class="choice" data-answer="wrong">Menghabiskan semua uang</div>
+      <div class="choice" data-answer="right">Menyimpan sebagian uang</div>
+      <div class="choice" data-answer="wrong">Meminjam uang</div>
+      <div class="choice" data-answer="wrong">Memberi uang ke teman</div>
+    </div>
+    <div class="feedback" data-quiz-feedback="qTabung1"></div>
+  `
+},
+
+{
+  title: "Cerita Bayu",
+  html: `
+    <h2>Cerita Bayu</h2>
+    <p>Bayu ingin membeli kotak pensil Rp20.000.</p>
+
+    <div class="scenarioBox" style="margin-top:12px">
+      <p style="margin:0">Setiap hari Bayu punya uang Rp5.000.</p>
+      <p style="margin:8px 0 0">Kalau dihabiskan terus, Bayu tidak bisa membeli pensil.</p>
+    </div>
+
+    <div class="hint" style="margin-top:12px">
+      Jadi, Bayu harus mulai menabung.
+    </div>
+  `
+},
+
+{
+  title: "Kenapa menabung",
+  html: `
+    <h2>Mengapa Kita Menabung?</h2>
+
+    <div class="grid cols2" style="margin-top:12px">
+      <div class="card">
+        <div class="kicker">Tujuan</div>
+        <p style="margin:8px 0 0">Bisa membeli barang yang diinginkan</p>
+      </div>
+      <div class="card">
+        <div class="kicker">Kebiasaan baik</div>
+        <p style="margin:8px 0 0">Belajar sabar dan tidak boros</p>
+      </div>
+    </div>
+  `
+},
+
+{
+  title: "Cara menabung",
+  html: `
+    <h2>Cara Menabung</h2>
+
+    <div class="grid cols3" style="margin-top:12px">
+      <div class="card" style="text-align:center">
+        <div class="emojiBig">🐷</div>
+        <p>Celengan</p>
+      </div>
+      <div class="card" style="text-align:center">
+        <div class="emojiBig">🏦</div>
+        <p>Bank</p>
+      </div>
+      <div class="card" style="text-align:center">
+        <div class="emojiBig">📱</div>
+        <p>Digital</p>
+      </div>
+    </div>
+
+    <div class="hint" style="margin-top:12px">
+      Pilih cara yang aman dan dibantu orang tua.
+    </div>
+  `
+},
+
+{
+  title: "Simulasi uang",
+  html: `
+    <h2>🧩 Simulasi</h2>
+    <p>Kamu punya Rp5.000. Mau bagaimana?</p>
+
+    <div class="choices" data-quiz="qSimulasi">
+      <div class="choice" data-answer="wrong">Habiskan semua</div>
+      <div class="choice" data-answer="right">Sebagian ditabung</div>
+      <div class="choice" data-answer="wrong">Dibuang</div>
+      <div class="choice" data-answer="wrong">Dipinjamkan</div>
+    </div>
+    <div class="feedback" data-quiz-feedback="qSimulasi"></div>
+  `
+},
+
+{
+  title: "Menyisihkan uang",
+  html: `
+    <h2>Menyisihkan Uang</h2>
+    <p>Kita tidak harus menabung semua uang.</p>
+
+    <div class="card" style="margin-top:12px">
+      <p style="margin:0">Contoh:</p>
+      <p>Rp5.000 → Rp2.000 ditabung</p>
+      <p>Rp3.000 untuk jajan</p>
+    </div>
+  `
+},
+
+{
+  title: "Quiz jumlah",
+  html: `
+    <h2>🧠 Hitung</h2>
+    <p>Kalau kamu menabung Rp2.000 dari Rp5.000, sisanya untuk jajan berapa?</p>
+
+    <div class="choices" data-quiz="qHitung">
+      <div class="choice" data-answer="wrong">Rp1.000</div>
+      <div class="choice" data-answer="right">Rp3.000</div>
+      <div class="choice" data-answer="wrong">Rp2.000</div>
+      <div class="choice" data-answer="wrong">Rp5.000</div>
+    </div>
+    <div class="feedback" data-quiz-feedback="qHitung"></div>
+  `
+},
+
+{
+  title: "Cerita Salsa",
+  html: `
+    <h2>Cerita Salsa</h2>
+    <p>Salsa ingin membeli botol minum Rp30.000.</p>
+
+    <div class="card" style="margin-top:12px">
+      <p style="margin:0">Ia menabung Rp3.000 setiap hari.</p>
+      <p>Setelah beberapa hari, uangnya cukup.</p>
+    </div>
+
+    <div class="hint" style="margin-top:12px">
+      Menabung membantu mencapai tujuan.
+    </div>
+  `
+},
+
+{
+  title: "Quiz Salsa",
+  html: `
+    <h2>🎯 Pilih Jawaban</h2>
+    <p>Kenapa Salsa bisa membeli barangnya?</p>
+
+    <div class="choices" data-quiz="qSalsa">
+      <div class="choice" data-answer="wrong">Karena meminjam</div>
+      <div class="choice" data-answer="right">Karena menabung</div>
+      <div class="choice" data-answer="wrong">Karena diberi teman</div>
+      <div class="choice" data-answer="wrong">Karena gratis</div>
+    </div>
+    <div class="feedback" data-quiz-feedback="qSalsa"></div>
+  `
+},
+
+{
+  title: "Digital",
+  html: `
+    <h2>📱 Menabung di Dunia Digital</h2>
+    <p>Kita bisa mencatat tabungan di aplikasi.</p>
+
+    <div class="card" style="margin-top:12px">
+      <p style="margin:0">Tetap harus hati-hati dan didampingi orang tua.</p>
+    </div>
+  `
+},
+
+{
+  title: "Hubungkan coding",
+  html: `
+    <h2>🤖 Hubungkan dengan Coding</h2>
+    <p>Menabung seperti membuat langkah-langkah.</p>
+
+    <div class="card" style="margin-top:12px">
+      <p style="margin:0">Tujuan → Menabung → Hasil</p>
+    </div>
+  `
+},
+
+{
+  title: "Quiz akhir",
+  html: `
+    <h2>🌟 Quiz Akhir</h2>
+    <p>Apa manfaat menabung?</p>
+
+    <div class="choices" data-quiz="qFinal55">
+      <div class="choice" data-answer="wrong">Uang cepat habis</div>
+      <div class="choice" data-answer="right">Membantu mencapai tujuan</div>
+      <div class="choice" data-answer="wrong">Tidak perlu memilih</div>
+      <div class="choice" data-answer="wrong">Selalu membeli semua</div>
+    </div>
+    <div class="feedback" data-quiz-feedback="qFinal55"></div>
+  `
+},
+
+{
+  title: "Penutup",
+  html: `
+    <h2>🎉 Hebat!</h2>
+
+    <div class="card">
+      <ul class="list">
+        <li>Menabung berarti menyimpan uang</li>
+        <li>Uang tidak harus habis</li>
+        <li>Menabung membantu mencapai tujuan</li>
+      </ul>
+    </div>
+
+    <div class="card" style="margin-top:12px;text-align:center">
+      <button class="btn primary" data-goto="0">🏁 Ulangi</button>
+    </div>
+  `
+}
+    ];
+
+    let currentSlide = 0;
+    const contentEl = document.getElementById("content");
+    const barEl = document.getElementById("bar");
+    const countEl = document.getElementById("count");
+    const accessGate = document.getElementById("accessGate");
+    const accessInput = document.getElementById("accessInput");
+
+    const sortStates = {
+      sort1: ["🍭 Permen", "✏️ Pensil", "🎈 Balon"]
+    };
+
+    function clamp(n, min, max) {
+      return Math.max(min, Math.min(max, n));
+    }
+
+    function getQuizMsg(id, ok) {
+      const msgs = {
+        qIntro: {
+          ok: "✅ Betul! Pensil lebih penting untuk belajar.",
+          bad: "⚠️ Coba lagi ya. Pilih yang paling dibutuhkan dulu."
+        },
+        qRani54: {
+          ok: "✅ Betul! Rani sebaiknya membeli pensil terlebih dahulu.",
+          bad: "⚠️ Coba lagi ya. Rani butuh barang untuk belajar."
+        },
+        qLangkah: {
+          ok: "✅ Benar! Langkah pertama adalah melihat jumlah uang yang dimiliki.",
+          bad: "⚠️ Belum tepat. Sebelum memilih, kita lihat dulu uang yang kita punya."
+        },
+        qAkibat: {
+          ok: "✅ Betul! Kalau uang habis untuk keinginan dulu, hal penting bisa tidak terbeli.",
+          bad: "⚠️ Coba lagi ya. Ingat, uang yang habis bisa membuat kita tidak membeli yang penting."
+        },
+        qDigital54: {
+          ok: "✅ Benar! Aplikasi belajar adalah prioritas di dunia digital.",
+          bad: "⚠️ Coba lagi. Pilih yang membantu belajar dulu."
+        },
+        qScratch54: {
+          ok: "✅ Betul! Tap cocok untuk pilihan yang disentuh pemain.",
+          bad: "⚠️ Belum tepat. Kita butuh blok yang aktif saat pemain menyentuh pilihan."
+        },
+        qFinal54: {
+          ok: "✅ Hebat! Kalau uang terbatas, pilih yang paling penting terlebih dahulu.",
+          bad: "⚠️ Coba lagi ya. Prioritas berarti memilih yang paling penting dulu."
+        }
+      };
+      const m = msgs[id];
+      if (!m) return ok ? "✅ Benar!" : "⚠️ Coba lagi.";
+      return ok ? m.ok : m.bad;
+    }
+
+    function renderSort(id) {
+      const wrap = contentEl.querySelector(`[data-sort="${id}"]`);
+      if (!wrap) return;
+      const arr = sortStates[id];
+      wrap.innerHTML = arr.map((item, index) => `
+        <div class="sortItem">
+          <div class="sortNum">${index + 1}</div>
+          <span>${item}</span>
+          <div class="miniBtns">
+            <button class="miniBtn" data-up="${index}">↑</button>
+            <button class="miniBtn" data-down="${index}">↓</button>
+          </div>
+        </div>
+      `).join("");
+    }
+
+    function showSlide(index) {
+      if (index < 0 || index >= slides.length) return;
+      currentSlide = index;
+      const slide = slides[index];
+      contentEl.innerHTML = slide.html;
+      barEl.style.width = `${((index + 1) / slides.length) * 100}%`;
+      countEl.textContent = `${index + 1}/${slides.length}`;
+
+      if (contentEl.querySelector('[data-sort="sort1"]')) {
+        renderSort("sort1");
+      }
+    }
+
+    document.getElementById("btnNext").addEventListener("click", () => showSlide(currentSlide + 1));
+    document.getElementById("btnPrev").addEventListener("click", () => showSlide(currentSlide - 1));
+    document.getElementById("btnHome").addEventListener("click", () => showSlide(0));
+
+    document.addEventListener("keydown", (e) => {
+      if (e.key === "ArrowRight") showSlide(currentSlide + 1);
+      else if (e.key === "ArrowLeft") showSlide(currentSlide - 1);
+    });
+
+    document.addEventListener("click", (e) => {
+      if (e.target.matches("[data-quiz] .choice")) {
+        const choice = e.target;
+        const quizWrap = choice.closest("[data-quiz]");
+        const quizId = quizWrap.getAttribute("data-quiz");
+        const feedbackEl = document.querySelector(`[data-quiz-feedback="${quizId}"]`);
+
+        quizWrap.querySelectorAll(".choice").forEach(item => {
+          item.classList.remove("active", "ok", "bad");
+        });
+
+        const answer = choice.getAttribute("data-answer");
+        choice.classList.add("active");
+
+        if (answer === "right") {
+          choice.classList.add("ok");
+          feedbackEl.textContent = getQuizMsg(quizId, true);
+          feedbackEl.classList.remove("fbBad");
+          feedbackEl.classList.add("fbOk", "show");
+        } else {
+          choice.classList.add("bad");
+          feedbackEl.textContent = getQuizMsg(quizId, false);
+          feedbackEl.classList.remove("fbOk");
+          feedbackEl.classList.add("fbBad", "show");
+        }
+
+      } else if (e.target.matches("[data-up], [data-down]")) {
+        const sortWrap = e.target.closest('[data-sort]');
+        const id = sortWrap.getAttribute("data-sort");
+        const index = Number(e.target.getAttribute(e.target.hasAttribute("data-up") ? "data-up" : "data-down"));
+        const arr = sortStates[id];
+
+        if (e.target.hasAttribute("data-up") && index > 0) {
+          [arr[index - 1], arr[index]] = [arr[index], arr[index - 1]];
+        }
+        if (e.target.hasAttribute("data-down") && index < arr.length - 1) {
+          [arr[index + 1], arr[index]] = [arr[index], arr[index + 1]];
+        }
+
+        renderSort(id);
+
+      } else if (e.target.matches("[data-check-sort]")) {
+        const id = e.target.getAttribute("data-check-sort");
+        const fb = document.getElementById("sortFb1");
+        const correct = ["✏️ Pensil", "🍭 Permen", "🎈 Balon"];
+        const current = sortStates[id];
+
+        const isCorrect = current.every((item, idx) => item === correct[idx]);
+
+        if (isCorrect) {
+          fb.textContent = "✅ Hebat! Yang paling penting didahulukan dulu.";
+          fb.classList.remove("fbBad");
+          fb.classList.add("fbOk", "show");
+        } else {
+          fb.textContent = "⚠️ Coba lagi ya. Pikirkan mana yang paling dibutuhkan dulu.";
+          fb.classList.remove("fbOk");
+          fb.classList.add("fbBad", "show");
+        }
+
+      } else if (e.target.matches("[data-goto]")) {
+        const index = parseInt(e.target.getAttribute("data-goto"), 10);
+        showSlide(index);
+      }
+    });
+
+    document.getElementById("accessBtn").addEventListener("click", () => {
+      const code = accessInput.value.trim().toUpperCase();
+      const feedbackEl = document.getElementById("accessFb");
+      if (code === ACCESS_CODE) {
+        accessGate.style.display = "none";
+        showSlide(0);
+      } else {
+        feedbackEl.textContent = "Kode salah, coba lagi!";
+        feedbackEl.classList.add("fbBad", "show");
+      }
+    });
+
+    accessInput.addEventListener("input", () => {
+      accessInput.value = accessInput.value.toUpperCase();
+    });
+
+    accessInput.addEventListener("keydown", (e) => {
+      if (e.key === "Enter") {
+        document.getElementById("accessBtn").click();
+      }
+    });
+
+    showSlide(0);
+  </script>
+</body>
+</html>
