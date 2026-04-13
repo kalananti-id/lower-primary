@@ -1,0 +1,1388 @@
+<!doctype html>
+<html lang="id">
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>UOB MDS – Lower Primary – Animasi: Menabung dengan Logika Kode</title>
+    <style>
+        :root {
+            --bg1: #F7FAFF;
+            --bg2: #F3F6FF;
+            --ink: #0F172A;
+            --muted: #475569;
+            --line: rgba(226, 232, 240, .95);
+            --brand: #4F46E5;
+            --brand2: #06B6D4;
+            --ok: #16A34A;
+            --bad: #DC2626;
+            --warn: #F59E0B;
+            --radius: 22px;
+            --shadow: 0 18px 40px rgba(15, 23, 42, .08);
+            --shadow2: 0 10px 22px rgba(15, 23, 42, .06);
+            --focus: 0 0 0 4px rgba(79, 70, 229, .18);
+            --mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+            --sans: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, "Apple Color Emoji", "Segoe UI Emoji";
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            font-family: var(--sans);
+            color: var(--ink);
+            background:
+                radial-gradient(1200px 520px at 10% 0%, rgba(6, 182, 212, .18), transparent 60%),
+                radial-gradient(1200px 520px at 90% 0%, rgba(79, 70, 229, .16), transparent 55%),
+                linear-gradient(180deg, var(--bg1), var(--bg2) 45%, var(--bg1));
+            min-height: 100vh;
+        }
+
+        .app {
+            width: min(1100px, 96vw);
+            margin: 18px auto 26px;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .topbar {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 10px;
+            padding: 12px 14px;
+            border: 1px solid var(--line);
+            border-radius: 18px;
+            background: rgba(255, 255, 255, .72);
+            backdrop-filter: blur(10px);
+            box-shadow: var(--shadow2);
+        }
+
+        .brand {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .logo {
+            width: 38px;
+            height: 38px;
+            border-radius: 14px;
+            background: linear-gradient(135deg, rgba(79, 70, 229, .18), rgba(6, 182, 212, .20));
+            border: 1px solid rgba(226, 232, 240, .9);
+            display: grid;
+            place-items: center;
+            font-weight: 1000;
+            color: rgba(79, 70, 229, 1);
+        }
+
+        .brand h1 {
+            margin: 0;
+            font-size: 14px;
+            line-height: 1.15;
+            letter-spacing: .2px;
+        }
+
+        .brand .sub {
+            font-size: 12px;
+            color: var(--muted);
+            font-weight: 800;
+            margin-top: 2px;
+        }
+
+        .controls {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+
+        .btn {
+            border: 1px solid rgba(226, 232, 240, .95);
+            background: rgba(255, 255, 255, .9);
+            padding: 10px 12px;
+            border-radius: 16px;
+            font-weight: 1000;
+            cursor: pointer;
+            box-shadow: 0 8px 16px rgba(15, 23, 42, .06);
+            transition: transform .06s ease, box-shadow .12s ease, background .12s ease;
+            user-select: none;
+        }
+
+        .btn:hover {
+            transform: translateY(-1px);
+        }
+
+        .btn:active {
+            transform: translateY(0);
+        }
+
+        .btn.primary {
+            background: linear-gradient(135deg, rgba(79, 70, 229, .12), rgba(6, 182, 212, .14));
+            border-color: rgba(79, 70, 229, .18);
+        }
+
+        .btn.ghost {
+            background: transparent;
+            box-shadow: none;
+        }
+
+        .btn:focus {
+            outline: none;
+            box-shadow: var(--focus);
+        }
+
+        .progressWrap {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            min-width: 260px;
+            justify-content: flex-end;
+        }
+
+        .progress {
+            width: 180px;
+            height: 10px;
+            background: rgba(226, 232, 240, .9);
+            border-radius: 999px;
+            overflow: hidden;
+            border: 1px solid rgba(226, 232, 240, .95);
+        }
+
+        .bar {
+            height: 100%;
+            width: 0%;
+            background: linear-gradient(90deg, rgba(79, 70, 229, .85), rgba(6, 182, 212, .85));
+            border-radius: 999px;
+            transition: width .25s ease;
+        }
+
+        .count {
+            font-family: var(--mono);
+            font-size: 12px;
+            color: var(--muted);
+            font-weight: 900;
+        }
+
+        .stage {
+            border: 1px solid var(--line);
+            border-radius: var(--radius);
+            background: rgba(255, 255, 255, .60);
+            box-shadow: var(--shadow);
+            padding: 14px;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            min-height: calc(100vh - 145px);
+        }
+
+        .slide {
+            flex: 1;
+            background: rgba(255, 255, 255, .68);
+            border: 1px solid rgba(229, 234, 245, .95);
+            border-radius: var(--radius);
+            box-shadow: var(--shadow2);
+            padding: 20px;
+            overflow: hidden;
+            backdrop-filter: blur(8px);
+        }
+
+        .slideInner {
+            max-width: 980px;
+            margin: 0 auto;
+            max-height: calc(100vh - 190px);
+            overflow-y: auto;
+            padding-right: 8px;
+        }
+
+        .slideInner::-webkit-scrollbar {
+            width: 10px;
+        }
+
+        .slideInner::-webkit-scrollbar-thumb {
+            background: rgba(96, 112, 153, .25);
+            border-radius: 999px;
+            border: 3px solid rgba(255, 255, 255, .9);
+        }
+
+        h2 {
+            margin: 6px 0 10px;
+            font-size: 30px;
+            letter-spacing: -.3px;
+        }
+
+        h3 {
+            margin: 0 0 8px;
+            font-size: 18px;
+        }
+
+        p {
+            margin: 0 0 10px;
+            color: var(--muted);
+            font-weight: 800;
+            line-height: 1.55;
+        }
+
+        .kicker {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            font-weight: 1000;
+            font-size: 12px;
+            letter-spacing: .2px;
+            padding: 7px 10px;
+            border-radius: 999px;
+            border: 1px solid rgba(79, 70, 229, .16);
+            background: rgba(79, 70, 229, .06);
+            color: rgba(55, 65, 81, .95);
+        }
+
+        .grid {
+            display: grid;
+            gap: 14px;
+        }
+
+        .cols2 {
+            grid-template-columns: 1fr 1fr;
+        }
+
+        .cols3 {
+            grid-template-columns: repeat(3, 1fr);
+        }
+
+        @media (max-width: 860px) {
+
+            .cols2,
+            .cols3 {
+                grid-template-columns: 1fr;
+            }
+
+            .progressWrap {
+                min-width: unset;
+            }
+
+            .progress {
+                width: 130px;
+            }
+
+            h2 {
+                font-size: 26px;
+            }
+        }
+
+        .card {
+            background: rgba(255, 255, 255, .92);
+            border: 1px solid rgba(226, 232, 240, .95);
+            border-radius: 22px;
+            padding: 14px;
+            box-shadow: 0 10px 18px rgba(15, 23, 42, .06);
+        }
+
+        .hint {
+            background: rgba(6, 182, 212, .10);
+            border: 1px dashed rgba(6, 182, 212, .35);
+            border-radius: 18px;
+            padding: 12px 14px;
+            color: rgba(30, 41, 59, .92);
+            font-weight: 900;
+            line-height: 1.5;
+        }
+
+        .warnBox {
+            background: rgba(245, 158, 11, .10);
+            border: 1px dashed rgba(245, 158, 11, .35);
+            border-radius: 18px;
+            padding: 12px 14px;
+            color: rgba(30, 41, 59, .92);
+            font-weight: 900;
+            line-height: 1.5;
+        }
+
+        ul.list {
+            margin: 8px 0 0 18px;
+            color: var(--muted);
+            font-weight: 850;
+            line-height: 1.55;
+        }
+
+        .choices {
+            display: grid;
+            gap: 10px;
+            margin-top: 10px;
+        }
+
+        .choice {
+            border: 1px solid rgba(226, 232, 240, .95);
+            border-radius: 18px;
+            padding: 12px 14px;
+            background: rgba(255, 255, 255, .96);
+            font-weight: 950;
+            color: rgba(30, 41, 59, .96);
+            cursor: pointer;
+            user-select: none;
+            transition: transform .06s ease, border-color .12s ease, background .12s ease;
+        }
+
+        .choice:hover {
+            transform: translateY(-1px);
+        }
+
+        .choice.active {
+            border-color: rgba(79, 70, 229, .35);
+            background: rgba(79, 70, 229, .06);
+        }
+
+        .choice.ok {
+            border-color: rgba(22, 163, 74, .35);
+            background: rgba(22, 163, 74, .08);
+        }
+
+        .choice.bad {
+            border-color: rgba(220, 38, 38, .35);
+            background: rgba(220, 38, 38, .08);
+        }
+
+        .feedback {
+            display: none;
+            margin-top: 10px;
+            border-radius: 18px;
+            padding: 12px 14px;
+            border: 1px solid rgba(226, 232, 240, .95);
+            background: rgba(255, 255, 255, .92);
+            color: var(--muted);
+            font-weight: 900;
+            line-height: 1.5;
+        }
+
+        .feedback.show {
+            display: block;
+        }
+
+        .fbOk {
+            border-color: rgba(22, 163, 74, .35);
+            background: rgba(22, 163, 74, .08);
+            color: rgba(15, 23, 42, .92);
+        }
+
+        .fbBad {
+            border-color: rgba(220, 38, 38, .35);
+            background: rgba(220, 38, 38, .08);
+            color: rgba(15, 23, 42, .92);
+        }
+
+        .input {
+            width: 100%;
+            border: 1px solid rgba(226, 232, 240, .95);
+            background: rgba(255, 255, 255, .96);
+            border-radius: 16px;
+            padding: 12px 14px;
+            font-weight: 950;
+            color: rgba(30, 41, 59, .96);
+        }
+
+        .emojiBig {
+            font-size: 58px;
+            line-height: 1;
+        }
+
+        .planBox {
+            display: grid;
+            gap: 10px;
+            margin-top: 12px;
+        }
+
+        .planItem {
+            border: 1px solid rgba(226, 232, 240, .95);
+            border-radius: 18px;
+            padding: 12px 14px;
+            background: rgba(255, 255, 255, .96);
+            display: flex;
+            gap: 10px;
+            align-items: center;
+        }
+
+        .planTag {
+            min-width: 90px;
+            padding: 8px 10px;
+            border-radius: 999px;
+            background: rgba(79, 70, 229, .10);
+            color: #3730a3;
+            font-weight: 1000;
+            text-align: center;
+            flex: 0 0 auto;
+        }
+
+        .sortWrap {
+            display: grid;
+            gap: 10px;
+            margin-top: 12px;
+        }
+
+        .sortItem {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            border: 1px solid rgba(226, 232, 240, .95);
+            border-radius: 18px;
+            padding: 12px 14px;
+            background: rgba(255, 255, 255, .96);
+            font-weight: 950;
+        }
+
+        .sortNum {
+            width: 34px;
+            height: 34px;
+            display: grid;
+            place-items: center;
+            border-radius: 999px;
+            background: rgba(79, 70, 229, .10);
+            color: #3730a3;
+            font-weight: 1000;
+            flex: 0 0 auto;
+        }
+
+        .miniBtns {
+            display: flex;
+            gap: 6px;
+            margin-left: auto;
+        }
+
+        .miniBtn {
+            border: 1px solid rgba(226, 232, 240, .95);
+            background: white;
+            border-radius: 12px;
+            padding: 6px 10px;
+            cursor: pointer;
+            font-weight: 1000;
+        }
+
+        .matchWrap {
+            display: grid;
+            gap: 10px;
+            margin-top: 12px;
+        }
+
+        .matchRow {
+            display: grid;
+            grid-template-columns: 1.4fr 1fr;
+            gap: 10px;
+            align-items: center;
+        }
+
+        .selectBox {
+            width: 100%;
+            border: 1px solid rgba(226, 232, 240, .95);
+            background: white;
+            border-radius: 16px;
+            padding: 10px 12px;
+            font-weight: 900;
+            color: var(--ink);
+        }
+
+        .simWrap {
+            display: grid;
+            gap: 14px;
+            margin-top: 12px;
+        }
+
+        .simScreen {
+            border: 1px solid rgba(226, 232, 240, .95);
+            border-radius: 22px;
+            padding: 16px;
+            background: rgba(255, 255, 255, .96);
+            text-align: center;
+        }
+
+        .simState {
+            display: none;
+        }
+
+        .simState.show {
+            display: block;
+        }
+
+        .simButtons {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            gap: 10px;
+        }
+
+        .simBtn {
+            border: 1px solid rgba(226, 232, 240, .95);
+            background: white;
+            border-radius: 18px;
+            padding: 14px;
+            cursor: pointer;
+            font-weight: 1000;
+            text-align: center;
+        }
+
+        .tapBox {
+            display: grid;
+            gap: 10px;
+            margin-top: 12px;
+        }
+
+        .tapItem {
+            border: 1px solid rgba(226, 232, 240, .95);
+            border-radius: 18px;
+            padding: 12px 14px;
+            background: rgba(255, 255, 255, .96);
+            cursor: pointer;
+            font-weight: 950;
+        }
+
+        .tapItem.active {
+            border-color: rgba(79, 70, 229, .35);
+            background: rgba(79, 70, 229, .06);
+        }
+
+        .stepCard {
+            display: grid;
+            gap: 10px;
+            margin-top: 12px;
+        }
+
+        .stepItem {
+            display: flex;
+            gap: 10px;
+            align-items: flex-start;
+            border: 1px solid rgba(226, 232, 240, .95);
+            background: rgba(255, 255, 255, .96);
+            border-radius: 18px;
+            padding: 12px 14px;
+        }
+
+        .stepNum {
+            width: 30px;
+            height: 30px;
+            border-radius: 999px;
+            background: rgba(79, 70, 229, .10);
+            color: #3730a3;
+            display: grid;
+            place-items: center;
+            font-weight: 1000;
+            flex: 0 0 auto;
+        }
+
+        .codeRow {
+            display: grid;
+            gap: 10px;
+            margin-top: 10px;
+        }
+
+        .codePill {
+            display: inline-flex;
+            align-items: center;
+            padding: 8px 12px;
+            border-radius: 999px;
+            border: 1px solid rgba(226, 232, 240, .95);
+            background: white;
+            font-weight: 1000;
+            color: var(--ink);
+            width: fit-content;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="accessGate"
+        style="position:fixed; inset:0; background:linear-gradient(135deg,#eef2ff,#ecfeff); display:flex; align-items:center; justify-content:center; z-index:9999;">
+        <div class="card" style="max-width:420px;width:92%;text-align:center">
+            <h2>🔐 Kode Akses</h2>
+            <p>Masukkan kode untuk memulai sesi.</p>
+            <input id="accessInput" class="input" placeholder="MASUKKAN KODE" autocomplete="off"
+                style="text-align:center;font-weight:900;letter-spacing:2px" />
+            <button class="btn primary" id="accessBtn" style="margin-top:12px">Masuk</button>
+            <div class="feedback" id="accessFb" style="margin-top:10px"></div>
+            <div class="card" style="margin-top:10px;background:rgba(79,70,229,.05)">
+                <p style="margin:0">Kode diberikan oleh guru.</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="app">
+        <div class="topbar">
+            <div class="brand">
+                <div class="logo">LP</div>
+                <div>
+                    <h1>Lower Primary</h1>
+                    <div class="sub">Animasi: Menabung dengan Logika Kode</div>
+                </div>
+            </div>
+
+            <div class="controls">
+                <button class="btn ghost" id="btnHome" title="Kembali ke awal">🏠 Awal</button>
+                <button class="btn" id="btnPrev" title="Sebelumnya (←)">←</button>
+                <button class="btn primary" id="btnNext" title="Berikutnya (→)">→</button>
+            </div>
+
+            <div class="progressWrap">
+                <div class="progress" aria-label="Progress">
+                    <div class="bar" id="bar"></div>
+                </div>
+                <div class="count" id="count">1/1</div>
+            </div>
+        </div>
+
+        <div class="stage">
+            <div class="slide" role="region" aria-label="Slide">
+                <div class="slideInner" id="content"></div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const ACCESS_CODE = "RGMDSLP25";
+
+        const slides = [
+            {
+                title: "Pembuka",
+                html: `
+          <h2>🎮 Animasi: Menabung dengan Logika Kode</h2>
+          <p>Hari ini kita akan membuat proyek ScratchJr tentang menabung selama beberapa hari sampai akhirnya bisa membeli mainan.</p>
+
+          <div class="grid cols2" style="margin-top:12px">
+            <div class="card" style="text-align:center">
+              <div class="emojiBig">🐷</div>
+              <p style="margin-top:8px">Menabung sedikit demi sedikit</p>
+            </div>
+            <div class="card" style="text-align:center">
+              <div class="emojiBig">🧸</div>
+              <p style="margin-top:8px">Akhirnya bisa membeli mainan</p>
+            </div>
+          </div>
+
+          <div class="hint" style="margin-top:12px">
+            Kita akan memakai cerita, loop, perpindahan halaman, dan perbaikan urutan kode.
+          </div>
+        `
+            },
+
+            {
+                title: "Rencana Proyek",
+                html: `
+          <h2>Menyusun Rencana Proyek</h2>
+          <p>Sebelum membuat proyek, kita tentukan dulu gambaran umumnya.</p>
+
+          <div class="planBox">
+            <div class="planItem">
+              <div class="planTag">Judul</div>
+              <div>5 Hari Menabung untuk Membeli Mainan</div>
+            </div>
+            <div class="planItem">
+              <div class="planTag">Stage 1</div>
+              <div>Proses menabung</div>
+            </div>
+            <div class="planItem">
+              <div class="planTag">Stage 2</div>
+              <div>Hasil menabung</div>
+            </div>
+            <div class="planItem">
+              <div class="planTag">Karakter</div>
+              <div>Anak, koin, celengan, mainan</div>
+            </div>
+          </div>
+        `
+            },
+
+            {
+                title: "Alur Cerita",
+                html: `
+          <h2>Alur Cerita Proyek</h2>
+          <p>Rani menabung setiap hari. Setiap hari, satu koin masuk ke celengan. Setelah 5 hari, tabungannya cukup untuk membeli mainan.</p>
+
+          <div class="card" style="margin-top:12px">
+            <div class="kicker">Urutan cerita</div>
+            <ul class="list" style="margin-top:10px">
+              <li>Rani berjalan ke celengan</li>
+              <li>Koin masuk ke celengan</li>
+              <li>Diulang beberapa hari</li>
+              <li>Pindah ke halaman akhir</li>
+              <li>Mainan muncul</li>
+            </ul>
+          </div>
+        `
+            },
+
+            {
+                title: "Susun Urutan",
+                html: `
+          <h2>🧩 Susun Urutan Cerita</h2>
+          <p>Atur dari langkah yang paling awal sampai akhir.</p>
+
+          <div class="sortWrap" data-sort="sort1">
+            <div class="sortItem">
+              <div class="sortNum">1</div>
+              <span>🧸 Mainan muncul di halaman akhir</span>
+              <div class="miniBtns">
+                <button class="miniBtn" data-up="0">↑</button>
+                <button class="miniBtn" data-down="0">↓</button>
+              </div>
+            </div>
+            <div class="sortItem">
+              <div class="sortNum">2</div>
+              <span>👧 Rani berjalan ke celengan</span>
+              <div class="miniBtns">
+                <button class="miniBtn" data-up="1">↑</button>
+                <button class="miniBtn" data-down="1">↓</button>
+              </div>
+            </div>
+            <div class="sortItem">
+              <div class="sortNum">3</div>
+              <span>🪙 Koin masuk ke celengan</span>
+              <div class="miniBtns">
+                <button class="miniBtn" data-up="2">↑</button>
+                <button class="miniBtn" data-down="2">↓</button>
+              </div>
+            </div>
+            <div class="sortItem">
+              <div class="sortNum">4</div>
+              <span>📄 Pindah ke halaman kedua</span>
+              <div class="miniBtns">
+                <button class="miniBtn" data-up="3">↑</button>
+                <button class="miniBtn" data-down="3">↓</button>
+              </div>
+            </div>
+          </div>
+
+          <button class="btn primary" data-check-sort="sort1" style="margin-top:12px">Cek Urutan</button>
+          <div class="feedback" id="sortFb1"></div>
+        `
+            },
+
+            {
+                title: "Menyiapkan Stage 1",
+                html: `
+          <h2>Stage 1 – Proses Menabung</h2>
+          <p>Di halaman pertama, kita menyiapkan tempat menabung.</p>
+
+          <div class="grid cols2" style="margin-top:12px">
+            <div class="card">
+              <div class="kicker">Tambahkan</div>
+              <p style="margin:8px 0 0">Latar belakang rumah atau halaman</p>
+              <p>Karakter Rani</p>
+              <p>Celengan</p>
+            </div>
+            <div class="card">
+              <div class="kicker">Tambahkan juga</div>
+              <p style="margin:8px 0 0">Koin</p>
+              <p>Boleh tambah dekorasi kalender</p>
+            </div>
+          </div>
+        `
+            },
+
+            {
+                title: "Quiz Sprite",
+                html: `
+          <h2>🎯 Sprite Apa Saja yang Dibutuhkan?</h2>
+          <p>Pilih jawaban yang paling tepat.</p>
+
+          <div class="choices" data-quiz="qSprite">
+            <div class="choice" data-answer="wrong">Rani, bola, pesawat</div>
+            <div class="choice" data-answer="right">Rani, koin, celengan, mainan</div>
+            <div class="choice" data-answer="wrong">Kucing, rumah, bunga</div>
+            <div class="choice" data-answer="wrong">Pensil, buku, tas</div>
+          </div>
+          <div class="feedback" data-quiz-feedback="qSprite"></div>
+        `
+            },
+
+            {
+                title: "Kode Rani",
+                html: `
+          <h2>Kode Sprite Rani</h2>
+          <p>Rani berjalan ke arah celengan lalu kembali lagi. Gerakan ini diulang beberapa kali untuk menunjukkan menabung selama beberapa hari.</p>
+
+          <div class="codeRow">
+            <div class="card">
+              <div class="codePill">🚩 Green Flag</div>
+              <p style="margin:10px 0 0">Proyek mulai saat bendera hijau ditekan.</p>
+            </div>
+            <div class="card">
+              <div class="codePill">➡️ Move + ⏱ Wait + ⬅️ Move</div>
+              <p style="margin:10px 0 0">Rani bergerak ke celengan, menunggu, lalu kembali.</p>
+            </div>
+            <div class="card">
+              <div class="codePill">🔁 Repeat / Loop</div>
+              <p style="margin:10px 0 0">Gerakan yang sama diulang beberapa kali.</p>
+            </div>
+          </div>
+        `
+            },
+
+            {
+                title: "Quiz Loop",
+                html: `
+          <h2>🔁 Mengapa Kita Memakai Loop?</h2>
+          <p>Klik jawaban yang benar.</p>
+
+          <div class="choices" data-quiz="qLoop">
+            <div class="choice" data-answer="wrong">Supaya semua sprite hilang</div>
+            <div class="choice" data-answer="right">Supaya gerakan menabung bisa diulang beberapa kali</div>
+            <div class="choice" data-answer="wrong">Supaya halaman langsung selesai</div>
+            <div class="choice" data-answer="wrong">Supaya mainan mengecil</div>
+          </div>
+          <div class="feedback" data-quiz-feedback="qLoop"></div>
+        `
+            },
+
+            {
+                title: "Kode Koin",
+                html: `
+          <h2>Kode Sprite Koin</h2>
+          <p>Koin dibuat seolah-olah masuk ke dalam celengan dengan bantuan gerak dan hide/show.</p>
+
+          <div class="grid cols2" style="margin-top:12px">
+            <div class="card">
+              <div class="kicker">Yang dilakukan koin</div>
+              <p style="margin:8px 0 0">Muncul</p>
+              <p>Bergerak ke celengan</p>
+              <p>Sembunyi lagi</p>
+            </div>
+            <div class="card">
+              <div class="kicker">Kenapa diulang?</div>
+              <p style="margin:8px 0 0">Karena Rani menabung beberapa hari</p>
+            </div>
+          </div>
+        `
+            },
+
+            {
+                title: "Celengan",
+                html: `
+          <h2>Sprite Celengan</h2>
+          <p>Celengan tetap diam di tempatnya. Jadi, sprite ini tidak harus punya banyak kode.</p>
+
+          <div class="hint" style="margin-top:12px">
+            Tidak semua sprite harus bergerak. Ada sprite yang hanya menjadi tujuan atau dekorasi.
+          </div>
+        `
+            },
+
+            {
+                title: "Stage 2",
+                html: `
+          <h2>Stage 2 – Hasil Menabung</h2>
+          <p>Setelah menabung selesai, proyek pindah ke halaman kedua.</p>
+
+          <div class="grid cols2" style="margin-top:12px">
+            <div class="card">
+              <div class="kicker">Halaman kedua</div>
+              <p style="margin:8px 0 0">Buat desain akhir yang menyenangkan</p>
+              <p>Tambahkan mainan impian</p>
+            </div>
+            <div class="card">
+              <div class="kicker">Artinya</div>
+              <p style="margin:8px 0 0">Rani berhasil menabung dan bisa membeli mainan</p>
+            </div>
+          </div>
+        `
+            },
+
+            {
+                title: "Pindah Halaman",
+                html: `
+          <h2>Perpindahan Halaman</h2>
+          <p>Setelah loop selesai, proyek bisa berpindah ke halaman kedua.</p>
+
+          <div class="card" style="margin-top:12px">
+            <div class="kicker">Letaknya</div>
+            <p style="margin:8px 0 0">Kode pindah halaman bisa diletakkan setelah repeat / loop selesai.</p>
+          </div>
+
+          <div class="warnBox" style="margin-top:12px">
+            Jadi, cerita tidak langsung lompat ke akhir sebelum proses menabung selesai.
+          </div>
+        `
+            },
+
+            {
+                title: "Quiz Pindah Halaman",
+                html: `
+          <h2>📄 Kapan Proyek Pindah ke Halaman Kedua?</h2>
+          <p>Klik jawaban yang benar.</p>
+
+          <div class="choices" data-quiz="qPage">
+            <div class="choice" data-answer="wrong">Sebelum menabung dimulai</div>
+            <div class="choice" data-answer="right">Setelah pengulangan menabung selesai</div>
+            <div class="choice" data-answer="wrong">Saat koin belum bergerak</div>
+            <div class="choice" data-answer="wrong">Saat celengan diam</div>
+          </div>
+          <div class="feedback" data-quiz-feedback="qPage"></div>
+        `
+            },
+
+            {
+                title: "Mainan Impian",
+                html: `
+          <h2>Sprite Mainan Impian</h2>
+          <p>Di halaman kedua, mainan dibuat muncul sebagai hasil dari menabung.</p>
+
+          <div class="stepCard">
+            <div class="stepItem">
+              <div class="stepNum">1</div>
+              <div>Gunakan <b>green flag</b> agar mainan muncul saat halaman dimulai.</div>
+            </div>
+            <div class="stepItem">
+              <div class="stepNum">2</div>
+              <div>Mainan boleh dibuat sedikit membesar agar terlihat menarik.</div>
+            </div>
+            <div class="stepItem">
+              <div class="stepNum">3</div>
+              <div>Tambahkan tulisan seperti <b>“MAINAN BERHASIL DIBELI”</b>.</div>
+            </div>
+          </div>
+        `
+            },
+
+            {
+                title: "Masalah Kode",
+                html: `
+          <h2>🛠️ Memeriksa dan Memperbaiki Urutan Kode</h2>
+          <p>Kadang proyek belum berjalan seperti yang kita inginkan.</p>
+
+          <div class="scenarioBox" style="margin-top:12px">
+            <p style="margin:0"><b>Masalah:</b> Koin sudah masuk ke celengan, tapi Rani masih jauh di posisi awal.</p>
+          </div>
+
+          <div class="warnBox" style="margin-top:12px">
+            Ini artinya urutan kodenya belum rapi.
+          </div>
+        `
+            },
+
+            {
+                title: "Simulasi Perbaikan",
+                html: `
+          <h2>🎮 Simulasi Memilih Perbaikan</h2>
+          <p>Baca situasinya, lalu pilih cara memperbaiki yang paling tepat.</p>
+
+          <div class="simWrap">
+            <div class="simScreen">
+              <div class="simState show" data-fix-stage="1">
+                <div class="emojiBig">🪙</div>
+                <div class="kicker" style="margin-top:10px">Masalah</div>
+                <p style="margin-top:10px">Koin bergerak terlalu cepat sebelum Rani sampai ke celengan.</p>
+              </div>
+
+              <div class="simState" data-fix-stage="2">
+                <div class="emojiBig">✅</div>
+                <div class="kicker" style="margin-top:10px">Bagus!</div>
+                <p style="margin-top:10px">Tambahkan message atau jeda supaya koin bergerak setelah Rani mendekat.</p>
+              </div>
+
+              <div class="simState" data-fix-stage="3">
+                <div class="emojiBig">⚠️</div>
+                <div class="kicker" style="margin-top:10px">Belum tepat</div>
+                <p style="margin-top:10px">Kalau halaman langsung pindah, masalah gerakan koin belum diperbaiki.</p>
+              </div>
+            </div>
+
+            <div class="simButtons">
+              <button class="simBtn" data-fix-action="message">📩 Pakai Message / Jeda</button>
+              <button class="simBtn" data-fix-action="page">📄 Langsung pindah halaman</button>
+              <button class="simBtn" data-fix-action="reset">🔄 Ulang</button>
+            </div>
+
+            <div class="feedback" id="fixFb"></div>
+          </div>
+        `
+            },
+
+            {
+                title: "Message",
+                html: `
+          <h2>Message Membantu Kode Lebih Rapi</h2>
+          <p>Sprite Rani bisa mengirim pesan ke koin, lalu koin menjawab pesan itu dengan bergerak.</p>
+
+          <div class="grid cols2" style="margin-top:12px">
+            <div class="card">
+              <div class="kicker">Pada Rani</div>
+              <p style="margin:8px 0 0">Tambahkan kode mengirim pesan ke koin.</p>
+            </div>
+            <div class="card">
+              <div class="kicker">Pada Koin</div>
+              <p style="margin:8px 0 0">Gunakan pesan itu sebagai tanda untuk mulai bergerak.</p>
+            </div>
+          </div>
+
+          <div class="hint" style="margin-top:12px">
+            Message membantu dua sprite bekerja lebih kompak.
+          </div>
+        `
+            },
+
+            {
+                title: "Cocokkan Blok",
+                html: `
+          <h2>🔗 Cocokkan Fungsi Blok</h2>
+          <p>Pilih fungsi yang paling tepat.</p>
+
+          <div class="matchWrap">
+            <div class="matchRow">
+              <div class="card"><b>Repeat / Loop</b></div>
+              <select class="selectBox" data-match="m1">
+                <option value="">Pilih jawaban</option>
+                <option value="ulang">Mengulang gerakan beberapa kali</option>
+                <option value="pindah">Pindah halaman</option>
+                <option value="pesan">Mengirim pesan</option>
+              </select>
+            </div>
+
+            <div class="matchRow">
+              <div class="card"><b>Message</b></div>
+              <select class="selectBox" data-match="m2">
+                <option value="">Pilih jawaban</option>
+                <option value="ulang">Mengulang gerakan beberapa kali</option>
+                <option value="pindah">Pindah halaman</option>
+                <option value="pesan">Mengirim tanda ke sprite lain</option>
+              </select>
+            </div>
+
+            <div class="matchRow">
+              <div class="card"><b>Pindah Halaman</b></div>
+              <select class="selectBox" data-match="m3">
+                <option value="">Pilih jawaban</option>
+                <option value="ulang">Mengulang gerakan beberapa kali</option>
+                <option value="pindah">Menuju halaman berikutnya</option>
+                <option value="pesan">Mengirim tanda ke sprite lain</option>
+              </select>
+            </div>
+          </div>
+
+          <button class="btn primary" data-check-match="match1" style="margin-top:12px">Cek Jawaban</button>
+          <div class="feedback" id="matchFb1"></div>
+        `
+            },
+
+            {
+                title: "Inovasi Proyek",
+                html: `
+          <h2>Boleh Berkreasi!</h2>
+          <p>Setelah proyek dasar selesai, kamu boleh menambahkan inovasi sendiri.</p>
+
+          <div class="tapBox">
+            <div class="tapItem" data-tip="1">🚀 Buat halaman awal dengan tombol mulai</div>
+            <div class="tapItem" data-tip="2">⭐ Tambahkan score sederhana</div>
+            <div class="tapItem" data-tip="3">🌸 Hias halaman akhir dengan animasi tambahan</div>
+          </div>
+
+          <div class="feedback" id="tipFb"></div>
+        `
+            },
+
+            {
+                title: "Checklist Tes",
+                html: `
+          <h2>✅ Checklist Tes Proyek</h2>
+          <p>Sebelum selesai, tes dulu proyekmu.</p>
+
+          <div class="card" style="margin-top:12px">
+            <ul class="list">
+              <li>Apakah Rani bergerak sesuai urutan?</li>
+              <li>Apakah koin masuk ke celengan pada waktu yang tepat?</li>
+              <li>Apakah loop berjalan sesuai jumlah hari menabung?</li>
+              <li>Apakah proyek berpindah ke halaman akhir?</li>
+              <li>Apakah mainan muncul di halaman akhir?</li>
+            </ul>
+          </div>
+        `
+            },
+
+            {
+                title: "Quiz Akhir",
+                html: `
+          <h2>🌟 Quiz Akhir</h2>
+          <p>Kalau koin masuk ke celengan terlalu cepat, apa yang bisa kita lakukan?</p>
+
+          <div class="choices" data-quiz="qFinal58">
+            <div class="choice" data-answer="wrong">Menghapus semua sprite</div>
+            <div class="choice" data-answer="right">Menambah jeda atau memakai message agar urutannya lebih tepat</div>
+            <div class="choice" data-answer="wrong">Langsung selesai tanpa dicek</div>
+            <div class="choice" data-answer="wrong">Membiarkan saja</div>
+          </div>
+          <div class="feedback" data-quiz-feedback="qFinal58"></div>
+        `
+            },
+
+            {
+                title: "Penutup",
+                html: `
+          <h2>🎉 Hebat!</h2>
+          <p>Sekarang kamu sudah belajar membuat, memeriksa, dan memperbaiki proyek ScratchJr.</p>
+
+          <div class="card" style="margin-top:12px">
+            <div class="kicker">Yang kita pelajari hari ini</div>
+            <ul class="list" style="margin-top:10px">
+              <li>Proyek dimulai dari rencana cerita.</li>
+              <li>Loop membantu gerakan diulang beberapa kali.</li>
+              <li>Show, hide, dan message membantu cerita lebih hidup.</li>
+              <li>Urutan kode yang rapi membuat proyek berjalan lebih baik.</li>
+            </ul>
+          </div>
+
+          <div class="card" style="margin-top:12px;text-align:center">
+            <button class="btn primary" data-goto="0">🏁 Balik ke awal</button>
+          </div>
+        `
+            }
+        ];
+
+        let currentSlide = 0;
+        let fixStage = 1;
+
+        const sortStates = {
+            sort1: [
+                "🧸 Mainan muncul di halaman akhir",
+                "👧 Rani berjalan ke celengan",
+                "🪙 Koin masuk ke celengan",
+                "📄 Pindah ke halaman kedua"
+            ]
+        };
+
+        const contentEl = document.getElementById("content");
+        const barEl = document.getElementById("bar");
+        const countEl = document.getElementById("count");
+        const accessGate = document.getElementById("accessGate");
+        const accessInput = document.getElementById("accessInput");
+
+        function getQuizMsg(id, ok) {
+            const msgs = {
+                qSprite: {
+                    ok: "✅ Betul! Sprite pentingnya adalah Rani, koin, celengan, dan mainan.",
+                    bad: "⚠️ Coba lagi ya. Pikirkan tokoh dan benda yang ada di cerita menabung."
+                },
+                qLoop: {
+                    ok: "✅ Benar! Loop dipakai supaya kegiatan menabung bisa diulang beberapa kali.",
+                    bad: "⚠️ Belum tepat. Loop dipakai untuk mengulang gerakan atau aksi."
+                },
+                qPage: {
+                    ok: "✅ Betul! Halaman pindah setelah proses menabung selesai.",
+                    bad: "⚠️ Coba lagi ya. Proyek jangan pindah ke akhir terlalu cepat."
+                },
+                qFinal58: {
+                    ok: "✅ Hebat! Menambah jeda atau memakai message bisa membuat urutan gerakan lebih rapi.",
+                    bad: "⚠️ Belum tepat. Kalau urutannya kurang pas, kita perlu memperbaiki kode."
+                }
+            };
+            const m = msgs[id];
+            if (!m) return ok ? "✅ Benar!" : "⚠️ Coba lagi.";
+            return ok ? m.ok : m.bad;
+        }
+
+        function renderSort(id) {
+            const wrap = contentEl.querySelector(`[data-sort="${id}"]`);
+            if (!wrap) return;
+            const arr = sortStates[id];
+            wrap.innerHTML = arr.map((item, index) => `
+        <div class="sortItem">
+          <div class="sortNum">${index + 1}</div>
+          <span>${item}</span>
+          <div class="miniBtns">
+            <button class="miniBtn" data-up="${index}">↑</button>
+            <button class="miniBtn" data-down="${index}">↓</button>
+          </div>
+        </div>
+      `).join("");
+        }
+
+        function renderFixStage() {
+            const states = contentEl.querySelectorAll("[data-fix-stage]");
+            if (!states.length) return;
+            states.forEach(s => s.classList.remove("show"));
+            const current = contentEl.querySelector(`[data-fix-stage="${fixStage}"]`);
+            if (current) current.classList.add("show");
+        }
+
+        function showSlide(index) {
+            if (index < 0 || index >= slides.length) return;
+            currentSlide = index;
+            const slide = slides[index];
+            contentEl.innerHTML = slide.html;
+            barEl.style.width = `${((index + 1) / slides.length) * 100}%`;
+            countEl.textContent = `${index + 1}/${slides.length}`;
+
+            if (contentEl.querySelector('[data-sort="sort1"]')) {
+                renderSort("sort1");
+            }
+
+            fixStage = 1;
+            renderFixStage();
+        }
+
+        document.getElementById("btnNext").addEventListener("click", () => showSlide(currentSlide + 1));
+        document.getElementById("btnPrev").addEventListener("click", () => showSlide(currentSlide - 1));
+        document.getElementById("btnHome").addEventListener("click", () => showSlide(0));
+
+        document.addEventListener("keydown", (e) => {
+            if (e.key === "ArrowRight") showSlide(currentSlide + 1);
+            else if (e.key === "ArrowLeft") showSlide(currentSlide - 1);
+        });
+
+        document.addEventListener("click", (e) => {
+            if (e.target.matches("[data-quiz] .choice")) {
+                const choice = e.target;
+                const quizWrap = choice.closest("[data-quiz]");
+                const quizId = quizWrap.getAttribute("data-quiz");
+                const feedbackEl = document.querySelector(`[data-quiz-feedback="${quizId}"]`);
+
+                quizWrap.querySelectorAll(".choice").forEach(item => {
+                    item.classList.remove("active", "ok", "bad");
+                });
+
+                const answer = choice.getAttribute("data-answer");
+                choice.classList.add("active");
+
+                if (answer === "right") {
+                    choice.classList.add("ok");
+                    feedbackEl.textContent = getQuizMsg(quizId, true);
+                    feedbackEl.classList.remove("fbBad");
+                    feedbackEl.classList.add("fbOk", "show");
+                } else {
+                    choice.classList.add("bad");
+                    feedbackEl.textContent = getQuizMsg(quizId, false);
+                    feedbackEl.classList.remove("fbOk");
+                    feedbackEl.classList.add("fbBad", "show");
+                }
+
+            } else if (e.target.matches("[data-up], [data-down]")) {
+                const sortWrap = e.target.closest('[data-sort]');
+                const id = sortWrap.getAttribute("data-sort");
+                const index = Number(e.target.getAttribute(e.target.hasAttribute("data-up") ? "data-up" : "data-down"));
+                const arr = sortStates[id];
+
+                if (e.target.hasAttribute("data-up") && index > 0) {
+                    [arr[index - 1], arr[index]] = [arr[index], arr[index - 1]];
+                }
+                if (e.target.hasAttribute("data-down") && index < arr.length - 1) {
+                    [arr[index + 1], arr[index]] = [arr[index], arr[index + 1]];
+                }
+
+                renderSort(id);
+
+            } else if (e.target.matches("[data-check-sort]")) {
+                const fb = document.getElementById("sortFb1");
+                const correct = [
+                    "👧 Rani berjalan ke celengan",
+                    "🪙 Koin masuk ke celengan",
+                    "📄 Pindah ke halaman kedua",
+                    "🧸 Mainan muncul di halaman akhir"
+                ];
+                const current = sortStates["sort1"];
+                const isCorrect = current.every((item, idx) => item === correct[idx]);
+
+                if (isCorrect) {
+                    fb.textContent = "✅ Hebat! Urutannya sudah pas dari awal sampai akhir.";
+                    fb.classList.remove("fbBad");
+                    fb.classList.add("fbOk", "show");
+                } else {
+                    fb.textContent = "⚠️ Coba lagi ya. Pikirkan mana yang terjadi lebih dulu.";
+                    fb.classList.remove("fbOk");
+                    fb.classList.add("fbBad", "show");
+                }
+
+            } else if (e.target.matches("[data-fix-action]")) {
+                const action = e.target.getAttribute("data-fix-action");
+                const fb = document.getElementById("fixFb");
+
+                if (action === "message") {
+                    fixStage = 2;
+                    renderFixStage();
+                    fb.textContent = "✅ Bagus! Message atau jeda bisa membuat koin bergerak setelah Rani mendekat.";
+                    fb.classList.remove("fbBad");
+                    fb.classList.add("fbOk", "show");
+                }
+
+                if (action === "page") {
+                    fixStage = 3;
+                    renderFixStage();
+                    fb.textContent = "⚠️ Belum tepat. Pindah halaman tidak memperbaiki urutan gerakan koin.";
+                    fb.classList.remove("fbOk");
+                    fb.classList.add("fbBad", "show");
+                }
+
+                if (action === "reset") {
+                    fixStage = 1;
+                    renderFixStage();
+                    fb.textContent = "🔄 Ulangi lagi dari awal.";
+                    fb.classList.remove("fbOk", "fbBad");
+                    fb.classList.add("show");
+                }
+
+            } else if (e.target.matches("[data-check-match]")) {
+                const fb = document.getElementById("matchFb1");
+                const a1 = contentEl.querySelector('[data-match="m1"]')?.value;
+                const a2 = contentEl.querySelector('[data-match="m2"]')?.value;
+                const a3 = contentEl.querySelector('[data-match="m3"]')?.value;
+
+                const complete = a1 && a2 && a3;
+                const ok = a1 === "ulang" && a2 === "pesan" && a3 === "pindah";
+
+                if (!complete) {
+                    fb.textContent = "⚠️ Lengkapi dulu semua jawaban ya.";
+                    fb.classList.remove("fbOk");
+                    fb.classList.add("fbBad", "show");
+                } else if (ok) {
+                    fb.textContent = "✅ Hebat! Kamu sudah bisa mencocokkan fungsi blok dengan benar.";
+                    fb.classList.remove("fbBad");
+                    fb.classList.add("fbOk", "show");
+                } else {
+                    fb.textContent = "⚠️ Masih ada yang belum tepat. Coba lagi ya.";
+                    fb.classList.remove("fbOk");
+                    fb.classList.add("fbBad", "show");
+                }
+
+            } else if (e.target.matches("[data-tip]")) {
+                const id = e.target.getAttribute("data-tip");
+                const fb = document.getElementById("tipFb");
+                contentEl.querySelectorAll("[data-tip]").forEach(item => item.classList.remove("active"));
+                e.target.classList.add("active");
+
+                const msgs = {
+                    "1": "✅ Bagus! Halaman awal dengan tombol mulai bisa membuat proyek lebih menarik.",
+                    "2": "✅ Betul! Score sederhana bisa membuat proyek terasa lebih seru.",
+                    "3": "✅ Ya! Halaman akhir yang dihias akan membuat hasil proyek lebih menarik."
+                };
+
+                fb.textContent = msgs[id];
+                fb.classList.remove("fbBad");
+                fb.classList.add("fbOk", "show");
+
+            } else if (e.target.matches("[data-goto]")) {
+                const index = parseInt(e.target.getAttribute("data-goto"), 10);
+                showSlide(index);
+            }
+        });
+
+        document.getElementById("accessBtn").addEventListener("click", () => {
+            const code = accessInput.value.trim().toUpperCase();
+            const feedbackEl = document.getElementById("accessFb");
+            if (code === ACCESS_CODE) {
+                accessGate.style.display = "none";
+                showSlide(0);
+            } else {
+                feedbackEl.textContent = "Kode salah, coba lagi!";
+                feedbackEl.classList.add("fbBad", "show");
+            }
+        });
+
+        accessInput.addEventListener("input", () => {
+            accessInput.value = accessInput.value.toUpperCase();
+        });
+
+        accessInput.addEventListener("keydown", (e) => {
+            if (e.key === "Enter") {
+                document.getElementById("accessBtn").click();
+            }
+        });
+
+        showSlide(0);
+    </script>
+</body>
+
+</html>

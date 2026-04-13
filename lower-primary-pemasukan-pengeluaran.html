@@ -1,0 +1,1104 @@
+<!doctype html>
+<html lang="id">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>UOB MDS – Lower Primary – 5.6 Pemasukan dan Pengeluaran</title>
+  <style>
+    :root {
+      --bg1: #F7FAFF;
+      --bg2: #F3F6FF;
+      --ink: #0F172A;
+      --muted: #475569;
+      --line: rgba(226, 232, 240, .95);
+      --brand: #4F46E5;
+      --brand2: #06B6D4;
+      --ok: #16A34A;
+      --bad: #DC2626;
+      --warn: #F59E0B;
+      --radius: 22px;
+      --shadow: 0 18px 40px rgba(15, 23, 42, .08);
+      --shadow2: 0 10px 22px rgba(15, 23, 42, .06);
+      --focus: 0 0 0 4px rgba(79, 70, 229, .18);
+      --mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+      --sans: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, "Apple Color Emoji", "Segoe UI Emoji";
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      font-family: var(--sans);
+      color: var(--ink);
+      background:
+        radial-gradient(1200px 520px at 10% 0%, rgba(6, 182, 212, .18), transparent 60%),
+        radial-gradient(1200px 520px at 90% 0%, rgba(79, 70, 229, .16), transparent 55%),
+        linear-gradient(180deg, var(--bg1), var(--bg2) 45%, var(--bg1));
+      min-height: 100vh;
+    }
+
+    .app {
+      width: min(1100px, 96vw);
+      margin: 18px auto 26px;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .topbar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      padding: 12px 14px;
+      border: 1px solid var(--line);
+      border-radius: 18px;
+      background: rgba(255, 255, 255, .72);
+      backdrop-filter: blur(10px);
+      box-shadow: var(--shadow2);
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .logo {
+      width: 38px;
+      height: 38px;
+      border-radius: 14px;
+      background: linear-gradient(135deg, rgba(79, 70, 229, .18), rgba(6, 182, 212, .20));
+      border: 1px solid rgba(226, 232, 240, .9);
+      display: grid;
+      place-items: center;
+      font-weight: 1000;
+      color: rgba(79, 70, 229, 1);
+    }
+
+    .brand h1 {
+      margin: 0;
+      font-size: 14px;
+      line-height: 1.15;
+      letter-spacing: .2px;
+    }
+
+    .brand .sub {
+      font-size: 12px;
+      color: var(--muted);
+      font-weight: 800;
+      margin-top: 2px;
+    }
+
+    .controls {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+
+    .btn {
+      border: 1px solid rgba(226, 232, 240, .95);
+      background: rgba(255, 255, 255, .9);
+      padding: 10px 12px;
+      border-radius: 16px;
+      font-weight: 1000;
+      cursor: pointer;
+      box-shadow: 0 8px 16px rgba(15, 23, 42, .06);
+      transition: transform .06s ease, box-shadow .12s ease, background .12s ease;
+      user-select: none;
+    }
+
+    .btn:hover { transform: translateY(-1px); }
+    .btn:active { transform: translateY(0); }
+
+    .btn.primary {
+      background: linear-gradient(135deg, rgba(79, 70, 229, .12), rgba(6, 182, 212, .14));
+      border-color: rgba(79, 70, 229, .18);
+    }
+
+    .btn.ghost {
+      background: transparent;
+      box-shadow: none;
+    }
+
+    .btn:focus {
+      outline: none;
+      box-shadow: var(--focus);
+    }
+
+    .progressWrap {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      min-width: 260px;
+      justify-content: flex-end;
+    }
+
+    .progress {
+      width: 180px;
+      height: 10px;
+      background: rgba(226, 232, 240, .9);
+      border-radius: 999px;
+      overflow: hidden;
+      border: 1px solid rgba(226, 232, 240, .95);
+    }
+
+    .bar {
+      height: 100%;
+      width: 0%;
+      background: linear-gradient(90deg, rgba(79, 70, 229, .85), rgba(6, 182, 212, .85));
+      border-radius: 999px;
+      transition: width .25s ease;
+    }
+
+    .count {
+      font-family: var(--mono);
+      font-size: 12px;
+      color: var(--muted);
+      font-weight: 900;
+    }
+
+    .stage {
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      background: rgba(255, 255, 255, .60);
+      box-shadow: var(--shadow);
+      padding: 14px;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      min-height: calc(100vh - 145px);
+    }
+
+    .slide {
+      flex: 1;
+      background: rgba(255, 255, 255, .68);
+      border: 1px solid rgba(229, 234, 245, .95);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow2);
+      padding: 20px;
+      overflow: hidden;
+      backdrop-filter: blur(8px);
+    }
+
+    .slideInner {
+      max-width: 980px;
+      margin: 0 auto;
+      max-height: calc(100vh - 190px);
+      overflow-y: auto;
+      padding-right: 8px;
+    }
+
+    .slideInner::-webkit-scrollbar { width: 10px; }
+    .slideInner::-webkit-scrollbar-thumb {
+      background: rgba(96, 112, 153, .25);
+      border-radius: 999px;
+      border: 3px solid rgba(255, 255, 255, .9);
+    }
+
+    h2 {
+      margin: 6px 0 10px;
+      font-size: 30px;
+      letter-spacing: -.3px;
+    }
+
+    h3 {
+      margin: 0 0 8px;
+      font-size: 18px;
+    }
+
+    p {
+      margin: 0 0 10px;
+      color: var(--muted);
+      font-weight: 800;
+      line-height: 1.55;
+    }
+
+    .kicker {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      font-weight: 1000;
+      font-size: 12px;
+      letter-spacing: .2px;
+      padding: 7px 10px;
+      border-radius: 999px;
+      border: 1px solid rgba(79, 70, 229, .16);
+      background: rgba(79, 70, 229, .06);
+      color: rgba(55, 65, 81, .95);
+    }
+
+    .grid { display: grid; gap: 14px; }
+    .cols2 { grid-template-columns: 1fr 1fr; }
+    .cols3 { grid-template-columns: repeat(3, 1fr); }
+
+    @media (max-width: 860px) {
+      .cols2, .cols3 { grid-template-columns: 1fr; }
+      .progressWrap { min-width: unset; }
+      .progress { width: 130px; }
+      h2 { font-size: 26px; }
+    }
+
+    .card {
+      background: rgba(255, 255, 255, .92);
+      border: 1px solid rgba(226, 232, 240, .95);
+      border-radius: 22px;
+      padding: 14px;
+      box-shadow: 0 10px 18px rgba(15, 23, 42, .06);
+    }
+
+    .hint {
+      background: rgba(6, 182, 212, .10);
+      border: 1px dashed rgba(6, 182, 212, .35);
+      border-radius: 18px;
+      padding: 12px 14px;
+      color: rgba(30, 41, 59, .92);
+      font-weight: 900;
+      line-height: 1.5;
+    }
+
+    ul.list {
+      margin: 8px 0 0 18px;
+      color: var(--muted);
+      font-weight: 850;
+      line-height: 1.55;
+    }
+
+    .choices {
+      display: grid;
+      gap: 10px;
+      margin-top: 10px;
+    }
+
+    .choice {
+      border: 1px solid rgba(226, 232, 240, .95);
+      border-radius: 18px;
+      padding: 12px 14px;
+      background: rgba(255, 255, 255, .96);
+      font-weight: 950;
+      color: rgba(30, 41, 59, .96);
+      cursor: pointer;
+      user-select: none;
+      transition: transform .06s ease, border-color .12s ease, background .12s ease;
+    }
+
+    .choice:hover { transform: translateY(-1px); }
+    .choice.active {
+      border-color: rgba(79, 70, 229, .35);
+      background: rgba(79, 70, 229, .06);
+    }
+    .choice.ok {
+      border-color: rgba(22, 163, 74, .35);
+      background: rgba(22, 163, 74, .08);
+    }
+    .choice.bad {
+      border-color: rgba(220, 38, 38, .35);
+      background: rgba(220, 38, 38, .08);
+    }
+
+    .feedback {
+      display: none;
+      margin-top: 10px;
+      border-radius: 18px;
+      padding: 12px 14px;
+      border: 1px solid rgba(226, 232, 240, .95);
+      background: rgba(255, 255, 255, .92);
+      color: var(--muted);
+      font-weight: 900;
+      line-height: 1.5;
+    }
+
+    .feedback.show { display: block; }
+    .fbOk {
+      border-color: rgba(22, 163, 74, .35);
+      background: rgba(22, 163, 74, .08);
+      color: rgba(15, 23, 42, .92);
+    }
+    .fbBad {
+      border-color: rgba(220, 38, 38, .35);
+      background: rgba(220, 38, 38, .08);
+      color: rgba(15, 23, 42, .92);
+    }
+
+    .input {
+      width: 100%;
+      border: 1px solid rgba(226, 232, 240, .95);
+      background: rgba(255, 255, 255, .96);
+      border-radius: 16px;
+      padding: 12px 14px;
+      font-weight: 950;
+      color: rgba(30, 41, 59, .96);
+    }
+
+    .emojiBig {
+      font-size: 58px;
+      line-height: 1;
+    }
+
+    .pill {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-width: 92px;
+      padding: 8px 12px;
+      border-radius: 999px;
+      background: linear-gradient(135deg, rgba(79, 70, 229, .10), rgba(6, 182, 212, .10));
+      border: 1px solid rgba(79, 70, 229, .16);
+      font-weight: 1000;
+      color: #3730a3;
+    }
+
+    .scenarioBox {
+      border: 1px dashed rgba(79, 70, 229, .30);
+      border-radius: 22px;
+      padding: 16px;
+      background: linear-gradient(180deg, rgba(79, 70, 229, .05), rgba(6, 182, 212, .05));
+    }
+
+    .moneySim {
+      display: grid;
+      gap: 14px;
+      margin-top: 12px;
+    }
+
+    .moneyBoard {
+      border: 1px solid rgba(226, 232, 240, .95);
+      border-radius: 22px;
+      padding: 16px;
+      background: rgba(255, 255, 255, .96);
+      text-align: center;
+    }
+
+    .moneyFace {
+      font-size: 52px;
+      line-height: 1;
+      margin-bottom: 10px;
+    }
+
+    .moneyMsg {
+      font-weight: 1000;
+      color: var(--ink);
+      min-height: 28px;
+    }
+
+    .moneyStage {
+      display: none;
+    }
+
+    .moneyStage.show {
+      display: block;
+    }
+
+    .actionBtns {
+      display: grid;
+      gap: 10px;
+      grid-template-columns: 1fr 1fr 1fr;
+    }
+
+    .actionBtn {
+      border: 1px solid rgba(226,232,240,.95);
+      background: rgba(255,255,255,.96);
+      border-radius: 18px;
+      padding: 14px;
+      font-weight: 1000;
+      cursor: pointer;
+      text-align: center;
+    }
+
+    .actionBtn:hover {
+      transform: translateY(-1px);
+    }
+
+    .codeRow {
+      display: grid;
+      gap: 10px;
+      margin-top: 10px;
+    }
+
+    .codePill {
+      display: inline-flex;
+      align-items: center;
+      padding: 8px 12px;
+      border-radius: 999px;
+      border: 1px solid rgba(226,232,240,.95);
+      background: white;
+      font-weight: 1000;
+      color: var(--ink);
+      width: fit-content;
+    }
+
+    .stepCard {
+      display: grid;
+      gap: 10px;
+    }
+
+    .stepItem {
+      display: flex;
+      gap: 10px;
+      align-items: flex-start;
+      border: 1px solid rgba(226,232,240,.95);
+      background: rgba(255,255,255,.96);
+      border-radius: 18px;
+      padding: 12px 14px;
+    }
+
+    .stepNum {
+      width: 30px;
+      height: 30px;
+      border-radius: 999px;
+      background: rgba(79,70,229,.10);
+      color: #3730a3;
+      display: grid;
+      place-items: center;
+      font-weight: 1000;
+      flex: 0 0 auto;
+    }
+
+    .matchWrap {
+      display: grid;
+      gap: 10px;
+      margin-top: 12px;
+    }
+
+    .matchRow {
+      display: grid;
+      grid-template-columns: 1.2fr 1fr;
+      gap: 10px;
+      align-items: center;
+    }
+
+    .selectBox {
+      width: 100%;
+      border: 1px solid rgba(226,232,240,.95);
+      background: white;
+      border-radius: 16px;
+      padding: 10px 12px;
+      font-weight: 900;
+      color: var(--ink);
+    }
+  </style>
+</head>
+<body>
+  <div id="accessGate" style="position:fixed; inset:0; background:linear-gradient(135deg,#eef2ff,#ecfeff); display:flex; align-items:center; justify-content:center; z-index:9999;">
+    <div class="card" style="max-width:420px;width:92%;text-align:center">
+      <h2>🔐 Kode Akses</h2>
+      <p>Masukkan kode untuk memulai sesi.</p>
+      <input id="accessInput" class="input" placeholder="MASUKKAN KODE" autocomplete="off" style="text-align:center;font-weight:900;letter-spacing:2px" />
+      <button class="btn primary" id="accessBtn" style="margin-top:12px">Masuk</button>
+      <div class="feedback" id="accessFb" style="margin-top:10px"></div>
+      <div class="card" style="margin-top:10px;background:rgba(79,70,229,.05)">
+        <p style="margin:0">Kode diberikan oleh guru.</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="app">
+    <div class="topbar">
+      <div class="brand">
+        <div class="logo">LP</div>
+        <div>
+          <h1>Lower Primary</h1>
+          <div class="sub">5.6 Pemasukan dan Pengeluaran</div>
+        </div>
+      </div>
+
+      <div class="controls">
+        <button class="btn ghost" id="btnHome" title="Kembali ke awal">🏠 Awal</button>
+        <button class="btn" id="btnPrev" title="Sebelumnya (←)">←</button>
+        <button class="btn primary" id="btnNext" title="Berikutnya (→)">→</button>
+      </div>
+
+      <div class="progressWrap">
+        <div class="progress" aria-label="Progress">
+          <div class="bar" id="bar"></div>
+        </div>
+        <div class="count" id="count">1/1</div>
+      </div>
+    </div>
+
+    <div class="stage">
+      <div class="slide" role="region" aria-label="Slide">
+        <div class="slideInner" id="content"></div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const ACCESS_CODE = "RGMDSLP25";
+
+    const slides = [
+      {
+        title: "Pembuka",
+        html: `
+          <h2>💰 Pemasukan dan Pengeluaran</h2>
+          <p>Hari ini kita belajar bahwa uang bisa bertambah dan berkurang.</p>
+
+          <div class="grid cols2" style="margin-top:12px">
+            <div class="card" style="text-align:center">
+              <div class="emojiBig">🪙➕</div>
+              <p style="margin-top:8px">Uang bertambah</p>
+            </div>
+            <div class="card" style="text-align:center">
+              <div class="emojiBig">🛒➖</div>
+              <p style="margin-top:8px">Uang berkurang</p>
+            </div>
+          </div>
+
+          <div class="hint" style="margin-top:12px">
+            Saat menerima uang, uang bertambah. Saat membeli sesuatu, uang berkurang.
+          </div>
+        `
+      },
+
+      {
+        title: "Uang Bisa Berubah",
+        html: `
+          <h2>Uang Bisa Berubah</h2>
+          <p>Jumlah uang yang kita miliki tidak selalu tetap. Kadang bertambah, kadang berkurang.</p>
+
+          <div class="grid cols2" style="margin-top:12px">
+            <div class="card">
+              <div class="kicker">Bertambah</div>
+              <p style="margin:8px 0 0">Saat menerima uang jajan</p>
+              <p>Saat mendapat hadiah</p>
+            </div>
+            <div class="card">
+              <div class="kicker">Berkurang</div>
+              <p style="margin:8px 0 0">Saat membeli makanan</p>
+              <p>Saat membeli alat tulis</p>
+            </div>
+          </div>
+        `
+      },
+
+      {
+        title: "Apa Itu Pemasukan",
+        html: `
+          <h2>Apa Itu Pemasukan?</h2>
+          <p>Pemasukan adalah saat uang kita bertambah.</p>
+
+          <div class="grid cols3" style="margin-top:12px">
+            <div class="card" style="text-align:center">
+              <div class="emojiBig">👨‍👩‍👧</div>
+              <p style="margin-top:8px"><b>Uang jajan</b></p>
+            </div>
+            <div class="card" style="text-align:center">
+              <div class="emojiBig">🎁</div>
+              <p style="margin-top:8px"><b>Hadiah</b></p>
+            </div>
+            <div class="card" style="text-align:center">
+              <div class="emojiBig">💌</div>
+              <p style="margin-top:8px"><b>Diberi keluarga</b></p>
+            </div>
+          </div>
+
+          <div class="hint" style="margin-top:12px">
+            Pemasukan artinya uang masuk ke tangan kita.
+          </div>
+        `
+      },
+
+      {
+        title: "Apa Itu Pengeluaran",
+        html: `
+          <h2>Apa Itu Pengeluaran?</h2>
+          <p>Pengeluaran adalah saat kita menggunakan uang, sehingga uang kita berkurang.</p>
+
+          <div class="grid cols3" style="margin-top:12px">
+            <div class="card" style="text-align:center">
+              <div class="emojiBig">🍞</div>
+              <p style="margin-top:8px"><b>Beli makanan</b></p>
+            </div>
+            <div class="card" style="text-align:center">
+              <div class="emojiBig">🧸</div>
+              <p style="margin-top:8px"><b>Beli mainan</b></p>
+            </div>
+            <div class="card" style="text-align:center">
+              <div class="emojiBig">✏️</div>
+              <p style="margin-top:8px"><b>Beli alat tulis</b></p>
+            </div>
+          </div>
+
+          <div class="hint" style="margin-top:12px">
+            Pengeluaran artinya uang keluar karena dipakai membeli sesuatu.
+          </div>
+        `
+      },
+
+      {
+        title: "Quiz Pemasukan",
+        html: `
+          <h2>🎯 Mana yang Termasuk Pemasukan?</h2>
+          <p>Klik jawaban yang benar.</p>
+
+          <div class="choices" data-quiz="qIncome">
+            <div class="choice" data-answer="right">Mendapat uang jajan</div>
+            <div class="choice" data-answer="wrong">Membeli roti</div>
+            <div class="choice" data-answer="wrong">Membeli pensil</div>
+            <div class="choice" data-answer="wrong">Membeli mainan</div>
+          </div>
+          <div class="feedback" data-quiz-feedback="qIncome"></div>
+        `
+      },
+
+      {
+        title: "Quiz Pengeluaran",
+        html: `
+          <h2>📝 Mana yang Termasuk Pengeluaran?</h2>
+          <p>Klik jawaban yang benar.</p>
+
+          <div class="choices" data-quiz="qExpense">
+            <div class="choice" data-answer="wrong">Dapat hadiah uang</div>
+            <div class="choice" data-answer="right">Membeli makanan</div>
+            <div class="choice" data-answer="wrong">Diberi uang oleh ayah</div>
+            <div class="choice" data-answer="wrong">Menerima uang jajan</div>
+          </div>
+          <div class="feedback" data-quiz-feedback="qExpense"></div>
+        `
+      },
+
+      {
+        title: "Cerita Sehari-hari",
+        html: `
+          <h2>Contoh Sehari-hari</h2>
+          <p>Lihat cerita sederhana ini.</p>
+
+          <div class="scenarioBox" style="margin-top:12px">
+            <p style="margin:0">Pagi: Siti mendapat uang jajan.</p>
+            <p>Siang: Siti membeli air minum.</p>
+            <p>Sore: Siti masih punya sisa uang.</p>
+          </div>
+
+          <div class="card" style="margin-top:12px">
+            <div class="kicker">Pikirkan</div>
+            <p style="margin:8px 0 0">Bagian mana yang pemasukan? Bagian mana yang pengeluaran?</p>
+          </div>
+        `
+      },
+
+      {
+        title: "Cocokkan",
+        html: `
+          <h2>🔗 Cocokkan Yuk!</h2>
+          <p>Pilih apakah setiap contoh termasuk pemasukan atau pengeluaran.</p>
+
+          <div class="matchWrap">
+            <div class="matchRow">
+              <div class="card"><b>Mendapat uang jajan</b></div>
+              <select class="selectBox" data-match="m1">
+                <option value="">Pilih jawaban</option>
+                <option value="pemasukan">Pemasukan</option>
+                <option value="pengeluaran">Pengeluaran</option>
+              </select>
+            </div>
+            <div class="matchRow">
+              <div class="card"><b>Membeli roti</b></div>
+              <select class="selectBox" data-match="m2">
+                <option value="">Pilih jawaban</option>
+                <option value="pemasukan">Pemasukan</option>
+                <option value="pengeluaran">Pengeluaran</option>
+              </select>
+            </div>
+            <div class="matchRow">
+              <div class="card"><b>Mendapat hadiah uang</b></div>
+              <select class="selectBox" data-match="m3">
+                <option value="">Pilih jawaban</option>
+                <option value="pemasukan">Pemasukan</option>
+                <option value="pengeluaran">Pengeluaran</option>
+              </select>
+            </div>
+          </div>
+
+          <button class="btn primary" data-check-match="match1" style="margin-top:12px">Cek Jawaban</button>
+          <div class="feedback" id="matchFb1"></div>
+        `
+      },
+
+      {
+        title: "Perubahan Uang",
+        html: `
+          <h2>Perubahan Uang</h2>
+          <p>Saat menerima uang, jumlah uang bertambah. Saat membeli sesuatu, jumlah uang berkurang.</p>
+
+          <div class="grid cols2" style="margin-top:12px">
+            <div class="card">
+              <div class="kicker">Saat uang bertambah</div>
+              <p style="margin:8px 0 0">Kita bisa merasa senang.</p>
+            </div>
+            <div class="card">
+              <div class="kicker">Saat uang berkurang</div>
+              <p style="margin:8px 0 0">Kita perlu lebih hati-hati.</p>
+            </div>
+          </div>
+        `
+      },
+
+      {
+        title: "Simulasi Interaktif",
+        html: `
+          <h2>🎮 Simulasi Uang</h2>
+          <p>Klik tombol untuk melihat uang bertambah dan berkurang.</p>
+
+          <div class="moneySim">
+            <div class="moneyBoard">
+              <div class="moneyStage show" data-stage="1">
+                <div class="moneyFace">🙂</div>
+                <div class="pill">Uang: 1</div>
+                <div class="moneyMsg" style="margin-top:10px">Awal</div>
+              </div>
+
+              <div class="moneyStage" data-stage="2">
+                <div class="moneyFace">😄</div>
+                <div class="pill">Uang: 2</div>
+                <div class="moneyMsg" style="margin-top:10px">Dapat uang jajan!</div>
+              </div>
+
+              <div class="moneyStage" data-stage="3">
+                <div class="moneyFace">😌</div>
+                <div class="pill">Uang: 1</div>
+                <div class="moneyMsg" style="margin-top:10px">Membeli makanan</div>
+              </div>
+            </div>
+
+            <div class="actionBtns">
+              <button class="actionBtn" data-money-action="income">🪙 Dapat Uang</button>
+              <button class="actionBtn" data-money-action="expense">🍞 Beli Makanan</button>
+              <button class="actionBtn" data-money-action="reset">🔄 Ulang</button>
+            </div>
+
+            <div class="feedback" id="moneyFb"></div>
+          </div>
+        `
+      },
+
+      {
+        title: "Dalam Game",
+        html: `
+          <h2>Pemasukan dan Pengeluaran dalam Game</h2>
+          <p>Dalam game, karakter juga bisa mendapatkan uang dan menggunakan uang.</p>
+
+          <div class="grid cols2" style="margin-top:12px">
+            <div class="card">
+              <div class="kicker">Uang bertambah</div>
+              <p style="margin:8px 0 0">Saat karakter mengambil koin</p>
+            </div>
+            <div class="card">
+              <div class="kicker">Uang berkurang</div>
+              <p style="margin:8px 0 0">Saat karakter membeli makanan</p>
+            </div>
+          </div>
+        `
+      },
+
+      {
+        title: "ScratchJr",
+        html: `
+          <h2>🤖 ScratchJr: Simulasi Uang</h2>
+          <p>Di ScratchJr, kita belum memakai variabel. Jadi, kita bisa memakai gambar atau pesan angka yang show dan hide.</p>
+
+          <div class="card" style="margin-top:12px">
+            <div class="kicker">Contoh tampilan</div>
+            <p style="margin:8px 0 0">Uang: 1 → disembunyikan → muncul Uang: 2</p>
+            <p>Uang: 2 → disembunyikan → muncul Uang: 1</p>
+          </div>
+
+          <div class="hint" style="margin-top:12px">
+            Jadi, anak tetap bisa melihat uang bertambah dan berkurang walaupun belum ada variabel.
+          </div>
+        `
+      },
+
+      {
+        title: "Kode ScratchJr",
+        html: `
+          <h2>Kode ScratchJr yang Dipelajari</h2>
+          <p>Pada proyek ini, kita memakai blok sederhana.</p>
+
+          <div class="codeRow">
+            <div class="card">
+              <div class="codePill">👆 Tap / Saat disentuh</div>
+              <p style="margin:10px 0 0">Dipakai agar aksi berjalan saat gambar disentuh.</p>
+            </div>
+            <div class="card">
+              <div class="codePill">👀 Show / Tampilkan</div>
+              <p style="margin:10px 0 0">Dipakai untuk menampilkan angka atau pesan.</p>
+            </div>
+            <div class="card">
+              <div class="codePill">🙈 Hide / Sembunyikan</div>
+              <p style="margin:10px 0 0">Dipakai untuk menyembunyikan angka atau pesan lama.</p>
+            </div>
+            <div class="card">
+              <div class="codePill">📩 Message / Pesan</div>
+              <p style="margin:10px 0 0">Dipakai untuk memberi perintah ke sprite lain.</p>
+            </div>
+            <div class="card">
+              <div class="codePill">💬 Say / Bicara</div>
+              <p style="margin:10px 0 0">Dipakai untuk menampilkan pesan seperti “Uang bertambah!”</p>
+            </div>
+          </div>
+        `
+      },
+
+      {
+        title: "Langkah Proyek",
+        html: `
+          <h2>Langkah Proyek Sederhana</h2>
+          <p>Kita bisa membuat proyek kecil tentang uang bertambah dan berkurang.</p>
+
+          <div class="stepCard" style="margin-top:12px">
+            <div class="stepItem">
+              <div class="stepNum">1</div>
+              <div>Buat tampilan awal, misalnya <b>Uang: 1</b>.</div>
+            </div>
+            <div class="stepItem">
+              <div class="stepNum">2</div>
+              <div>Buat tombol <b>koin</b>. Saat disentuh, sembunyikan angka lama lalu tampilkan angka baru.</div>
+            </div>
+            <div class="stepItem">
+              <div class="stepNum">3</div>
+              <div>Buat tombol <b>makanan</b>. Saat disentuh, sembunyikan angka lama lalu tampilkan angka yang lebih kecil.</div>
+            </div>
+            <div class="stepItem">
+              <div class="stepNum">4</div>
+              <div>Tambahkan pesan seperti <b>“Dapat uang jajan!”</b> atau <b>“Membeli roti!”</b>.</div>
+            </div>
+          </div>
+        `
+      },
+
+      {
+        title: "Quiz ScratchJr",
+        html: `
+          <h2>🎯 Quiz ScratchJr</h2>
+          <p>Kalau kita ingin angka lama hilang lalu angka baru muncul, blok mana yang dibutuhkan?</p>
+
+          <div class="choices" data-quiz="qScratch56">
+            <div class="choice" data-answer="wrong">Move dan Sound</div>
+            <div class="choice" data-answer="right">Hide dan Show</div>
+            <div class="choice" data-answer="wrong">Green Flag saja</div>
+            <div class="choice" data-answer="wrong">Stop semua</div>
+          </div>
+          <div class="feedback" data-quiz-feedback="qScratch56"></div>
+        `
+      },
+
+      {
+        title: "Quiz Akhir",
+        html: `
+          <h2>🌟 Quiz Akhir</h2>
+          <p>Kalau kamu menerima uang jajan lalu membeli makanan, urutannya adalah…</p>
+
+          <div class="choices" data-quiz="qFinal56">
+            <div class="choice" data-answer="wrong">Pengeluaran lalu pemasukan</div>
+            <div class="choice" data-answer="right">Pemasukan lalu pengeluaran</div>
+            <div class="choice" data-answer="wrong">Pemasukan lalu pemasukan</div>
+            <div class="choice" data-answer="wrong">Pengeluaran lalu pengeluaran</div>
+          </div>
+          <div class="feedback" data-quiz-feedback="qFinal56"></div>
+        `
+      },
+
+      {
+        title: "Penutup",
+        html: `
+          <h2>🎉 Hebat!</h2>
+          <p>Sekarang kamu sudah belajar tentang pemasukan dan pengeluaran.</p>
+
+          <div class="card" style="margin-top:12px">
+            <div class="kicker">Yang kita pelajari hari ini</div>
+            <ul class="list" style="margin-top:10px">
+              <li>Uang bisa bertambah dan berkurang.</li>
+              <li>Pemasukan berarti uang bertambah.</li>
+              <li>Pengeluaran berarti uang berkurang.</li>
+              <li>Di ScratchJr, perubahan uang bisa ditunjukkan dengan show dan hide angka atau pesan.</li>
+            </ul>
+          </div>
+
+          <div class="card" style="margin-top:12px;text-align:center">
+            <button class="btn primary" data-goto="0">🏁 Balik ke awal</button>
+          </div>
+        `
+      }
+    ];
+
+    let currentSlide = 0;
+    let moneyStage = 1;
+
+    const contentEl = document.getElementById("content");
+    const barEl = document.getElementById("bar");
+    const countEl = document.getElementById("count");
+    const accessGate = document.getElementById("accessGate");
+    const accessInput = document.getElementById("accessInput");
+
+    function getQuizMsg(id, ok) {
+      const msgs = {
+        qIncome: {
+          ok: "✅ Betul! Mendapat uang jajan membuat uang kita bertambah.",
+          bad: "⚠️ Coba lagi ya. Pemasukan berarti uang masuk."
+        },
+        qExpense: {
+          ok: "✅ Benar! Membeli makanan adalah pengeluaran karena uang berkurang.",
+          bad: "⚠️ Coba lagi. Pengeluaran terjadi saat uang dipakai."
+        },
+        qScratch56: {
+          ok: "✅ Betul! Hide menyembunyikan angka lama, Show menampilkan angka baru.",
+          bad: "⚠️ Belum tepat. Kita butuh blok untuk menyembunyikan dan menampilkan."
+        },
+        qFinal56: {
+          ok: "✅ Hebat! Menerima uang jajan adalah pemasukan, membeli makanan adalah pengeluaran.",
+          bad: "⚠️ Coba lagi ya. Ingat: uang masuk dulu, lalu uang keluar saat membeli."
+        }
+      };
+      const m = msgs[id];
+      if (!m) return ok ? "✅ Benar!" : "⚠️ Coba lagi.";
+      return ok ? m.ok : m.bad;
+    }
+
+    function showSlide(index) {
+      if (index < 0 || index >= slides.length) return;
+      currentSlide = index;
+      const slide = slides[index];
+      contentEl.innerHTML = slide.html;
+      barEl.style.width = `${((index + 1) / slides.length) * 100}%`;
+      countEl.textContent = `${index + 1}/${slides.length}`;
+      moneyStage = 1;
+      renderMoneyStage();
+    }
+
+    function renderMoneyStage() {
+      const stages = contentEl.querySelectorAll("[data-stage]");
+      if (!stages.length) return;
+      stages.forEach(s => s.classList.remove("show"));
+      const current = contentEl.querySelector(`[data-stage="${moneyStage}"]`);
+      if (current) current.classList.add("show");
+    }
+
+    document.getElementById("btnNext").addEventListener("click", () => showSlide(currentSlide + 1));
+    document.getElementById("btnPrev").addEventListener("click", () => showSlide(currentSlide - 1));
+    document.getElementById("btnHome").addEventListener("click", () => showSlide(0));
+
+    document.addEventListener("keydown", (e) => {
+      if (e.key === "ArrowRight") showSlide(currentSlide + 1);
+      else if (e.key === "ArrowLeft") showSlide(currentSlide - 1);
+    });
+
+    document.addEventListener("click", (e) => {
+      if (e.target.matches("[data-quiz] .choice")) {
+        const choice = e.target;
+        const quizWrap = choice.closest("[data-quiz]");
+        const quizId = quizWrap.getAttribute("data-quiz");
+        const feedbackEl = document.querySelector(`[data-quiz-feedback="${quizId}"]`);
+
+        quizWrap.querySelectorAll(".choice").forEach(item => {
+          item.classList.remove("active", "ok", "bad");
+        });
+
+        const answer = choice.getAttribute("data-answer");
+        choice.classList.add("active");
+
+        if (answer === "right") {
+          choice.classList.add("ok");
+          feedbackEl.textContent = getQuizMsg(quizId, true);
+          feedbackEl.classList.remove("fbBad");
+          feedbackEl.classList.add("fbOk", "show");
+        } else {
+          choice.classList.add("bad");
+          feedbackEl.textContent = getQuizMsg(quizId, false);
+          feedbackEl.classList.remove("fbOk");
+          feedbackEl.classList.add("fbBad", "show");
+        }
+
+      } else if (e.target.matches("[data-check-match]")) {
+        const fb = document.getElementById("matchFb1");
+        const a1 = contentEl.querySelector('[data-match="m1"]')?.value;
+        const a2 = contentEl.querySelector('[data-match="m2"]')?.value;
+        const a3 = contentEl.querySelector('[data-match="m3"]')?.value;
+
+        const complete = a1 && a2 && a3;
+        const ok = a1 === "pemasukan" && a2 === "pengeluaran" && a3 === "pemasukan";
+
+        if (!complete) {
+          fb.textContent = "⚠️ Lengkapi dulu semua jawaban ya.";
+          fb.classList.remove("fbOk");
+          fb.classList.add("fbBad", "show");
+        } else if (ok) {
+          fb.textContent = "✅ Hebat! Kamu sudah bisa membedakan pemasukan dan pengeluaran.";
+          fb.classList.remove("fbBad");
+          fb.classList.add("fbOk", "show");
+        } else {
+          fb.textContent = "⚠️ Masih ada yang belum tepat. Coba lagi ya.";
+          fb.classList.remove("fbOk");
+          fb.classList.add("fbBad", "show");
+        }
+
+      } else if (e.target.matches("[data-money-action]")) {
+        const action = e.target.getAttribute("data-money-action");
+        const fb = document.getElementById("moneyFb");
+
+        if (action === "income") {
+          if (moneyStage === 1) moneyStage = 2;
+          renderMoneyStage();
+          fb.textContent = "✅ Ini pemasukan. Uang bertambah.";
+          fb.classList.remove("fbBad");
+          fb.classList.add("fbOk", "show");
+        }
+
+        if (action === "expense") {
+          if (moneyStage === 2) {
+            moneyStage = 3;
+            renderMoneyStage();
+            fb.textContent = "✅ Ini pengeluaran. Uang berkurang.";
+            fb.classList.remove("fbBad");
+            fb.classList.add("fbOk", "show");
+          } else if (moneyStage === 1) {
+            fb.textContent = "⚠️ Coba dapat uang dulu sebelum membeli sesuatu.";
+            fb.classList.remove("fbOk");
+            fb.classList.add("fbBad", "show");
+          } else {
+            fb.textContent = "⚠️ Uangnya sudah kembali sedikit. Kamu bisa ulang lagi.";
+            fb.classList.remove("fbOk");
+            fb.classList.add("fbBad", "show");
+          }
+        }
+
+        if (action === "reset") {
+          moneyStage = 1;
+          renderMoneyStage();
+          fb.textContent = "🔄 Ulangi lagi dari awal.";
+          fb.classList.remove("fbOk", "fbBad");
+          fb.classList.add("show");
+        }
+
+      } else if (e.target.matches("[data-goto]")) {
+        const index = parseInt(e.target.getAttribute("data-goto"), 10);
+        showSlide(index);
+      }
+    });
+
+    document.getElementById("accessBtn").addEventListener("click", () => {
+      const code = accessInput.value.trim().toUpperCase();
+      const feedbackEl = document.getElementById("accessFb");
+      if (code === ACCESS_CODE) {
+        accessGate.style.display = "none";
+        showSlide(0);
+      } else {
+        feedbackEl.textContent = "Kode salah, coba lagi!";
+        feedbackEl.classList.add("fbBad", "show");
+      }
+    });
+
+    accessInput.addEventListener("input", () => {
+      accessInput.value = accessInput.value.toUpperCase();
+    });
+
+    accessInput.addEventListener("keydown", (e) => {
+      if (e.key === "Enter") {
+        document.getElementById("accessBtn").click();
+      }
+    });
+
+    showSlide(0);
+  </script>
+</body>
+</html>
