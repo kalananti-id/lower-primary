@@ -1,0 +1,302 @@
+<!doctype html>
+<html lang="id">
+
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>UOB MDS – Lower Primary – Sesi 2: Menghidupkan Cerita</title>
+  <style>
+    :root {
+      --bg1: #F7FAFF;
+      --bg2: #F3F6FF;
+      --ink: #0F172A;
+      --muted: #475569;
+      --line: rgba(226, 232, 240, .95);
+      --brand: #4F46E5;
+      --brand2: #06B6D4;
+      --ok: #16A34A;
+      --bad: #DC2626;
+      --warn: #F59E0B;
+      --radius: 24px;
+      --shadow: 0 20px 50px rgba(15, 23, 42, .1);
+      --mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+    body { background: var(--bg1); color: var(--ink); font-family: system-ui, -apple-system, sans-serif; line-height: 1.5; min-height: 100vh; display: flex; align-items: center; justify-content: center; padding: 1rem; }
+
+    /* GATE */
+    #accessGate { position: fixed; inset: 0; background: linear-gradient(135deg, #EEF2FF 0%, #F5F3FF 100%); z-index: 100; display: flex; align-items: center; justify-content: center; padding: 1.5rem; }
+    .gateCard { background: #fff; padding: 3rem 2.5rem; border-radius: var(--radius); box-shadow: var(--shadow); width: 100%; max-width: 420px; text-align: center; border: 1px solid #fff; }
+    input#accessInput { width: 100%; padding: 1.1rem; border: 2px solid var(--line); border-radius: 16px; font-size: 1.3rem; text-align: center; font-family: var(--mono); margin-bottom: 1.25rem; transition: all 0.3s; background: var(--bg1); text-transform: uppercase; }
+
+    /* SLIDE STRUCTURE */
+    .slide { background: #fff; width: 100%; max-width: 850px; min-height: 640px; border-radius: var(--radius); box-shadow: var(--shadow); display: none; flex-direction: column; overflow: hidden; border: 1px solid var(--line); position: relative; }
+    .slide.active { display: flex; animation: slideUp 0.5s cubic-bezier(0.16, 1, 0.3, 1); }
+    @keyframes slideUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+
+    .header { padding: 1.5rem 2.5rem; border-bottom: 1px solid var(--line); display: flex; justify-content: space-between; align-items: center; }
+    .header h4 { font-size: 0.85rem; text-transform: uppercase; color: var(--brand); font-weight: 800; }
+    .progress-bar { width: 120px; height: 8px; background: var(--bg2); border-radius: 10px; overflow: hidden; }
+    .progress-fill { height: 100%; background: var(--brand); transition: width 0.5s; }
+
+    .body { padding: 2.5rem 3rem; flex: 1; overflow-y: auto; }
+    .body h2 { font-size: 2rem; margin-bottom: 1.2rem; color: var(--ink); line-height: 1.2; }
+    .body p { font-size: 1.1rem; color: var(--muted); margin-bottom: 1.5rem; }
+
+    /* BOXES */
+    .info-box { background: #EEF2FF; padding: 1.25rem; border-radius: 16px; border-left: 6px solid var(--brand); margin-bottom: 1.5rem; }
+    .fun-fact-box { background: #FFFBEB; padding: 1.25rem; border-radius: 16px; border-left: 6px solid var(--warn); margin-bottom: 1.5rem; display: flex; gap: 15px; align-items: flex-start; }
+    .fun-fact-box span { font-size: 1.8rem; }
+
+    /* INTERACTIVE */
+    .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem; margin: 1.5rem 0; }
+    .card-item { background: var(--bg1); padding: 1.25rem; border-radius: 20px; border: 2px solid transparent; cursor: pointer; transition: all 0.2s; position: relative; }
+    .card-item:hover { border-color: var(--brand); background: #fff; transform: translateY(-3px); }
+    .card-item.correct { border-color: var(--ok); background: #DCFCE7; }
+    
+    .drop-zone { border: 2px dashed var(--line); padding: 1rem; border-radius: 16px; margin-top: 10px; min-height: 60px; text-align: center; color: var(--muted); }
+
+    .footer { padding: 1.5rem 2.5rem; border-top: 1px solid var(--line); display: flex; justify-content: space-between; align-items: center; }
+    .btn { padding: 0.85rem 1.75rem; border-radius: 14px; border: none; font-weight: 700; cursor: pointer; transition: all 0.2s; font-size: 1rem; display: flex; align-items: center; gap: 0.5rem; }
+    .btn-next { background: var(--brand); color: #fff; }
+    .btn-prev { background: var(--bg2); color: var(--muted); }
+  </style>
+</head>
+
+<body>
+
+  <div id="accessGate">
+    <div class="gateCard">
+      <h1>Selamat Datang! 👋</h1>
+      <p>Masukkan kode akses Sesi 2 untuk melanjutkan.</p>
+      <input type="text" id="accessInput" placeholder="KODE DISINI" maxlength="10" />
+      <button class="btn btn-next" style="width:100%; justify-content:center;" id="accessBtn">Lanjutkan ➔</button>
+      <p id="accessFb" style="color:var(--bad); margin-top:15px; display:none; font-weight:bold;"></p>
+    </div>
+  </div>
+
+  <div id="mainContent" style="display:none; width:100%; display:flex; justify-content:center;">
+
+    <div class="slide" id="s0">
+      <div class="header">
+        <h4>Review Sesi 1</h4>
+        <div class="progress-bar"><div class="progress-fill" style="width: 10%"></div></div>
+      </div>
+      <div class="body">
+        <h2>Apa Saja yang Sudah Siap? 🎒</h2>
+        <p>Di pertemuan sebelumnya, kamu sudah menentukan 3 bahan utama ceritamu:</p>
+        <div class="grid">
+          <div class="card-item" style="cursor:default;"><span>💡</span><h3>Tema</h3><p>Pesan kebaikan.</p></div>
+          <div class="card-item" style="cursor:default;"><span>🧍</span><h3>Tokoh</h3><p>Siapa pahlawannya.</p></div>
+          <div class="card-item" style="cursor:default;"><span>🏠</span><h3>Tempat</h3><p>Di mana lokasinya.</p></div>
+        </div>
+        <p>Sekarang, ayo kita bikin mereka "bergerak" dan bercerita!</p>
+      </div>
+      <div class="footer">
+        <div></div>
+        <button class="btn btn-next" onclick="showSlide(1)">Ayo Mulai! ➔</button>
+      </div>
+    </div>
+
+    <div class="slide" id="s1">
+      <div class="header">
+        <h4>Menyusun Alur</h4>
+        <div class="progress-bar"><div class="progress-fill" style="width: 25%"></div></div>
+      </div>
+      <div class="body">
+        <h2>3 Langkah Alur Cerita ⏳</h2>
+        <p>Agar temanmu mengerti ceritamu, gunakan urutan sederhana ini:</p>
+        <div class="info-box">
+          <p><b>1. Awal Cerita:</b> Perkenalkan siapa tokohmu dan apa yang sedang dilakukan.</p>
+        </div>
+        <div class="info-box">
+          <p><b>2. Tengah Cerita:</b> Munculkan masalah atau tantangan yang seru!</p>
+        </div>
+        <div class="info-box">
+          <p><b>3. Akhir Cerita:</b> Masalah selesai dan tunjukkan pesan kebaikannya.</p>
+        </div>
+      </div>
+      <div class="footer">
+        <button class="btn btn-prev" onclick="showSlide(0)">Kembali</button>
+        <button class="btn btn-next" onclick="showSlide(2)">Contoh Cerita ➔</button>
+      </div>
+    </div>
+
+    <div class="slide" id="s2">
+      <div class="header">
+        <h4>Praktik: Urutan</h4>
+        <div class="progress-bar"><div class="progress-fill" style="width: 40%"></div></div>
+      </div>
+      <div class="body">
+        <h2>Ayo Bantu Kala! 🧩</h2>
+        <p>Klik kotak di bawah sesuai urutan ceritanya (1, 2, atau 3):</p>
+        
+        <div id="storyGame">
+          <div class="card-item" onclick="checkOrder(this, 3)" style="margin-bottom:10px;">
+            <p><b>Kala belajar untuk lebih berhati-hati dan tidak jadi kirim foto.</b></p>
+          </div>
+          <div class="card-item" onclick="checkOrder(this, 1)" style="margin-bottom:10px;">
+            <p><b>Kala sedang asyik bermain game online di rumah.</b></p>
+          </div>
+          <div class="card-item" onclick="checkOrder(this, 2)" style="margin-bottom:10px;">
+            <p><b>Tiba-tiba ada orang asing minta foto Kala.</b></p>
+          </div>
+        </div>
+        <p id="gameFb" style="text-align:center; font-weight:bold; margin-top:10px;"></p>
+      </div>
+      <div class="footer">
+        <button class="btn btn-prev" onclick="showSlide(1)">Kembali</button>
+        <button class="btn btn-next" onclick="showSlide(3)">Lanjut ➔</button>
+      </div>
+    </div>
+
+    <div class="slide" id="s3">
+      <div class="header">
+        <h4>Fakta Seru</h4>
+        <div class="progress-bar"><div class="progress-fill" style="width: 55%"></div></div>
+      </div>
+      <div class="body">
+        <h2>Rahasia Sutradara 🎬</h2>
+        <div class="fun-fact-box">
+          <span>💡</span>
+          <p><b>Tahukah Kamu?</b> Di studio film besar, satu adegan bisa digambar berulang-ulang sampai ratusan kali di atas kertas (Storyboard) hanya untuk memastikan ceritanya sudah pas sebelum benar-benar di-animasikan!</p>
+        </div>
+        <p>Dengan rencana yang jelas, membuat proyek di ScratchJr jadi jauh lebih mudah.</p>
+      </div>
+      <div class="footer">
+        <button class="btn btn-prev" onclick="showSlide(2)">Kembali</button>
+        <button class="btn btn-next" onclick="showSlide(4)">Masuk ke ScratchJr ➔</button>
+      </div>
+    </div>
+
+    <div class="slide" id="s4">
+      <div class="header">
+        <h4>Implementasi</h4>
+        <div class="progress-bar"><div class="progress-fill" style="width: 70%"></div></div>
+      </div>
+      <div class="body">
+        <h2>Langkah di ScratchJr 📱</h2>
+        <p>Sekarang, ayo masukkan rencanamu ke dalam aplikasi:</p>
+        <ol style="margin-left: 20px; font-size: 1.1rem; display: flex; flex-direction: column; gap: 10px;">
+          <li><b>Buka Proyek Baru:</b> Klik tanda (+) di rumah utama.</li>
+          <li><b>Siapkan Panggung:</b> Masukkan tokoh dan latar tempat yang sudah kamu pilih.</li>
+          <li><b>Gunakan Halaman:</b> Ingat, setiap bagian cerita (Awal, Tengah, Akhir) bisa kamu buat di halaman yang berbeda agar rapi!</li>
+        </ol>
+      </div>
+      <div class="footer">
+        <button class="btn btn-prev" onclick="showSlide(3)">Kembali</button>
+        <button class="btn btn-next" onclick="showSlide(5)">Tips Coding ➔</button>
+      </div>
+    </div>
+
+    <div class="slide" id="s5">
+      <div class="header">
+        <h4>Tips Coding</h4>
+        <div class="progress-bar"><div class="progress-fill" style="width: 85%"></div></div>
+      </div>
+      <div class="body">
+        <h2>Bikin Ceritamu Interaktif! ✨</h2>
+        <p>Gunakan blok-blok ini agar ceritanya tidak membosankan:</p>
+        <div class="grid">
+          <div class="card-item" style="border-bottom: 5px solid yellow; cursor:default;">
+            <h3>Blok Mulai</h3>
+            <p>Pilih Bendera Hijau atau Saat Disentuh.</p>
+          </div>
+          <div class="card-item" style="border-bottom: 5px solid pink; cursor:default;">
+            <h3>Blok Bicara</h3>
+            <p>Tulis pesan kebaikanmu di sini.</p>
+          </div>
+          <div class="card-item" style="border-bottom: 5px solid orange; cursor:default;">
+            <h3>Blok Urutan</h3>
+            <p>Gunakan blok jeda agar tidak terlalu cepat.</p>
+          </div>
+        </div>
+      </div>
+      <div class="footer">
+        <button class="btn btn-prev" onclick="showSlide(4)">Kembali</button>
+        <button class="btn btn-next" onclick="showSlide(6)">Misi Selesai ➔</button>
+      </div>
+    </div>
+
+    <div class="slide" id="s6">
+      <div class="header">
+        <h4>Selesai</h4>
+        <div class="progress-bar"><div class="progress-fill" style="width: 100%"></div></div>
+      </div>
+      <div class="body">
+        <h2>Kamu Siap Beraksi! 🏆</h2>
+        <p>Sekarang kamu punya rencana cerita yang hebat dan tahu cara memasukkannya ke ScratchJr.</p>
+        <div class="info-box" style="background: #FFF1F2; border-color: #F43F5E;">
+          <p><b>Ingat Nilai Kita:</b> Pastikan ceritamu punya pesan tentang <b>Menabung, Sopan, Aman Online, atau Berbagi</b> ya!</p>
+        </div>
+        <p style="text-align:center; font-size:1.2rem; margin-top:20px;">Ayo mulai buka tabletmu dan berkreasi!</p>
+      </div>
+      <div class="footer">
+        <button class="btn btn-prev" onclick="showSlide(5)">Kembali</button>
+        <button class="btn btn-next" style="background:var(--ok);" onclick="location.reload()">Selesai ✨</button>
+      </div>
+    </div>
+
+  </div>
+
+  <script>
+    const ACCESS_CODE = "RGMDSLP25";
+    let currentSlideIdx = 0;
+    let nextExpectedOrder = 1;
+
+    // GATE
+    const accessInput = document.getElementById("accessInput");
+    accessInput.addEventListener("input", () => { accessInput.value = accessInput.value.toUpperCase(); });
+
+    document.getElementById("accessBtn").addEventListener("click", () => {
+      if (accessInput.value.trim() === ACCESS_CODE) {
+        document.getElementById("accessGate").style.display = "none";
+        document.getElementById("mainContent").style.display = "flex";
+        showSlide(0);
+      } else {
+        const fb = document.getElementById("accessFb");
+        fb.textContent = "Kodenya kurang tepat. Coba cek lagi ya!";
+        fb.style.display = "block";
+      }
+    });
+
+    // NAVIGATION
+    function showSlide(idx) {
+      if (idx < 0 || idx >= 7) return;
+      currentSlideIdx = idx;
+      document.querySelectorAll(".slide").forEach(s => s.classList.remove("active"));
+      document.getElementById(`s${idx}`).classList.add("active");
+    }
+
+    // KEYBOARD NAV
+    document.addEventListener("keydown", (e) => {
+      if (document.getElementById("mainContent").style.display === "flex") {
+        if (e.target.tagName === "INPUT") return;
+        if (e.key === "ArrowRight") showSlide(currentSlideIdx + 1);
+        if (e.key === "ArrowLeft") showSlide(currentSlideIdx - 1);
+      }
+    });
+
+    // GAME LOGIC
+    function checkOrder(el, order) {
+      const fb = document.getElementById("gameFb");
+      if (order === nextExpectedOrder) {
+        el.classList.add("correct");
+        el.style.pointerEvents = "none";
+        el.innerHTML = `<span>✅ <b>${order}.</b> </span>` + el.innerHTML;
+        nextExpectedOrder++;
+        fb.textContent = "Bagus! Lanjutkan urutan berikutnya.";
+        fb.style.color = "var(--ok)";
+        
+        if (nextExpectedOrder > 3) {
+          fb.textContent = "Luar Biasa! Kamu sudah paham alur cerita.";
+        }
+      } else {
+        fb.textContent = "Ups! Itu bukan urutan yang benar. Coba lagi.";
+        fb.style.color = "var(--bad)";
+      }
+    }
+  </script>
+</body>
+</html>

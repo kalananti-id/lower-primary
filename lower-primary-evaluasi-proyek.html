@@ -1,0 +1,1082 @@
+<!doctype html>
+<html lang="id">
+
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>UOB MDS – Lower Primary – Mengevaluasi Proyek dan Nilai Tanggung Jawab dalam Cerita Digital
+
+</title>
+  <style>
+    :root {
+      --bg1: #F7FAFF;
+      --bg2: #F3F6FF;
+      --ink: #0F172A;
+      --muted: #475569;
+      --line: rgba(226, 232, 240, .95);
+      --brand: #4F46E5;
+      --brand2: #06B6D4;
+      --ok: #16A34A;
+      --bad: #DC2626;
+      --warn: #F59E0B;
+      --radius: 22px;
+      --shadow: 0 18px 40px rgba(15, 23, 42, .08);
+      --shadow2: 0 10px 22px rgba(15, 23, 42, .06);
+      --focus: 0 0 0 4px rgba(79, 70, 229, .18);
+      --mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+      --sans: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, "Apple Color Emoji", "Segoe UI Emoji";
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      font-family: var(--sans);
+      color: var(--ink);
+      background:
+        radial-gradient(1200px 520px at 10% 0%, rgba(6, 182, 212, .18), transparent 60%),
+        radial-gradient(1200px 520px at 90% 0%, rgba(79, 70, 229, .16), transparent 55%),
+        linear-gradient(180deg, var(--bg1), var(--bg2) 45%, var(--bg1));
+      min-height: 100vh;
+    }
+
+    .app {
+      width: min(1100px, 96vw);
+      margin: 18px auto 26px;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .topbar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      padding: 12px 14px;
+      border: 1px solid var(--line);
+      border-radius: 18px;
+      background: rgba(255, 255, 255, .72);
+      backdrop-filter: blur(10px);
+      box-shadow: var(--shadow2);
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .logo {
+      width: 38px;
+      height: 38px;
+      border-radius: 14px;
+      background: linear-gradient(135deg, rgba(79, 70, 229, .18), rgba(6, 182, 212, .20));
+      border: 1px solid rgba(226, 232, 240, .9);
+      display: grid;
+      place-items: center;
+      font-weight: 1000;
+      color: rgba(79, 70, 229, 1);
+    }
+
+    .brand h1 {
+      margin: 0;
+      font-size: 14px;
+      line-height: 1.15;
+      letter-spacing: .2px;
+    }
+
+    .brand .sub {
+      font-size: 12px;
+      color: var(--muted);
+      font-weight: 800;
+      margin-top: 2px;
+    }
+
+    .controls {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+
+    .btn {
+      border: 1px solid rgba(226, 232, 240, .95);
+      background: rgba(255, 255, 255, .9);
+      padding: 10px 12px;
+      border-radius: 16px;
+      font-weight: 1000;
+      cursor: pointer;
+      box-shadow: 0 8px 16px rgba(15, 23, 42, .06);
+      transition: transform .06s ease, box-shadow .12s ease, background .12s ease;
+      user-select: none;
+    }
+
+    .btn:hover {
+      transform: translateY(-1px);
+    }
+
+    .btn:active {
+      transform: translateY(0);
+    }
+
+    .btn.primary {
+      background: linear-gradient(135deg, rgba(79, 70, 229, .12), rgba(6, 182, 212, .14));
+      border-color: rgba(79, 70, 229, .18);
+    }
+
+    .btn.ghost {
+      background: transparent;
+      box-shadow: none;
+    }
+
+    .btn:focus {
+      outline: none;
+      box-shadow: var(--focus);
+    }
+
+    .progressWrap {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      min-width: 260px;
+      justify-content: flex-end;
+    }
+
+    .progress {
+      width: 180px;
+      height: 10px;
+      background: rgba(226, 232, 240, .9);
+      border-radius: 999px;
+      overflow: hidden;
+      border: 1px solid rgba(226, 232, 240, .95);
+    }
+
+    .bar {
+      height: 100%;
+      width: 0%;
+      background: linear-gradient(90deg, rgba(79, 70, 229, .85), rgba(6, 182, 212, .85));
+      border-radius: 999px;
+      transition: width .25s ease;
+    }
+
+    .count {
+      font-family: var(--mono);
+      font-size: 12px;
+      color: var(--muted);
+      font-weight: 900;
+    }
+
+    .stage {
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      background: rgba(255, 255, 255, .60);
+      box-shadow: var(--shadow);
+      padding: 14px;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      min-height: calc(100vh - 145px);
+    }
+
+    .slide {
+      flex: 1;
+      background: rgba(255, 255, 255, .68);
+      border: 1px solid rgba(229, 234, 245, .95);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow2);
+      padding: 20px;
+      overflow: hidden;
+      backdrop-filter: blur(8px);
+    }
+
+    .slideInner {
+      max-width: 980px;
+      margin: 0 auto;
+      max-height: calc(100vh - 190px);
+      overflow-y: auto;
+      padding-right: 8px;
+    }
+
+    .slideInner::-webkit-scrollbar {
+      width: 10px;
+    }
+
+    .slideInner::-webkit-scrollbar-thumb {
+      background: rgba(96, 112, 153, .25);
+      border-radius: 999px;
+      border: 3px solid rgba(255, 255, 255, .9);
+    }
+
+    h2 {
+      margin: 6px 0 10px;
+      font-size: 30px;
+      letter-spacing: -.3px;
+    }
+
+    h3 {
+      margin: 0 0 8px;
+      font-size: 18px;
+    }
+
+    p {
+      margin: 0 0 10px;
+      color: var(--muted);
+      font-weight: 800;
+      line-height: 1.55;
+    }
+
+    .kicker {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      font-weight: 1000;
+      font-size: 12px;
+      letter-spacing: .2px;
+      padding: 7px 10px;
+      border-radius: 999px;
+      border: 1px solid rgba(79, 70, 229, .16);
+      background: rgba(79, 70, 229, .06);
+      color: rgba(55, 65, 81, .95);
+    }
+
+    .grid {
+      display: grid;
+      gap: 14px;
+    }
+
+    .cols2 {
+      grid-template-columns: 1fr 1fr;
+    }
+
+    .cols3 {
+      grid-template-columns: repeat(3, 1fr);
+    }
+
+    @media (max-width: 860px) {
+
+      .cols2,
+      .cols3 {
+        grid-template-columns: 1fr;
+      }
+
+      .progressWrap {
+        min-width: unset;
+      }
+
+      .progress {
+        width: 130px;
+      }
+
+      h2 {
+        font-size: 26px;
+      }
+    }
+
+    .card {
+      background: rgba(255, 255, 255, .92);
+      border: 1px solid rgba(226, 232, 240, .95);
+      border-radius: 22px;
+      padding: 14px;
+      box-shadow: 0 10px 18px rgba(15, 23, 42, .06);
+    }
+
+    .hint {
+      background: rgba(6, 182, 212, .10);
+      border: 1px dashed rgba(6, 182, 212, .35);
+      border-radius: 18px;
+      padding: 12px 14px;
+      color: rgba(30, 41, 59, .92);
+      font-weight: 900;
+      line-height: 1.5;
+    }
+
+    .warnBox {
+      background: rgba(245, 158, 11, .10);
+      border: 1px dashed rgba(245, 158, 11, .35);
+      border-radius: 18px;
+      padding: 12px 14px;
+      color: rgba(30, 41, 59, .92);
+      font-weight: 900;
+      line-height: 1.5;
+    }
+
+    ul.list {
+      margin: 8px 0 0 18px;
+      color: var(--muted);
+      font-weight: 850;
+      line-height: 1.55;
+    }
+
+    .choices {
+      display: grid;
+      gap: 10px;
+      margin-top: 10px;
+    }
+
+    .choice {
+      border: 1px solid rgba(226, 232, 240, .95);
+      border-radius: 18px;
+      padding: 12px 14px;
+      background: rgba(255, 255, 255, .96);
+      font-weight: 950;
+      color: rgba(30, 41, 59, .96);
+      cursor: pointer;
+      user-select: none;
+      transition: transform .06s ease, border-color .12s ease, background .12s ease;
+    }
+
+    .choice:hover {
+      transform: translateY(-1px);
+    }
+
+    .choice.active {
+      border-color: rgba(79, 70, 229, .35);
+      background: rgba(79, 70, 229, .06);
+    }
+
+    .choice.ok {
+      border-color: rgba(22, 163, 74, .35);
+      background: rgba(22, 163, 74, .08);
+    }
+
+    .choice.bad {
+      border-color: rgba(220, 38, 38, .35);
+      background: rgba(220, 38, 38, .08);
+    }
+
+    .feedback {
+      display: none;
+      margin-top: 10px;
+      border-radius: 18px;
+      padding: 12px 14px;
+      border: 1px solid rgba(226, 232, 240, .95);
+      background: rgba(255, 255, 255, .92);
+      color: var(--muted);
+      font-weight: 900;
+      line-height: 1.5;
+    }
+
+    .feedback.show {
+      display: block;
+    }
+
+    .fbOk {
+      border-color: rgba(22, 163, 74, .35);
+      background: rgba(22, 163, 74, .08);
+      color: rgba(15, 23, 42, .92);
+    }
+
+    .fbBad {
+      border-color: rgba(220, 38, 38, .35);
+      background: rgba(220, 38, 38, .08);
+      color: rgba(15, 23, 42, .92);
+    }
+
+    .input {
+      width: 100%;
+      border: 1px solid rgba(226, 232, 240, .95);
+      background: rgba(255, 255, 255, .96);
+      border-radius: 16px;
+      padding: 12px 14px;
+      font-weight: 950;
+      color: rgba(30, 41, 59, .96);
+    }
+
+    .emojiBig {
+      font-size: 58px;
+      line-height: 1;
+    }
+
+    .actionGrid {
+      display: grid;
+      gap: 12px;
+      margin-top: 12px;
+    }
+
+    .actionCard {
+      border: 1px solid rgba(226, 232, 240, .95);
+      border-radius: 18px;
+      padding: 14px;
+      background: rgba(255, 255, 255, .96);
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .tagSafe {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-width: 95px;
+      padding: 8px 12px;
+      border-radius: 999px;
+      background: rgba(22, 163, 74, .10);
+      border: 1px solid rgba(22, 163, 74, .20);
+      color: #166534;
+      font-weight: 1000;
+    }
+
+    .tagAsk {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-width: 95px;
+      padding: 8px 12px;
+      border-radius: 999px;
+      background: rgba(245, 158, 11, .10);
+      border: 1px solid rgba(245, 158, 11, .20);
+      color: #92400e;
+      font-weight: 1000;
+    }
+
+    .tagNo {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-width: 95px;
+      padding: 8px 12px;
+      border-radius: 999px;
+      background: rgba(220, 38, 38, .10);
+      border: 1px solid rgba(220, 38, 38, .20);
+      color: #991b1b;
+      font-weight: 1000;
+    }
+
+    .simWrap {
+      display: grid;
+      gap: 14px;
+      margin-top: 12px;
+    }
+
+    .simScreen {
+      border: 1px solid rgba(226, 232, 240, .95);
+      border-radius: 22px;
+      padding: 16px;
+      background: rgba(255, 255, 255, .96);
+      text-align: center;
+    }
+
+    .simState {
+      display: none;
+    }
+
+    .simState.show {
+      display: block;
+    }
+
+    .simButtons {
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr;
+      gap: 10px;
+    }
+
+    .simBtn {
+      border: 1px solid rgba(226, 232, 240, .95);
+      background: white;
+      border-radius: 18px;
+      padding: 14px;
+      cursor: pointer;
+      font-weight: 1000;
+      text-align: center;
+    }
+
+    .matchWrap {
+      display: grid;
+      gap: 10px;
+      margin-top: 12px;
+    }
+
+    .matchRow {
+      display: grid;
+      grid-template-columns: 1.4fr 1fr;
+      gap: 10px;
+      align-items: center;
+    }
+
+    .selectBox {
+      width: 100%;
+      border: 1px solid rgba(226, 232, 240, .95);
+      background: white;
+      border-radius: 16px;
+      padding: 10px 12px;
+      font-weight: 900;
+      color: var(--ink);
+    }
+
+    .tapBox {
+      display: grid;
+      gap: 10px;
+      margin-top: 12px;
+    }
+
+    .tapItem {
+      border: 1px solid rgba(226, 232, 240, .95);
+      border-radius: 18px;
+      padding: 12px 14px;
+      background: rgba(255, 255, 255, .96);
+      cursor: pointer;
+      font-weight: 950;
+    }
+
+    .tapItem.active {
+      border-color: rgba(79, 70, 229, .35);
+      background: rgba(79, 70, 229, .06);
+    }
+  </style>
+</head>
+
+<body>
+  <div id="accessGate"
+    style="position:fixed; inset:0; background:linear-gradient(135deg,#eef2ff,#ecfeff); display:flex; align-items:center; justify-content:center; z-index:9999;">
+    <div class="card" style="max-width:420px;width:92%;text-align:center">
+      <h2>🔐 Kode Akses</h2>
+      <p>Masukkan kode untuk memulai sesi.</p>
+      <input id="accessInput" class="input" placeholder="MASUKKAN KODE" autocomplete="off"
+        style="text-align:center;font-weight:900;letter-spacing:2px" />
+      <button class="btn primary" id="accessBtn" style="margin-top:12px">Masuk</button>
+      <div class="feedback" id="accessFb" style="margin-top:10px"></div>
+      <div class="card" style="margin-top:10px;background:rgba(79,70,229,.05)">
+        <p style="margin:0">Kode diberikan oleh guru.</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="app">
+    <div class="topbar">
+      <div class="brand">
+        <div class="logo">LP</div>
+        <div>
+          <h1>Lower Primary</h1>
+          <div class="sub">Mengevaluasi Proyek dan Nilai Tanggung Jawab dalam Cerita Digital
+
+</div>
+        </div>
+      </div>
+
+      <div class="controls">
+        <button class="btn ghost" id="btnHome" title="Kembali ke awal">🏠 Awal</button>
+        <button class="btn" id="btnPrev" title="Sebelumnya (←)">←</button>
+        <button class="btn primary" id="btnNext" title="Berikutnya (→)">→</button>
+      </div>
+
+      <div class="progressWrap">
+        <div class="progress" aria-label="Progress">
+          <div class="bar" id="bar"></div>
+        </div>
+        <div class="count" id="count">1/1</div>
+      </div>
+    </div>
+
+    <div class="stage">
+      <div class="slide" role="region" aria-label="Slide">
+        <div class="slideInner" id="content"></div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const ACCESS_CODE = "RGMDSLP25";
+
+    const safeScenarioData = [
+      {
+        id: 1,
+        answers: [
+          { label: "🙋 Tanya orang tua dulu", correct: true, feedback: "✅ Betul! Kalau ada tombol beli, kita harus minta izin orang tua dulu." },
+          { label: "🛒 Tekan beli sekarang", correct: false, feedback: "⚠️ Jangan langsung menekan tombol beli sendiri." },
+          { label: "❌ Tutup mata lalu klik", correct: false, feedback: "⚠️ Itu tidak aman. Kita harus berhati-hati saat memakai gawai." }
+        ]
+      },
+      {
+        id: 2,
+        answers: [
+          { label: "🔑 Masukkan kata sandi sendiri", correct: false, feedback: "⚠️ Jangan memasukkan kata sandi sendiri tanpa izin." },
+          { label: "🙋 Panggil orang tua atau guru", correct: true, feedback: "✅ Betul! Kalau diminta kata sandi, kita harus meminta bantuan orang dewasa." },
+          { label: "📤 Beri tahu teman", correct: false, feedback: "⚠️ Kata sandi tidak boleh dibagikan ke teman." }
+        ]
+      },
+      {
+        id: 3,
+        answers: [
+          { label: "📘 Minta izin lalu buka bersama orang tua", correct: true, feedback: "✅ Ya! Membuka aplikasi baru sebaiknya dengan izin dan pendampingan." },
+          { label: "⬇️ Unduh sendiri tanpa bertanya", correct: false, feedback: "⚠️ Jangan mengunduh sendiri tanpa izin orang tua." },
+          { label: "🎮 Pilih game lain saja", correct: false, feedback: "⚠️ Ini belum menjawab cara aman membuka aplikasi baru." }
+        ]
+      }
+    ];
+
+    let safeScenarioIndex = 0;
+
+    function renderSafeScenario() {
+      const screenStates = contentEl.querySelectorAll("[data-safe-case]");
+      const choiceWrap = contentEl.querySelector("#safeChoices");
+      const fb = contentEl.querySelector("#safeFb");
+      if (!screenStates.length || !choiceWrap || !fb) return;
+
+      screenStates.forEach(el => el.classList.remove("show"));
+
+      if (safeScenarioIndex >= safeScenarioData.length) {
+        const done = contentEl.querySelector('[data-safe-case="done"]');
+        if (done) done.classList.add("show");
+        choiceWrap.innerHTML = `
+        <button class="btn primary" data-safe-nav="reset">🔄 Main Lagi</button>
+      `;
+        fb.textContent = "🎉 Kamu sudah menyelesaikan semua situasi dengan baik.";
+        fb.className = "feedback show fbOk";
+        return;
+      }
+
+      const current = safeScenarioData[safeScenarioIndex];
+      const currentScreen = contentEl.querySelector('[data-safe-case="' + current.id + '"]');
+      if (currentScreen) currentScreen.classList.add("show");
+
+      choiceWrap.innerHTML = current.answers.map((ans, idx) => `
+      <div class="choice" data-safe-answer="${idx}">${ans.label}</div>
+    `).join("");
+
+      fb.className = "feedback";
+      fb.textContent = "";
+    }
+
+    function wireSafeScenario() {
+      if (!contentEl.querySelector("#safeChoices")) return;
+      safeScenarioIndex = 0;
+      renderSafeScenario();
+    }
+
+    const slides = [
+
+      {
+        title: "Pembuka",
+        html: `
+<h2>🎬 Cek Cerita Kita Yuk!</h2>
+<p>Hari ini kita akan melihat kembali cerita yang sudah kita buat.</p>
+
+<div class="grid cols2" style="margin-top:12px">
+  <div class="card" style="text-align:center">
+    <div class="emojiBig">👀</div>
+    <p>Lihat ulang</p>
+  </div>
+  <div class="card" style="text-align:center">
+    <div class="emojiBig">🔧</div>
+    <p>Perbaiki cerita</p>
+  </div>
+</div>
+
+<div class="hint" style="margin-top:12px">
+Cerita kita bisa jadi lebih bagus kalau kita mau mengecek dan memperbaikinya.
+</div>
+`
+      },
+
+      {
+        title: "Apa Itu Evaluasi",
+        html: `
+<h2>Apa itu mengecek cerita?</h2>
+<p>Mengecek cerita artinya melihat ulang dan memperbaiki jika ada yang belum pas.</p>
+
+<div class="card">
+<p><b>Contoh:</b></p>
+<ul class="list">
+<li>Tokoh bergerak belum sesuai</li>
+<li>Dialog muncul terlalu cepat</li>
+<li>Cerita belum jelas</li>
+</ul>
+</div>
+
+<div class="hint" style="margin-top:10px">
+Kalau ada yang belum pas, kita boleh memperbaikinya 👍
+</div>
+`
+      },
+
+      {
+        title: "Apa yang Dicek",
+        html: `
+<h2>Yang perlu kita cek</h2>
+
+<div class="grid cols2">
+<div class="card">Apakah tokoh bergerak dengan benar?</div>
+<div class="card">Apakah cerita mudah dimengerti?</div>
+<div class="card">Apakah dialog muncul di waktu yang tepat?</div>
+<div class="card">Apakah urutan ceritanya sudah benar?</div>
+</div>
+`
+      },
+
+      {
+        title: "Quiz Cek",
+        html: `
+<h2>🎯 Kenapa kita perlu mengecek cerita?</h2>
+
+<div class="choices" data-quiz="qCek">
+<div class="choice" data-answer="right">Agar cerita jadi lebih bagus</div>
+<div class="choice" data-answer="wrong">Supaya cepat selesai saja</div>
+<div class="choice" data-answer="wrong">Agar tidak perlu berpikir</div>
+</div>
+
+<div class="feedback" data-quiz-feedback="qCek"></div>
+`
+      },
+
+      {
+        title: "Umpan Balik",
+        html: `
+<h2>Mendengar saran teman</h2>
+<p>Kadang teman atau guru memberi saran.</p>
+
+<div class="card">
+<p><b>Contoh:</b></p>
+<p>"Cerita kamu bagus, tapi pintunya kecil."</p>
+</div>
+
+<div class="hint">
+Saran ini membantu cerita kita jadi lebih baik 😊
+</div>
+`
+      },
+
+      {
+        title: "Sikap Saat Diberi Saran",
+        html: `
+<h2>Kalau diberi saran</h2>
+
+<div class="actionGrid">
+<div class="actionCard">
+<div class="emojiBig">👂</div>
+<div><b>Dengarkan</b></div>
+</div>
+
+<div class="actionCard">
+<div class="emojiBig">🤔</div>
+<div><b>Pikirkan</b></div>
+</div>
+
+<div class="actionCard">
+<div class="emojiBig">🔧</div>
+<div><b>Perbaiki jika perlu</b></div>
+</div>
+</div>
+`
+      },
+
+      {
+        title: "Simulasi Umpan Balik",
+        html: `
+<h2>🎮 Pilih sikap yang benar</h2>
+<p>Teman memberi saran ke ceritamu.</p>
+
+<div class="choices" data-quiz="qFeedback">
+<div class="choice" data-answer="right">Mendengarkan dan mencoba memperbaiki</div>
+<div class="choice" data-answer="wrong">Marah dan tidak mau dengar</div>
+<div class="choice" data-answer="wrong">Mengabaikan semua saran</div>
+</div>
+
+<div class="feedback" data-quiz-feedback="qFeedback"></div>
+`
+      },
+
+      {
+        title: "Menyimpan Proyek",
+        html: `
+<h2>💾 Menyimpan Cerita</h2>
+
+<div class="grid cols2">
+<div class="card">
+<p>Gunakan nama yang jelas</p>
+<p><b>Contoh:</b> CeritaRiko</p>
+</div>
+
+<div class="card">
+<p>Simpan di tempat yang benar</p>
+</div>
+</div>
+
+<div class="warnBox">
+Jangan membagikan file ke orang yang tidak dikenal.
+</div>
+`
+      },
+
+      {
+        title: "Nilai Tanggung Jawab",
+        html: `
+<h2>Nilai dalam cerita</h2>
+<p>Cerita kita bisa mengajarkan hal baik.</p>
+
+<div class="grid cols2">
+<div class="card">🤝 Berbagi</div>
+<div class="card">💬 Sopan</div>
+<div class="card">💰 Menabung</div>
+<div class="card">🔒 Aman online</div>
+</div>
+`
+      },
+
+      {
+        title: "Quiz Nilai",
+        html: `
+<h2>🎯 Mana contoh sikap baik?</h2>
+
+<div class="choices" data-quiz="qNilai">
+<div class="choice" data-answer="right">Membantu teman</div>
+<div class="choice" data-answer="wrong">Mengejek teman</div>
+<div class="choice" data-answer="wrong">Membagikan password</div>
+</div>
+
+<div class="feedback" data-quiz-feedback="qNilai"></div>
+`
+      },
+
+      {
+        title: "Pesan Cerita",
+        html: `
+<h2>Pesan dari ceritamu</h2>
+<p>Cerita tidak hanya untuk bermain, tapi juga memberi pesan.</p>
+
+<div class="card">
+<p><b>Contoh:</b></p>
+<ul class="list">
+<li>Kita harus berbagi</li>
+<li>Kita harus sopan</li>
+<li>Kita harus aman saat online</li>
+</ul>
+</div>
+`
+      },
+
+      {
+        title: "Refleksi",
+        html: `
+<h2>🧠 Ayo pikirkan</h2>
+
+<div class="card">
+<ul class="list">
+<li>Apa yang kamu perbaiki?</li>
+<li>Apa pesan dari ceritamu?</li>
+<li>Apakah ceritamu sudah jelas?</li>
+</ul>
+</div>
+`
+      },
+
+      {
+        title: "Quiz Akhir",
+        html: `
+<h2>🌟 Pilih yang benar</h2>
+
+<div class="choices" data-quiz="qFinal62">
+<div class="choice" data-answer="right">Memperbaiki cerita agar lebih baik</div>
+<div class="choice" data-answer="wrong">Tidak perlu mengecek cerita</div>
+<div class="choice" data-answer="wrong">Mengabaikan saran</div>
+</div>
+
+<div class="feedback" data-quiz-feedback="qFinal62"></div>
+`
+      },
+
+      {
+        title: "Penutup",
+        html: `
+<h2>🎉 Hebat!</h2>
+<p>Kamu sudah belajar:</p>
+
+<ul class="list">
+<li>Mengecek cerita</li>
+<li>Memperbaiki cerita</li>
+<li>Mendengar saran</li>
+<li>Menjadi anak bertanggung jawab</li>
+</ul>
+
+<div class="card" style="text-align:center">
+<button class="btn primary" data-goto="0">🔁 Ulangi</button>
+</div>
+`
+      }
+
+    ];
+
+    let currentSlide = 0;
+
+    const contentEl = document.getElementById("content");
+    const barEl = document.getElementById("bar");
+    const countEl = document.getElementById("count");
+    const accessGate = document.getElementById("accessGate");
+    const accessInput = document.getElementById("accessInput");
+
+    function getQuizMsg(id, ok) {
+      const msgs = {
+        qIzin: {
+          ok: "✅ Betul! Kalau mau membeli sesuatu di gawai, kita harus meminta izin orang tua.",
+          bad: "⚠️ Coba lagi ya. Ingat, pembelian digital harus dengan izin orang tua."
+        },
+        qManfaat: {
+          ok: "✅ Benar! Aplikasi belajar adalah contoh penggunaan gawai yang bermanfaat.",
+          bad: "⚠️ Belum tepat. Pilih kegiatan yang membantu belajar dan aman."
+        },
+        qFinal57: {
+          ok: "✅ Hebat! Kita harus meminta izin orang tua dulu sebelum membeli sesuatu secara digital.",
+          bad: "⚠️ Coba lagi ya. Jangan langsung menekan tombol beli sendiri."
+        }
+      };
+      const m = msgs[id];
+      if (!m) return ok ? "✅ Benar!" : "⚠️ Coba lagi.";
+      return ok ? m.ok : m.bad;
+    }
+
+    function showSlide(index) {
+      if (index < 0 || index >= slides.length) return;
+      currentSlide = index;
+      const slide = slides[index];
+      contentEl.innerHTML = slide.html;
+      barEl.style.width = `${((index + 1) / slides.length) * 100}%`;
+      countEl.textContent = `${index + 1}/${slides.length}`;
+      wireSafeScenario();
+    }
+
+    document.getElementById("btnNext").addEventListener("click", () => showSlide(currentSlide + 1));
+    document.getElementById("btnPrev").addEventListener("click", () => showSlide(currentSlide - 1));
+    document.getElementById("btnHome").addEventListener("click", () => showSlide(0));
+
+    document.addEventListener("keydown", (e) => {
+      if (e.key === "ArrowRight") showSlide(currentSlide + 1);
+      else if (e.key === "ArrowLeft") showSlide(currentSlide - 1);
+    });
+
+    document.addEventListener("click", (e) => {
+      if (e.target.matches("[data-quiz] .choice")) {
+        const choice = e.target;
+        const quizWrap = choice.closest("[data-quiz]");
+        const quizId = quizWrap.getAttribute("data-quiz");
+        const feedbackEl = document.querySelector(`[data-quiz-feedback="${quizId}"]`);
+
+        quizWrap.querySelectorAll(".choice").forEach(item => {
+          item.classList.remove("active", "ok", "bad");
+        });
+
+        const answer = choice.getAttribute("data-answer");
+        choice.classList.add("active");
+
+        if (answer === "right") {
+          choice.classList.add("ok");
+          feedbackEl.textContent = getQuizMsg(quizId, true);
+          feedbackEl.classList.remove("fbBad");
+          feedbackEl.classList.add("fbOk", "show");
+        } else {
+          choice.classList.add("bad");
+          feedbackEl.textContent = getQuizMsg(quizId, false);
+          feedbackEl.classList.remove("fbOk");
+          feedbackEl.classList.add("fbBad", "show");
+        }
+
+      } else if (e.target.matches("[data-safe-answer]")) {
+        const idx = Number(e.target.getAttribute("data-safe-answer"));
+        const current = safeScenarioData[safeScenarioIndex];
+        const answer = current.answers[idx];
+        const fb = contentEl.querySelector("#safeFb");
+        const allChoices = contentEl.querySelectorAll("[data-safe-answer]");
+
+        allChoices.forEach(ch => ch.classList.remove("active", "ok", "bad"));
+        e.target.classList.add("active");
+        e.target.classList.add(answer.correct ? "ok" : "bad");
+
+        fb.textContent = answer.feedback;
+        fb.className = "feedback show " + (answer.correct ? "fbOk" : "fbBad");
+
+        if (answer.correct) {
+          setTimeout(() => {
+            safeScenarioIndex += 1;
+            renderSafeScenario();
+          }, 900);
+        }
+      }
+
+      else if (e.target.matches("[data-safe-nav]")) {
+        const action = e.target.getAttribute("data-safe-nav");
+
+        if (action === "reset") {
+          safeScenarioIndex = 0;
+          renderSafeScenario();
+        }
+
+        if (action === "prev") {
+          safeScenarioIndex = Math.max(0, safeScenarioIndex - 1);
+          renderSafeScenario();
+        }
+      }
+
+      else if (e.target.matches("[data-check-match]")) {
+        const fb = document.getElementById("matchFb1");
+        const a1 = contentEl.querySelector('[data-match="m1"]')?.value;
+        const a2 = contentEl.querySelector('[data-match="m2"]')?.value;
+        const a3 = contentEl.querySelector('[data-match="m3"]')?.value;
+
+        const complete = a1 && a2 && a3;
+        const ok = a1 === "aman" && a2 === "tidak" && a3 === "aman";
+
+        if (!complete) {
+          fb.textContent = "⚠️ Lengkapi dulu semua jawaban ya.";
+          fb.classList.remove("fbOk");
+          fb.classList.add("fbBad", "show");
+        } else if (ok) {
+          fb.textContent = "✅ Hebat! Kamu sudah tahu mana yang aman dan mana yang tidak aman.";
+          fb.classList.remove("fbBad");
+          fb.classList.add("fbOk", "show");
+        } else {
+          fb.textContent = "⚠️ Masih ada yang belum tepat. Coba lagi ya.";
+          fb.classList.remove("fbOk");
+          fb.classList.add("fbBad", "show");
+        }
+
+      } else if (e.target.matches("[data-tip]")) {
+        const id = e.target.getAttribute("data-tip");
+        const fb = document.getElementById("tipFb");
+        contentEl.querySelectorAll("[data-tip]").forEach(item => item.classList.remove("active"));
+        e.target.classList.add("active");
+
+        const msgs = {
+          "1": "✅ Benar. Uang harus digunakan dengan bijak.",
+          "2": "✅ Betul. Kalau ingin membeli sesuatu secara digital, harus minta izin orang tua.",
+          "3": "✅ Ya. Gawai sebaiknya dipakai untuk hal yang bermanfaat.",
+          "4": "✅ Benar. Kalau bingung atau ragu, kita harus bertanya dulu."
+        };
+
+        fb.textContent = msgs[id];
+        fb.classList.remove("fbBad");
+        fb.classList.add("fbOk", "show");
+
+      } else if (e.target.matches("[data-goto]")) {
+        const index = parseInt(e.target.getAttribute("data-goto"), 10);
+        showSlide(index);
+      }
+    });
+
+    document.getElementById("accessBtn").addEventListener("click", () => {
+      const code = accessInput.value.trim().toUpperCase();
+      const feedbackEl = document.getElementById("accessFb");
+      if (code === ACCESS_CODE) {
+        accessGate.style.display = "none";
+        showSlide(0);
+      } else {
+        feedbackEl.textContent = "Kode salah, coba lagi!";
+        feedbackEl.classList.add("fbBad", "show");
+      }
+    });
+
+    accessInput.addEventListener("input", () => {
+      accessInput.value = accessInput.value.toUpperCase();
+    });
+
+    accessInput.addEventListener("keydown", (e) => {
+      if (e.key === "Enter") {
+        document.getElementById("accessBtn").click();
+      }
+    });
+
+    showSlide(0);
+  </script>
+</body>
+
+</html>
